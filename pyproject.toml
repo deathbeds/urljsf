@@ -1,0 +1,53 @@
+[build-system]
+build-backend = "flit_core.buildapi"
+requires = ["flit_core >=3.9.0,4.0.0"]
+
+[project]
+name = "prjsf"
+version = "0.1.0"
+description = "Build structured data files for pull requests with JSON schema"
+readme = "README.md"
+authors = [{name = "prjsf contributors"}]
+requires-python = ">=3.9"
+license.text = "BSD-3-Clause"
+classifiers = [
+  "Framework :: Sphinx :: Extension",
+  "Framework :: Sphinx",
+  "License :: OSI Approved :: BSD License",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3",
+  "Typing :: Typed",
+  "Topic :: File Formats",
+  "Topic :: File Formats :: JSON",
+  "Topic :: File Formats :: JSON :: JSON Schema",
+]
+scripts.prjsf = "prjsf.cli:main"
+dependencies = [
+  "jinja2",
+]
+
+[project.optional-dependencies]
+sphinx = [
+  "sphinx >=6.1",
+]
+validate = [
+  "jsonschema[format] >=4.18",
+]
+
+[tool.ruff]
+cache-dir = "build/.cache/ruff"
+extend-exclude = [".ipynb_checkpoints"]
+include = ["{tests,docs,src}/**/*.{py,ipynb}"]
+line-length = 88
+preview = true
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = ["D211", "D213", "COM812", "ISC001", "D203", "DOC501", "DOC201"]
+flake8-copyright.notice-rgx = 'Copyright \(C\) prjsf contributors\.'
+isort.known-first-party = ["prjsf"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["S101", "PLC0415"]
+"sphinx.py" = ["ANN401", "RUF012"]
+"conf.py" = ["INP001"]

@@ -1,0 +1,58 @@
+{
+    "name": "@deathbeds/prjsf-top",
+    "version": "0.0.0",
+    "private": true,
+    "workspaces": {
+      "packages": [
+        "./js"
+      ]
+    },
+    "scripts": {
+      "build": "cd js && yarn build",
+      "build:dist": "cd js && yarn build:dist",
+      "build:lib": "cd js && yarn build:lib",
+      "watch": "cd js && yarn watch"
+    },
+    "prettier": {
+      "plugins": [
+        "prettier-plugin-packagejson",
+        "prettier-plugin-sort-json"
+      ],
+      "printWidth": 88,
+      "proseWrap": "always",
+      "singleQuote": true,
+      "overrides": [
+        {
+          "files": [
+            "*schema.json"
+          ],
+          "options": {
+            "jsonRecursiveSort": true,
+            "jsonSortOrder": "{\"/^\\\\$id$/\": null, \"/^\\\\$schema$/\": null, \"/^\\\\$ref$/\": null, \"type\": null, \"title\": null, \"description\": null, \"/(properties|items)/\": null, \"/additional(Properties|Items)/\": null, \"/patternProperties/\": null, \"/^\\\\$defs$/\": \"lexical\"}"
+          }
+        },
+        {
+          "files": [
+            "*.toml"
+          ],
+          "options": {
+            "arrayAutoCollapse": false
+          }
+        },
+        {
+          "files": [
+            "*.yaml",
+            "*.yml"
+          ],
+          "options": {
+            "printWidth": 120
+          }
+        }
+      ]
+    },
+    "devDependencies": {
+      "prettier": "^3.3.3",
+      "prettier-plugin-packagejson": "^2.5.2",
+      "prettier-plugin-sort-json": "^4.0.0"
+    }
+  }

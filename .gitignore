@@ -1,0 +1,6 @@
+.pixi/
+build/
+dist/
+lib/
+.ipynb_checkpoints/
+*.tsbuildinfo
