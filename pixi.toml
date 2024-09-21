@@ -7,8 +7,8 @@ platforms = ["linux-64", "osx-64", "osx-arm64", "win-64"]
 
 # aliases ######################################################################
 [tasks]
-# "build", "test", "dist", "docs", "check"
-dev = {depends-on = ["fix", "lint", "build"]}
+# "test", "docs", "check"
+dev = {depends-on = ["fix", "lint", "build", "dist"]}
 fix = {depends-on = [
   "fix-toml-taplo",
   "fix-js-dedupe",
@@ -16,7 +16,8 @@ fix = {depends-on = [
   "fix-py-ruff",
 ]}
 lint = {depends-on = ["lint-py-ruff"]}
-build = {depends-on = ["build-js-lib", "build-js-app"]}
+build = {depends-on = ["build-js-lib", "build-js-app", "build-py-static"]}
+dist = {depends-on = ["dist-npm", "dist-pypi", "dist-hash"]}
 
 [tasks.prettier--]
 cmd = """
@@ -38,7 +39,7 @@ outputs = ["node_modules/.yarn-state.yml"]
 cmd = "yarn build:lib"
 depends-on = ["setup-js"]
 inputs = ["node_modules/.yarn-state.yml", "js/src", "js/{package,tsconfig}.json"]
-outputs = ["js/lib"]
+outputs = ["js/lib", "build/"]
 
 [feature.tasks-build.tasks.build-js-app]
 cmd = "yarn build:app"
@@ -46,11 +47,43 @@ depends-on = ["build-js-lib"]
 inputs = ["node_modules/.yarn-state.yml", "js/lib", "js/webpack.config.mjs"]
 outputs = ["js/dist"]
 
-[feature.tasks-build.tasks.build-js-dist]
-cmd = "mdkir -p dist && rm -rg *.tgz && npm pack ../js"
+[feature.tasks-build.tasks.build-py-static]
+cmd = """
+rm -rf src/prjsf/_static/
+&& cp -r js/dist/prjsf/ src/prjsf/_static/
+&& rm -rf src/prjsf/_static/demo/
+"""
+depends-on = ["build-js-app"]
+inputs = ["js/dist"]
+outputs = ["src/prjsf/_static", "!**/demo/"]
+
+[feature.tasks-build.tasks.dist-npm]
+cmd = "mkdir -p dist && cd dist && npm pack ../js"
 depends-on = ["build-js-app"]
 inputs = ["node_modules/.yarn-state.yml", "js/dist"]
 outputs = ["dist/*.tgz"]
+
+[feature.tasks-build.tasks.dist-pypi]
+cmd = "pyproject-build . --no-isolation"
+depends-on = ["build-py-static"]
+inputs = ["{pyproject.toml,LICENSE,README.md}", "src"]
+outputs = ["dist/*.whl", "dist/*.tar.gz"]
+
+[feature.tasks-build.tasks.dist-hash]
+cmd = """
+rm -rf dist/SHA256SUMS
+&& python -c 'from hashlib import sha256; from pathlib import Path; [
+  print(f"{sha256(p.read_bytes()).hexdigest()}  {p.name}")
+  for p in sorted(Path("dist").glob("*"))
+  if p.name != "SHA256SUMS"
+]'
+> dist/SHA256SUMS
+&& cat dist/SHA256SUMS
+&& ls -hs dist
+"""
+depends-on = ["dist-pypi", "dist-npm"]
+inputs = ["dist", "!dist/SHA256SUMS"]
+outputs = ["dist/SHA256SUMS"]
 
 [feature.tasks-lint.tasks.fix-py-ruff]
 cmd = "ruff format && ruff check --fix-only"
@@ -105,6 +138,7 @@ pydata-sphinx-theme = ">=0.15.4,<0.16.0a0"
 flit = ">=3.9.0,<4.0.0a0"
 nodejs = "22.*"
 yarn = "3.6.4"
+python-build = "*"
 
 [feature.deps-lint.dependencies]
 ruff = "*"
