@@ -26,7 +26,7 @@ yarn prettier
   --cache
   --cache-location build/.cache/prettier
   "*.{yml,json,md}"
-  "{docs,tests,src,js,.github}/**/*.{md,json,yml,yaml,css,ts,tsx,ts}"
+  "{docs,tests,src,js,.github}/**/*.{md,json,yml,yaml,css,ts,tsx,ts,mjs}"
 """
 
 # tasks ########################################################################
@@ -39,7 +39,7 @@ outputs = ["node_modules/.yarn-state.yml"]
 cmd = "yarn build:lib"
 depends-on = ["setup-js"]
 inputs = ["node_modules/.yarn-state.yml", "js/src", "js/{package,tsconfig}.json"]
-outputs = ["js/lib", "build/"]
+outputs = ["js/lib"]
 
 [feature.tasks-build.tasks.build-js-app]
 cmd = "yarn build:app"
@@ -98,7 +98,8 @@ cmd = "pixi r prettier-- --write"
 depends-on = ["setup-js"]
 inputs = [
   "*.{yml,json,md}",
-  "{docs,tests,src,js,.github}/**/*.{md,json,yml,yaml,css,ts,tsx,ts}",
+  "{docs,tests,src,js,.github}/**/*.{md,json,yml,yaml,css,ts,tsx,ts,mjs}",
+  "!src/**/_static",
 ]
 
 [feature.tasks-lint.tasks.fix-js-dedupe]

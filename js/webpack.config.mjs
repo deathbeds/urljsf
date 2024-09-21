@@ -7,13 +7,9 @@ import { LicenseWebpackPlugin } from 'license-webpack-plugin';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
-const __dirname = path.dirname(__filename); // get the name of the directory
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-/**
- * a plugin that creates a predictable, machine-readable report of licenses for
- * all modules included in this build
- */
 export class JSONLicenseWebpackPlugin extends LicenseWebpackPlugin {
   constructor(pluginOptions = {}) {
     super({
@@ -26,7 +22,8 @@ export class JSONLicenseWebpackPlugin extends LicenseWebpackPlugin {
 
   /** render an SPDX-like record */
   renderLicensesJSON(modules) {
-    const report = { packages: [] };
+    const packages /** @type {Record<string,any>} */ = [];
+    const report = { packages };
 
     modules.sort((left, right) => (left.name < right.name ? -1 : 1));
 
