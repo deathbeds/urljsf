@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+  {% block html_head %}
+  <head>
+    <meta charset="utf-8" />
+    {% block html_title %}
+    {% if html_title %}
+    <title>{{ html_title }}</title>
+    {% endif %}
+    {% endblock %}
+    {% block html_style %}
+    <link
+      rel="stylesheet"
+      href="{{ url_base }}_static/vendor/bootstrap/dist/css/bootstrap.min.css"
+    />
+    {% endblock %}
+    {% block extra_head %}{% endblock %}
+  </head>
+  {% endblock %}
+  <body>
+    <div class="col-lg-8 mx-auto p-3 py-md-5">
+      <header>
+        {% block header %}
+        {% if html_title %}
+        <h1>{{ html_title }}</h1>
+        {% endif %}
+        {% endblock %}
+        {% block extra_header %}
+        {% endblock %}
+      </header>
+      <main class="bs-main">
+        <div class="bs-content">
+          <div class="bs-article-container">
+            <section>
+              <div
+                data-prjsf-github-url="{{ github_url }}"
+                data-prjsf-schema="{{ schema }}"
+                {% if data_format %}data-prjsf-data-format="{{ data_format }}"{% endif %}
+                {% if data %}data-prjsf-data="{{ data }}"{% endif %}
+                {% if pr_filename %}data-prjsf-file-name="{{ pr_filename }}"{% endif %}
+                {% if schema_format %}data-prjsf-schema-format="{{ schema_format }}"{% endif %}
+                {% if ui_schema_format %}data-prjsf-ui-schema-format="{{ ui_schema_format }}"{% endif %}
+                {% if ui_schema %}data-prjsf-ui-schema="{{ ui_schema }}"{% endif %}
+              ></div>
+            </section>
+          </div>
+        </div>
+      </main>
+      <footer>
+        {% block footer %}
+        <em>Form built with <a href="https://github.com/deathbeds/prjsf" target="_blank"><code>prjsf</code></a>.</em>
+        {% endblock %}
+      </footer>
+    </div>
+    {% block body_script %}
+    <script type="module" src="{{ url_base }}_static/prjsf/prjsf.js"></script>
+    {% endblock %}
+  </body>
+</html>

@@ -28,6 +28,16 @@ yarn prettier
   "*.{yml,json,md}"
   "{docs,tests,src,js,.github}/**/*.{md,json,yml,yaml,css,ts,tsx,ts,mjs}"
 """
+[tasks.pip-e--]
+cmd = """
+python -m pip install
+  -vv
+  -e .
+  --no-deps
+  --no-build-isolation
+  --disable-pip-version-check
+  --ignore-installed
+"""
 
 # tasks ########################################################################
 [feature.tasks-build.tasks.setup-js]
@@ -50,8 +60,11 @@ outputs = ["js/dist"]
 [feature.tasks-build.tasks.build-py-static]
 cmd = """
 rm -rf src/prjsf/_static/
-&& cp -r js/dist/prjsf/ src/prjsf/_static/
-&& rm -rf src/prjsf/_static/demo/
+&& cp -r js/dist/prjsf/ src/prjsf/_static/prjsf/
+&& mkdir -p src/prjsf/_static/vendor/bootstrap/dist/css/
+&& cp -r node_modules/bootstrap/LICENSE src/prjsf/_static/vendor/bootstrap/LICENSE
+&& cp -r node_modules/bootstrap/dist/css/bootstrap.min.css src/prjsf/_static/vendor/bootstrap/dist/css/
+&& rm -rf src/prjsf/_static/prjsf/demo/
 """
 depends-on = ["build-js-app"]
 inputs = ["js/dist"]
@@ -119,6 +132,10 @@ cmd = """
     *.toml"""
 inputs = ["*.toml"]
 
+[feature.tasks-dev.tasks.dev-setup]
+cmd = """pixi r -e dev pip-e--"""
+inputs = ["pyproject.toml"]
+
 # deps #########################################################################
 [feature.deps-run.dependencies]
 sphinx = ">=6.1"
@@ -156,3 +173,4 @@ test = ["deps-test", "deps-run"]
 test-oldest = ["deps-pip", "deps-test", "deps-run", "deps-run-oldest"]
 lint = ["deps-build", "deps-lint", "tasks-lint"]
 docs = ["deps-docs", "deps-run"]
+dev = ["deps-build", "deps-test", "deps-docs", "deps-lint", "deps-pip", "tasks-dev"]

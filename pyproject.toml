@@ -52,5 +52,5 @@ isort.known-first-party = ["prjsf"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**/*.py" = ["S101", "PLC0415"]
-"sphinx.py" = ["ANN401", "RUF012"]
+"sphinxext.py" = ["ANN401", "RUF012"]
 "conf.py" = ["INP001"]

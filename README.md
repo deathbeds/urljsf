@@ -69,7 +69,7 @@ Add `prjsf` to a project's Sphinx configuration in `conf.py`:
 ```py
 # conf.py
 extensions = [
-    "prjsf.sphinx",
+    "prjsf.sphinxext",
 ]
 ```
 

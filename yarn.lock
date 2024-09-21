@@ -42,6 +42,7 @@ __metadata:
     "@rjsf/validator-ajv8": ^5.21.1
     "@types/node": ^20.10.3
     "@types/webpack": ^5.28.5
+    bootstrap: ^5.3.3
     copy-webpack-plugin: ^11.0.0
     html-webpack-plugin: ^5.5.3
     preact: ^10.24.0
@@ -841,6 +842,15 @@ __metadata:
   version: 1.0.0
   resolution: "boolbase@npm:1.0.0"
   checksum: 3e25c80ef626c3a3487c73dbfc70ac322ec830666c9ad915d11b701142fab25ec1e63eff2c450c74347acfd2de854ccde865cd79ef4db1683f7c7b046ea43bb0
+  languageName: node
+  linkType: hard
+
+"bootstrap@npm:^5.3.3":
+  version: 5.3.3
+  resolution: "bootstrap@npm:5.3.3"
+  peerDependencies:
+    "@popperjs/core": ^2.11.8
+  checksum: 537b68db30150075614310e9ebdf1be9b4affdf89ca226d59f4352e82a368b203af13ed0ce5ccfa4e06f141ecd233f7432ca3817e9c1a39863a05fbe13c73c4b
   languageName: node
   linkType: hard
 

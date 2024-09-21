@@ -1,3 +1,5 @@
+__pycache__/
+_prjsf_output/
 .ipynb_checkpoints/
 .pixi/
 *.tsbuildinfo

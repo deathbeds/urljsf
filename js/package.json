@@ -26,6 +26,7 @@
   "devDependencies": {
     "@types/node": "^20.10.3",
     "@types/webpack": "^5.28.5",
+    "bootstrap": "^5.3.3",
     "copy-webpack-plugin": "^11.0.0",
     "html-webpack-plugin": "^5.5.3",
     "source-map-loader": "^5.0.0",
