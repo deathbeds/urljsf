@@ -2,14 +2,14 @@
   "name": "@deathbeds/prjsf",
   "version": "0.1.0",
   "description": "Build structured data files for pull requests with JSON schema",
-  "browser": "lib/index.js",
   "license": "LICENSE",
+  "browser": "lib/index.js",
   "scripts": {
     "build": "yarn build:lib && yarn build:dist",
-    "build:lib": "tsc -b",
     "build:dist": "webpack -c webpack.config.js",
-    "watch:lib": "jlpm build:lib --watch --verbose --preserveWatchOutput",
-    "watch:dist": "jlpm build:dist --watch --progress"
+    "build:lib": "tsc -b",
+    "watch:dist": "jlpm build:dist --watch --progress",
+    "watch:lib": "jlpm build:lib --watch --verbose --preserveWatchOutput"
   },
   "dependencies": {
     "@rjsf/bootstrap-4": "^5.21.1",

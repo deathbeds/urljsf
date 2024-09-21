@@ -5,10 +5,11 @@
 _Powered by [react-json-schema-form](https://react-jsonschema-form.readthedocs.io)._
 
 While GitHub provides semi-structured templates for _Pull Requests_ (PR) and _Issues_,
-these are not great for structured requests, and the output requires heuristics
-for parsing the markdown they generate.
+these are not great for structured requests, and the output requires heuristics for
+parsing the markdown they generate.
 
 With a `prjsf`-built form on a static web host, users:
+
 - work with a precise, documented data structure
 - propose a single file in a PR on a GitHub fork
 
@@ -16,10 +17,11 @@ With a `prjsf`-built form on a static web host, users:
 
 > ### This package is not yet released
 >
-> _We're still working on it, so the instructions below are aspirational. See
-> the contributing guide for more._
+> _We're still working on it, so the instructions below are aspirational. See the
+> contributing guide for more._
 >
 > ### From PyPI
+>
 > `prjsf` is distributed on PyPI:
 >
 > ```bash
@@ -30,6 +32,7 @@ With a `prjsf`-built form on a static web host, users:
 > ```
 >
 > ### From conda-forge
+>
 > `prjsf` is also distributed on `conda-forge`:
 >
 > ```bash
@@ -44,8 +47,8 @@ With a `prjsf`-built form on a static web host, users:
 
 ## Usage
 
-`prjsf` works as a standalone site generator for simple sites, or integrates with
-the `sphinx` documentation systems.
+`prjsf` works as a standalone site generator for simple sites, or integrates with the
+`sphinx` documentation systems.
 
 ### Command Line
 
@@ -57,7 +60,7 @@ prsf --help
 
 ### Sphinx
 
-``prjsf``
+`prjsf`
 
 #### Configuration
 

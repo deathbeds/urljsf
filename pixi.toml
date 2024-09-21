@@ -9,31 +9,46 @@ platforms = ["linux-64", "osx-64", "osx-arm64", "win-64"]
 [tasks]
 # "build", "test", "dist", "docs", "check"
 dev = {depends-on = ["fix", "lint"]}
-fix = {depends-on = ["fix-toml-taplo", "fix-py-ruff"]}
+fix = {depends-on = [
+  "fix-toml-taplo",
+  "fix-js-dedupe",
+  "fix-js-prettier",
+  "fix-py-ruff",
+]}
 lint = {depends-on = ["lint-py-ruff"]}
+
+[tasks.prettier--]
+cmd = """
+yarn prettier
+  --list-different
+  --cache
+  --cache-location build/.cache/prettier
+  "*.{yml,json,md}"
+  "{docs,tests,src,js,.github}/**/*.{md,json,yml,yaml,css,ts,tsx,ts}"
+"""
 
 # tasks ########################################################################
 [feature.tasks-build.tasks.setup-js]
 cmd = "yarn"
 inputs = ["yarn.lock", "package.json", "js/package.json", ".yarnrc.yml"]
-outputs = ["node_modules/.yarn-integrity"]
+outputs = ["node_modules/.yarn-state.yml"]
 
 [feature.tasks-build.tasks.build-js-lib]
 cmd = "yarn build:lib"
 depends-on = ["setup-js"]
-inputs = ["node_modules/.yarn-integrity", "js/src", "js/{package,tsconfig}.json"]
+inputs = ["node_modules/.yarn-state.yml", "js/src", "js/{package,tsconfig}.json"]
 outputs = ["js/lib"]
 
 [feature.tasks-build.tasks.build-js-app]
 cmd = "yarn build:app"
 depends-on = ["build-js-lib"]
-inputs = ["node_modules/.yarn-integrity", "js/lib", "js/webpack.config.js"]
+inputs = ["node_modules/.yarn-state.yml", "js/lib", "js/webpack.config.js"]
 outputs = ["js/dist"]
 
 [feature.tasks-build.tasks.build-js-dist]
 cmd = "mdkir -p dist && rm -rg *.tgz && npm pack ../js"
 depends-on = ["build-js-app"]
-inputs = ["node_modules/.yarn-integrity", "js/dist"]
+inputs = ["node_modules/.yarn-state.yml", "js/dist"]
 outputs = ["dist/*.tgz"]
 
 [feature.tasks-lint.tasks.fix-py-ruff]
@@ -43,6 +58,20 @@ inputs = ["pyproject.toml", "{src,tests,docs}/**/*.py"]
 [feature.tasks-lint.tasks.lint-py-ruff]
 cmd = "ruff format --check && ruff check"
 inputs = ["pyproject.toml", "{src,tests,docs}/**/*.py"]
+
+[feature.tasks-lint.tasks.fix-js-prettier]
+cmd = "pixi r prettier-- --write"
+depends-on = ["setup-js"]
+inputs = [
+  "*.{yml,json,md}",
+  "{docs,tests,src,js,.github}/**/*.{md,json,yml,yaml,css,ts,tsx,ts}",
+]
+
+[feature.tasks-lint.tasks.fix-js-dedupe]
+cmd = "yarn yarn-berry-deduplicate --fail --strategy fewer"
+depends-on = ["setup-js"]
+inputs = ["node_modules/.yarn-state.yml", "package.json"]
+outputs = ["yarn.lock"]
 
 [feature.tasks-lint.tasks.fix-toml-taplo]
 cmd = """
@@ -86,8 +115,8 @@ pip = "*"
 
 # envs #########################################################################
 [environments]
-build = ["deps-build"]
-test = ["deps-test", "deps-run", "tasks-build"]
+build = ["deps-build", "tasks-build"]
+test = ["deps-test", "deps-run"]
 test-oldest = ["deps-pip", "deps-test", "deps-run", "deps-run-oldest"]
-lint = ["deps-lint", "tasks-lint"]
+lint = ["deps-build", "deps-lint", "tasks-lint"]
 docs = ["deps-docs", "deps-run"]
