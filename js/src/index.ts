@@ -10,7 +10,7 @@ export async function main() {
     return;
   }
 
-  const { makeOneForm } = await import('./render');
+  const { makeOneForm } = await import('./render.js');
 
   containers.forEach(makeOneForm);
 }

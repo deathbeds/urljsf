@@ -7,7 +7,7 @@
   },
   "scripts": {
     "build": "cd js && yarn build",
-    "build:dist": "cd js && yarn build:dist",
+    "build:app": "cd js && yarn build:app",
     "build:lib": "cd js && yarn build:lib",
     "watch": "cd js && yarn watch"
   },
@@ -41,6 +41,7 @@
     ]
   },
   "devDependencies": {
+    "license-webpack-plugin": "^4.0.2",
     "prettier": "^3.3.3",
     "prettier-plugin-packagejson": "^2.5.2",
     "prettier-plugin-sort-json": "^4.0.0",

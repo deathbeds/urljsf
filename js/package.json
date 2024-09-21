@@ -3,12 +3,14 @@
   "version": "0.1.0",
   "description": "Build structured data files for pull requests with JSON schema",
   "license": "LICENSE",
+  "type": "module",
   "browser": "lib/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
-    "build": "yarn build:lib && yarn build:dist",
-    "build:dist": "webpack -c webpack.config.js",
+    "build": "yarn build:lib && yarn build:app",
+    "build:app": "webpack -c webpack.config.mjs",
     "build:lib": "tsc -b",
-    "watch:dist": "jlpm build:dist --watch --progress",
+    "watch:app": "jlpm build:app --watch --progress",
     "watch:lib": "jlpm build:lib --watch --verbose --preserveWatchOutput"
   },
   "dependencies": {

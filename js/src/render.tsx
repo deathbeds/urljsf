@@ -7,9 +7,9 @@ import { Fragment, render } from 'react-dom';
 import { useState } from 'react';
 import Form from '@rjsf/bootstrap-4';
 
-import { TDataSet } from './tokens';
+import type { TDataSet } from './tokens.js';
 
-import { fetchData, getFileContent, getDataSet } from './utils';
+import { fetchData, getFileContent, getDataSet } from './utils.js';
 
 export async function makeOneForm(container: HTMLElement): Promise<void> {
   const dataset = getDataSet(container);

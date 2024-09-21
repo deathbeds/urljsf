@@ -2,7 +2,7 @@
 // Distributed under the terms of the Modified BSD License.
 
 import { isObject } from '@rjsf/utils';
-import { TDataSet, TUrlKey, ALL_KEYS, DEFAULTS } from './tokens';
+import { TDataSet, TUrlKey, ALL_KEYS, DEFAULTS } from './tokens.js';
 
 export function getDataSet(el: HTMLElement): TDataSet {
   const dataset: TDataSet = {};

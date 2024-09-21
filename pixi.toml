@@ -8,7 +8,7 @@ platforms = ["linux-64", "osx-64", "osx-arm64", "win-64"]
 # aliases ######################################################################
 [tasks]
 # "build", "test", "dist", "docs", "check"
-dev = {depends-on = ["fix", "lint"]}
+dev = {depends-on = ["fix", "lint", "build"]}
 fix = {depends-on = [
   "fix-toml-taplo",
   "fix-js-dedupe",
@@ -16,6 +16,7 @@ fix = {depends-on = [
   "fix-py-ruff",
 ]}
 lint = {depends-on = ["lint-py-ruff"]}
+build = {depends-on = ["build-js-lib", "build-js-app"]}
 
 [tasks.prettier--]
 cmd = """
@@ -30,7 +31,7 @@ yarn prettier
 # tasks ########################################################################
 [feature.tasks-build.tasks.setup-js]
 cmd = "yarn"
-inputs = ["yarn.lock", "package.json", "js/package.json", ".yarnrc.yml"]
+inputs = ["{yarn.lock,package.json,.yarnrc.yml}", "js/package.json"]
 outputs = ["node_modules/.yarn-state.yml"]
 
 [feature.tasks-build.tasks.build-js-lib]
@@ -42,7 +43,7 @@ outputs = ["js/lib"]
 [feature.tasks-build.tasks.build-js-app]
 cmd = "yarn build:app"
 depends-on = ["build-js-lib"]
-inputs = ["node_modules/.yarn-state.yml", "js/lib", "js/webpack.config.js"]
+inputs = ["node_modules/.yarn-state.yml", "js/lib", "js/webpack.config.mjs"]
 outputs = ["js/dist"]
 
 [feature.tasks-build.tasks.build-js-dist]
