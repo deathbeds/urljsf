@@ -1,3 +1,6 @@
+// Copyright (C) prjsf contributors.
+// Distributed under the terms of the Modified BSD License.
+
 import { isObject } from '@rjsf/utils';
 import { TDataSet, TUrlKey, ALL_KEYS, DEFAULTS } from './tokens';
 

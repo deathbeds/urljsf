@@ -1,5 +1,6 @@
 """Tests of packaging metadata."""
 # Copyright (C) prjsf contributors.
+# Distributed under the terms of the Modified BSD License.
 
 
 def test_version() -> None:

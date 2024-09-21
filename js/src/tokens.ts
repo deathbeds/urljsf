@@ -1,3 +1,6 @@
+// Copyright (C) prjsf contributors.
+// Distributed under the terms of the Modified BSD License.
+
 export const META_KEYS = ['prjsfFileName', 'prjsfPruneEmpty'] as const;
 export const PROVIDER_KEYS = ['prjsfGithubUrl'] as const;
 export const URL_KEYS = ['prjsfData', 'prjsfSchema', 'prjsfUiSchema'] as const;

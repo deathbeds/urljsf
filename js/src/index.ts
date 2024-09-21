@@ -1,3 +1,6 @@
+// Copyright (C) prjsf contributors.
+// Distributed under the terms of the Modified BSD License.
+
 const SELECTOR = '[data-prjsf-github-url]';
 
 export async function main() {

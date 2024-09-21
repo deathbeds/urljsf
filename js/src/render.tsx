@@ -1,3 +1,6 @@
+// Copyright (C) prjsf contributors.
+// Distributed under the terms of the Modified BSD License.
+
 import type { FormProps } from '@rjsf/core';
 import validator from '@rjsf/validator-ajv8';
 import { Fragment, render } from 'react-dom';

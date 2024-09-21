@@ -1,5 +1,6 @@
 """A sphinx extension for ``prjsf``."""
 # Copyright (C) prjsf contributors.
+# Distributed under the terms of the Modified BSD License.
 
 from typing import Any
 
