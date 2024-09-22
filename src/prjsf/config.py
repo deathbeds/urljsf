@@ -15,11 +15,11 @@ TFormat = Literal["json", "toml", "yaml"]
 class Config:
     """Configuration for ``prjsf``."""
 
+    schema: Path
     github_url: str
     pr_filename: str = "data.json"
     html_filename: str = "index.html"
     html_title: str | None = None
-    schema: Path = Path("schema.json")
     schema_format: TFormat | None = None
     url_base: str = "./"
     output_dir: Path = Path("_prjsf_output")

@@ -8,7 +8,7 @@ platforms = ["linux-64", "osx-64", "osx-arm64", "win-64"]
 # aliases ######################################################################
 [tasks]
 # "test", "docs", "check"
-dev = {depends-on = ["fix", "lint", "build", "dist"]}
+dev = {depends-on = ["fix", "lint", "build", "dist", "test"]}
 fix = {depends-on = [
   "fix-toml-taplo",
   "fix-js-dedupe",
@@ -18,6 +18,7 @@ fix = {depends-on = [
 lint = {depends-on = ["lint-py-ruff"]}
 build = {depends-on = ["build-js-lib", "build-js-app", "build-py-static"]}
 dist = {depends-on = ["dist-npm", "dist-pypi", "dist-hash"]}
+test = {depends-on = ["test-pytest"]}
 
 [tasks.prettier--]
 cmd = """
@@ -132,7 +133,27 @@ cmd = """
     *.toml"""
 inputs = ["*.toml"]
 
-[feature.tasks-dev.tasks.dev-setup]
+[feature.tasks-dev.tasks.test-pip]
+cmd = """pixi r -e test pip-e--"""
+inputs = ["pyproject.toml"]
+
+[feature.tasks-test.tasks.test-pytest]
+cmd = """
+pytest
+  --html=build/reports/pytest.html
+  --self-contained-html
+  --cov-report=html:build/reports/htmlcov
+  --cov-report=term-missing:skip-covered
+  --cov=prjsf
+  --cov-branch
+  --cov-context=test
+  --no-cov-on-fail
+  --cov-fail-under=84
+"""
+depends-on = ["test-pip", "build-py-static"]
+inputs = ["{tests,src/prjsf}/**/*.py", "src/prjsf/{_static,_templates}"]
+
+[feature.tasks-dev.tasks.dev-pip]
 cmd = """pixi r -e dev pip-e--"""
 inputs = ["pyproject.toml"]
 
@@ -147,13 +168,15 @@ python = "3.9.*"
 
 [feature.deps-test.dependencies]
 pytest = ">=8"
+pytest-cov = "*"
+pytest-html = "*"
 coverage = ">=7"
+pytest-console-scripts = "*"
 
 [feature.deps-docs.dependencies]
 pydata-sphinx-theme = ">=0.15.4,<0.16.0a0"
 
 [feature.deps-build.dependencies]
-flit = ">=3.9.0,<4.0.0a0"
 nodejs = "22.*"
 yarn = "3.6.4"
 python-build = "*"
@@ -165,11 +188,12 @@ taplo = "*"
 
 [feature.deps-pip.dependencies]
 pip = "*"
+flit = ">=3.9.0,<4.0.0a0"
 
 # envs #########################################################################
 [environments]
-build = ["deps-build", "tasks-build"]
-test = ["deps-test", "deps-run"]
+build = ["deps-build", "tasks-build", "deps-pip"]
+test = ["deps-test", "deps-run", "deps-pip", "tasks-test"]
 test-oldest = ["deps-pip", "deps-test", "deps-run", "deps-run-oldest"]
 lint = ["deps-build", "deps-lint", "tasks-lint"]
 docs = ["deps-docs", "deps-run"]

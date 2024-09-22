@@ -43,6 +43,13 @@ class Prjsf:
         out_html = cfg.output_dir / cfg.html_filename
         out_html.write_text(rendered, encoding="utf-8")
         static = cfg.output_dir / "_static"
+
+        for in_file in [cfg.schema, cfg.ui_schema, cfg.data]:
+            if in_file is None:
+                continue
+            out_file = cfg.output_dir / in_file.name
+            out_file.write_bytes(cfg.schema.read_bytes())
+
         if static.exists():
             shutil.rmtree(static)
         shutil.copytree(STATIC, static)

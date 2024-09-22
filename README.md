@@ -58,6 +58,8 @@ The `prjsf` command line generates a ready-to-serve site.
 prsf --help
 ```
 
+It requires a `schema` file and `github-url`, but offers a number options.
+
 ### Sphinx
 
 `prjsf`
@@ -92,3 +94,10 @@ Embed forms with the `prform` directive:
     uri_template: https://github.com/org/repo/
     schema: ../my-form.schema.json
 ```
+
+## Open Source
+
+This tool is licensed under the `BSD-3-Clause` license.
+
+It includes third-party JavaScript and CSS, licensed variously under the `MIT`,
+`BSD-3-Clause` and `ISC` licenses.

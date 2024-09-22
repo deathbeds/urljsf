@@ -54,3 +54,20 @@ isort.known-first-party = ["prjsf"]
 "tests/**/*.py" = ["S101", "PLC0415"]
 "sphinxext.py" = ["ANN401", "RUF012"]
 "conf.py" = ["INP001"]
+
+[tool.pytest.ini_options]
+cache_dir = "build/.cache/pytest"
+generate_report_on_test = true
+script_launch_mode = "subprocess"
+testpaths = ["tests"]
+addopts = ["--color=yes", "-Werror", "--tb=long", "-vv"]
+
+[tool.coverage.run]
+data_file = "build/reports/.coverage"
+disable_warnings = [
+  "no-data-collected",
+  "module-not-measured",
+]
+
+[tool.coverage.html]
+show_contexts = true

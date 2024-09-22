@@ -7,7 +7,6 @@ For more complex use cases, please use ``prjsf.sphinxext``.
 
 from __future__ import annotations
 
-import sys
 from argparse import ArgumentParser
 from pathlib import Path
 
@@ -19,8 +18,8 @@ from .prjsf import Prjsf
 def get_parser() -> ArgumentParser:
     """Get a parser for the command line arguments."""
     parser = ArgumentParser(__dist__, add_help=False)
-    parser.add_argument("-s", "--schema", type=Path, help="path to a JSON Schema")
-    parser.add_argument("-g", "--github-url", help="the full branch URL to target")
+    parser.add_argument(dest="schema", type=Path, help="path to a JSON Schema")
+    parser.add_argument(dest="github_url", help="the full branch URL to target")
     parser.add_argument(
         "-o",
         "--output-dir",
@@ -55,7 +54,3 @@ def main(argv: list[str] | None = None) -> int:
     config = Config(**vars(parser.parse_args(argv)))
     prjsf = Prjsf(config)
     return prjsf.run_cli()
-
-
-if __name__ == "__main__":
-    sys.exit(main(sys.argv[1:]))
