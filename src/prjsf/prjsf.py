@@ -5,7 +5,6 @@
 from __future__ import annotations
 
 import json
-import shutil
 from logging import Logger, getLogger
 from typing import TYPE_CHECKING, Any
 
@@ -84,15 +83,13 @@ class Prjsf:
     @staticmethod
     def deploy_static(path: Path) -> None:
         """Copy the static assets into the right place."""
-        if not path.parent.exists():
-            path.parent.mkdir(exist_ok=True)
-        if path.exists():
-            shutil.rmtree(path)
-        shutil.copytree(STATIC, path)
-
-    def get_cli_context(self) -> dict[str, Any]:
-        """Get the rendering context."""
-        return {"title": self.config.title}
+        for child in STATIC.rglob("*"):
+            if child.is_dir():
+                continue
+            rel = str(child.relative_to(STATIC))
+            dest = path / rel
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            dest.write_bytes(child.read_bytes())
 
     def import_dotted(self, dotted: str) -> tuple[str, dict[str, Any]]:
         """Generate a JSON file from a dotted python import."""
