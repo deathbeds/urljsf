@@ -1,0 +1,9 @@
+{
+  "title": "Hello Form",
+  "properties": {
+    "note": {
+      "type": "string",
+      "description": "Make something up."
+    }
+  }
+}

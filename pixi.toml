@@ -8,7 +8,7 @@ platforms = ["linux-64", "osx-64", "osx-arm64", "win-64"]
 # aliases ######################################################################
 [tasks]
 # "test", "docs", "check"
-dev = {depends-on = ["fix", "lint", "build", "dist", "test"]}
+dev = {depends-on = ["fix", "lint", "build", "dist", "test", "docs"]}
 fix = {depends-on = [
   "fix-toml-taplo",
   "fix-js-dedupe",
@@ -19,6 +19,7 @@ lint = {depends-on = ["lint-py-ruff"]}
 build = {depends-on = ["build-js-lib", "build-js-app", "build-py-static"]}
 dist = {depends-on = ["dist-npm", "dist-pypi", "dist-hash"]}
 test = {depends-on = ["test-pytest"]}
+docs = {depends-on = ["docs-sphinx"]}
 
 [tasks.prettier--]
 cmd = """
@@ -148,7 +149,7 @@ pytest
   --cov-branch
   --cov-context=test
   --no-cov-on-fail
-  --cov-fail-under=84
+  --cov-fail-under=94
 """
 depends-on = ["test-pip", "build-py-static"]
 inputs = ["{tests,src/prjsf}/**/*.py", "src/prjsf/{_static,_templates}"]
@@ -156,6 +157,46 @@ inputs = ["{tests,src/prjsf}/**/*.py", "src/prjsf/{_static,_templates}"]
 [feature.tasks-dev.tasks.dev-pip]
 cmd = """pixi r -e dev pip-e--"""
 inputs = ["pyproject.toml"]
+
+[feature.tasks-docs.tasks.docs-pip]
+cmd = """pixi r -e docs pip-e--"""
+inputs = ["pyproject.toml"]
+
+[feature.tasks-docs.tasks.docs-sphinx]
+inputs = [
+  "*.md",
+  "*.toml",
+  "src/**/*.py",
+  "dist/*.whl",
+  "docs/**/*.{css,ipynb,md,py}",
+  "!**/.ipynb_checkpoints",
+]
+depends-on = ["docs-pip"]
+outputs = ["build/docs/.buildinfo"]
+cmd = """
+  export PYDEVD_DISABLE_FILE_VALIDATION=1
+  && sphinx-build -W --keep-going --color -b html docs build/docs
+"""
+
+[feature.tasks-docs.tasks.docs-watch]
+depends-on = ["docs-pip"]
+cmd = """
+rm -rf build/watch-docs
+&& sphinx-autobuild docs build/watch-docs
+  --write-all
+  --jobs 8
+  --color
+  --watch src
+"""
+
+# envs #########################################################################
+[environments]
+build = ["deps-build", "tasks-build", "deps-pip"]
+test = ["deps-test", "deps-run", "deps-pip", "tasks-test"]
+test-oldest = ["deps-pip", "deps-test", "deps-run", "deps-run-oldest"]
+lint = ["deps-build", "deps-lint", "tasks-lint"]
+docs = ["deps-docs", "deps-run", "deps-build", "deps-pip", "tasks-docs"]
+dev = ["deps-build", "deps-test", "deps-docs", "deps-lint", "deps-pip", "tasks-dev"]
 
 # deps #########################################################################
 [feature.deps-run.dependencies]
@@ -175,6 +216,10 @@ pytest-console-scripts = "*"
 
 [feature.deps-docs.dependencies]
 pydata-sphinx-theme = ">=0.15.4,<0.16.0a0"
+myst-nb = "*"
+sphinx-autodoc-typehints = "*"
+sphinx-copybutton = "*"
+sphinx-autobuild = "*"
 
 [feature.deps-build.dependencies]
 nodejs = "22.*"
@@ -190,11 +235,36 @@ taplo = "*"
 pip = "*"
 flit = ">=3.9.0,<4.0.0a0"
 
-# envs #########################################################################
-[environments]
-build = ["deps-build", "tasks-build", "deps-pip"]
-test = ["deps-test", "deps-run", "deps-pip", "tasks-test"]
-test-oldest = ["deps-pip", "deps-test", "deps-run", "deps-run-oldest"]
-lint = ["deps-build", "deps-lint", "tasks-lint"]
-docs = ["deps-docs", "deps-run"]
-dev = ["deps-build", "deps-test", "deps-docs", "deps-lint", "deps-pip", "tasks-dev"]
+# tools ########################################################################
+[tool.sphinx]
+exclude_patterns = ["rtd.rst"]
+author = "{{ ppt.project.authors[0].name }}"
+project = "{{ ppt.project.name }}"
+copyright = "2024, {{ ppt.project.authors[0].name }}"
+release = "{{ ppt.project.version }}"
+version = "{{ ppt.project.version }}"
+extensions = [
+  "sphinx.ext.autodoc",
+  "sphinx_autodoc_typehints",
+  "sphinx.ext.intersphinx",
+  "sphinx.ext.viewcode",
+  "myst_nb",
+  "sphinx.ext.autosectionlabel",
+  "sphinx_copybutton",
+  "prjsf.sphinxext",
+]
+suppress_warnings = ["autosectionlabel.*"]
+
+## autodoc
+autoclass_content = "both"
+always_document_param_types = true
+typehints_defaults = "comma"
+typehints_use_signature_return = true
+autodoc_default_options = {members = true, show-inheritance = true, undoc-members = true}
+autosectionlabel_prefix_document = true
+
+## myst
+myst_heading_anchors = 3
+
+## theme
+html_theme = "pydata_sphinx_theme"

@@ -1,3 +1,4 @@
+{%- import "prjsf/_form.j2" as form with context -%}
 <!doctype html>
 <html>
   {% block html_head %}
@@ -24,16 +25,7 @@
         <div class="bs-content">
           <div class="bs-article-container">
             <section>
-              <div
-                data-prjsf-github-url="{{ github_url }}"
-                data-prjsf-schema="{{ schema.name }}"
-                {% if data_format %}data-prjsf-data-format="{{ data_format }}"{% endif %}
-                {% if data %}data-prjsf-data="{{ data.name }}"{% endif %}
-                {% if pr_filename %}data-prjsf-file-name="{{ pr_filename }}"{% endif %}
-                {% if schema_format %}data-prjsf-schema-format="{{ schema_format }}"{% endif %}
-                {% if ui_schema_format %}data-prjsf-ui-schema-format="{{ ui_schema_format }}"{% endif %}
-                {% if ui_schema %}data-prjsf-ui-schema="{{ ui_schema.name }}"{% endif %}
-              ></div>
+              {{ form.prjsf() }}
             </section>
           </div>
         </div>

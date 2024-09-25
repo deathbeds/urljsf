@@ -1,0 +1,12 @@
+{% macro prjsf() %}
+<div
+data-prjsf-github-url="{{ github_url }}"
+data-prjsf-schema="{{ url_base }}{{ schema.name }}"
+{% if data_format %}data-prjsf-data-format="{{ data_format }}"{% endif %}
+{% if data %}data-prjsf-data="{{ url_base }}{{ data.name }}"{% endif %}
+{% if pr_filename %}data-prjsf-file-name="{{ pr_filename }}"{% endif %}
+{% if schema_format %}data-prjsf-schema-format="{{ schema_format }}"{% endif %}
+{% if ui_schema_format %}data-prjsf-ui-schema-format="{{ ui_schema_format }}"{% endif %}
+{% if ui_schema %}data-prjsf-ui-schema="{{ url_base }}{{ ui_schema.name }}"{% endif %}
+></div>
+{% endmacro %}
