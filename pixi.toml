@@ -59,6 +59,14 @@ depends-on = ["build-js-lib"]
 inputs = ["node_modules/.yarn-state.yml", "js/lib", "js/webpack.config.mjs"]
 outputs = ["js/dist"]
 
+[feature.tasks-build.tasks.watch-js-lib]
+cmd = "yarn build:lib --watch"
+depends-on = ["setup-js"]
+
+[feature.tasks-build.tasks.watch-js-app]
+cmd = "yarn build:app --watch"
+depends-on = ["setup-js"]
+
 [feature.tasks-build.tasks.build-py-static]
 cmd = """
 rm -rf src/prjsf/_static/
@@ -71,6 +79,12 @@ rm -rf src/prjsf/_static/
 depends-on = ["build-js-app"]
 inputs = ["js/dist"]
 outputs = ["src/prjsf/_static", "!**/demo/"]
+
+[feature.tasks-build.tasks.watch-py-static]
+cmd = """
+watchfiles "pixi r build-py-static" js/dist
+"""
+
 
 [feature.tasks-build.tasks.dist-npm]
 cmd = "mkdir -p dist && cd dist && npm pack ../js"
@@ -225,6 +239,7 @@ sphinx-autobuild = "*"
 nodejs = "22.*"
 yarn = "3.6.4"
 python-build = "*"
+watchfiles = "*"
 
 [feature.deps-lint.dependencies]
 ruff = "*"

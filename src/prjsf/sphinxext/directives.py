@@ -18,7 +18,7 @@ from ..prjsf import Prjsf
 
 
 def a_format(argument: str) -> str:
-    """Conversion function for the "align" option."""
+    """Conversion function for the ``*-format`` options."""
     return directives.choice(argument, TFORMATS)
 
 
@@ -35,6 +35,8 @@ class PrForm(SphinxDirective):
         "ui-schema-format": a_format,
         "data": directives.path,
         "data-format": a_format,
+        "id-prefix": directives.unchanged,
+        "filename": directives.uri,
     }
     _prsjf: Prjsf | None
 
@@ -56,9 +58,22 @@ class PrForm(SphinxDirective):
         rel = os.path.relpath(self.env.app.srcdir, here)
         url_base = f"{rel}/_static/pr-form/"
 
+        data = self.options.get("data")
+        ui_schema = self.options.get("ui-schema")
+
         return Config(
+            # meta
             template="prjsf/sphinx.j2",
-            schema=Path(here / self.options["schema"]),
-            github_url=self.options["github-url"],
             url_base=url_base,
+            id_prefix=self.options.get("id-prefix"),
+            # required
+            github_url=self.options["github-url"],
+            schema=here / self.options["schema"],
+            # optional
+            schema_format=self.options.get("schema-format"),
+            pr_filename=self.options.get("filename"),
+            data=(here / data) if data else data,
+            data_format=self.options.get("data-format"),
+            ui_schema=(here / ui_schema) if ui_schema else ui_schema,
+            ui_schema_format=self.options.get("ui-schema-format"),
         )

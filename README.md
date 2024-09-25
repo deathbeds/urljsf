@@ -1,17 +1,34 @@
 # `prjsf`
 
-> Build structured data files for pull requests with JSON schema
+> Build structured data files for pull requests from JSON schema
 
 _Powered by [react-json-schema-form](https://react-jsonschema-form.readthedocs.io)._
 
 While GitHub provides semi-structured templates for _Pull Requests_ (PR) and _Issues_,
-these are not great for structured requests, and the output requires heuristics for
-parsing the markdown they generate.
+these are poor for structured requests that drive automation, requiring API tokens and
+"clever" tricks for fetching and then parsing the markdown they generate.
 
 With a `prjsf`-built form on a static web host, users:
 
-- work with a precise, documented data structure
-- propose a single file in a PR on a GitHub fork
+- work with a precise, [JSON Schema][json-schema]-constrained data structure
+- click to propose a single file (`.json`, `.yaml`, or `.toml`) in a PR on a GitHub fork
+- see automation on a branch the user owns
+
+[json-schema]: https://json-schema.org
+
+## Alternatives
+
+- GitHub
+  [issue and PR templates](https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests)
+
+## Limitations
+
+- presently only the `bootstrap`-based theme for `react-json-schema-form` is provided
+- `react-json-schema-form` cannot represent all possible data structures, such as
+  writing a _new_ JSON schema in JSON schema, or many features added after Draft 7
+- "advanced" YAML features such as anchors and tags are not supported
+- can only propose a single file per form
+- the [`sphinx`](#sphinx) integration can only target the `-b html` builder
 
 ## Install
 
@@ -48,11 +65,12 @@ With a `prjsf`-built form on a static web host, users:
 ## Usage
 
 `prjsf` works as a standalone site generator for simple sites, or integrates with the
-`sphinx` documentation systems.
+`sphinx` documentation system.
 
 ### Command Line
 
-The `prjsf` command line generates a ready-to-serve site.
+The `prjsf` command line generates a ready-to-serve, standalone site with all required
+static assets.
 
 ```bash
 prsf --help
@@ -62,7 +80,10 @@ It requires a `schema` file and `github-url`, but offers a number options.
 
 ### Sphinx
 
-`prjsf`
+`prjsf` was originally built as a pile of `jinja2` hacks to embed in `sphinx` sites
+built by [jupyak](https://github.com/deathbeds/jupyak).
+
+`prjsf.sphinxext` formalizes some of these hacks into a mostly-usable pattern.
 
 #### Configuration
 
@@ -86,18 +107,26 @@ prjsf = {
 
 #### Write
 
-Embed forms with the `prform` directive:
+Embed forms with the `pr-form` directive in an `.rst` file:
 
 ```rst
 
-.. prform:
-    uri_template: https://github.com/org/repo/
-    schema: ../my-form.schema.json
+.. pr-form: https://github.com/some-org/some-repo/new/some-branch
+    schema: my-form.schema.json
 ```
+
+... or an `.md` file:
+
+````md
+```{pr-form} https://github.com/some-org/some-repo/new/some-branch
+:schema: my-form.schema.json
+```
+````
 
 ## Open Source
 
-This tool is licensed under the `BSD-3-Clause` license.
+`prjsf` includes third-party JavaScript and CSS, licensed variously under the `MIT`,
+`BSD-3-Clause` and `ISC` licenses, provided in the distributions
 
-It includes third-party JavaScript and CSS, licensed variously under the `MIT`,
-`BSD-3-Clause` and `ISC` licenses.
+`prjsf` itself is licensed under the `BSD-3-Clause` license. You can do whatever you
+want with it.

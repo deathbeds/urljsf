@@ -8,5 +8,6 @@ data-prjsf-schema="{{ url_base }}{{ schema.name }}"
 {% if schema_format %}data-prjsf-schema-format="{{ schema_format }}"{% endif %}
 {% if ui_schema_format %}data-prjsf-ui-schema-format="{{ ui_schema_format }}"{% endif %}
 {% if ui_schema %}data-prjsf-ui-schema="{{ url_base }}{{ ui_schema.name }}"{% endif %}
+{% if id_prefix %}data-prjsf-id-prefix="{{ id_prefix }}"{% endif %}
 ></div>
 {% endmacro %}

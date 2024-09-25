@@ -45,6 +45,8 @@ export function formComponent(dataset: TDataSet, props: Partial<FormProps>) {
       updateUrl();
     };
 
+    const idPrefix = dataset.prjsfIdPrefix || void 0;
+
     if (!value) {
       void updateFormData(formData);
     }
@@ -53,6 +55,7 @@ export function formComponent(dataset: TDataSet, props: Partial<FormProps>) {
       schema: {},
       validator,
       liveValidate: true,
+      idPrefix,
       onChange: async ({ formData }) => await updateFormData(formData),
       ...props,
     };
