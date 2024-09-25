@@ -16,14 +16,14 @@ if TYPE_CHECKING:
 class Config:
     """Configuration for ``prjsf``."""
 
-    # required
+    # required...
     github_url: str
-    schema: Path
-    # app
-    log_level: str = "DEBUG"
-    # meta
+    # at least one of...
+    schema: Path | None = None
+    py_schema: str | None = None
+    # meta...
     url_base: str = "./"
-    # end up as data- attributes
+    # end up as ``data-`` attributes..
     schema_format: TFormat | None = None
     id_prefix: str | None = None
     pr_filename: str = "data.json"
@@ -31,12 +31,15 @@ class Config:
     data: Path | None = None
     ui_schema: Path | None = None
     ui_schema_format: TFormat | None = None
-    # cli
+    # cli...
     html_filename: str = "index.html"
     html_title: str | None = None
     output_dir: Path = Path("_prjsf_output")
     template: str = "prjsf/standalone.j2"
     extra_template_paths: list[Path] = field(default_factory=list)
+    # app...
+    log_level: str = "DEBUG"
+    # more?
 
 
 DEFAULTS = {fn: f.default for fn, f in Config.__dataclass_fields__.items()}

@@ -7,10 +7,16 @@ from __future__ import annotations
 import json
 from typing import TYPE_CHECKING
 
+import pytest
+
 if TYPE_CHECKING:
     from pathlib import Path
 
     from pytest_console_scripts import ScriptRunner
+
+SIMPLE_SCHEMA = {"type": "object", "properties": {"foo": {"type": "string"}}}
+GH = ["-g", "https://github.com/org/repo/new/branch"]
+UTF8 = {"encoding": "utf-8"}
 
 
 def test_cli_help(script_runner: ScriptRunner) -> None:
@@ -29,19 +35,62 @@ def test_cli_version(script_runner: ScriptRunner) -> None:
 
 def test_cli_run(script_runner: ScriptRunner, tmp_path: Path) -> None:
     """Verify a site is built."""
-    (tmp_path / "schema.json").write_text(
-        json.dumps({"type": "object", "properties": {"foo": {"type": "string"}}}),
-        encoding="utf-8",
-    )
+    (tmp_path / "schema.json").write_text(json.dumps(SIMPLE_SCHEMA), **UTF8)
+    r = script_runner.run(["prjsf", *GH, "-s", "schema.json"], cwd=str(tmp_path))
+    assert r.success
+    assert_outputs(tmp_path)
+
+
+@pytest.mark.parametrize("py_style", ["simple", "nested"])
+def test_cli_run_py(
+    script_runner: ScriptRunner, py_tmp_path: Path, py_style: str
+) -> None:
+    """Verify a site is built with a python schema."""
+    if py_style == "simple":
+        (py_tmp_path / "schema.py").write_text(
+            f"""SCHEMA = {json.dumps(SIMPLE_SCHEMA)}""", **UTF8
+        )
+        dotted = "schema:SCHEMA"
+        extra_files = ["schema-schema.json"]
+    elif py_style == "nested":
+        nested = py_tmp_path / "nested"
+        nested.mkdir()
+        (nested / "__init__.py").write_text("# empty", **UTF8)
+        (nested / "schema.py").write_text(
+            f"""get_schema = lambda: {json.dumps(SIMPLE_SCHEMA)}""", **UTF8
+        )
+        dotted = "nested.schema:get_schema"
+        extra_files = ["nested.schema-get_schema.json"]
+
     r = script_runner.run(
-        ["prjsf", "schema.json", "https://github.com/foo/bar/baz"], cwd=str(tmp_path)
+        ["prjsf", *GH, "--py-schema", dotted],
+        cwd=str(py_tmp_path),
     )
     assert r.success
-    out = tmp_path / "_prjsf_output"
+    assert_outputs(py_tmp_path, extra_files=extra_files)
+
+
+def assert_outputs(
+    path: Path, *, out: Path | None = None, extra_files: list[Path] | None = None
+) -> None:
+    """Assert a number of files exist."""
     expected = [
         "index.html",
         "_static/prjsf/third-party-licenses.json",
         "_static/vendor/bootstrap/LICENSE",
     ]
+    out = out or (path / "_prjsf_output")
+    missing = {}
+
     for rel in expected:
-        assert (out / rel).exists()
+        if not (out / rel).exists():
+            missing[out / rel] = True
+
+    for file_ in extra_files or []:
+        if not (out / file_).exists():
+            missing[out / file_] = True
+
+    if missing:
+        print("\n".join(map(str, path.rglob("*"))))
+
+    assert not missing

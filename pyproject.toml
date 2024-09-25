@@ -51,7 +51,7 @@ flake8-copyright.notice-rgx = '''
 isort.known-first-party = ["prjsf"]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/**/*.py" = ["S101", "PLC0415", "T201"]
+"tests/**/*.py" = ["S101", "PLC0415", "T201", "DOC402"]
 "**/sphinxext/*.py" = ["TID252", "ANN401", "ARG001"]
 "conf.py" = ["INP001"]
 
@@ -67,6 +67,14 @@ data_file = "build/reports/.coverage"
 disable_warnings = [
   "no-data-collected",
   "module-not-measured",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+  "except ImportError as err:",
+  "if TYPE_CHECKING:",
+  """if __name__ == "__main__":""",
+  "pragma: no cover",
 ]
 
 [tool.coverage.html]

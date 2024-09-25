@@ -3,10 +3,13 @@
 # Copyright (C) prjsf contributors.
 # Distributed under the terms of the Modified BSD License.
 import json
+import sys
 from pathlib import Path
 
 import tomllib
 from jinja2 import Template
+
+sys.path += [str(Path(__file__).parent)]
 
 HERE = Path(__file__).parent
 ROOT = HERE.parent
@@ -19,3 +22,11 @@ SPX = json.loads(
 )
 
 globals().update(SPX)
+
+# this is used in an example
+PY_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "foo": {"type": "string"},
+    },
+}

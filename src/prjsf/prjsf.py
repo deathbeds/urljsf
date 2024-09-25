@@ -4,6 +4,7 @@
 # Distributed under the terms of the Modified BSD License.
 from __future__ import annotations
 
+import json
 import shutil
 from logging import Logger, getLogger
 from typing import TYPE_CHECKING, Any
@@ -46,11 +47,11 @@ class Prjsf:
         """Generate output."""
         cfg = self.config
         self.log.debug("config: %s", cfg)
+        self.deploy_form_files(cfg.output_dir)
         rendered = self.render()
         cfg.output_dir.mkdir(parents=True, exist_ok=True)
         out_html = cfg.output_dir / cfg.html_filename
         out_html.write_text(rendered, encoding="utf-8")
-        self.deploy_form_files(cfg.output_dir)
         self.deploy_static(cfg.output_dir / "_static")
         return 0
 
@@ -61,11 +62,17 @@ class Prjsf:
         if not path.exists():
             path.mkdir(parents=True)
 
+        if cfg.py_schema:
+            name, raw = self.import_dotted(cfg.py_schema)
+            dest = path / name
+            dest.write_text(json.dumps(raw, indent=2), encoding="utf-8")
+            cfg.schema = dest
+
         for in_file in [cfg.schema, cfg.ui_schema, cfg.data]:
             if in_file is None:
                 continue
             out_file = path / in_file.name
-            out_file.write_bytes(cfg.schema.read_bytes())
+            out_file.write_bytes(in_file.read_bytes())
 
     def render(self) -> str:
         """Render a template."""
@@ -86,3 +93,21 @@ class Prjsf:
     def get_cli_context(self) -> dict[str, Any]:
         """Get the rendering context."""
         return {"title": self.config.title}
+
+    def import_dotted(self, dotted: str) -> tuple[str, dict[str, Any]]:
+        """Generate a JSON file from a dotted python import."""
+        module_path, member = dotted.split(":")
+        submodules = module_path.split(".")[1:]
+        current = __import__(module_path)
+        for sub in submodules:
+            current = getattr(current, sub)
+        final = getattr(current, member)
+        if callable(final):
+            final = final()
+        return self.dotted_name(dotted), final
+
+    @staticmethod
+    def dotted_name(dotted: str) -> str:
+        """Get a filename for a dotted import."""
+        module_path, member = dotted.split(":")
+        return f"{module_path}-{member}.json".lower()

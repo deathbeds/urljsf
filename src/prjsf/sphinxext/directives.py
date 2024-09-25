@@ -30,6 +30,7 @@ class PrForm(SphinxDirective):
     option_spec: ClassVar = {
         "github-url": directives.uri,
         "schema": directives.path,
+        "py-schema": directives.unchanged,
         "schema-format": a_format,
         "ui-schema": directives.path,
         "ui-schema-format": a_format,
@@ -58,6 +59,7 @@ class PrForm(SphinxDirective):
         rel = os.path.relpath(self.env.app.srcdir, here)
         url_base = f"{rel}/_static/pr-form/"
 
+        schema = self.options.get("schema")
         data = self.options.get("data")
         ui_schema = self.options.get("ui-schema")
 
@@ -68,7 +70,8 @@ class PrForm(SphinxDirective):
             id_prefix=self.options.get("id-prefix"),
             # required
             github_url=self.options["github-url"],
-            schema=here / self.options["schema"],
+            schema=(here / schema) if schema else None,
+            py_schema=self.options.get("py-schema"),
             # optional
             schema_format=self.options.get("schema-format"),
             pr_filename=self.options.get("filename"),
