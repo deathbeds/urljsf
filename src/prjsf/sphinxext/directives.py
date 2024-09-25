@@ -5,8 +5,8 @@
 from __future__ import annotations
 
 import os
-import pprint
 from pathlib import Path
+from typing import ClassVar
 
 from docutils import nodes
 from docutils.parsers.rst import directives
@@ -17,7 +17,7 @@ from ..constants import TFORMATS
 from ..prjsf import Prjsf
 
 
-def a_format(argument: str):
+def a_format(argument: str) -> str:
     """Conversion function for the "align" option."""
     return directives.choice(argument, TFORMATS)
 
@@ -27,7 +27,7 @@ class PrForm(SphinxDirective):
 
     optional_arguments = 1
     has_content = True
-    option_spec = {
+    option_spec: ClassVar = {
         "github-url": directives.uri,
         "schema": directives.path,
         "schema-format": a_format,
@@ -41,14 +41,6 @@ class PrForm(SphinxDirective):
     def run(self) -> list[nodes.Node]:
         """Generate a single RJSF form."""
         self._prjsf = Prjsf(self._options_to_config())
-        self._prjsf.log.error(
-            "\n%s\n",
-            pprint.pformat({"doc": sorted(self.state.document.__dict__.items())}),
-        )
-        self._prjsf.log.error(
-            "\n%s\n",
-            pprint.pformat({"env": sorted(self.env.app.builder.__dict__.items())}),
-        )
         attrs = {"class": "prsf"}
         self._prjsf.deploy_form_files(
             Path(self.env.app.builder.outdir) / "_static/pr-form"

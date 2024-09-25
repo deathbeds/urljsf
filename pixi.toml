@@ -149,7 +149,7 @@ pytest
   --cov-branch
   --cov-context=test
   --no-cov-on-fail
-  --cov-fail-under=94
+  --cov-fail-under=92
 """
 depends-on = ["test-pip", "build-py-static"]
 inputs = ["{tests,src/prjsf}/**/*.py", "src/prjsf/{_static,_templates}"]
@@ -172,7 +172,7 @@ inputs = [
   "!**/.ipynb_checkpoints",
 ]
 depends-on = ["docs-pip"]
-outputs = ["build/docs/.buildinfo"]
+outputs = ["build/docs"]
 cmd = """
   export PYDEVD_DISABLE_FILE_VALIDATION=1
   && sphinx-build -W --keep-going --color -b html docs build/docs

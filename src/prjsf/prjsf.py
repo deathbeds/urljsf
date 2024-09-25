@@ -1,16 +1,21 @@
 """Main application for ``prjsf``."""
+
 # Copyright (C) prjsf contributors.
 # Distributed under the terms of the Modified BSD License.
+from __future__ import annotations
 
 import shutil
 from logging import Logger, getLogger
-from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import jinja2
 
-from .config import Config
 from .constants import STATIC, TEMPLATES, __dist__
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from .config import Config
 
 
 class Prjsf:
@@ -28,7 +33,8 @@ class Prjsf:
         self.log.debug("prjsf config: %s", self.config)
         self.init_env()
 
-    def init_env(self):
+    def init_env(self) -> None:
+        """Prepare a jinja environment."""
         loader = jinja2.FileSystemLoader(
             searchpath=[TEMPLATES, *self.config.extra_template_paths],
         )
@@ -49,6 +55,7 @@ class Prjsf:
         return 0
 
     def deploy_form_files(self, path: Path) -> None:
+        """Copy the schema, uiSchema, and data files."""
         cfg = self.config
 
         if not path.exists():
@@ -61,6 +68,7 @@ class Prjsf:
             out_file.write_bytes(cfg.schema.read_bytes())
 
     def render(self) -> str:
+        """Render a template."""
         cfg = self.config
         self.log.debug("rendering: %s", cfg)
         tmpl = self.env.get_template(cfg.template)

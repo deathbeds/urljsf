@@ -27,6 +27,7 @@ SCHEMA_JSON = """
 
 
 def test_sphinx(script_runner: ScriptRunner, tmp_path: Path) -> None:
+    """Verify a basic site builds."""
     src = tmp_path / "src"
     build = tmp_path / "build"
     src.mkdir()

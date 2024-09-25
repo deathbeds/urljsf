@@ -22,12 +22,20 @@ SPHINX_EXT_INFO = {
 
 
 def deploy_static(app: Sphinx, _err: Exception | None) -> None:
+    """Copy all static assets.
+
+    Should only deploy bootstrap if asked.
+    """
     Prjsf.deploy_static(Path(app.builder.outdir) / "_static/prjsf")
 
 
 def add_to_page(
     app: Sphinx, pagename: str, templatename: str, context: dict, event_arg: Any
 ) -> None:
+    """Add js/css to the page.
+
+    Should only do so if needed/asked.
+    """
     app.add_js_file("prjsf/prjsf/prjsf.js", type="module")
     ext_config = app.config["prjsf"]
     if ext_config.get("add_bootstrap_css"):
