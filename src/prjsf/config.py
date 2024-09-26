@@ -33,6 +33,7 @@ class Config:
     ui_schema: Path | None = None
     py_ui_schema: str | None = None
     ui_schema_format: TFormat | None = None
+    prune_empty: bool = (True,)
     # cli...
     html_filename: str = "index.html"
     html_title: str | None = None

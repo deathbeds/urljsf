@@ -22,6 +22,11 @@ def a_format(argument: str) -> str:
     return directives.choice(argument, TFORMATS)
 
 
+def a_boolish(argument: str) -> str:
+    """Conversion function for ."""
+    return directives.choice(argument.lower(), ["true", "false"])
+
+
 class PrForm(SphinxDirective):
     """Class for the ``pr-form`` directive."""
 
@@ -40,6 +45,7 @@ class PrForm(SphinxDirective):
         "data-format": a_format,
         "id-prefix": directives.unchanged,
         "filename": directives.uri,
+        "prune-empty": a_boolish,
     }
     _prsjf: Prjsf | None
 
@@ -83,4 +89,5 @@ class PrForm(SphinxDirective):
             ui_schema=(here / ui_schema) if ui_schema else ui_schema,
             py_ui_schema=self.options.get("py-ui-schema"),
             ui_schema_format=self.options.get("ui-schema-format"),
+            prune_empty=self.options.get("prune-empty"),
         )

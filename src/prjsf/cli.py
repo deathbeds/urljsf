@@ -21,27 +21,14 @@ def get_parser() -> ArgumentParser:
     parser.add_argument("-g", "--github-url", help="the full branch URL to target")
     parser.add_argument("-s", "--schema", type=Path, help="path to a JSON Schema")
     parser.add_argument(
-        "-p",
-        "--py-schema",
-        help="a schema from a python.module:member e.g. foo.bar:baz",
-    )
-    parser.add_argument(
         "-u",
         "--ui-schema",
         help="an rjsf UI schema",
     )
     parser.add_argument(
-        "--py-ui-schema",
-        help="an rjsf UI schema from a python.module:member e.g. foo.bar:baz",
-    )
-    parser.add_argument(
         "-d",
         "--data",
         help="an initial data document",
-    )
-    parser.add_argument(
-        "--py-data",
-        help="an initial data document from e.g. foo.bar:baz",
     )
     parser.add_argument(
         "-o",
@@ -57,14 +44,30 @@ def get_parser() -> ArgumentParser:
         default=DEFAULTS["html_filename"],
     )
     parser.add_argument(
+        "--py-schema",
+        help="a schema from a python.module:member e.g. foo.bar:baz",
+    )
+    parser.add_argument(
+        "--py-ui-schema",
+        help="an rjsf UI schema from a python.module:member e.g. foo.bar:baz",
+    )
+    parser.add_argument(
+        "--py-data",
+        help="an initial data document from e.g. foo.bar:baz",
+    )
+    parser.add_argument(
+        "--html-title",
+        help="HTML page title",
+    )
+    parser.add_argument(
+        "--prune-empty",
+        help="title",
+    )
+    parser.add_argument(
         "-t",
         "--template",
         help="name of the template to use",
         default=DEFAULTS["template"],
-    )
-    parser.add_argument(
-        "--html-title",
-        help="title",
     )
     parser.add_argument("--help", action="help", help="show program's usage and exit")
     parser.add_argument("--version", action="version", version=__version__)
