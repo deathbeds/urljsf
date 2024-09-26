@@ -18,12 +18,30 @@ from .prjsf import Prjsf
 def get_parser() -> ArgumentParser:
     """Get a parser for the command line arguments."""
     parser = ArgumentParser(__dist__, add_help=False)
-    parser.add_argument("-s", "--schema", type=Path, help="path to a JSON Schema")
     parser.add_argument("-g", "--github-url", help="the full branch URL to target")
+    parser.add_argument("-s", "--schema", type=Path, help="path to a JSON Schema")
     parser.add_argument(
         "-p",
         "--py-schema",
-        help="a python.module:member to use as a schema, e.g. foo.bar:baz",
+        help="a schema from a python.module:member e.g. foo.bar:baz",
+    )
+    parser.add_argument(
+        "-u",
+        "--ui-schema",
+        help="an rjsf UI schema",
+    )
+    parser.add_argument(
+        "--py-ui-schema",
+        help="an rjsf UI schema from a python.module:member e.g. foo.bar:baz",
+    )
+    parser.add_argument(
+        "-d",
+        "--data",
+        help="an initial data document",
+    )
+    parser.add_argument(
+        "--py-data",
+        help="an initial data document from e.g. foo.bar:baz",
     )
     parser.add_argument(
         "-o",

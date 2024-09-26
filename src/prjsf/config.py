@@ -27,9 +27,11 @@ class Config:
     schema_format: TFormat | None = None
     id_prefix: str | None = None
     pr_filename: str = "data.json"
-    data_format: TFormat | None = None
     data: Path | None = None
+    py_data: str | None = None
+    data_format: TFormat | None = None
     ui_schema: Path | None = None
+    py_ui_schema: str | None = None
     ui_schema_format: TFormat | None = None
     # cli...
     html_filename: str = "index.html"

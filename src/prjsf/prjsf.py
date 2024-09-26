@@ -58,20 +58,33 @@ class Prjsf:
         """Copy the schema, uiSchema, and data files."""
         cfg = self.config
 
-        if not path.exists():
-            path.mkdir(parents=True)
-
-        if cfg.py_schema:
-            name, raw = self.import_dotted(cfg.py_schema)
-            dest = path / name
-            dest.write_text(json.dumps(raw, indent=2), encoding="utf-8")
-            cfg.schema = dest
+        path.mkdir(parents=True, exist_ok=True)
+        cfg.schema = self.from_file_or_py(path, cfg.schema, cfg.py_schema)
+        cfg.ui_schema = self.from_file_or_py(
+            path,
+            cfg.ui_schema,
+            cfg.py_ui_schema,
+        )
+        cfg.data = self.from_file_or_py(path, cfg.data, cfg.py_data)
 
         for in_file in [cfg.schema, cfg.ui_schema, cfg.data]:
             if in_file is None:
                 continue
             out_file = path / in_file.name
             out_file.write_bytes(in_file.read_bytes())
+
+    def from_file_or_py(
+        self,
+        parent_path: Path,
+        file_path: Path | None,
+        dotted: str | None,
+    ) -> Path | None:
+        """Resolve a dotted python import string, if given, to a path."""
+        if dotted:
+            name, raw = self.import_dotted(dotted)
+            file_path = parent_path / name
+            file_path.write_text(json.dumps(raw, indent=2), encoding="utf-8")
+        return file_path
 
     def render(self) -> str:
         """Render a template."""
