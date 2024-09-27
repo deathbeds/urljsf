@@ -34,6 +34,8 @@ class PrForm(SphinxDirective):
     has_content = True
     option_spec: ClassVar = {
         "github-url": directives.uri,
+        "github-repo": directives.uri,
+        "github-branch": directives.unchanged,
         "schema": directives.path,
         "py-schema": directives.unchanged,
         "schema-format": a_format,
@@ -60,8 +62,10 @@ class PrForm(SphinxDirective):
 
     def _options_to_config(self) -> Config:
         """Convert ``sphinx-options`` to ``prjsf_options``."""
+        cfg = self.env.config.__dict__["prjsf"].get
+
         if self.arguments:
-            self.options["github-url"] = self.arguments[0]
+            self.options["github-repo"] = self.arguments[0]
 
         here = Path(self.state.document.current_source).parent
         rel = os.path.relpath(self.env.app.srcdir, here)
@@ -77,10 +81,12 @@ class PrForm(SphinxDirective):
             url_base=url_base,
             id_prefix=self.options.get("id-prefix"),
             # required
-            github_url=self.options["github-url"],
+            github_repo=self.options.get("github-repo", cfg("github_repo")),
             schema=(here / schema) if schema else None,
             py_schema=self.options.get("py-schema"),
             # optional
+            github_branch=self.options.get("github-branch", cfg("github_branch")),
+            github_url=self.options.get("github-url", cfg("github_url")),
             schema_format=self.options.get("schema-format"),
             pr_filename=self.options.get("filename"),
             data=(here / data) if data else data,
@@ -89,5 +95,5 @@ class PrForm(SphinxDirective):
             ui_schema=(here / ui_schema) if ui_schema else ui_schema,
             py_ui_schema=self.options.get("py-ui-schema"),
             ui_schema_format=self.options.get("ui-schema-format"),
-            prune_empty=self.options.get("prune-empty"),
+            prune_empty=self.options.get("prune-empty", cfg("prune_empty")),
         )

@@ -32,7 +32,7 @@ def deploy_static(app: Sphinx, _err: Exception | None) -> None:
 def add_to_page(
     app: Sphinx, pagename: str, templatename: str, context: dict, event_arg: Any
 ) -> None:
-    """Add js/css to the page.
+    """Add JS/CSS to the page.
 
     Should only do so if needed/asked.
     """

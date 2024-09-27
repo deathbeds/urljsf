@@ -1,7 +1,9 @@
 {% macro prjsf() %}
 <div
-    data-prjsf-github-url="{{ github_url }}"
+    data-prjsf-git-hub-repo="{{ github_repo }}"
+    data-prjsf-git-hub-branch="{{ github_branch }}"
     data-prjsf-schema="{{ url_base }}{{ schema.name }}"
+    {% if github_url %}data-prjsf-git-hub-url="{{ github_url }}"{% endif %}
     {% if data_format %}data-prjsf-data-format="{{ data_format }}"{% endif %}
     {% if data %}data-prjsf-data="{{ url_base }}{{ data.name }}"{% endif %}
     {% if pr_filename %}data-prjsf-file-name="{{ pr_filename }}"{% endif %}
@@ -9,6 +11,6 @@
     {% if ui_schema_format %}data-prjsf-ui-schema-format="{{ ui_schema_format }}"{% endif %}
     {% if ui_schema %}data-prjsf-ui-schema="{{ url_base }}{{ ui_schema.name }}"{% endif %}
     {% if id_prefix %}data-prjsf-id-prefix="{{ id_prefix }}"{% endif %}
-    {% if prune_empty is defined %}data-prjsf-prune-empty="{{ prune_empty | string | lower }}"{% endif %}
+    {% if prune_empty is defined and prune_empty is not none %}data-prjsf-prune-empty="{{ prune_empty | string | lower }}"{% endif %}
 ></div>
 {% endmacro %}

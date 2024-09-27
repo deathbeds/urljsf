@@ -1,7 +1,4 @@
-"""Standalone CLI for building simple PR forms.
-
-For more complex use cases, please consider ``prjsf.sphinxext``.
-"""
+"""Standalone CLI for building simple PR forms."""
 # Copyright (C) prjsf contributors.
 # Distributed under the terms of the Modified BSD License.
 
@@ -18,7 +15,17 @@ from .prjsf import Prjsf
 def get_parser() -> ArgumentParser:
     """Get a parser for the command line arguments."""
     parser = ArgumentParser(__dist__, add_help=False, description=__doc__)
-    parser.add_argument("-g", "--github-url", help="the full branch URL to target")
+    parser.add_argument(
+        "-r",
+        "--github-repo",
+        help="the owner and repo name to target, e.g. ``deathbeds/prjsf``",
+    )
+    parser.add_argument(
+        "-b",
+        "--github-branch",
+        help="the full branch URL to target",
+        default=DEFAULTS["github_branch"],
+    )
     parser.add_argument("-s", "--schema", type=Path, help="path to a JSON Schema")
     parser.add_argument(
         "-u",
@@ -71,6 +78,9 @@ def get_parser() -> ArgumentParser:
         "--template",
         help="name of the template to use",
         default=DEFAULTS["template"],
+    )
+    parser.add_argument(
+        "-g", "--github-url", help="a GitHub deployment", default=DEFAULTS["github_url"]
     )
     parser.add_argument("--help", action="help", help="show program's usage and exit")
     parser.add_argument("--version", action="version", version=__version__)

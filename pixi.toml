@@ -320,3 +320,6 @@ html_theme = "pydata_sphinx_theme"
 icon_links = [
   {name = "PyPI", url = "{{ ppt.project.urls.PyPI }}", icon = "fa-brands fa-python"},
 ]
+
+## prjsf
+prjsf = {github_repo = "deathbeds/prjsf"}

@@ -1,9 +1,10 @@
 # Python
 
 > Use an importable python module member as a schema. This one uses `sys.path` in
-> `conf.py`.
+> `conf.py` to define a schema dynamically.
 
-```{pr-form} https://github.com/deathbeds/prjsf/new/not-a-branch
+```{pr-form} deathbeds/prjsf
 :py-schema: conf:PY_SCHEMA
+:github-branch: not-a-branch
 :id-prefix: python
 ```

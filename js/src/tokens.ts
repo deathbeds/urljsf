@@ -2,7 +2,11 @@
 // Distributed under the terms of the Modified BSD License.
 
 export const META_KEYS = ['prjsfFileName', 'prjsfPruneEmpty', 'prjsfIdPrefix'] as const;
-export const PROVIDER_KEYS = ['prjsfGithubUrl'] as const;
+export const PROVIDER_KEYS = [
+  'prjsfGitHubUrl',
+  'prjsfGitHubRepo',
+  'prjsfGitHubBranch',
+] as const;
 export const URL_KEYS = ['prjsfData', 'prjsfSchema', 'prjsfUiSchema'] as const;
 export const FORMAT_KEYS = [
   'prjsfSchemaFormat',
@@ -26,4 +30,6 @@ export const DEFAULTS: TDataSet = {
   prjsfUiSchemaFormat: 'json',
   prjsfDataFormat: 'json',
   prjsfPruneEmpty: 'true',
+  prjsfGitHubRepo: 'main',
+  prjsfGitHubUrl: 'https://github.com',
 };

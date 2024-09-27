@@ -2,14 +2,16 @@
 
 > one form
 
-```{pr-form} https://github.com/deathbeds/prjsf/new/not-a-branch
+```{pr-form} deathbeds/prjsf
 :schema:    ./simple.schema.json
 :id-prefix: multiple-1
+:github-branch: not-a-branch
 ```
 
 > another form
 
-```{pr-form} https://github.com/deathbeds/prjsf/new/not-a-branch
+```{pr-form} deathbeds/prjsf
 :schema:    ./simple.schema.json
 :id-prefix: multiple-2
+:github-branch: not-a-another-branch
 ```

@@ -6,8 +6,9 @@ import validator from '@rjsf/validator-ajv8';
 import { Fragment, render } from 'react-dom';
 import { useState } from 'react';
 import Form from '@rjsf/bootstrap-4';
+import { Form as BS, Badge } from 'react-bootstrap';
 
-import type { TDataSet } from './tokens.js';
+import { DEFAULTS, type TDataSet } from './tokens.js';
 
 import { fetchData, getFileContent, getDataSet } from './utils.js';
 
@@ -24,15 +25,25 @@ export async function makeOneForm(container: HTMLElement): Promise<void> {
   render(form, container);
 }
 
+function makeOneBranchOption(branch: string, idx: number) {
+  return <option key={idx}>{branch}</option>;
+}
+
 export function formComponent(dataset: TDataSet, props: Partial<FormProps>) {
   const PRJSF = () => {
+    const branches = `${dataset.prjsfGitHubBranch || DEFAULTS.prjsfGitHubBranch}`
+      .trim()
+      .split(' ');
     const [value, setValue] = useState('');
     const [url, setUrl] = useState('#');
     const [formData, setFormData] = useState(props.formData);
     const [fileName, setFileName] = useState(dataset.prjsfFileName || '');
+    const [branch, setBranch] = useState(branches[0]);
 
     const updateUrl = () => {
-      let url = new URL(dataset.prjsfGithubUrl || '#', window.location.href);
+      let gh = `${dataset.prjsfGitHubUrl}`.trim().replace(/\/$/, '');
+      let repo = `${dataset.prjsfGitHubRepo}`.trim();
+      let url = new URL(`${gh}/${repo}/new/${branch}`, window.location.href);
       url.searchParams.set('value', value);
       url.searchParams.set('fileName', fileName);
       setUrl(url.toString());
@@ -60,6 +71,36 @@ export function formComponent(dataset: TDataSet, props: Partial<FormProps>) {
       ...props,
     };
 
+    let branchEl: JSX.Element;
+    if (branches.length == 1) {
+      branchEl = <code>{branch}</code>;
+    } else {
+      branchEl = (
+        <BS.Group>
+          <BS.Control
+            as="select"
+            custom
+            onChange={(e) => setBranch(e.currentTarget.value)}
+          >
+            {branches.map(makeOneBranchOption)}
+          </BS.Control>
+        </BS.Group>
+      );
+    }
+
+    const badge = (
+      <Badge pill className="bg-secondary badge-secondary">
+        <i className="fab fa-github"></i> {dataset.prjsfGitHubRepo}
+      </Badge>
+    );
+
+    const button = (
+      <a href={url} class="form-control btn btn-primary" role="button" target="_blank">
+        Start <i class="fa fa-code-pull-request"></i> Pull Request with{' '}
+        <code>{fileName}</code>
+      </a>
+    );
+
     return (
       <div class="card prjsf">
         <ul class="list-group list-group-flush">
@@ -73,7 +114,7 @@ export function formComponent(dataset: TDataSet, props: Partial<FormProps>) {
             <textarea
               className="form-control font-monospace"
               value={value}
-              spellCheck={false}
+              spellcheck={false}
               rows={10}
             ></textarea>
           </li>
@@ -92,14 +133,7 @@ export function formComponent(dataset: TDataSet, props: Partial<FormProps>) {
             />
           </li>
           <li class="list-group-item">
-            <a
-              href={url}
-              class="form-control btn btn-primary btn-lg"
-              role="button"
-              target="_blank"
-            >
-              Start Pull Request with <code>{fileName}</code>
-            </a>
+            {badge} {branchEl} {button}
           </li>
         </ul>
       </div>

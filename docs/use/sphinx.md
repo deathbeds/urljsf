@@ -1,4 +1,6 @@
-# Sphinx
+(prjsf-sphinxext)=
+
+# Sphinx Extension
 
 `prjsf` was originally built as a pile of `jinja2` hacks to embed in [`sphinx`][sphinx]
 sites built by [jupyak](https://github.com/deathbeds/jupyak).
@@ -16,12 +18,13 @@ extensions = [
 ]
 ```
 
-Provide defaults:
+Optionally provide defaults (using `.py`-style `_`, rather than `.rst`-style `_`):
 
 ```py
 # conf.py
 prjsf = {
-    # TODO: add config
+    "github_url": "https://not-github.org",
+    "github_repo": "default-org/repo",
 }
 ```
 
@@ -30,17 +33,18 @@ prjsf = {
 Embed forms with the `pr-form` directive in an `.rst` file:
 
 ```rst
-
-.. pr-form: https://github.com/some-org/some-repo/new/some-branch
+.. pr-form: some-org/some-repo
     schema: my-form.schema.json
 ```
 
 ... or an `.md` file:
 
 ````md
-```{pr-form} https://github.com/some-org/some-repo/new/some-branch
+```{pr-form} some-org/some-repo
 :schema: my-form.schema.json
 ```
 ````
+
+Any values provided in `conf.py` will be overwritten.
 
 [sphinx]: https://www.sphinx-doc.org

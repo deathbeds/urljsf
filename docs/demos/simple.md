@@ -1,8 +1,8 @@
 # Simple
 
-> shows a single form.
+> shows a single form. The `github-repo` is omitted, and defined in `conf.py`.
 
-```{pr-form} https://github.com/deathbeds/prjsf/new/not-a-branch
+```{pr-form}
 :schema:    ./simple.schema.json
-:id-prefix: simple
+:github-branch:  not-a-branch
 ```

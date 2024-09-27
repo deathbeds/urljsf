@@ -17,13 +17,15 @@ class Config:
     """Configuration for ``prjsf``."""
 
     # required...
-    github_url: str
+    github_repo: str
     # at least one of...
     schema: Path | None = None
     py_schema: str | None = None
     # meta...
     url_base: str = "./"
     # end up as ``data-`` attributes..
+    github_branch: str = "main"
+    github_url: str = "https://github.com"
     schema_format: TFormat | None = None
     id_prefix: str | None = None
     pr_filename: str = "data.json"

@@ -39,7 +39,7 @@ validate = [
 Changelog = "https://github.com/deathbeds/prjsf/blob/main/CHANGELOG.md"
 Documentation = "https://prjsf.rtfd.io"
 PyPI = "https://pypi.org/project/prjsf"
-Source = "https://github.com/deathbeds/prjsf/tree/main"
+Source = "https://github.com/deathbeds/prjsf"
 
 [tool.ruff]
 cache-dir = "build/.cache/ruff"
