@@ -12,10 +12,11 @@ dev = {depends-on = ["fix", "lint", "build", "dist", "test", "docs"]}
 fix = {depends-on = [
   "fix-toml-taplo",
   "fix-js-dedupe",
+  "fix-js-markdownlint",
   "fix-js-prettier",
   "fix-py-ruff",
 ]}
-lint = {depends-on = ["lint-py-ruff"]}
+lint = {depends-on = ["lint-py-ruff", "lint-js-prettier", "lint-js-markdownlint"]}
 build = {depends-on = ["build-js-lib", "build-js-app", "build-py-static"]}
 dist = {depends-on = ["dist-npm", "dist-pypi", "dist-hash"]}
 test = {depends-on = ["test-pytest"]}
@@ -29,6 +30,10 @@ yarn prettier
   --cache-location build/.cache/prettier
   "*.{yml,json,md}"
   "{docs,tests,src,js,.github}/**/*.{md,json,yml,yaml,css,ts,tsx,ts,mjs}"
+"""
+[tasks.markdownlint--]
+cmd = """
+yarn markdownlint-cli2 "*.md" "{docs,tests,src,js,.github}/**/*.{md}"
 """
 [tasks.pip-e--]
 cmd = """
@@ -89,7 +94,7 @@ watchfiles "pixi r build-py-static" js/dist
 [feature.tasks-build.tasks.dist-npm]
 cmd = "mkdir -p dist && cd dist && npm pack ../js"
 depends-on = ["build-js-app"]
-inputs = ["node_modules/.yarn-state.yml", "js/dist"]
+inputs = ["node_modules/.yarn-state.yml", "js/{dist,LICENSE,README.md,package.json}"]
 outputs = ["dist/*.tgz"]
 
 [feature.tasks-build.tasks.dist-pypi]
@@ -128,6 +133,32 @@ depends-on = ["setup-js"]
 inputs = [
   "*.{yml,json,md}",
   "{docs,tests,src,js,.github}/**/*.{md,json,yml,yaml,css,ts,tsx,ts,mjs}",
+  "!src/**/_static",
+]
+
+[feature.tasks-lint.tasks.lint-js-prettier]
+cmd = "pixi r prettier--"
+depends-on = ["setup-js"]
+inputs = [
+  "*.{yml,json,md}",
+  "{docs,tests,src,js,.github}/**/*.{md,json,yml,yaml,css,ts,tsx,ts,mjs}",
+  "!src/**/_static",
+]
+
+[feature.tasks-lint.tasks.lint-js-markdownlint]
+cmd = "pixi r markdownlint--"
+depends-on = ["setup-js"]
+inputs = [
+  "*.{md,json}",
+  "{docs,tests,src,js,.github}/**/*.{md}",
+  "!src/**/_static",
+]
+[feature.tasks-lint.tasks.fix-js-markdownlint]
+cmd = "pixi r markdownlint-- --fix"
+depends-on = ["setup-js"]
+inputs = [
+  "*.{md,json}",
+  "{docs,tests,src,js,.github}/**/*.{md}",
   "!src/**/_static",
 ]
 
@@ -234,6 +265,7 @@ myst-nb = "*"
 sphinx-autodoc-typehints = "*"
 sphinx-copybutton = "*"
 sphinx-autobuild = "*"
+sphinx-argparse = "*"
 
 [feature.deps-build.dependencies]
 nodejs = "22.*"
@@ -265,6 +297,7 @@ extensions = [
   "myst_nb",
   "sphinx.ext.autosectionlabel",
   "sphinx_copybutton",
+  "sphinxarg.ext",
   "prjsf.sphinxext",
 ]
 suppress_warnings = ["autosectionlabel.*"]
@@ -284,3 +317,6 @@ myst_heading_anchors = 3
 
 ## theme
 html_theme = "pydata_sphinx_theme"
+icon_links = [
+  {name = "PyPI", url = "{{ ppt.project.urls.PyPI }}", icon = "fa-brands fa-python"},
+]

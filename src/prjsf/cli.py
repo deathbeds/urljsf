@@ -1,6 +1,6 @@
 """Standalone CLI for building simple PR forms.
 
-For more complex use cases, please use ``prjsf.sphinxext``.
+For more complex use cases, please consider ``prjsf.sphinxext``.
 """
 # Copyright (C) prjsf contributors.
 # Distributed under the terms of the Modified BSD License.
@@ -17,18 +17,21 @@ from .prjsf import Prjsf
 
 def get_parser() -> ArgumentParser:
     """Get a parser for the command line arguments."""
-    parser = ArgumentParser(__dist__, add_help=False)
+    parser = ArgumentParser(__dist__, add_help=False, description=__doc__)
     parser.add_argument("-g", "--github-url", help="the full branch URL to target")
     parser.add_argument("-s", "--schema", type=Path, help="path to a JSON Schema")
     parser.add_argument(
         "-u",
         "--ui-schema",
-        help="an rjsf UI schema",
+        help="an rjsf UI schema as a JSON, TOML, or YAML file",
     )
     parser.add_argument(
         "-d",
         "--data",
-        help="an initial data document",
+        help=(
+            "an initial data document as a JSON, TOML, or YAML file. Overrides "
+            "any defaults from ``schema``."
+        ),
     )
     parser.add_argument(
         "-o",

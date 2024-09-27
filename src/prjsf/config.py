@@ -37,7 +37,7 @@ class Config:
     # cli...
     html_filename: str = "index.html"
     html_title: str | None = None
-    output_dir: Path = Path("_prjsf_output")
+    output_dir: Path = Path("./_prjsf_output")
     template: str = "prjsf/standalone.j2"
     extra_template_paths: list[Path] = field(default_factory=list)
     # app...

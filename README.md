@@ -2,7 +2,10 @@
 
 > Build structured data files for pull requests from JSON schema
 
-_Powered by [react-json-schema-form](https://react-jsonschema-form.readthedocs.io)._
+_Powered by [`react-json-schema-form`][rjsf] and [bootstrap][bootstrap]._
+
+[rjsf]: https://github.com/rjsf-team/react-jsonschema-form
+[bootstrap]: https://github.com/twbs/bootstrap
 
 While GitHub provides semi-structured templates for _Pull Requests_ (PR) and _Issues_,
 these are poor for structured requests that drive automation, requiring API tokens and
@@ -23,12 +26,13 @@ With a `prjsf`-built form on a static web host, users:
 
 ## Limitations
 
-- presently only the `bootstrap`-based theme for `react-json-schema-form` is provided
 - `react-json-schema-form` cannot represent all possible data structures, such as
   writing a _new_ JSON schema in JSON schema, or many features added after Draft 7
 - "advanced" YAML features such as anchors and tags are not supported
 - can only propose a single file per form
 - the [`sphinx`](#sphinx) integration can only target the `-b html` builder
+- the generated scripts _won't_ work when served from `file://` due to browser CORS
+  headers requirements
 
 ## Install
 
@@ -76,52 +80,13 @@ static assets.
 prsf --help
 ```
 
-It requires a `schema` file and `github-url`, but offers a number options.
+It requires a `--schema` file (or `--py-schema` module) and `--github-url`, but offers a
+number options.
 
 ### Sphinx
 
-`prjsf` was originally built as a pile of `jinja2` hacks to embed in `sphinx` sites
-built by [jupyak](https://github.com/deathbeds/jupyak).
-
-`prjsf.sphinxext` formalizes some of these hacks into a mostly-usable pattern.
-
-#### Configuration
-
-Add `prjsf` to a project's Sphinx configuration in `conf.py`:
-
-```py
-# conf.py
-extensions = [
-    "prjsf.sphinxext",
-]
-```
-
-Provide defaults:
-
-```py
-# conf.py
-prjsf = {
-    # TODO: add config
-}
-```
-
-#### Write
-
-Embed forms with the `pr-form` directive in an `.rst` file:
-
-```rst
-
-.. pr-form: https://github.com/some-org/some-repo/new/some-branch
-    schema: my-form.schema.json
-```
-
-... or an `.md` file:
-
-````md
-```{pr-form} https://github.com/some-org/some-repo/new/some-branch
-:schema: my-form.schema.json
-```
-````
+See the documentation for more about configuring `prjsf.sphinxext` and the `pr-form`
+directive.
 
 ## Open Source
 

@@ -71,7 +71,7 @@ export function formComponent(dataset: TDataSet, props: Partial<FormProps>) {
           <li class="list-group-item">
             <label class="form-label">Preview</label>
             <textarea
-              className="form-control"
+              className="form-control font-monospace"
               value={value}
               spellCheck={false}
               rows={10}

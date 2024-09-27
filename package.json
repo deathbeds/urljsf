@@ -42,9 +42,15 @@
   },
   "devDependencies": {
     "license-webpack-plugin": "^4.0.2",
+    "markdownlint-cli2": "^0.14.0",
     "prettier": "^3.3.3",
     "prettier-plugin-packagejson": "^2.5.2",
     "prettier-plugin-sort-json": "^4.0.0",
     "yarn-berry-deduplicate": "^6.1.1"
+  },
+  "markdownlint-cli2": {
+    "config": {
+      "line-length": false
+    }
   }
 }

@@ -6,4 +6,7 @@
 :maxdepth: 2
 
 demos/index
+use/index
+changelog
+contributing
 ```
