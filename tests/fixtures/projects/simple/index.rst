@@ -1,6 +1,5 @@
-site
-====
+form1
+=====
 
-.. toctree::
-    form1
-    form2
+.. pr-form:: deathbeds/prjsf
+    :schema: ./schema.json

@@ -196,7 +196,7 @@ pytest
   --cov-branch
   --cov-context=test
   --no-cov-on-fail
-  --cov-fail-under=98
+  --cov-fail-under=100
 """
 depends-on = ["test-pip", "build-py-static"]
 inputs = ["{tests,src/prjsf}/**/*.py", "src/prjsf/{_static,_templates}"]
