@@ -20,11 +20,36 @@ SPHINX_EXT_INFO = {
     "version": __version__,
 }
 
+ROOT_CLASS = "prjsf-pr-form"
+
 DEFAULT_SCOPES = [
-    ".prjsf-pr-form",
-    ".prjsf-pr-form .list-group",
-    ".prjsf-pr-form .card",
+    f".{ROOT_CLASS}",
+    f".{ROOT_CLASS} .list-group",
+    f".{ROOT_CLASS} .card",
 ]
+
+
+def variable_css(css: dict[str, Any]) -> list[str]:
+    """Generate css variable chunks."""
+    scopes = css.get("scopes", DEFAULT_SCOPES)
+    rules = [
+        f"  --{k}: var(--{v}) !important;"
+        for k, v in sorted(css.get("variables", {}).items())
+    ]
+
+    chunk = "\n".join([f"""{", ".join(scopes)} {{""", *rules, "}", ""])
+
+    return [chunk] if rules else []
+
+
+def heading_css(css: dict[str, Any]) -> list[str]:
+    """Inject CSS for ``h*`` elements."""
+    if not css.get("compact_headings"):
+        return []
+
+    selector = ",\n".join([f".{ROOT_CLASS} h{i + 1}" for i in range(7)])
+    chunk = "\n".join([f"{selector} {{", "margin: 0", "}"])
+    return [chunk]
 
 
 def build_finished(app: Sphinx, _err: Exception | None) -> None:
@@ -37,17 +62,12 @@ def build_finished(app: Sphinx, _err: Exception | None) -> None:
 
     Prjsf.deploy_static(Path(app.builder.outdir) / static)
 
-    css = conf("css")
-    if css:
-        css_path = static / "variables.css"
-        scopes = css.get("scopes", DEFAULT_SCOPES)
-        rules = [
-            f"  --{k}: var(--{v}) !important;"
-            for k, v in sorted(css["variables"].items())
-        ]
-        css_path.write_text(
-            "\n".join([f"""{", ".join(scopes)} {{""", *rules, "}", ""]), **UTF8
-        )
+    css = conf("css", {})
+
+    chunks = [*variable_css(css), *heading_css(css)]
+
+    if chunks:
+        (static / "prjsf.css").write_text("\n".join(chunks), **UTF8)
 
 
 def html_page_context(
@@ -59,12 +79,12 @@ def html_page_context(
 
     app.add_js_file("prjsf/prjsf/prjsf.js", type="module")
     conf = app.config["prjsf"].get
-    if conf("add_bootstrap_css"):
+    if conf("css", {}).get("add_bootstrap"):
         app.add_css_file("prjsf/vendor/bootstrap/dist/css/bootstrap.min.css")
 
-    css = conf("css")
-    if css:
-        app.add_css_file("prjsf/variables.css")
+    css = conf("css", {})
+    if "variables" in css or "compact_headings" in css:
+        app.add_css_file("prjsf/prjsf.css")
 
 
 def setup(app: Sphinx) -> dict[str, Any]:

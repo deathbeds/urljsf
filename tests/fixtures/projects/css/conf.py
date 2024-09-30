@@ -3,4 +3,9 @@
 # Distributed under the terms of the Modified BSD License.
 
 extensions = ["prjsf.sphinxext"]
-prjsf = {"css": {"variables": {"bs-foo": "xxx-bar"}}}
+prjsf = {
+    "css": {
+        "variables": {"bs-foo": "xxx-bar"},
+        "compact_headings": True,
+    }
+}

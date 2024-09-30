@@ -341,12 +341,13 @@ html_theme_options.icon_links = [
 
 ## prjsf
 prjsf.github_repo = "deathbeds/prjsf"
+prjsf.css.compact_headings = true
 
 [tool.sphinx.prjsf.css.variables]
+bs-body-color = "pst-color-text-base"
 bs-card-bg = "pst-color-surface"
+bs-card-cap-bg = "pst-color-danger-bg"
 bs-danger-text-emphasis = "pst-color-danger-highlight"
 bs-list-group-bg = "pst-color-background"
-bs-body-color = "pst-color-text-base"
 bs-list-group-color = "pst-color-text-base"
-bs-card-cap-bg = "pst-color-danger-bg"
 bs-secondary-color = "pst-color-text-base"

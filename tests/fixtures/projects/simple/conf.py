@@ -3,4 +3,4 @@
 # Distributed under the terms of the Modified BSD License.
 
 extensions = ["prjsf.sphinxext"]
-prjsf = {"add_bootstrap_css": True}
+prjsf = {"css": {"add_bootstrap": True}}
