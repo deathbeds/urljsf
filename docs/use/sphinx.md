@@ -7,7 +7,7 @@ sites built by [jupyak](https://github.com/deathbeds/jupyak).
 
 `prjsf.sphinxext` formalizes some of these hacks into a mostly-usable pattern.
 
-## Configuration
+## Configure
 
 Add `prjsf` to a project's Sphinx configuration in `conf.py`:
 
@@ -45,6 +45,6 @@ Embed forms with the `pr-form` directive in an `.rst` file:
 ```
 ````
 
-Any values provided in `conf.py` will be overwritten.
+Any values provided in [`conf.py`](#configure) will be overwritten.
 
 [sphinx]: https://www.sphinx-doc.org

@@ -181,6 +181,7 @@ export function formComponent(
         <hr />
         <div>
           <label>{fileNameInput} {...filenameEls}</label>
+          <br />
           {preview}
         </div>
         <hr />
