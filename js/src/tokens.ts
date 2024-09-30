@@ -1,7 +1,12 @@
 // Copyright (C) prjsf contributors.
 // Distributed under the terms of the Modified BSD License.
 
-export const META_KEYS = ['prjsfFileName', 'prjsfPruneEmpty', 'prjsfIdPrefix'] as const;
+export const META_KEYS = [
+  'prjsfFileName',
+  'prjsfFileNamePattern',
+  'prjsfPruneEmpty',
+  'prjsfIdPrefix',
+] as const;
 export const PROVIDER_KEYS = [
   'prjsfGitHubUrl',
   'prjsfGitHubRepo',
@@ -25,11 +30,12 @@ export type TDataSet = Partial<{
   [K in TDataKey]: string | null;
 }>;
 
-export const DEFAULTS: TDataSet = {
+export const DEFAULTS = {
+  prjsfFileNamePattern: `^[^/].+\.(json|yaml|yml|toml)$`,
   prjsfSchemaFormat: 'json',
   prjsfUiSchemaFormat: 'json',
   prjsfDataFormat: 'json',
   prjsfPruneEmpty: 'true',
-  prjsfGitHubRepo: 'main',
+  prjsfGitHubBranch: 'main',
   prjsfGitHubUrl: 'https://github.com',
 };

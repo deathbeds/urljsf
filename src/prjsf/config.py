@@ -29,6 +29,7 @@ class Config:
     schema_format: TFormat | None = None
     id_prefix: str | None = None
     pr_filename: str = "data.json"
+    pr_filename_pattern: str | None = None
     data: Path | None = None
     py_data: str | None = None
     data_format: TFormat | None = None

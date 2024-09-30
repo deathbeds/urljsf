@@ -26,6 +26,20 @@ def get_parser() -> ArgumentParser:
         help="the full branch URL to target",
         default=DEFAULTS["github_branch"],
     )
+    parser.add_argument(
+        "-f",
+        "--filename",
+        dest="pr_filename",
+        help="the name of the file to propose",
+        default=DEFAULTS["pr_filename"],
+    )
+    parser.add_argument(
+        "-p",
+        "--filename-pattern",
+        dest="pr_filename_pattern",
+        help="a JS regular expression the proposed file must match",
+        default=DEFAULTS["pr_filename_pattern"],
+    )
     parser.add_argument("-s", "--schema", type=Path, help="path to a JSON Schema")
     parser.add_argument(
         "-u",

@@ -7,9 +7,17 @@
 [rjsf]: https://github.com/rjsf-team/react-jsonschema-form
 [bootstrap]: https://github.com/twbs/bootstrap
 
-With a `prjsf`-built form on a static web host, users:
+GitHub projects can use `prjsf` as a standalone [CLI tool](#command-line) or
+[sphinx](#sphinx) extension to create static HTML forms that jumpstart contibution to
+data-driven:
 
-- work with a precise, [JSON Schema][json-schema]-constrained HTML form, optionally
+- galleries
+- on-demand build services
+- precise test descriptions
+
+When visiting a `prjsf`-built form, users:
+
+- see with an interative [JSON Schema][json-schema]-constrained HTML form, optionally
   with...
   - ... a [user interface schema][ui-schema]
   - ... pre-filled data
@@ -34,8 +42,10 @@ With a `prjsf`-built form on a static web host, users:
 >
 > ```bash
 > pip install prjsf
+>
 > # or...
 > uv install prjsf
+>
 > # etc.
 > ```
 >
@@ -45,10 +55,13 @@ With a `prjsf`-built form on a static web host, users:
 >
 > ```bash
 > pixi add prjsf
+>
 > # or...
 > micromamba install -c conda-forge prjsf
+>
 > # or...
 > mamba install -c conda-forge prjsf
+>
 > # or...
 > conda install -c conda-forge prjsf
 > ```
@@ -71,6 +84,23 @@ prsf --help
 can be further customized with a number of other options.
 
 ### Sphinx
+
+After [installing](#install), add this to `conf.py`:
+
+```py
+# conf.py
+extensions = [
+  # ... other extensions
+  "prjsf.sphinxext",
+]
+```
+
+Then use the `pr-form` directive:
+
+```rst
+.. pr-form: a-github-org/a-github-repo
+  :schema: path/to/schema.json
+```
 
 See the documentation for more about configuring `prjsf.sphinxext` and the `pr-form`
 directive.

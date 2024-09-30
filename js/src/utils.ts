@@ -7,7 +7,7 @@ import { TDataSet, TUrlKey, ALL_KEYS, DEFAULTS } from './tokens.js';
 export function getDataSet(el: HTMLElement): TDataSet {
   const dataset: TDataSet = {};
   for (const k of [...ALL_KEYS]) {
-    dataset[k] = el.dataset[k] || DEFAULTS[k];
+    dataset[k] = el.dataset[k] || (DEFAULTS as any as TDataSet)[k];
   }
   return dataset;
 }

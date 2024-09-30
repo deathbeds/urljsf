@@ -50,6 +50,7 @@ class PrForm(SphinxDirective):
         "data-format": a_format,
         "id-prefix": directives.unchanged,
         "filename": directives.uri,
+        "filename-pattern": directives.unchanged,
         "prune-empty": a_boolish,
     }
     _prsjf: Prjsf | None
@@ -92,6 +93,7 @@ class PrForm(SphinxDirective):
             github_url=opt("github-url", cfg("github_url")),
             schema_format=opt("schema-format"),
             pr_filename=opt("filename"),
+            pr_filename_pattern=opt("filename-pattern"),
             data=(here / data) if data else data,
             py_data=opt("py-data"),
             data_format=opt("data-format"),
