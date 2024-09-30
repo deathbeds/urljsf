@@ -67,8 +67,8 @@ static assets.
 prsf --help
 ```
 
-It requires a `--schema` file (or `--py-schema` module) and `--github-repo`, but offers
-a number options.
+`prjsf` requires a `--schema` file (or `--py-schema` module) and `--github-repo`, but
+can be further customized with a number of other options.
 
 ### Sphinx
 

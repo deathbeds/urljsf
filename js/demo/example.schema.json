@@ -6,14 +6,16 @@
   "properties": {
     "name": {
       "type": "string",
-      "description": "What is this list about?"
+      "description": "What is this list about?",
+      "minLength": 3
     },
     "tasks": {
       "type": "array",
       "description": "What are the tasks?",
       "items": {
         "$ref": "#/$defs/Task"
-      }
+      },
+      "minItems": 1
     }
   },
   "$defs": {
@@ -32,9 +34,11 @@
         },
         "task": {
           "type": "string",
-          "description": "What needs to be done?"
+          "description": "What needs to be done?",
+          "minLength": 3
         }
-      }
+      },
+      "required": ["task"]
     }
   }
 }

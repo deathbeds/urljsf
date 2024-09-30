@@ -5,18 +5,23 @@
 from __future__ import annotations
 
 import os
+import shutil
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 import pytest
 
 if TYPE_CHECKING:
     from collections.abc import Generator
-    from pathlib import Path
 
 
 WIN = os.name == "win32"
 SEP = ";" if WIN else ":"
-
+UTF8 = {"encoding": "utf-8"}
+HERE = Path(__file__).parent
+FIXTURES = HERE / "fixtures"
+PROJECTS = FIXTURES / "projects"
+FIXTURE_PROJECTS = {p.name: p for p in PROJECTS.glob("*") if p.is_dir()}
 
 pytest_plugins = ("sphinx.testing.fixtures",)
 
@@ -36,3 +41,11 @@ def py_tmp_path(tmp_path: Path) -> Generator[Path, None, None]:
         os.environ[var_name] = old_py_path
     else:
         os.environ.pop(var_name)
+
+
+@pytest.fixture(params=sorted(FIXTURE_PROJECTS.keys()))
+def a_project(request: pytest.FixtureRequest, tmp_path: Path) -> Path:
+    """Project a project fixture."""
+    dest = tmp_path / "src"
+    shutil.copytree(PROJECTS / request.param, dest)
+    return dest

@@ -45,6 +45,15 @@ python -m pip install
   --disable-pip-version-check
   --ignore-installed
 """
+[tasks.py-static--]
+cmd = """
+rm -rf src/prjsf/_static/
+&& cp -r js/dist/prjsf/ src/prjsf/_static/prjsf/
+&& mkdir -p src/prjsf/_static/vendor/bootstrap/dist/css/
+&& cp -r node_modules/bootstrap/LICENSE src/prjsf/_static/vendor/bootstrap/LICENSE
+&& cp -r node_modules/bootstrap/dist/css/bootstrap.min.css src/prjsf/_static/vendor/bootstrap/dist/css/
+&& rm -rf src/prjsf/_static/prjsf/demo/
+"""
 
 # tasks ########################################################################
 [feature.tasks-build.tasks.setup-js]
@@ -73,23 +82,15 @@ cmd = "yarn build:app --watch"
 depends-on = ["setup-js"]
 
 [feature.tasks-build.tasks.build-py-static]
-cmd = """
-rm -rf src/prjsf/_static/
-&& cp -r js/dist/prjsf/ src/prjsf/_static/prjsf/
-&& mkdir -p src/prjsf/_static/vendor/bootstrap/dist/css/
-&& cp -r node_modules/bootstrap/LICENSE src/prjsf/_static/vendor/bootstrap/LICENSE
-&& cp -r node_modules/bootstrap/dist/css/bootstrap.min.css src/prjsf/_static/vendor/bootstrap/dist/css/
-&& rm -rf src/prjsf/_static/prjsf/demo/
-"""
+cmd = """pixi r py-static--"""
 depends-on = ["build-js-app"]
 inputs = ["js/dist"]
 outputs = ["src/prjsf/_static", "!**/demo/"]
 
 [feature.tasks-build.tasks.watch-py-static]
 cmd = """
-watchfiles "pixi r build-py-static" js/dist
+watchfiles "pixi r py-static--" js/dist
 """
-
 
 [feature.tasks-build.tasks.dist-npm]
 cmd = "mkdir -p dist && cd dist && npm pack ../js"
@@ -186,6 +187,7 @@ inputs = ["pyproject.toml"]
 [feature.tasks-test.tasks.test-pytest]
 cmd = """
 pytest
+  -n auto
   --html=build/reports/pytest.html
   --self-contained-html
   --cov-report=html:build/reports/htmlcov
@@ -207,6 +209,16 @@ inputs = ["pyproject.toml"]
 cmd = """pixi r -e docs pip-e--"""
 inputs = ["pyproject.toml"]
 
+[feature.tasks-docs.tasks.docs-scour]
+cmd = """
+export SCOUR_ARGS="scour --enable-id-stripping --enable-comment-stripping"
+&& cd docs/_static
+&& $SCOUR_ARGS logo-inkscape.svg logo.svg
+&& $SCOUR_ARGS icon-inkscape.svg icon.svg
+"""
+inputs = ["docs/_static/*-inkscape.svg"]
+outputs = ["docs/_static/*.svg", "!*inkscape.svg"]
+
 [feature.tasks-docs.tasks.docs-sphinx]
 inputs = [
   "*.md",
@@ -216,7 +228,7 @@ inputs = [
   "docs/**/*.{css,ipynb,md,py}",
   "!**/.ipynb_checkpoints",
 ]
-depends-on = ["docs-pip"]
+depends-on = ["docs-pip", "docs-scour"]
 outputs = ["build/docs"]
 cmd = """
   export PYDEVD_DISABLE_FILE_VALIDATION=1
@@ -256,6 +268,7 @@ python = "3.9.*"
 pytest = ">=8"
 pytest-cov = "*"
 pytest-html = "*"
+pytest-xdist = "*"
 coverage = ">=7"
 pytest-console-scripts = "*"
 
@@ -266,6 +279,7 @@ sphinx-autodoc-typehints = "*"
 sphinx-copybutton = "*"
 sphinx-autobuild = "*"
 sphinx-argparse = "*"
+scour = "*"
 
 [feature.deps-build.dependencies]
 nodejs = "22.*"
@@ -317,9 +331,22 @@ myst_heading_anchors = 3
 
 ## theme
 html_theme = "pydata_sphinx_theme"
-icon_links = [
-  {name = "PyPI", url = "{{ ppt.project.urls.PyPI }}", icon = "fa-brands fa-python"},
+html_logo = "_static/logo.svg"
+html_favicon = "_static/icon.svg"
+
+html_theme_options.icon_links = [
+  {name = "GitHub", url = "{{ ppt.project.urls.Source }}", icon = "fa-brands fa-github", type = "fontawesome"},
+  {name = "PyPI", url = "{{ ppt.project.urls.PyPI }}", icon = "fa-brands fa-python", type = "fontawesome"},
 ]
 
 ## prjsf
-prjsf = {github_repo = "deathbeds/prjsf"}
+prjsf.github_repo = "deathbeds/prjsf"
+
+[tool.sphinx.prjsf.css.variables]
+bs-card-bg = "pst-color-surface"
+bs-danger-text-emphasis = "pst-color-danger-highlight"
+bs-list-group-bg = "pst-color-background"
+bs-body-color = "pst-color-text-base"
+bs-list-group-color = "pst-color-text-base"
+bs-card-cap-bg = "pst-color-danger-bg"
+bs-secondary-color = "pst-color-text-base"

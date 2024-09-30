@@ -8,6 +8,8 @@ from typing import Literal
 __dist__ = "prjsf"
 __version__ = f"""{__import__("importlib.metadata").metadata.version(__dist__)}"""
 
+UTF8 = {"encoding": "utf-8"}
+
 HERE = Path(__file__).parent
 TEMPLATES = HERE / "_templates"
 STATIC = HERE / "_static"

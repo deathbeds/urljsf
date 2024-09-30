@@ -1,16 +1,20 @@
 // Copyright (C) prjsf contributors.
 // Distributed under the terms of the Modified BSD License.
 
-import type { FormProps } from '@rjsf/core';
+import type { FormProps, IChangeEvent } from '@rjsf/core';
 import validator from '@rjsf/validator-ajv8';
 import { Fragment, render } from 'react-dom';
 import { useState } from 'react';
-import Form from '@rjsf/bootstrap-4';
-import { Form as BS, Badge } from 'react-bootstrap';
+import { Form as RJSFForm } from '@rjsf/react-bootstrap';
+import { Form, Badge, Button, Col, Row } from 'react-bootstrap';
 
 import { DEFAULTS, type TDataSet } from './tokens.js';
 
 import { fetchData, getFileContent, getDataSet } from './utils.js';
+import { RJSFValidationError } from '@rjsf/utils';
+
+let _NEXT_DATA_SET = 0;
+let _DATA_SETS = new WeakMap<TDataSet, number>();
 
 export async function makeOneForm(container: HTMLElement): Promise<void> {
   const dataset = getDataSet(container);
@@ -31,11 +35,17 @@ function makeOneBranchOption(branch: string, idx: number) {
 
 export function formComponent(dataset: TDataSet, props: Partial<FormProps>) {
   const PRJSF = () => {
+    if (!_DATA_SETS.has(dataset)) {
+      _DATA_SETS.set(dataset, _NEXT_DATA_SET++);
+    }
+    const idPrefix = dataset.prjsfIdPrefix || `prjsf-${_DATA_SETS.get(dataset)}`;
+
     const branches = `${dataset.prjsfGitHubBranch || DEFAULTS.prjsfGitHubBranch}`
       .trim()
       .split(' ');
     const [value, setValue] = useState('');
     const [url, setUrl] = useState('#');
+    const [errors, setErrors] = useState<RJSFValidationError[]>([]);
     const [formData, setFormData] = useState(props.formData);
     const [fileName, setFileName] = useState(dataset.prjsfFileName || '');
     const [branch, setBranch] = useState(branches[0]);
@@ -49,25 +59,21 @@ export function formComponent(dataset: TDataSet, props: Partial<FormProps>) {
       setUrl(url.toString());
     };
 
-    const updateFormData = async (formData: any) => {
-      let value = await getFileContent(dataset, formData);
+    const onChange = async (evt: IChangeEvent) => {
+      let value = await getFileContent(dataset, evt.formData);
       setValue(value);
-      setFormData(formData);
+      setFormData(evt.formData);
+      setErrors(evt.errors);
       updateUrl();
     };
-
-    const idPrefix = dataset.prjsfIdPrefix || void 0;
-
-    if (!value) {
-      void updateFormData(formData);
-    }
 
     const formProps: FormProps = {
       schema: {},
       validator,
       liveValidate: true,
-      idPrefix,
-      onChange: async ({ formData }) => await updateFormData(formData),
+      idPrefix: `${idPrefix}-`,
+      id: idPrefix,
+      onChange,
       ...props,
     };
 
@@ -76,15 +82,13 @@ export function formComponent(dataset: TDataSet, props: Partial<FormProps>) {
       branchEl = <code>{branch}</code>;
     } else {
       branchEl = (
-        <BS.Group>
-          <BS.Control
-            as="select"
-            custom
-            onChange={(e) => setBranch(e.currentTarget.value)}
-          >
-            {branches.map(makeOneBranchOption)}
-          </BS.Control>
-        </BS.Group>
+        <Form.Control
+          as="select"
+          size="sm"
+          onChange={(e) => setBranch(e.currentTarget.value)}
+        >
+          {branches.map(makeOneBranchOption)}
+        </Form.Control>
       );
     }
 
@@ -94,48 +98,90 @@ export function formComponent(dataset: TDataSet, props: Partial<FormProps>) {
       </Badge>
     );
 
-    const button = (
-      <a href={url} class="form-control btn btn-primary" role="button" target="_blank">
-        Start <i class="fa fa-code-pull-request"></i> Pull Request with{' '}
-        <code>{fileName}</code>
-      </a>
+    let createButton: JSX.Element;
+
+    if (errors.length) {
+      const errorEl = document.querySelector(`#${idPrefix} .has-error [id]`);
+      const errorHref = errorEl ? `#${errorEl.id}` : '#';
+
+      createButton = (
+        <Button as="a" size="sm" href={errorHref} variant="danger">
+          <i class="fa fa-triangle-exclamation"></i> {errors.length} error
+          {errors.length > 1 ? 's' : ''}
+        </Button>
+      );
+    } else {
+      createButton = (
+        <Button as="a" href={url} variant="primary" target="_blank">
+          <i class="fa fa-code-pull-request"></i> Start Pull Request
+        </Button>
+      );
+    }
+
+    const fileNameInput = (
+      <Form.Control
+        size="sm"
+        className="font-monospace"
+        placeholder={fileName}
+        onChange={(change) => {
+          setFileName(change.currentTarget.value);
+          updateUrl();
+        }}
+      />
     );
 
+    const preview = value
+      ? [
+          <code>
+            <pre>{value}</pre>
+          </code>,
+        ]
+      : [
+          <blockquote>
+            <i>
+              No valid data for <code>{fileName}</code> yet
+            </i>
+          </blockquote>,
+        ];
+
     return (
-      <div class="card prjsf">
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item">
-            <Form {...formProps} formData={formData}>
-              <Fragment />
-            </Form>
-          </li>
-          <li class="list-group-item">
-            <label class="form-label">Preview</label>
-            <textarea
-              className="form-control font-monospace"
-              value={value}
-              spellcheck={false}
-              rows={10}
-            ></textarea>
-          </li>
-          <li class="list-group-item">
-            <label class="form-label">
-              {dataset.prjsfDataFormat?.toUpperCase()} file name
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              placeholder={fileName}
-              onChange={(change) => {
-                setFileName(change.currentTarget.value);
-                updateUrl();
-              }}
-            />
-          </li>
-          <li class="list-group-item">
-            {badge} {branchEl} {button}
-          </li>
-        </ul>
+      <div class="prjsf-pr-form">
+        <div>
+          <RJSFForm {...formProps} formData={formData}>
+            <Fragment />
+          </RJSFForm>
+        </div>
+        <hr />
+        <div>
+          <Row>
+            <Col>
+              <Form.Text>repo</Form.Text>
+              <br />
+              {badge}
+            </Col>
+            <Col>
+              <Form.Text>branch</Form.Text>
+              <br />
+              {branchEl}
+            </Col>
+            <Col>
+              <Form.Text>path</Form.Text>
+              {fileNameInput}
+            </Col>
+            <Col style="text-align:right;">
+              <br />
+              {createButton}
+            </Col>
+          </Row>
+        </div>
+        <hr />
+        <div>
+          <label>
+            <code>{fileName}</code>
+          </label>
+          {preview}
+        </div>
+        <hr />
       </div>
     );
   };

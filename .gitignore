@@ -7,4 +7,4 @@ build/
 dist/
 lib/
 node_modules/
-src/prjsf/_static/
+src/prjsf/_static

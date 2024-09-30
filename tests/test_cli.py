@@ -9,6 +9,8 @@ from typing import TYPE_CHECKING
 
 import pytest
 
+from .conftest import UTF8
+
 if TYPE_CHECKING:
     from pathlib import Path
 
@@ -16,7 +18,6 @@ if TYPE_CHECKING:
 
 SIMPLE_SCHEMA = {"type": "object", "properties": {"foo": {"type": "string"}}}
 GH = ["-g", "https://github.com/org/repo/new/branch"]
-UTF8 = {"encoding": "utf-8"}
 
 
 def test_cli_help(script_runner: ScriptRunner) -> None:

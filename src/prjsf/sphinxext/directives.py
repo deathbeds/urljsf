@@ -6,15 +6,18 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
-from typing import ClassVar
+from typing import TYPE_CHECKING, ClassVar
 
-from docutils import nodes
 from docutils.parsers.rst import directives
 from sphinx.util.docutils import SphinxDirective
 
 from ..config import Config
 from ..constants import TFORMATS
 from ..prjsf import Prjsf
+from .nodes import prform
+
+if TYPE_CHECKING:
+    from docutils import nodes
 
 
 def a_format(argument: str) -> str:
@@ -54,15 +57,15 @@ class PrForm(SphinxDirective):
     def run(self) -> list[nodes.Node]:
         """Generate a single RJSF form."""
         self._prjsf = Prjsf(self._options_to_config())
-        attrs = {"class": "prsf"}
         self._prjsf.deploy_form_files(
             Path(self.env.app.builder.outdir) / "_static/pr-form"
         )
-        return [nodes.raw("", self._prjsf.render(), format="html", **attrs)]
+        return [prform("", self._prjsf.render())]
 
     def _options_to_config(self) -> Config:
         """Convert ``sphinx-options`` to ``prjsf_options``."""
         cfg = self.env.config.__dict__["prjsf"].get
+        opt = self.options.get
 
         if self.arguments:
             self.options["github-repo"] = self.arguments[0]
@@ -71,29 +74,29 @@ class PrForm(SphinxDirective):
         rel = os.path.relpath(self.env.app.srcdir, here)
         url_base = f"{rel}/_static/pr-form/"
 
-        schema = self.options.get("schema")
-        data = self.options.get("data")
-        ui_schema = self.options.get("ui-schema")
+        schema = opt("schema")
+        data = opt("data")
+        ui_schema = opt("ui-schema")
 
         return Config(
             # meta
             template="prjsf/sphinx.j2",
             url_base=url_base,
-            id_prefix=self.options.get("id-prefix"),
+            id_prefix=opt("id-prefix"),
             # required
-            github_repo=self.options.get("github-repo", cfg("github_repo")),
+            github_repo=opt("github-repo", cfg("github_repo")),
             schema=(here / schema) if schema else None,
-            py_schema=self.options.get("py-schema"),
+            py_schema=opt("py-schema"),
             # optional
-            github_branch=self.options.get("github-branch", cfg("github_branch")),
-            github_url=self.options.get("github-url", cfg("github_url")),
-            schema_format=self.options.get("schema-format"),
-            pr_filename=self.options.get("filename"),
+            github_branch=opt("github-branch", cfg("github_branch")),
+            github_url=opt("github-url", cfg("github_url")),
+            schema_format=opt("schema-format"),
+            pr_filename=opt("filename"),
             data=(here / data) if data else data,
-            py_data=self.options.get("py-data"),
-            data_format=self.options.get("data-format"),
+            py_data=opt("py-data"),
+            data_format=opt("data-format"),
             ui_schema=(here / ui_schema) if ui_schema else ui_schema,
-            py_ui_schema=self.options.get("py-ui-schema"),
-            ui_schema_format=self.options.get("ui-schema-format"),
-            prune_empty=self.options.get("prune-empty", cfg("prune_empty")),
+            py_ui_schema=opt("py-ui-schema"),
+            ui_schema_format=opt("ui-schema-format"),
+            prune_empty=opt("prune-empty", cfg("prune_empty")),
         )
