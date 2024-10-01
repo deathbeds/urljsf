@@ -1,17 +1,25 @@
-{% macro prjsf() %}
+{% macro prjsf() -%}
 <div
     data-prjsf-git-hub-repo="{{ github_repo }}"
     data-prjsf-git-hub-branch="{{ github_branch }}"
-    data-prjsf-schema="{{ url_base }}{{ schema.name }}"
+    data-prjsf-schema="{{ get_url(schema) }}"
+    {% if ui_schema %}data-prjsf-ui-schema="{{ get_url(ui_schema) }}"{% endif %}
+    {% if data %}data-prjsf-data="{{ get_url(data) }}"{% endif %}
     {% if github_url %}data-prjsf-git-hub-url="{{ github_url }}"{% endif %}
     {% if data_format %}data-prjsf-data-format="{{ data_format }}"{% endif %}
-    {% if data %}data-prjsf-data="{{ url_base }}{{ data.name }}"{% endif %}
     {% if pr_filename %}data-prjsf-file-name="{{ pr_filename }}"{% endif %}
     {% if pr_filename_pattern %}data-prjsf-file-name-template="{{ pr_filename_pattern }}"{% endif %}
     {% if schema_format %}data-prjsf-schema-format="{{ schema_format }}"{% endif %}
     {% if ui_schema_format %}data-prjsf-ui-schema-format="{{ ui_schema_format }}"{% endif %}
-    {% if ui_schema %}data-prjsf-ui-schema="{{ url_base }}{{ ui_schema.name }}"{% endif %}
     {% if id_prefix %}data-prjsf-id-prefix="{{ id_prefix }}"{% endif %}
     {% if prune_empty is defined and prune_empty is not none %}data-prjsf-prune-empty="{{ prune_empty | string | lower }}"{% endif %}
 ></div>
-{% endmacro %}
+{%- endmacro %}
+
+{% macro get_url(url) -%}
+    {%- if url.startswith('http://') or url.startswith('https://') -%}
+        {{ url }}
+    {%- else -%}
+        {{ url_base }}{{ url }}
+    {%- endif -%}
+{%- endmacro %}

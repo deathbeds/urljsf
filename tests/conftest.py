@@ -25,6 +25,9 @@ FIXTURE_PROJECTS = {p.name: p for p in PROJECTS.glob("*") if p.is_dir()}
 
 pytest_plugins = ("sphinx.testing.fixtures",)
 
+#: names of fixture projects that won't deploy `schema.json`
+NO_SCHEMA_JSON = ["remote"]
+
 
 @pytest.fixture
 def py_tmp_path(tmp_path: Path) -> Generator[Path, None, None]:
@@ -48,4 +51,4 @@ def a_project(request: pytest.FixtureRequest, tmp_path: Path) -> Path:
     """Project a project fixture."""
     dest = tmp_path / "src"
     shutil.copytree(PROJECTS / request.param, dest)
-    return dest
+    return request.param

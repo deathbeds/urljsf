@@ -28,10 +28,24 @@ prjsf = {
 }
 ```
 
-### Style
+## Write
+
+Embed forms with the `pr-form` directive in an `.rst` file:
+
+```rst
+.. pr-form: some-org/some-repo
+    schema: my-form.schema.json
+```
+
+Any values provided in [`conf.py`](#configure) will be overwritten, and `:schema:`, etc.
+may be a [URL](./advanced.md#remote-urls) or come from [python](./advanced.md#python).
+
+[sphinx]: https://www.sphinx-doc.org
+
+## Style
 
 Of particular note are some CSS opinions, which can help tune integration with sphinx
-themes that use (or abuse) `bootstrap`'s class names and CSS variables.
+themes that use (or abuse) the _hundreds_ of `bootstrap` class names and CSS variables.
 
 ```py
 # conf.py
@@ -70,24 +84,3 @@ For more advanced uses, consider maintaining a custom stylesheet with
 
 [html-css-files]:
   https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-html_css_files
-
-## Write
-
-Embed forms with the `pr-form` directive in an `.rst` file:
-
-```rst
-.. pr-form: some-org/some-repo
-    schema: my-form.schema.json
-```
-
-... or an `.md` file:
-
-````md
-```{pr-form} some-org/some-repo
-:schema: my-form.schema.json
-```
-````
-
-Any values provided in [`conf.py`](#configure) will be overwritten.
-
-[sphinx]: https://www.sphinx-doc.org

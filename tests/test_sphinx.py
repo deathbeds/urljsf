@@ -7,8 +7,10 @@ from pathlib import Path
 
 from pytest_console_scripts import ScriptRunner
 
+from .conftest import NO_SCHEMA_JSON
 
-def test_sphinx(a_project: Path, script_runner: ScriptRunner, tmp_path: Path) -> None:
+
+def test_sphinx(a_project: str, script_runner: ScriptRunner, tmp_path: Path) -> None:
     """Verify a site builds."""
     build = tmp_path / "build"
 
@@ -21,4 +23,5 @@ def test_sphinx(a_project: Path, script_runner: ScriptRunner, tmp_path: Path) ->
     print("\n".join(list(map(str, built))))
     static = build / "_static"
     assert (static / "prjsf/prjsf/prjsf.js").exists()
-    assert (static / "pr-form/schema.json").exists()
+    if a_project not in NO_SCHEMA_JSON:
+        assert (static / "pr-form/schema.json").exists()

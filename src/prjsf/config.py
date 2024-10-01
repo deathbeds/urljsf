@@ -19,7 +19,7 @@ class Config:
     # required...
     github_repo: str
     # at least one of...
-    schema: Path | None = None
+    schema: str | None = None
     py_schema: str | None = None
     # meta...
     url_base: str = "./"
@@ -30,10 +30,10 @@ class Config:
     id_prefix: str | None = None
     pr_filename: str = "data.json"
     pr_filename_pattern: str | None = r"^[^/].*\.(json|yaml|yml|toml)$"
-    data: Path | None = None
+    data: str | None = None
     py_data: str | None = None
     data_format: TFormat | None = None
-    ui_schema: Path | None = None
+    ui_schema: str | None = None
     py_ui_schema: str | None = None
     ui_schema_format: TFormat | None = None
     prune_empty: bool = (True,)

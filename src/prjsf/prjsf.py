@@ -5,7 +5,9 @@
 from __future__ import annotations
 
 import json
+import re
 from logging import Logger, getLogger
+from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 import jinja2
@@ -13,8 +15,6 @@ import jinja2
 from .constants import STATIC, TEMPLATES, __dist__
 
 if TYPE_CHECKING:
-    from pathlib import Path
-
     from .config import Config
 
 
@@ -58,7 +58,6 @@ class Prjsf:
         """Copy the schema, uiSchema, and data files."""
         cfg = self.config
 
-        path.mkdir(parents=True, exist_ok=True)
         cfg.schema = self.from_file_or_py(path, cfg.schema, cfg.py_schema)
         cfg.ui_schema = self.from_file_or_py(
             path,
@@ -67,31 +66,45 @@ class Prjsf:
         )
         cfg.data = self.from_file_or_py(path, cfg.data, cfg.py_data)
 
-        for in_file in [cfg.schema, cfg.ui_schema, cfg.data]:
-            if in_file is None:
-                continue
-            out_file = path / in_file.name
-            out_file.write_bytes(in_file.read_bytes())
-
     def from_file_or_py(
         self,
-        parent_path: Path,
-        file_path: Path | None,
+        static_path: Path,
+        file_name: str | None,
         dotted: str | None,
-    ) -> Path | None:
+    ) -> str | None:
         """Resolve a dotted python import string, if given, to a path."""
         if dotted:
             name, raw = self.import_dotted(dotted)
-            file_path = parent_path / name
-            file_path.write_text(json.dumps(raw, indent=2), encoding="utf-8")
-        return file_path
+            if isinstance(raw, str):
+                resolved = raw
+            elif isinstance(raw, dict):
+                out_path = static_path / name
+                out_path.parent.mkdir(parents=True, exist_ok=True)
+                out_path.write_text(json.dumps(raw, indent=2), encoding="utf-8")
+                resolved = str(out_path)
+            else:  # pragma: no cover
+                msg = f"cannot resolve as URL string or schema object: {raw}"
+                raise RuntimeError(msg)
+        elif file_name is None:
+            resolved = None
+        elif self.is_url(file_name):
+            resolved = file_name
+        else:
+            in_path = Path(file_name)
+            out_path = static_path / in_path.name
+            in_bytes = in_path.read_bytes()
+            out_path.parent.mkdir(parents=True, exist_ok=True)
+            out_path.write_bytes(in_bytes)
+            resolved = out_path.name
+        return resolved
 
     def render(self) -> str:
         """Render a template."""
         cfg = self.config
         self.log.debug("rendering: %s", cfg)
         tmpl = self.env.get_template(cfg.template)
-        return tmpl.render(**cfg.__dict__)
+        context = dict(cfg.__dict__)
+        return tmpl.render(context)
 
     @staticmethod
     def deploy_static(path: Path) -> None:
@@ -104,7 +117,7 @@ class Prjsf:
             dest.parent.mkdir(parents=True, exist_ok=True)
             dest.write_bytes(child.read_bytes())
 
-    def import_dotted(self, dotted: str) -> tuple[str, dict[str, Any]]:
+    def import_dotted(self, dotted: str) -> tuple[str, dict[str, Any] | str]:
         """Generate a JSON file from a dotted python import."""
         module_path, member = dotted.split(":")
         submodules = module_path.split(".")[1:]
@@ -121,3 +134,8 @@ class Prjsf:
         """Get a filename for a dotted import."""
         module_path, member = dotted.split(":")
         return f"{module_path}-{member}.json".lower()
+
+    @staticmethod
+    def is_url(value: str | Path | None) -> bool:
+        """Get whether a value is a URL."""
+        return bool(re.findall("^https?://", str(value)))

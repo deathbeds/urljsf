@@ -40,18 +40,22 @@ def get_parser() -> ArgumentParser:
         help="a JS regular expression the proposed file must match",
         default=DEFAULTS["pr_filename_pattern"],
     )
-    parser.add_argument("-s", "--schema", type=Path, help="path to a JSON Schema")
+    parser.add_argument(
+        "-s",
+        "--schema",
+        help="path or URL for a JSON Schema as a JSON, TOML, or YAML file",
+    )
     parser.add_argument(
         "-u",
         "--ui-schema",
-        help="an rjsf UI schema as a JSON, TOML, or YAML file",
+        help="path or URL for an rjsf UI schema as a JSON, TOML, or YAML file",
     )
     parser.add_argument(
         "-d",
         "--data",
         help=(
-            "an initial data document as a JSON, TOML, or YAML file. Overrides "
-            "any defaults from ``schema``."
+            "path or URL for an initial data document as a JSON, TOML, or YAML file. "
+            "Overrides any defaults from ``schema``."
         ),
     )
     parser.add_argument(

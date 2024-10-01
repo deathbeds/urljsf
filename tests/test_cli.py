@@ -42,6 +42,16 @@ def test_cli_run(script_runner: ScriptRunner, tmp_path: Path) -> None:
     assert_outputs(tmp_path)
 
 
+def test_cli_urls(script_runner: ScriptRunner, tmp_path: Path) -> None:
+    """Verify remote URLs can be used."""
+    url = "https://foo.bar/schema.json"
+    r = script_runner.run(
+        ["prjsf", *GH, "-s", url, "-d", url, "-u", url], cwd=str(tmp_path)
+    )
+    assert r.success
+    assert_outputs(tmp_path)
+
+
 @pytest.mark.parametrize("py_style", ["simple", "nested"])
 def test_cli_run_py(
     script_runner: ScriptRunner, py_tmp_path: Path, py_style: str

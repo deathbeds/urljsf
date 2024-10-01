@@ -1,7 +1,7 @@
 # Python
 
-> Use an importable python module member as a schema. This one uses `sys.path` in
-> `conf.py` to define a schema dynamically.
+> Use an importable [python module member](../use/advanced.md#python) as a schema. This
+> one extends `sys.path` in `conf.py` to define a schema dynamically.
 
 ```{pr-form} deathbeds/prjsf
 :py-schema: conf:PY_SCHEMA

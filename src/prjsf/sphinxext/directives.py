@@ -57,7 +57,8 @@ class PrForm(SphinxDirective):
 
     def run(self) -> list[nodes.Node]:
         """Generate a single RJSF form."""
-        self._prjsf = Prjsf(self._options_to_config())
+        config = self._options_to_config()
+        self._prjsf = Prjsf(config)
         self._prjsf.deploy_form_files(
             Path(self.env.app.builder.outdir) / "_static/pr-form"
         )
@@ -73,31 +74,41 @@ class PrForm(SphinxDirective):
 
         here = Path(self.state.document.current_source).parent
         rel = os.path.relpath(self.env.app.srcdir, here)
-        url_base = f"{rel}/_static/pr-form/"
 
-        schema = opt("schema")
-        data = opt("data")
-        ui_schema = opt("ui-schema")
+        def to_abs_or_url(url_or_path: str | None) -> str | None:
+            """Resolve a path to a config value."""
+            if url_or_path is None:
+                resolved = None
+            elif Prjsf.is_url(url_or_path):
+                resolved = url_or_path
+            else:
+                resolved = str(here / url_or_path)
+            return resolved
+
+        schema = to_abs_or_url(opt("schema"))
+        data = to_abs_or_url(opt("data"))
+        ui_schema = to_abs_or_url(opt("ui-schema"))
 
         return Config(
             # meta
             template="prjsf/sphinx.j2",
-            url_base=url_base,
+            url_base=f"{rel}/_static/pr-form/",
             id_prefix=opt("id-prefix"),
             # required
             github_repo=opt("github-repo", cfg("github_repo")),
-            schema=(here / schema) if schema else None,
             py_schema=opt("py-schema"),
-            # optional
+            # paths
+            schema=schema,
+            data=data,
+            ui_schema=ui_schema,
+            # other optional
             github_branch=opt("github-branch", cfg("github_branch")),
             github_url=opt("github-url", cfg("github_url")),
             schema_format=opt("schema-format"),
             pr_filename=opt("filename"),
             pr_filename_pattern=opt("filename-pattern"),
-            data=(here / data) if data else data,
             py_data=opt("py-data"),
             data_format=opt("data-format"),
-            ui_schema=(here / ui_schema) if ui_schema else ui_schema,
             py_ui_schema=opt("py-ui-schema"),
             ui_schema_format=opt("ui-schema-format"),
             prune_empty=opt("prune-empty", cfg("prune_empty")),

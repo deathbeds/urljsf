@@ -3,7 +3,11 @@
 The `prjsf` command line interface (CLI) is appropriate for standalone forms, such as to
 be hosted on GitLab pages.
 
-For more complex use cases, please consider the {ref}`prjsf-sphinxext`.
+Some additional [advanced options](./advanced.md) are available.
+
+```{note}
+For more complex use cases, please consider using the [sphinx extension](./sphinx.md).
+```
 
 ```{argparse}
 :module: prjsf.cli

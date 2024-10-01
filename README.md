@@ -14,6 +14,7 @@ data-driven:
 - galleries
 - on-demand build services
 - precise test descriptions
+- linter rules
 
 When visiting a `prjsf`-built form, users:
 
@@ -85,7 +86,7 @@ can be further customized with a number of other options.
 
 ### Sphinx
 
-After [installing](#install), add this to `conf.py`:
+After [installing](#install), add `prjsf.sphinxext` to `conf.py`:
 
 ```py
 # conf.py
@@ -95,7 +96,7 @@ extensions = [
 ]
 ```
 
-Then use the `pr-form` directive:
+Then use the `pr-form` directive in source files:
 
 ```rst
 .. pr-form: a-github-org/a-github-repo
@@ -117,15 +118,16 @@ directive.
 
 ## Alternatives
 
-A number of other approaches can help users submit _public_ data which can be used to
-drive automation:
+A number of other approaches can help authenticated users submit _public_ data which can
+be used to drive automation:
 
-- GitHub [issue templates][issue-templates] and [some][issue-parser1]
-  [parser][issue-parser2]
-  - requires a GitHub account
-- Google [Forms][g-forms]
-  - creating a form requires a Google account
-  - submissions _can_ be anonymous, but this reduces the cost to spammers
+| approach                                  | project needs                                      | user needs account |
+| ----------------------------------------- | -------------------------------------------------- | ------------------ |
+| GitHub [issue templates][issue-templates] | [some][issue-parser1] [parser][issue-parser2]      | GitHub             |
+| Google [Forms][g-forms]                   | Google account to create form, polling for changes | Google `*`         |
+
+- `*` _while it is **possible** to accept anonymous form submissions, this reduces the
+  cost to spammers, which can make the form useless_
 
 [issue-templates]:
   https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests
