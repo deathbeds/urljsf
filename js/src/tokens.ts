@@ -6,6 +6,9 @@ export const META_KEYS = [
   'prjsfFileNamePattern',
   'prjsfPruneEmpty',
   'prjsfIdPrefix',
+  'prjsfIframe',
+  'prjsfIframeStyle',
+  'prjsfTheme',
 ] as const;
 export const PROVIDER_KEYS = [
   'prjsfGitHubUrl',
@@ -38,4 +41,6 @@ export const DEFAULTS = {
   prjsfPruneEmpty: 'true',
   prjsfGitHubBranch: 'main',
   prjsfGitHubUrl: 'https://github.com',
+  prjsfIframeStyle: 'width: 100%; height: 80vh;',
+  prjsfTheme: 'bootstrap',
 };

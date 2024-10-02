@@ -9,6 +9,8 @@ Some additional [advanced options](./advanced.md) are available.
 For more complex use cases, please consider using the [sphinx extension](./sphinx.md).
 ```
 
+## Usage
+
 ```{argparse}
 :module: prjsf.cli
 :func: get_parser

@@ -2,8 +2,13 @@
 // Distributed under the terms of the Modified BSD License.
 
 import { isObject } from '@rjsf/utils';
+
 import { TDataSet, TUrlKey, ALL_KEYS, DEFAULTS } from './tokens.js';
 
+let _NEXT_DATA_SET = 0;
+const _DATA_SETS = new WeakMap<TDataSet, number>();
+
+/** get a dataset with defaults */
 export function getDataSet(el: HTMLElement): TDataSet {
   const dataset: TDataSet = {};
   for (const k of [...ALL_KEYS]) {
@@ -12,6 +17,27 @@ export function getDataSet(el: HTMLElement): TDataSet {
   return dataset;
 }
 
+/** remove empty objects and arrays */
+function pruneObject(data: Record<string, any>) {
+  let newData: Record<string, any> = {};
+  for (let [key, value] of Object.entries(data)) {
+    if (Array.isArray(value) && !value.length) {
+      continue;
+    }
+
+    if (isObject(value)) {
+      value = pruneObject(value);
+    }
+
+    if (value == null) {
+      continue;
+    }
+    newData[key] = value;
+  }
+  return [...Object.keys(newData)].length ? newData : null;
+}
+
+/** lazily serialize some data */
 export async function getFileContent(
   dataset: TDataSet,
   formData: any,
@@ -37,26 +63,7 @@ export async function getFileContent(
   }
   return '';
 }
-
-function pruneObject(data: Record<string, any>) {
-  let newData: Record<string, any> = {};
-  for (let [key, value] of Object.entries(data)) {
-    if (Array.isArray(value) && !value.length) {
-      continue;
-    }
-
-    if (isObject(value)) {
-      value = pruneObject(value);
-    }
-
-    if (value == null) {
-      continue;
-    }
-    newData[key] = value;
-  }
-  return [...Object.keys(newData)].length ? newData : null;
-}
-
+/** fetch some data and lazily parse it */
 export async function fetchData(dataset: TDataSet, key: TUrlKey): Promise<any> {
   let url = dataset[key];
 
@@ -65,24 +72,33 @@ export async function fetchData(dataset: TDataSet, key: TUrlKey): Promise<any> {
   }
 
   const response = await fetch(url);
-  let data: any = null;
+  let data: any = {};
   const format = dataset[`${key}Format`] || 'json';
 
   if (response.ok) {
+    const text = await response.text();
     switch (format) {
       case 'json':
-        data = await response.json();
+        data = JSON.parse(text);
         break;
       case 'toml':
         let toml = await import('smol-toml');
-        data = toml.parse(await response.text());
+        data = toml.parse(text);
         break;
       case 'yaml':
         let yaml = await import('yaml');
-        data = yaml.parse(await response.text());
+        data = yaml.parse(text);
         break;
     }
   }
 
   return data;
+}
+
+/** provide an id of last resort for a dataset */
+export function getIdPrefix(dataset: TDataSet): string {
+  if (!_DATA_SETS.has(dataset)) {
+    _DATA_SETS.set(dataset, _NEXT_DATA_SET++);
+  }
+  return dataset.prjsfIdPrefix || `prjsf-${_DATA_SETS.get(dataset)}`;
 }

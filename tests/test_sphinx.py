@@ -5,12 +5,33 @@
 
 from pathlib import Path
 
+import pytest
 from pytest_console_scripts import ScriptRunner
+
+from prjsf.constants import THEMES
 
 from .conftest import NO_SCHEMA_JSON
 
 
-def test_sphinx(a_project: str, script_runner: ScriptRunner, tmp_path: Path) -> None:
+@pytest.mark.parametrize("theme", THEMES)
+def test_sphinx_theme_choice(theme: str) -> None:
+    """Verify known themes work."""
+    from prjsf.sphinxext.directives import a_theme
+
+    assert theme == a_theme(theme)
+
+
+def test_sphinx_theme_choice_bad() -> None:
+    """Verify broken themes break."""
+    from prjsf.sphinxext.directives import a_theme
+
+    with pytest.raises(ValueError, match="choose from"):
+        a_theme("not-a-theme")
+
+
+def test_sphinx_build(
+    a_project: str, script_runner: ScriptRunner, tmp_path: Path
+) -> None:
     """Verify a site builds."""
     build = tmp_path / "build"
 

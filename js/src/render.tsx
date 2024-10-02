@@ -1,21 +1,24 @@
 // Copyright (C) prjsf contributors.
 // Distributed under the terms of the Modified BSD License.
 
-import type { FormProps, IChangeEvent } from '@rjsf/core';
-import validator from '@rjsf/validator-ajv8';
+import { useState, createPortal } from 'react';
 import { Fragment, render } from 'react-dom';
-import { useState } from 'react';
-import { Form as RJSFForm } from '@rjsf/react-bootstrap';
+
 import { Form, Badge, Button, Col, Row } from 'react-bootstrap';
 
+import validator from '@rjsf/validator-ajv8';
+import type { RJSFValidationError } from '@rjsf/utils';
+import type { FormProps, IChangeEvent } from '@rjsf/core';
+import { Form as RJSFForm } from '@rjsf/react-bootstrap';
+
+import { fetchData, getFileContent, getDataSet, getIdPrefix } from './utils.js';
 import { DEFAULTS, type TDataSet } from './tokens.js';
+import { THEMES } from './themes.js';
 
-import { fetchData, getFileContent, getDataSet } from './utils.js';
-import { RJSFValidationError } from '@rjsf/utils';
-
-let _NEXT_DATA_SET = 0;
-let _DATA_SETS = new WeakMap<TDataSet, number>();
-
+/** process a single form
+ *
+ * @param container - a DOM node with prjsf dataset
+ */
 export async function makeOneForm(container: HTMLElement): Promise<void> {
   const dataset = getDataSet(container);
 
@@ -26,26 +29,75 @@ export async function makeOneForm(container: HTMLElement): Promise<void> {
   ]);
 
   const initValue = await getFileContent(dataset, formData);
-  console.error(initValue);
-
   const form = formComponent(dataset, initValue, { schema, formData, uiSchema });
-  render(form, container);
+  const isolated = !!dataset.prjsfIframe;
+  render(isolated ? await renderIframe(dataset, form) : form, container);
 }
 
-function makeOneBranchOption(branch: string, idx: number) {
+/** a component for a form in a (themed) iframe
+ *
+ * @param dataset - the pre-processed dataset with defaults
+ * @param form - the form element
+ * @param container - a DOM node with prjsf dataset
+ */
+async function renderIframe(
+  dataset: TDataSet,
+  form: JSX.Element,
+): Promise<JSX.Element> {
+  const anyTheme = THEMES as any;
+  const { prjsfTheme } = dataset;
+  const themeFn = anyTheme[prjsfTheme || DEFAULTS.prjsfTheme] || THEMES.bootstrap;
+  const cssUrl = (await themeFn()).default;
+  const style = dataset.prjsfIframeStyle || DEFAULTS.prjsfIframeStyle;
+  return (
+    <IFrame style={style}>
+      <head>
+        <link rel="stylesheet" href={cssUrl}></link>
+      </head>
+      <div class="col-lg-8 mx-auto p-3 py-md-5">
+        <main class="bs-main">
+          <div class="bs-content">
+            <div class="bs-article-container">
+              <section>{form}</section>
+            </div>
+          </div>
+        </main>
+      </div>
+    </IFrame>
+  );
+}
+
+/** an interface for iframe props */
+interface IFrameProps {
+  children: JSX.Element | JSX.Element[];
+  style?: string;
+}
+
+/** an iframe component for isolating CSS */
+function IFrame(props: IFrameProps): JSX.Element {
+  const [ref, setRef] = useState<HTMLIFrameElement>();
+  const container = ref?.contentWindow?.document?.body;
+
+  return (
+    <iframe ref={setRef as any} {...props}>
+      {container && createPortal(props.children, container)}
+    </iframe>
+  );
+}
+
+/** a component for a branch option  */
+function branchOption(branch: string, idx: number): JSX.Element {
   return <option key={idx}>{branch}</option>;
 }
 
+/** a component for a form */
 export function formComponent(
   dataset: TDataSet,
   initValue: string,
   props: Partial<FormProps>,
-) {
+): JSX.Element {
   const PRJSF = () => {
-    if (!_DATA_SETS.has(dataset)) {
-      _DATA_SETS.set(dataset, _NEXT_DATA_SET++);
-    }
-    const idPrefix = dataset.prjsfIdPrefix || `prjsf-${_DATA_SETS.get(dataset)}`;
+    const idPrefix = getIdPrefix(dataset);
     const filenamePattern = `${dataset.prjsfFileNamePattern || DEFAULTS.prjsfFileNamePattern}`;
 
     const branches = (dataset.prjsfGitHubBranch || DEFAULTS.prjsfGitHubBranch)
@@ -96,7 +148,7 @@ export function formComponent(
           size="sm"
           onChange={(e) => setBranch(e.currentTarget.value)}
         >
-          {branches.map(makeOneBranchOption)}
+          {branches.map(branchOption)}
         </Form.Control>
       );
     }

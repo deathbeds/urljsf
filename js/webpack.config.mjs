@@ -57,7 +57,24 @@ const config = {
     cacheDirectory: path.resolve(__dirname, '../build/.cache/webpack'),
   },
   module: {
-    rules: [{ test: /\.js$/, loader: 'source-map-loader', enforce: 'pre' }],
+    rules: [
+      { test: /\.js$/, loader: 'source-map-loader', enforce: 'pre' },
+      {
+        test: /bootstrap\/dist\/css\/bootstrap\.min\.css/,
+        type: 'asset',
+        generator: { filename: '[name][ext]?v=[hash:8]' },
+      },
+      {
+        test: /bootswatch.*\.css/,
+        type: 'asset',
+        generator: {
+          filename: ({ filename }) => {
+            const theme = filename.match('dist/([^/]+)/')[1];
+            return `themes/${theme}[ext]?v=[hash:8]`;
+          },
+        },
+      },
+    ],
   },
   plugins: [
     new CopyPlugin({

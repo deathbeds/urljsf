@@ -13,6 +13,9 @@
     {% if ui_schema_format %}data-prjsf-ui-schema-format="{{ ui_schema_format }}"{% endif %}
     {% if id_prefix %}data-prjsf-id-prefix="{{ id_prefix }}"{% endif %}
     {% if prune_empty is defined and prune_empty is not none %}data-prjsf-prune-empty="{{ prune_empty | string | lower }}"{% endif %}
+    {% if iframe is defined and iframe %}data-prjsf-iframe="true"{% endif %}
+    {% if iframe_style %}data-prjsf-iframe-style="{{ iframe_style }}"{% endif %}
+    {% if theme %}data-prjsf-theme="{{ theme }}"{% endif %}
 ></div>
 {%- endmacro %}
 

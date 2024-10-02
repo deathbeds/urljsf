@@ -8,7 +8,7 @@ from argparse import ArgumentParser
 from pathlib import Path
 
 from .config import DEFAULTS, Config
-from .constants import __dist__, __version__
+from .constants import THEMES, __dist__, __version__
 from .prjsf import Prjsf
 
 
@@ -89,10 +89,16 @@ def get_parser() -> ArgumentParser:
     )
     parser.add_argument(
         "--prune-empty",
-        help="title",
+        help="remove empty objects and arrays",
     )
     parser.add_argument(
         "-t",
+        "--theme",
+        help="the name of a bootswatch theme. (default: plain-old bootstrap)",
+        choices=THEMES,
+        default=THEMES[0],
+    )
+    parser.add_argument(
         "--template",
         help="name of the template to use",
         default=DEFAULTS["template"],

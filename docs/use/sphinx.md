@@ -44,6 +44,29 @@ may be a [URL](./advanced.md#remote-urls) or come from [python](./advanced.md#py
 
 ## Style
 
+### Iframe
+
+Ideally, a form would use minimal [CSS tweaks](#css) to get good-looking themes inline,
+as these will look more harmonious with the rest of the site, react to user style
+preferences (such as light/dark theming), and require fewer resources.
+
+However, if style issues are too extreme (or break other things), it may be desirable to
+render each form on a page as its own `iframe` element.
+
+```py
+# conf.py
+prjsf = {
+    # force rendering in an iframe (default: False)
+    "iframe": True,
+    # use a different theme (default: ``bootstrap``)
+    "theme": "zephyr",
+    # a reasonable default style, accounting for sticky headers (default: as shown)
+    "iframe_style": "width: 100%; height: 80vh;",
+}
+```
+
+### CSS
+
 Of particular note are some CSS opinions, which can help tune integration with sphinx
 themes that use (or abuse) the _hundreds_ of `bootstrap` class names and CSS variables.
 
@@ -61,9 +84,10 @@ prjsf = {
             ".prsjf-pr-form .card",
             ".prsjf-pr-form .list-group"
         ],
-        # a map of ``--{key}: var(--{value});`` (default: none)
+        # a map of ``--{key}: var(--{value});`` (default: ``{}``)
         "variables": {
             # the below are likely to look bad if not configured to _something_
+            "bs-body-bg": "some-variable",
             "bs-body-color": "some-variable",
             "bs-card-bg": "some-variable",
             "bs-card-cap-bg": "some-variable",

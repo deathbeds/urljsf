@@ -1,6 +1,13 @@
 {%- import "prjsf/_form.j2" as form with context -%}
 <!doctype html>
 <html>
+  {% set static = url_base ~ "_static/prjsf" %}
+  {% set theme_url = "bootstrap.min.css" %}
+
+  {% if theme is defined and theme != "bootstrap" %}
+    {% set theme_url = "themes/" ~ theme ~ ".min.css" %}
+  {% endif %}
+
   {% block html_head %}
   <head>
     <meta charset="utf-8" />
@@ -12,7 +19,7 @@
     {% block html_style %}
     <link
       rel="stylesheet"
-      href="{{ url_base }}_static/vendor/bootstrap/dist/css/bootstrap.min.css"
+      href="{{ static }}/{{ theme_url }}"
     />
     {% endblock %}
     {% block extra_head %}{% endblock %}
@@ -33,7 +40,7 @@
       {% block after_main %}{% endblock %}
     </div>
     {% block body_script %}
-    <script type="module" src="{{ url_base }}_static/prjsf/prjsf.js"></script>
+    <script type="module" src="{{ static }}/prjsf.js"></script>
     {% endblock %}
   </body>
 </html>

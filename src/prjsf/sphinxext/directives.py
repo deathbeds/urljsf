@@ -8,11 +8,11 @@ import os
 from pathlib import Path
 from typing import TYPE_CHECKING, ClassVar
 
-from docutils.parsers.rst import directives
+from docutils.parsers.rst.directives import choice, path, unchanged, uri
 from sphinx.util.docutils import SphinxDirective
 
 from ..config import Config
-from ..constants import TFORMATS
+from ..constants import TFORMATS, THEMES
 from ..prjsf import Prjsf
 from .nodes import prform
 
@@ -22,12 +22,17 @@ if TYPE_CHECKING:
 
 def a_format(argument: str) -> str:
     """Conversion function for the ``*-format`` options."""
-    return directives.choice(argument, TFORMATS)
+    return choice(argument, TFORMATS)
 
 
 def a_boolish(argument: str) -> str:
     """Conversion function for ."""
-    return directives.choice(argument.lower(), ["true", "false"])
+    return choice(argument.lower(), ["true", "false"])
+
+
+def a_theme(argument: str) -> str:
+    """Conversion function for ."""
+    return choice(argument.lower(), THEMES)
 
 
 class PrForm(SphinxDirective):
@@ -36,22 +41,25 @@ class PrForm(SphinxDirective):
     optional_arguments = 1
     has_content = True
     option_spec: ClassVar = {
-        "github-url": directives.uri,
-        "github-repo": directives.uri,
-        "github-branch": directives.unchanged,
-        "schema": directives.path,
-        "py-schema": directives.unchanged,
+        "github-url": uri,
+        "github-repo": uri,
+        "github-branch": unchanged,
+        "schema": path,
+        "py-schema": unchanged,
         "schema-format": a_format,
-        "ui-schema": directives.path,
-        "py-ui-schema": directives.unchanged,
+        "ui-schema": path,
+        "py-ui-schema": unchanged,
         "ui-schema-format": a_format,
-        "data": directives.path,
-        "py-data": directives.unchanged,
+        "data": path,
+        "py-data": unchanged,
         "data-format": a_format,
-        "id-prefix": directives.unchanged,
-        "filename": directives.uri,
-        "filename-pattern": directives.unchanged,
+        "id-prefix": unchanged,
+        "filename": uri,
+        "filename-pattern": unchanged,
         "prune-empty": a_boolish,
+        "iframe": a_boolish,
+        "iframe-style": unchanged,
+        "theme": a_theme,
     }
     _prsjf: Prjsf | None
 
@@ -101,6 +109,10 @@ class PrForm(SphinxDirective):
             schema=schema,
             data=data,
             ui_schema=ui_schema,
+            # iframe
+            theme=opt("theme", cfg("theme")),
+            iframe=opt("iframe", cfg("iframe")),
+            iframe_style=opt("iframe_style", cfg("iframe_style")),
             # other optional
             github_branch=opt("github-branch", cfg("github_branch")),
             github_url=opt("github-url", cfg("github_url")),

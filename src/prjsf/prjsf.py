@@ -81,7 +81,7 @@ class Prjsf:
                 out_path = static_path / name
                 out_path.parent.mkdir(parents=True, exist_ok=True)
                 out_path.write_text(json.dumps(raw, indent=2), encoding="utf-8")
-                resolved = str(out_path)
+                resolved = out_path.name
             else:  # pragma: no cover
                 msg = f"cannot resolve as URL string or schema object: {raw}"
                 raise RuntimeError(msg)

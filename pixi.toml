@@ -344,6 +344,7 @@ prjsf.github_repo = "deathbeds/prjsf"
 prjsf.css.compact_headings = true
 
 [tool.sphinx.prjsf.css.variables]
+bs-body-bg = "pst-color-surface"
 bs-body-color = "pst-color-text-base"
 bs-card-bg = "pst-color-surface"
 bs-card-cap-bg = "pst-color-danger-bg"

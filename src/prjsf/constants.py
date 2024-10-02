@@ -17,3 +17,32 @@ STATIC = HERE / "_static"
 
 TFormat = Literal["json", "toml", "yaml"]
 TFORMATS: list[TFormat] = "json", "toml", "yaml"
+
+THEMES = [
+    "default",
+    "cerulean",
+    "cosmo",
+    "cyborg",
+    "darkly",
+    "flatly",
+    "journal",
+    "litera",
+    "lumen",
+    "lux",
+    "materia",
+    "minty",
+    "morph",
+    "pulse",
+    "quartz",
+    "sandstone",
+    "simplex",
+    "sketchy",
+    "slate",
+    "solar",
+    "spacelab",
+    "superhero",
+    "united",
+    "vapor",
+    "yeti",
+    "zephyr",
+]
