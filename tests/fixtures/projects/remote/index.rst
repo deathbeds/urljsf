@@ -1,9 +1,9 @@
 form1
 =====
 
-.. pr-form:: deathbeds/prjsf
+.. github-pr:: deathbeds/prjsf
     :schema: https://example.com/complex-object.schema.json
 
 
-.. pr-form:: deathbeds/prjsf
+.. github-pr:: deathbeds/prjsf
     :py-schema: conf:get_schema_url

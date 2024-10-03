@@ -2,7 +2,7 @@
 
 > shows a single form. The `github-repo` is omitted, and defined in `conf.py`.
 
-```{pr-form}
+```{github-pr}
 :schema:    ./simple.schema.json
 :github-branch:  not-a-branch
 ```

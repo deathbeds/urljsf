@@ -1,7 +1,7 @@
 form2
 =====
 
-.. pr-form::
+.. github-pr::
     :github-repo: deathbeds/prjsf
     :schema: ./schema.json
     :prune-empty: true

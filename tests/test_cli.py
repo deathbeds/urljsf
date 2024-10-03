@@ -62,7 +62,7 @@ def test_cli_run_py(
             f"""SCHEMA = {json.dumps(SIMPLE_SCHEMA)}""", **UTF8
         )
         dotted = "schema:SCHEMA"
-        extra_files = ["schema-schema.json"]
+        extra_files = ["schema-schema-*.json"]
     elif py_style == "nested":
         nested = py_tmp_path / "nested"
         nested.mkdir()
@@ -71,7 +71,7 @@ def test_cli_run_py(
             f"""get_schema = lambda: {json.dumps(SIMPLE_SCHEMA)}""", **UTF8
         )
         dotted = "nested.schema:get_schema"
-        extra_files = ["nested.schema-get_schema.json"]
+        extra_files = ["nested.schema-get_schema-*.json"]
 
     r = script_runner.run(
         ["prjsf", *GH, "--py-schema", dotted],
@@ -89,17 +89,15 @@ def assert_outputs(
         "index.html",
         "_static/prjsf/third-party-licenses.json",
         "_static/vendor/bootstrap/LICENSE",
+        *(extra_files or []),
     ]
     out = out or (path / "_prjsf_output")
     missing = {}
 
     for rel in expected:
-        if not (out / rel).exists():
+        found = sorted(out.glob(rel))
+        if not found:
             missing[out / rel] = True
-
-    for file_ in extra_files or []:
-        if not (out / file_).exists():
-            missing[out / file_] = True
 
     if missing:
         print("\n".join(map(str, path.rglob("*"))))

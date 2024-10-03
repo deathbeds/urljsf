@@ -1,5 +1,5 @@
 form1
 =====
 
-.. pr-form:: deathbeds/prjsf
+.. github-pr:: deathbeds/prjsf
     :schema: ./schema.json

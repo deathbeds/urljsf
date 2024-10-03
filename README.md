@@ -7,9 +7,8 @@
 [rjsf]: https://github.com/rjsf-team/react-jsonschema-form
 [bootstrap]: https://github.com/twbs/bootstrap
 
-GitHub projects can use `prjsf` as a standalone [CLI tool](#command-line) or
-[sphinx](#sphinx) extension to create static HTML forms that jumpstart contibution to
-data-driven:
+Projects can use `prjsf` as a standalone [CLI tool](#command-line) or [sphinx](#sphinx)
+extension to create static HTML forms that jumpstart contibution to data-driven:
 
 - galleries
 - on-demand build services
@@ -22,7 +21,8 @@ When visiting a `prjsf`-built form, users:
   with...
   - ... a [user interface schema][ui-schema]
   - ... pre-filled data
-- click to propose a single file (`.json`, `.yaml`, or `.toml`) in a PR on a GitHub fork
+- click to propose a single file (`.json`, `.yaml`, or `.toml`) in a _pull request_ on a
+  GitHub fork (see [limitations](#limitations))
 - see automation on a branch the user owns
 - get automatic, actionable notifications of failures
 
@@ -96,25 +96,27 @@ extensions = [
 ]
 ```
 
-Then use the `pr-form` directive in source files:
+Then use the `github-pr` directive in source files:
 
 ```rst
-.. pr-form: a-github-org/a-github-repo
+.. github-pr: a-github-org/a-github-repo
   :schema: path/to/schema.json
 ```
 
-See the documentation for more about configuring `prjsf.sphinxext` and the `pr-form`
+See the documentation for more about configuring `prjsf.sphinxext` and the `github-pr`
 directive.
 
 ## Limitations
 
+- only works with GitHub's `/new/` URL: GitLab offers a _similar_ endpoint, but it
+  doesn't accept file content from a request parameter
 - `react-json-schema-form` cannot represent all possible data structures, such as
   writing a _new_ JSON schema in JSON schema, or many features added after Draft 7
 - advanced YAML features such as `&anchors` and `!!tags` are not supported
 - can only propose a single file per form
 - the generated scripts _won't_ work when served from `file://` due to browser CORS
   headers requirements for `type="module"` scripts
-- the [`sphinx`](#sphinx) integration os only tested with the `html` builder
+- the [`sphinx`](#sphinx) integration is only tested with the `html` builder
 
 ## Alternatives
 

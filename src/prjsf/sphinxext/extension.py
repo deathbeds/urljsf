@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     from sphinx.application import Sphinx
 
 
-ROOT_CLASS = "prjsf-pr-form"
+ROOT_CLASS = "prjsf-form"
 
 DEFAULT_SCOPES = [
     f".{ROOT_CLASS}",

@@ -35,8 +35,8 @@ def a_theme(argument: str) -> str:
     return choice(argument.lower(), THEMES)
 
 
-class PrForm(SphinxDirective):
-    """Class for the ``pr-form`` directive."""
+class GitHubPR(SphinxDirective):
+    """Class for the ``github-pr`` directive."""
 
     optional_arguments = 1
     has_content = True
@@ -68,7 +68,7 @@ class PrForm(SphinxDirective):
         config = self._options_to_config()
         self._prjsf = Prjsf(config)
         self._prjsf.deploy_form_files(
-            Path(self.env.app.builder.outdir) / "_static/pr-form"
+            Path(self.env.app.builder.outdir) / "_static/prjsf-forms"
         )
         return [prform("", self._prjsf.render())]
 
@@ -100,7 +100,7 @@ class PrForm(SphinxDirective):
         return Config(
             # meta
             template="prjsf/sphinx.j2",
-            url_base=f"{rel}/_static/pr-form/",
+            url_base=f"{rel}/_static/prjsf-forms/",
             id_prefix=opt("id-prefix"),
             # required
             github_repo=opt("github-repo", cfg("github_repo")),

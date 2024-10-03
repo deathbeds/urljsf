@@ -30,10 +30,10 @@ prjsf = {
 
 ## Write
 
-Embed forms with the `pr-form` directive in an `.rst` file:
+Embed forms with the `github-pr` directive in an `.rst` file:
 
 ```rst
-.. pr-form: some-org/some-repo
+.. github-pr: some-org/some-repo
     schema: my-form.schema.json
 ```
 
@@ -80,9 +80,9 @@ prjsf = {
         "compact_headings": True,
         # CSS selectors in which to re-map variables (default: as shown)
         "scopes": [
-            ".prsjf-pr-form",
-            ".prsjf-pr-form .card",
-            ".prsjf-pr-form .list-group"
+            ".prsjf-prjsf-form",
+            ".prsjf-prjsf-form .card",
+            ".prsjf-prjsf-form .list-group"
         ],
         # a map of ``--{key}: var(--{value});`` (default: ``{}``)
         "variables": {

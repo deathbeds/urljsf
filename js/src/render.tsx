@@ -224,7 +224,7 @@ export function formComponent(
           ];
 
     return (
-      <div class="prjsf-pr-form">
+      <div class="prjsf-form">
         <div>
           <RJSFForm {...formProps} formData={formData}>
             <Fragment />
