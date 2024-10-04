@@ -24,7 +24,7 @@ lint = {depends-on = [
 ]}
 build = {depends-on = ["build-js-lib", "build-js-app", "build-py-static"]}
 dist = {depends-on = ["dist-npm", "dist-pypi", "dist-hash"]}
-test = {depends-on = ["test-pytest"]}
+test = {depends-on = ["test-pytest", "test-oldest-pytest"]}
 docs = {depends-on = ["docs-sphinx"]}
 
 [tasks.prettier--]
@@ -58,6 +58,13 @@ rm -rf src/prjsf/_static/
 && cp -r node_modules/bootstrap/LICENSE src/prjsf/_static/vendor/bootstrap/LICENSE
 && cp -r node_modules/bootstrap/dist/css/bootstrap.min.css src/prjsf/_static/vendor/bootstrap/dist/css/
 && rm -rf src/prjsf/_static/prjsf/demo/
+"""
+[tasks.platform]
+cmd = """
+mkdir -p build
+&& python -c
+  "import platform; u = platform.uname(); print(f'{u.system}-{u.machine}'.lower())"
+> build/platform.txt
 """
 
 # tasks ########################################################################
@@ -189,17 +196,20 @@ cmd = """
     *.toml"""
 inputs = ["*.toml"]
 
+# test #########################################################################
 [feature.tasks-dev.tasks.test-pip]
 cmd = """pixi r -e test pip-e--"""
 inputs = ["pyproject.toml"]
 
 [feature.tasks-test.tasks.test-pytest]
 cmd = """
-pytest
+export PIXI_PLATFORM=$(cat build/platform.txt)
+&& export COVERAGE_FILE=build/reports/test/$PIXI_PLATFORM/.coverage
+&& pytest
   -n auto
-  --html=build/reports/pytest.html
+  --html=build/reports/test/$PIXI_PLATFORM/pytest/index.html
   --self-contained-html
-  --cov-report=html:build/reports/htmlcov
+  --cov-report=html:build/reports/test/$PIXI_PLATFORM/htmlcov
   --cov-report=term-missing:skip-covered
   --cov=prjsf
   --cov-branch
@@ -207,8 +217,26 @@ pytest
   --no-cov-on-fail
   --cov-fail-under=100
 """
-depends-on = ["test-pip", "build-py-static"]
-inputs = ["{tests,src/prjsf}/**/*.py", "src/prjsf/{_static,_templates}"]
+depends-on = ["test-pip", "build-py-static", "platform"]
+inputs = ["{tests,src/prjsf}/**/*.{py,rst,json}", "src/prjsf/{_static,_templates}"]
+outputs = ["build/reports/test"]
+
+# test-oldest ##################################################################
+[feature.tasks-test-oldest.tasks.test-oldest-pip]
+cmd = """pixi r -e test-oldest pip-e--"""
+inputs = ["pyproject.toml"]
+
+[feature.tasks-test-oldest.tasks.test-oldest-pytest]
+cmd = """
+export PIXI_PLATFORM=$(cat build/platform.txt)
+&& pytest
+  -n auto
+  --html=build/reports/test-oldest/$PIXI_PLATFORM/pytest/pytest.html
+  --self-contained-html
+"""
+depends-on = ["test-oldest-pip", "build-py-static", "platform"]
+inputs = ["{tests,src/prjsf}/**/*.{py,rst,json}", "src/prjsf/{_static,_templates}"]
+outputs = ["build/reports/test-oldest"]
 
 [feature.tasks-dev.tasks.dev-pip]
 cmd = """pixi r -e dev pip-e--"""
@@ -259,12 +287,22 @@ rm -rf build/watch-docs
 [environments]
 build = ["deps-build", "tasks-build", "deps-pip"]
 test = ["deps-test", "deps-run", "deps-pip", "tasks-test"]
-test-oldest = ["deps-pip", "deps-test", "deps-run", "deps-run-oldest"]
+test-oldest = [
+  "deps-pip",
+  "deps-test",
+  "deps-run",
+  "deps-run-oldest",
+  "tasks-test-oldest",
+]
 lint = ["deps-build", "deps-lint", "tasks-lint"]
 docs = ["deps-docs", "deps-run", "deps-build", "deps-pip", "tasks-docs"]
 dev = ["deps-build", "deps-test", "deps-docs", "deps-lint", "deps-pip", "tasks-dev"]
 
 # deps #########################################################################
+[feature.deps-pip.dependencies]
+pip = "*"
+flit = ">=3.9.0,<4.0.0a0"
+
 [feature.deps-run.dependencies]
 sphinx = ">=6.1"
 python = ">=3.9"
@@ -302,9 +340,6 @@ mypy = "*"
 taplo = "*"
 actionlint-with-all = "*"
 
-[feature.deps-pip.dependencies]
-pip = "*"
-flit = ">=3.9.0,<4.0.0a0"
 
 # tools ########################################################################
 [tool.sphinx]

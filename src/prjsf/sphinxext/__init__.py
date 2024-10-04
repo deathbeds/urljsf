@@ -18,9 +18,7 @@ if TYPE_CHECKING:
 def setup(app: Sphinx) -> ExtensionMetadata:
     """Set up the sphinx extension."""
     app.add_directive("github-pr", GitHubPR)
-    app.add_config_value(
-        "prjsf", {}, "env", description="``prjsf`` configuration values"
-    )
+    app.add_config_value("prjsf", {}, "env")
     app.connect("build-finished", build_finished)
     app.connect("html-page-context", html_page_context)
 
