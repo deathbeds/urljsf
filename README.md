@@ -108,8 +108,9 @@ directive.
 
 ## Limitations
 
-- only works with GitHub's `/new/` URL: GitLab offers a _similar_ endpoint, but it
-  doesn't accept file content from a request parameter
+- only works with GitHub's `/new/` URL
+  - GitLab offers a _similar_ endpoint, but it doesn't [accept file
+    content][gl-content-url] from a request parameter
 - `react-json-schema-form` cannot represent all possible data structures, such as
   writing a _new_ JSON schema in JSON schema, or many features added after Draft 7
 - advanced YAML features such as `&anchors` and `!!tags` are not supported
@@ -117,6 +118,8 @@ directive.
 - the generated scripts _won't_ work when served from `file://` due to browser CORS
   headers requirements for `type="module"` scripts
 - the [`sphinx`](#sphinx) integration is only tested with the `html` builder
+
+[gl-content-url]: https://gitlab.com/gitlab-org/gitlab/-/issues/297236
 
 ## Alternatives
 

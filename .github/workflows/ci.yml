@@ -1,0 +1,117 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: ['*']
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHONUNBUFFERED: '1'
+  PIP_DISABLE_PIP_VERSION_CHECK: '1'
+  CACHE_EPOCH: '0'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: prefix-dev/setup-pixi@v0.8.1
+        with:
+          pixi-version: v0.31.0
+          cache: true
+          environments: build
+          cache-key: job-build
+      - name: cache (node)
+        uses: actions/cache@v4
+        id: cache-node-modules
+        with:
+          path: node_modules
+          key: |
+            ${{ env.CACHE_EPOCH }}-${{ runner.os }}-node_modules-${{ hashFiles('yarn.lock') }}
+      - run: pixi run dist
+      - uses: actions/upload-artifact@v4
+        with:
+          name: prjsf-${{ github.run_number }}-dist
+          path: ./dist
+
+  lint:
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: prefix-dev/setup-pixi@v0.8.1
+        with:
+          pixi-version: v0.31.0
+          cache: true
+          environments: build lint
+          cache-key: job-lint
+      - name: cache (node)
+        uses: actions/cache@v4
+        id: cache-node-modules
+        with:
+          path: node_modules
+          key: |
+            ${{ env.CACHE_EPOCH }}-${{ runner.os }}-node_modules-${{ hashFiles('yarn.lock') }}
+      - run: pixi run lint
+
+  test:
+    needs: [build]
+    name: ${{ matrix.test-env }} (${{ matrix.vm }})
+    runs-on: ${{ matrix.vm }}
+    strategy:
+      fail-fast: false
+      matrix:
+        vm: [ubuntu-latest, windows-latest, macos-13, macos-latest]
+        test-env: [test, test-oldest]
+        exclude:
+          - { vm: macos-13, test-env: test }
+          - { vm: macos-latest, test-env: test-oldest }
+        include:
+          - { test-env: test, test-task: test-pytest }
+          - { test-env: test-oldest, test-task: test-pytest-oldest }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: prefix-dev/setup-pixi@v0.8.1
+        with:
+          pixi-version: v0.31.0
+          cache: true
+          environments: build ${{ matrix.test-env }}
+          cache-key: job-test-${{ matrix.test-env }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: prjsf-${{ github.run_number }}-dist
+          path: ./dist
+      - run: pixi run ${{ matrix.test-task }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: prjsf-${{ github.run_number }}-${{ matrix.test-env }}-${{ matrix.vm }}
+          path: ./build/reports
+
+  docs:
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: prefix-dev/setup-pixi@v0.8.1
+        with:
+          pixi-version: v0.31.0
+          cache: true
+          environments: build docs
+          cache-key: job-docs
+      - uses: actions/download-artifact@v4
+        with:
+          name: prjsf-${{ github.run_number }}-dist
+          path: ./dist
+      - run: pixi run -e docs ci-preflight-test
+      - run: pixi run docs-sphinx
+      - uses: actions/upload-artifact@v4
+        with:
+          name: prjsf-${{ github.run_number }}-docs
+          path: ./build/docs

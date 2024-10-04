@@ -1,6 +1,6 @@
-# Simple
+# Simple Demo
 
-> shows a single form. The `github-repo` is omitted, and defined in `conf.py`.
+> show a single form. The `github-repo` is omitted, and defined in `conf.py`.
 
 ```{github-pr}
 :schema:    ./simple.schema.json

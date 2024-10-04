@@ -58,9 +58,9 @@ flake8-copyright.notice-rgx = '''
 isort.known-first-party = ["prjsf"]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/**/*.py" = ["S101", "PLC0415", "T201", "DOC402", "ARG001"]
+"tests/**/*.py" = ["S101", "PLC0415", "T201", "DOC402", "ARG001", "INP001"]
 "**/sphinxext/*.py" = ["TID252", "ANN401", "ARG001"]
-"conf.py" = ["INP001"]
+"docs/**/*.py" = ["INP001"]
 "nodes.py" = ["N801"]
 
 [tool.pytest.ini_options]

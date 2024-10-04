@@ -16,7 +16,12 @@ fix = {depends-on = [
   "fix-js-prettier",
   "fix-py-ruff",
 ]}
-lint = {depends-on = ["lint-py-ruff", "lint-js-prettier", "lint-js-markdownlint"]}
+lint = {depends-on = [
+  "lint-actionlint",
+  "lint-py-ruff",
+  "lint-js-prettier",
+  "lint-js-markdownlint",
+]}
 build = {depends-on = ["build-js-lib", "build-js-app", "build-py-static"]}
 dist = {depends-on = ["dist-npm", "dist-pypi", "dist-hash"]}
 test = {depends-on = ["test-pytest"]}
@@ -119,6 +124,10 @@ rm -rf dist/SHA256SUMS
 depends-on = ["dist-pypi", "dist-npm"]
 inputs = ["dist", "!dist/SHA256SUMS"]
 outputs = ["dist/SHA256SUMS"]
+
+[feature.tasks-lint.tasks.lint-actionlint]
+cmd = "actionlint -shellcheck=shellcheck -pyflakes=pyflakes"
+inputs = [".github/workflows"]
 
 [feature.tasks-lint.tasks.fix-py-ruff]
 cmd = "ruff format && ruff check --fix-only"
@@ -291,6 +300,7 @@ watchfiles = "*"
 ruff = "*"
 mypy = "*"
 taplo = "*"
+actionlint-with-all = "*"
 
 [feature.deps-pip.dependencies]
 pip = "*"
@@ -344,7 +354,7 @@ prjsf.github_repo = "deathbeds/prjsf"
 prjsf.css.compact_headings = true
 
 [tool.sphinx.prjsf.css.variables]
-bs-body-bg = "pst-color-surface"
+bs-body-bg = "pst-color-background"
 bs-body-color = "pst-color-text-base"
 bs-card-bg = "pst-color-surface"
 bs-card-cap-bg = "pst-color-danger-bg"

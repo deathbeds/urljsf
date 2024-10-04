@@ -23,19 +23,3 @@ SPX = json.loads(
 )
 
 globals().update(SPX)
-
-#: this is used in an example in `demos/python.md`
-PY_SCHEMA = {
-    "type": "object",
-    "required": ["favorite"],
-    "properties": {
-        "favorite": {
-            "title": "favorite python module",
-            "description": "pick a module",
-            "type": "string",
-            "enum": sorted(
-                {m.split(".")[0] for m in sys.modules}, key=lambda x: x.lower()
-            ),
-        },
-    },
-}
