@@ -11,6 +11,7 @@ _Create Pull Request_ button to see a `404`.
 :maxdepth: 2
 
 simple
+pets
 multiple
 python
 iframe

@@ -7,7 +7,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
-from ..constants import UTF8
+from ..constants import UTF8, __version__
 from ..prjsf import Prjsf
 from .directives import prform
 
@@ -73,9 +73,16 @@ def html_page_context(
         return
 
     app.add_js_file("prjsf/prjsf/prjsf.js", type="module")
+    app.add_css_file(
+        "prjsf/prjsf/prjsf.js",
+        rel="modulepreload",
+        type=None,
+    )
     conf = app.config["prjsf"].get
     if conf("css", {}).get("add_bootstrap"):
-        app.add_css_file("prjsf/vendor/bootstrap/dist/css/bootstrap.min.css")
+        app.add_css_file(
+            "prjsf/vendor/bootstrap/dist/css/bootstrap.min.css"
+        )
 
     css = conf("css", {})
     if "variables" in css or "compact_headings" in css:

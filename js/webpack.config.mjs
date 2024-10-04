@@ -49,8 +49,12 @@ const config = {
   output: {
     path: path.resolve(__dirname, './dist/prjsf'),
     filename: 'prjsf.js',
+    chunkFilename: ({ chunk }) => {
+      return `${chunk.id}.${chunk.hash?.slice(0, 8)}.js`;
+    },
     library: { type: 'module' },
     clean: true,
+    asyncChunks: true,
   },
   cache: {
     type: 'filesystem',
