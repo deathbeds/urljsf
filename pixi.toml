@@ -24,8 +24,9 @@ lint = {depends-on = [
 ]}
 build = {depends-on = ["build-js-lib", "build-js-app", "build-py-static"]}
 dist = {depends-on = ["dist-npm", "dist-pypi", "dist-hash"]}
-test = {depends-on = ["test-pytest", "test-oldest-pytest"]}
+test = {depends-on = ["test-pytest", "test-oldest-pytest", "test-report"]}
 docs = {depends-on = ["docs-sphinx"]}
+
 
 [tasks.prettier--]
 cmd = """
@@ -204,12 +205,12 @@ inputs = ["pyproject.toml"]
 [feature.tasks-test.tasks.test-pytest]
 cmd = """
 export PIXI_PLATFORM=$(cat build/platform.txt)
-&& export COVERAGE_FILE=build/reports/test/$PIXI_PLATFORM/.coverage
+&& export COVERAGE_FILE=build/reports/test_pytest_$PIXI_PLATFORM.coverage
 && pytest
   -n auto
-  --html=build/reports/test/$PIXI_PLATFORM/pytest/index.html
+  --html=build/reports/test_pytest_$PIXI_PLATFORM.html
   --self-contained-html
-  --cov-report=html:build/reports/test/$PIXI_PLATFORM/htmlcov
+  --cov-report=html:build/reports/test_pytest_htmlcov-$PIXI_PLATFORM/
   --cov-report=term-missing:skip-covered
   --cov=prjsf
   --cov-branch
@@ -219,7 +220,37 @@ export PIXI_PLATFORM=$(cat build/platform.txt)
 """
 depends-on = ["test-pip", "build-py-static", "platform"]
 inputs = ["{tests,src/prjsf}/**/*.{py,rst,json}", "src/prjsf/{_static,_templates}"]
-outputs = ["build/reports/test"]
+outputs = ["build/reports/test_*"]
+
+[feature.tasks-test.tasks.test-report]
+cmd = '''
+python -c 'from pathlib import Path;
+print("""
+  <html>
+  <style>
+    html {font-family: sans-serif;}
+    iframe {position: absolute; top: 0; height: 99vh; width: 79vw; right: 0;}
+    ul {display: block; max-width: 19vw;}
+  </style>
+  <body>
+    <ul>""");
+ps = [
+  (
+    f"""./{p.name}{"/index.html" if p.is_dir() else ""}""",
+    " ".join(p.stem.split("_", 2))
+  )
+  for p in sorted(Path("build/reports/").iterdir())
+  if p.is_dir() or p.name.endswith(".html") and p.name != "index.html"
+];
+[print(f"""
+      <li><a href="{u}" target="main">{n}</a></li>""") for u, n in ps];
+print(f"""
+    </ul>
+    <iframe name="main" src="{ps[0][0]}"></iframe>
+  </body>
+</html>""")
+' > build/reports/index.html
+'''
 
 # test-oldest ##################################################################
 [feature.tasks-test-oldest.tasks.test-oldest-pip]
@@ -231,12 +262,13 @@ cmd = """
 export PIXI_PLATFORM=$(cat build/platform.txt)
 && pytest
   -n auto
-  --html=build/reports/test-oldest/$PIXI_PLATFORM/pytest/pytest.html
+  --html=build/reports/test-oldest_pytest_$PIXI_PLATFORM.html
   --self-contained-html
 """
 depends-on = ["test-oldest-pip", "build-py-static", "platform"]
 inputs = ["{tests,src/prjsf}/**/*.{py,rst,json}", "src/prjsf/{_static,_templates}"]
-outputs = ["build/reports/test-oldest"]
+outputs = ["build/reports/test-oldest_*"]
+
 
 [feature.tasks-dev.tasks.dev-pip]
 cmd = """pixi r -e dev pip-e--"""
