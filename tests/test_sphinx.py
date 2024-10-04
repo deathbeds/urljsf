@@ -43,7 +43,7 @@ def test_sphinx_build(
     built = sorted(build.rglob("*"))
     print("\n".join(list(map(str, built))))
     static = build / "_static"
-    assert (static / "prjsf/prjsf/prjsf.js").exists()
+    assert (static / "prjsf/prjsf.js").exists()
     if a_project not in NO_SCHEMA_JSON:
         found = sorted(static.glob("prjsf-forms/schema-*.json"))
         assert found

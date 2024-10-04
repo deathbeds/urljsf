@@ -1,19 +1,18 @@
 // Copyright (C) prjsf contributors.
 // Distributed under the terms of the Modified BSD License.
-
-import { useState, createPortal } from 'react';
+import { createPortal, useState } from 'react';
 import { Fragment, render } from 'react-dom';
 
-import { Form, Badge, Button, Col, Row } from 'react-bootstrap';
+import { Badge, Button, Col, Form, Row } from 'react-bootstrap';
 
-import validator from '@rjsf/validator-ajv8';
-import type { RJSFValidationError } from '@rjsf/utils';
 import type { FormProps, IChangeEvent } from '@rjsf/core';
 import { Form as RJSFForm } from '@rjsf/react-bootstrap';
+import type { RJSFValidationError } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
 
-import { fetchData, getFileContent, getDataSet, getIdPrefix } from './utils.js';
-import { DEFAULTS, type TDataSet } from './tokens.js';
 import { THEMES } from './themes.js';
+import { DEFAULTS, type TDataSet } from './tokens.js';
+import { fetchData, getDataSet, getFileContent, getIdPrefix } from './utils.js';
 
 /** process a single form
  *

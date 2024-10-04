@@ -14,12 +14,34 @@
   "prettier": {
     "plugins": [
       "prettier-plugin-packagejson",
-      "prettier-plugin-sort-json"
+      "prettier-plugin-sort-json",
+      "@trivago/prettier-plugin-sort-imports"
     ],
     "printWidth": 88,
     "proseWrap": "always",
     "singleQuote": true,
     "overrides": [
+      {
+        "files": [
+          "*.ts",
+          "*.tsx",
+          "*.mjs",
+          "*.mjs"
+        ],
+        "options": {
+          "importOrder": [
+            "^node:(.*)$",
+            "^react(|-dom)$",
+            "^react-bootstrap(/.*)?.*$",
+            "^@rjsf/(.*)$",
+            "^webpack$",
+            "<THIRD_PARTY_MODULES>",
+            "^[./]"
+          ],
+          "importOrderSeparation": true,
+          "importOrderSortSpecifiers": true
+        }
+      },
       {
         "files": [
           "*schema.json"
@@ -41,6 +63,7 @@
     ]
   },
   "devDependencies": {
+    "@trivago/prettier-plugin-sort-imports": "^4.3.0",
     "license-webpack-plugin": "^4.0.2",
     "markdownlint-cli2": "^0.14.0",
     "prettier": "^3.3.3",

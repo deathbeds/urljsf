@@ -74,7 +74,7 @@ themes that use (or abuse) the _hundreds_ of `bootstrap` class names and CSS var
 # conf.py
 prjsf = {
     "css": {
-        # whether to deploy the vendored bootrap.min.css (default: False)
+        # whether to deploy vendored bootrap theme CSS (default: False)
         "add_bootstrap": True,
         # remove margins on ``h[123456]``: (default: False)
         "compact_headings": True,

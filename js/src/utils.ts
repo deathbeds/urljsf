@@ -1,9 +1,8 @@
 // Copyright (C) prjsf contributors.
 // Distributed under the terms of the Modified BSD License.
-
 import { isObject } from '@rjsf/utils';
 
-import { TDataSet, TUrlKey, ALL_KEYS, DEFAULTS } from './tokens.js';
+import { ALL_KEYS, DEFAULTS, TDataSet, TUrlKey } from './tokens.js';
 
 let _NEXT_DATA_SET = 0;
 const _DATA_SETS = new WeakMap<TDataSet, number>();

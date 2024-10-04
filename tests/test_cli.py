@@ -88,7 +88,6 @@ def assert_outputs(
     expected = [
         "index.html",
         "_static/prjsf/third-party-licenses.json",
-        "_static/vendor/bootstrap/LICENSE",
         *(extra_files or []),
     ]
     out = out or (path / "_prjsf_output")

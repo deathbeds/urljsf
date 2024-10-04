@@ -19,7 +19,8 @@ TFormat = Literal["json", "toml", "yaml"]
 TFORMATS: list[TFormat] = "json", "toml", "yaml"
 
 THEMES = [
-    "default",
+    "bootstrap",
+    # custom themes
     "cerulean",
     "cosmo",
     "cyborg",

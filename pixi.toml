@@ -54,10 +54,7 @@ python -m pip install
 [tasks.py-static--]
 cmd = """
 rm -rf src/prjsf/_static/
-&& cp -r js/dist/prjsf/ src/prjsf/_static/prjsf/
-&& mkdir -p src/prjsf/_static/vendor/bootstrap/dist/css/
-&& cp -r node_modules/bootstrap/LICENSE src/prjsf/_static/vendor/bootstrap/LICENSE
-&& cp -r node_modules/bootstrap/dist/css/bootstrap.min.css src/prjsf/_static/vendor/bootstrap/dist/css/
+&& cp -r js/dist/prjsf src/prjsf/_static/prjsf
 && rm -rf src/prjsf/_static/prjsf/demo/
 """
 [tasks.platform]

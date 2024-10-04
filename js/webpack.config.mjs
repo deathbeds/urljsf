@@ -1,11 +1,13 @@
 // @ts-check
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
 import webpack from 'webpack';
+
 import CopyPlugin from 'copy-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
-import TerserPlugin from 'terser-webpack-plugin';
 import { LicenseWebpackPlugin } from 'license-webpack-plugin';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import TerserPlugin from 'terser-webpack-plugin';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

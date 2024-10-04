@@ -7,7 +7,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
-from ..constants import UTF8, __version__
+from ..constants import THEMES, UTF8
 from ..prjsf import Prjsf
 from .directives import prform
 
@@ -53,7 +53,7 @@ def build_finished(app: Sphinx, _err: Exception | None) -> None:
     Should only deploy bootstrap if asked.
     """
     conf = app.config["prjsf"].get
-    static = Path(app.builder.outdir) / "_static/prjsf"
+    static = Path(app.builder.outdir) / "_static"
 
     Prjsf.deploy_static(Path(app.builder.outdir) / static)
 
@@ -62,7 +62,7 @@ def build_finished(app: Sphinx, _err: Exception | None) -> None:
     chunks = [*variable_css(css), *heading_css(css)]
 
     if chunks:
-        (static / "prjsf.css").write_text("\n".join(chunks), **UTF8)
+        (static / "prjsf/prjsf.css").write_text("\n".join(chunks), **UTF8)
 
 
 def html_page_context(
@@ -71,18 +71,19 @@ def html_page_context(
     """Add JS/CSS to the page."""
     if not doctree or not doctree.traverse(prform):
         return
+    conf = app.config["prjsf"].get
 
-    app.add_js_file("prjsf/prjsf/prjsf.js", type="module")
+    app.add_js_file("prjsf/prjsf.js", type="module")
     app.add_css_file(
-        "prjsf/prjsf/prjsf.js",
+        "prjsf/prjsf.js",
         rel="modulepreload",
         type=None,
     )
-    conf = app.config["prjsf"].get
+
     if conf("css", {}).get("add_bootstrap"):
-        app.add_css_file(
-            "prjsf/vendor/bootstrap/dist/css/bootstrap.min.css"
-        )
+        theme = conf("theme", THEMES[0])
+        css = "bootstrap.min" if theme == THEMES[0] else f"themes/{theme}"
+        app.add_css_file(f"prjsf/{css}.css")
 
     css = conf("css", {})
     if "variables" in css or "compact_headings" in css:
