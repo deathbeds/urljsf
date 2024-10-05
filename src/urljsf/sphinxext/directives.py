@@ -74,13 +74,18 @@ class GitHubPR(SphinxDirective):
 
     def _options_to_config(self) -> Config:
         """Convert ``sphinx-options`` to ``urljsf_options``."""
+        current_source = self.state.document.current_source
+        if current_source is None:  # pragma: no cover
+            msg = "don't know how to handle documents without source"
+            raise NotImplementedError(msg)
+
         cfg = self.env.config.__dict__["urljsf"].get
         opt = self.options.get
 
         if self.arguments:
             self.options["github-repo"] = self.arguments[0]
 
-        here = Path(self.state.document.current_source).parent
+        here = Path(current_source).parent
         rel = os.path.relpath(self.env.app.srcdir, here)
 
         def to_abs_or_url(url_or_path: str | None) -> str | None:

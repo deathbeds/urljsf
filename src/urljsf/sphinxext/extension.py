@@ -66,7 +66,7 @@ def build_finished(app: Sphinx, _err: Exception | None) -> None:
 
 
 def html_page_context(
-    app: Sphinx, pagename: str, templatename: str, context: dict, doctree: Any
+    app: Sphinx, pagename: str, templatename: str, context: dict[str, Any], doctree: Any
 ) -> None:
     """Add JS/CSS to the page."""
     if not doctree or not doctree.traverse(prform):

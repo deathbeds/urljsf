@@ -22,7 +22,7 @@ if TYPE_CHECKING:
 class Urljsf:
     """Main class for ``urljsf``."""
 
-    config: Config | None = None
+    config: Config
     log: Logger
     env: jinja2.Environment
 

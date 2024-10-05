@@ -16,7 +16,11 @@ STATIC = HERE / "_static"
 
 
 TFormat = Literal["json", "toml", "yaml"]
-TFORMATS: list[TFormat] = "json", "toml", "yaml"
+TFORMATS: tuple[TFormat] = (  # type: ignore[assignment]
+    "json",
+    "toml",
+    "yaml",
+)
 
 THEMES = [
     "bootstrap",

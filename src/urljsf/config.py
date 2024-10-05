@@ -28,7 +28,7 @@ class Config:
     github_url: str = "https://github.com"
     schema_format: TFormat | None = None
     id_prefix: str | None = None
-    pr_filename: str = "data.json"
+    pr_filename: str | None = "data.json"
     pr_filename_pattern: str | None = r"^[^/].*\.(json|yaml|yml|toml)$"
     data: str | None = None
     py_data: str | None = None
@@ -36,7 +36,7 @@ class Config:
     ui_schema: str | None = None
     py_ui_schema: str | None = None
     ui_schema_format: TFormat | None = None
-    prune_empty: bool = (True,)
+    prune_empty: bool = True
     # iframe
     theme: bool = False
     iframe: bool | None = None
