@@ -1,11 +1,11 @@
-"""Constants for ``prjsf``."""
+"""Constants for ``urljsf``."""
 
-# Copyright (C) prjsf contributors.
+# Copyright (C) urljsf contributors.
 # Distributed under the terms of the Modified BSD License.
 from pathlib import Path
 from typing import Literal
 
-__dist__ = "prjsf"
+__dist__ = "urljsf"
 __version__ = f"""{__import__("importlib.metadata").metadata.version(__dist__)}"""
 
 UTF8 = {"encoding": "utf-8"}

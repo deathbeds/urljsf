@@ -1,4 +1,4 @@
-// Copyright (C) prjsf contributors.
+// Copyright (C) urljsf contributors.
 // Distributed under the terms of the Modified BSD License.
 import { createPortal, useState } from 'react';
 import { Fragment, render } from 'react-dom';
@@ -16,20 +16,20 @@ import { fetchData, getDataSet, getFileContent, getIdPrefix } from './utils.js';
 
 /** process a single form
  *
- * @param container - a DOM node with prjsf dataset
+ * @param container - a DOM node with urljsf dataset
  */
 export async function makeOneForm(container: HTMLElement): Promise<void> {
   const dataset = getDataSet(container);
 
   const [schema, uiSchema, formData] = await Promise.all([
-    fetchData(dataset, 'prjsfSchema'),
-    fetchData(dataset, 'prjsfUiSchema'),
-    fetchData(dataset, 'prjsfData'),
+    fetchData(dataset, 'urljsfSchema'),
+    fetchData(dataset, 'urljsfUiSchema'),
+    fetchData(dataset, 'urljsfData'),
   ]);
 
   const initValue = await getFileContent(dataset, formData);
   const form = formComponent(dataset, initValue, { schema, formData, uiSchema });
-  const isolated = !!dataset.prjsfIframe;
+  const isolated = !!dataset.urljsfIframe;
   render(isolated ? await renderIframe(dataset, form) : form, container);
 }
 
@@ -37,17 +37,17 @@ export async function makeOneForm(container: HTMLElement): Promise<void> {
  *
  * @param dataset - the pre-processed dataset with defaults
  * @param form - the form element
- * @param container - a DOM node with prjsf dataset
+ * @param container - a DOM node with urljsf dataset
  */
 async function renderIframe(
   dataset: TDataSet,
   form: JSX.Element,
 ): Promise<JSX.Element> {
   const anyTheme = THEMES as any;
-  const { prjsfTheme } = dataset;
-  const themeFn = anyTheme[prjsfTheme || DEFAULTS.prjsfTheme] || THEMES.bootstrap;
+  const { urljsfTheme } = dataset;
+  const themeFn = anyTheme[urljsfTheme || DEFAULTS.urljsfTheme] || THEMES.bootstrap;
   const cssUrl = (await themeFn()).default;
-  const style = dataset.prjsfIframeStyle || DEFAULTS.prjsfIframeStyle;
+  const style = dataset.urljsfIframeStyle || DEFAULTS.urljsfIframeStyle;
   return (
     <IFrame style={style}>
       <head>
@@ -95,24 +95,24 @@ export function formComponent(
   initValue: string,
   props: Partial<FormProps>,
 ): JSX.Element {
-  const PRJSF = () => {
+  const URLJSF = () => {
     const idPrefix = getIdPrefix(dataset);
-    const filenamePattern = `${dataset.prjsfFileNamePattern || DEFAULTS.prjsfFileNamePattern}`;
+    const filenamePattern = `${dataset.urljsfFileNamePattern || DEFAULTS.urljsfFileNamePattern}`;
 
-    const branches = (dataset.prjsfGitHubBranch || DEFAULTS.prjsfGitHubBranch)
+    const branches = (dataset.urljsfGitHubBranch || DEFAULTS.urljsfGitHubBranch)
       .trim()
       .split(' ');
     const [value, setValue] = useState(initValue);
     const [url, setUrl] = useState('#');
     const [errors, setErrors] = useState<RJSFValidationError[]>([]);
     const [formData, setFormData] = useState(props.formData);
-    const [fileName, setFileName] = useState(dataset.prjsfFileName || '');
+    const [fileName, setFileName] = useState(dataset.urljsfFileName || '');
     const [fileNameOk, setFileNameOk] = useState(!!fileName.match(filenamePattern));
     const [branch, setBranch] = useState(branches[0]);
 
     const updateUrl = () => {
-      let gh = `${dataset.prjsfGitHubUrl}`.trim().replace(/\/$/, '');
-      let repo = `${dataset.prjsfGitHubRepo}`.trim();
+      let gh = `${dataset.urljsfGitHubUrl}`.trim().replace(/\/$/, '');
+      let repo = `${dataset.urljsfGitHubRepo}`.trim();
       let url = new URL(`${gh}/${repo}/new/${branch}`, window.location.href);
       url.searchParams.set('value', value);
       url.searchParams.set('fileName', fileName);
@@ -154,7 +154,7 @@ export function formComponent(
 
     const badge = (
       <Badge pill className="bg-secondary badge-secondary">
-        {dataset.prjsfGitHubRepo}
+        {dataset.urljsfGitHubRepo}
       </Badge>
     );
 
@@ -223,7 +223,7 @@ export function formComponent(
           ];
 
     return (
-      <div class="prjsf-form">
+      <div class="urljsf-form">
         <div>
           <RJSFForm {...formProps} formData={formData}>
             <Fragment />
@@ -264,5 +264,5 @@ export function formComponent(
     );
   };
 
-  return <PRJSF />;
+  return <URLJSF />;
 }

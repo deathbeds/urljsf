@@ -1,5 +1,5 @@
 """Verify the standalone cli."""
-# Copyright (C) prjsf contributors.
+# Copyright (C) urljsf contributors.
 # Distributed under the terms of the Modified BSD License.
 
 from __future__ import annotations
@@ -22,22 +22,22 @@ GH = ["-g", "https://github.com/org/repo/new/branch"]
 
 def test_cli_help(script_runner: ScriptRunner) -> None:
     """Verify help is printed."""
-    r = script_runner.run(["prjsf", "--help"], check=True)
+    r = script_runner.run(["urljsf", "--help"], check=True)
     assert "help" in r.stdout
 
 
 def test_cli_version(script_runner: ScriptRunner) -> None:
     """Verify version is printed."""
-    import prjsf
+    import urljsf
 
-    r = script_runner.run(["prjsf", "--version"], check=True)
-    assert prjsf.__version__ in r.stdout
+    r = script_runner.run(["urljsf", "--version"], check=True)
+    assert urljsf.__version__ in r.stdout
 
 
 def test_cli_run(script_runner: ScriptRunner, tmp_path: Path) -> None:
     """Verify a site is built."""
     (tmp_path / "schema.json").write_text(json.dumps(SIMPLE_SCHEMA), **UTF8)
-    r = script_runner.run(["prjsf", *GH, "-s", "schema.json"], cwd=str(tmp_path))
+    r = script_runner.run(["urljsf", *GH, "-s", "schema.json"], cwd=str(tmp_path))
     assert r.success
     assert_outputs(tmp_path)
 
@@ -46,7 +46,7 @@ def test_cli_urls(script_runner: ScriptRunner, tmp_path: Path) -> None:
     """Verify remote URLs can be used."""
     url = "https://foo.bar/schema.json"
     r = script_runner.run(
-        ["prjsf", *GH, "-s", url, "-d", url, "-u", url], cwd=str(tmp_path)
+        ["urljsf", *GH, "-s", url, "-d", url, "-u", url], cwd=str(tmp_path)
     )
     assert r.success
     assert_outputs(tmp_path)
@@ -74,7 +74,7 @@ def test_cli_run_py(
         extra_files = ["nested.schema-get_schema-*.json"]
 
     r = script_runner.run(
-        ["prjsf", *GH, "--py-schema", dotted],
+        ["urljsf", *GH, "--py-schema", dotted],
         cwd=str(py_tmp_path),
     )
     assert r.success
@@ -87,10 +87,10 @@ def assert_outputs(
     """Assert a number of files exist."""
     expected = [
         "index.html",
-        "_static/prjsf/third-party-licenses.json",
+        "_static/urljsf/third-party-licenses.json",
         *(extra_files or []),
     ]
-    out = out or (path / "_prjsf_output")
+    out = out or (path / "_urljsf_output")
     missing = {}
 
     for rel in expected:

@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>prjsf - pull requests from schema</title>
+    <title>urljsf - pull requests from schema</title>
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
@@ -13,7 +13,7 @@
   <body>
     <div class="col-lg-8 mx-auto p-3 py-md-5">
       <header>
-        <h1><code>prjsf</code> examples</h1>
+        <h1><code>urljsf</code> examples</h1>
       </header>
       <main class="bs-main">
         <div class="bs-content">
@@ -22,16 +22,16 @@
             <section>
               <h2 id="example-<%= format %>"><%= format.toUpperCase() %></h2>
               <div
-                data-prjsf-git-hub-repo="deathbeds/prjsf"
-                data-prjsf-git-hub-branch="not-a-branch"
-                data-prjsf-file-name="new_file.<%= format %>"
-                data-prjsf-schema="./example.schema.<%= format %>"
-                data-prjsf-ui-schema="./example.uischema.<%= format %>"
-                data-prjsf-data="./example.data.<%= format %>"
+                data-urljsf-git-hub-repo="deathbeds/urljsf"
+                data-urljsf-git-hub-branch="not-a-branch"
+                data-urljsf-file-name="new_file.<%= format %>"
+                data-urljsf-schema="./example.schema.<%= format %>"
+                data-urljsf-ui-schema="./example.uischema.<%= format %>"
+                data-urljsf-data="./example.data.<%= format %>"
                 <% if(format !== 'json'){ %>
-                data-prjsf-ui-schema-format="<%= format %>"
-                data-prjsf-schema-format="<%= format %>"
-                data-prjsf-data-format="<%= format %>"
+                data-urljsf-ui-schema-format="<%= format %>"
+                data-urljsf-schema-format="<%= format %>"
+                data-urljsf-data-format="<%= format %>"
                 <% } %>
               ></div>
             </section>

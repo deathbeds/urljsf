@@ -1,5 +1,5 @@
 """Standalone CLI for building simple PR forms."""
-# Copyright (C) prjsf contributors.
+# Copyright (C) urljsf contributors.
 # Distributed under the terms of the Modified BSD License.
 
 from __future__ import annotations
@@ -9,7 +9,7 @@ from pathlib import Path
 
 from .config import DEFAULTS, Config
 from .constants import THEMES, __dist__, __version__
-from .prjsf import Prjsf
+from .urljsf import Urljsf
 
 
 def get_parser() -> ArgumentParser:
@@ -18,7 +18,7 @@ def get_parser() -> ArgumentParser:
     parser.add_argument(
         "-r",
         "--github-repo",
-        help="the owner and repo name to target, e.g. ``deathbeds/prjsf``",
+        help="the owner and repo name to target, e.g. ``deathbeds/urljsf``",
     )
     parser.add_argument(
         "-b",
@@ -115,5 +115,5 @@ def main(argv: list[str] | None = None) -> int:
     """Run the command line interface."""
     parser = get_parser()
     config = Config(**vars(parser.parse_args(argv)))
-    prjsf = Prjsf(config)
-    return prjsf.run_cli()
+    urljsf = Urljsf(config)
+    return urljsf.run_cli()

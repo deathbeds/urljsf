@@ -1,6 +1,6 @@
-"""A sphinx extension for ``prjsf``."""
+"""A sphinx extension for ``urljsf``."""
 
-# Copyright (C) prjsf contributors.
+# Copyright (C) urljsf contributors.
 # Distributed under the terms of the Modified BSD License.
 from __future__ import annotations
 
@@ -18,7 +18,7 @@ if TYPE_CHECKING:
 def setup(app: Sphinx) -> ExtensionMetadata:
     """Set up the sphinx extension."""
     app.add_directive("github-pr", GitHubPR)
-    app.add_config_value("prjsf", {}, "env")
+    app.add_config_value("urljsf", {}, "env")
     app.connect("build-finished", build_finished)
     app.connect("html-page-context", html_page_context)
 

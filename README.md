@@ -1,30 +1,45 @@
-# `prjsf`
+# `urljsf`
 
-> Build structured data files for pull requests from JSON schema
+> Build statically-hostable, interactive HTML forms for making web requests
 >
 > _Powered by [`react-json-schema-form`][rjsf] and [bootstrap][bootstrap]._
 
 [rjsf]: https://github.com/rjsf-team/react-jsonschema-form
 [bootstrap]: https://github.com/twbs/bootstrap
 
-Projects can use `prjsf` as a standalone [CLI tool](#command-line) or [sphinx](#sphinx)
-extension to create static HTML forms that jumpstart contibution to data-driven:
+Projects can use `urljsf` as a standalone [CLI tool](#command-line) or [sphinx](#sphinx)
+extension to create JavaScript/HTML forms that jumpstart contibution to data-driven:
 
 - galleries
 - on-demand build services
 - precise test descriptions
 - linter rules
+- pretty much anything that accepts a `POST` or `GET`
 
-When visiting a `prjsf`-built form, users:
+When visiting a `urljsf`-built form, users:
 
-- see with an interative [JSON Schema][json-schema]-constrained HTML form, optionally
-  with...
-  - ... a [user interface schema][ui-schema]
-  - ... pre-filled data
-- click to propose a single file (`.json`, `.yaml`, or `.toml`) in a _pull request_ on a
-  GitHub fork (see [limitations](#limitations))
-- see automation on a branch the user owns
-- get automatic, actionable notifications of failures
+- see an interative HTML form...
+  - defined by and validated against a JSON [Schema][json-schema], optionally with...
+    - with a customizble [user interface][ui-schema]
+    - pre-filled data
+
+Once the data (and URL metadata) is _validated_, the user sees a button which submits
+the form to any HTTPS endpoint.
+
+While almost _any_ URL can be built, special care is given for _pull requests_, which
+create excellent data for projects and users. For example, the GitHub `/new/` pull
+request URL starts a workflow to:
+
+- requests the user log into GitHub
+- automatically create a fork owned by the user
+- show _another_ form, with:
+  - new `.json`, `.yaml`, or `.toml` file
+  - a commit message
+  - a branch target
+- after confirming and submitting _that_ form, the user:
+  - sees automation workflows on their branch
+  - on failure, get automatic, actionable notifications
+  - on success, get access to build artifacts, reports, or drive further automation
 
 [ui-schema]:
   https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/uiSchema/
@@ -39,60 +54,60 @@ When visiting a `prjsf`-built form, users:
 >
 > ### From PyPI
 >
-> `prjsf` is distributed on PyPI:
+> `urljsf` is distributed on PyPI:
 >
 > ```bash
-> pip install prjsf
+> pip install urljsf
 >
 > # or...
-> uv install prjsf
+> uv install urljsf
 >
 > # etc.
 > ```
 >
 > ### From conda-forge
 >
-> `prjsf` is also distributed on `conda-forge`:
+> `urljsf` is also distributed on `conda-forge`:
 >
 > ```bash
-> pixi add prjsf
+> pixi add urljsf
 >
 > # or...
-> micromamba install -c conda-forge prjsf
+> micromamba install -c conda-forge urljsf
 >
 > # or...
-> mamba install -c conda-forge prjsf
+> mamba install -c conda-forge urljsf
 >
 > # or...
-> conda install -c conda-forge prjsf
+> conda install -c conda-forge urljsf
 > ```
 
 ## Usage
 
-`prjsf` works as a standalone site generator for simple sites, or integrates with the
+`urljsf` works as a standalone site generator for simple sites, or integrates with the
 `sphinx` documentation system.
 
 ### Command Line
 
-The `prjsf` command line generates a ready-to-serve, standalone site with all required
+The `urljsf` command line generates a ready-to-serve, standalone site with all required
 static assets.
 
 ```bash
 prsf --help
 ```
 
-`prjsf` requires a `--schema` file (or `--py-schema` module) and `--github-repo`, but
+`urljsf` requires a `--schema` file (or `--py-schema` module) and `--github-repo`, but
 can be further customized with a number of other options.
 
 ### Sphinx
 
-After [installing](#install), add `prjsf.sphinxext` to `conf.py`:
+After [installing](#install), add `urljsf.sphinxext` to `conf.py`:
 
 ```py
 # conf.py
 extensions = [
   # ... other extensions
-  "prjsf.sphinxext",
+  "urljsf.sphinxext",
 ]
 ```
 
@@ -103,8 +118,8 @@ Then use the `github-pr` directive in source files:
   :schema: path/to/schema.json
 ```
 
-See the documentation for more about configuring `prjsf.sphinxext` and the `github-pr`
-directive.
+See the documentation for more about configuring `urljsf.sphinxext`, the `github-pr`
+directive, and more advanced use cases.
 
 ## Limitations
 
@@ -119,31 +134,33 @@ directive.
   headers requirements for `type="module"` scripts
 - the [`sphinx`](#sphinx) integration is only tested with the `html` builder
 
-[gl-content-url]: https://gitlab.com/gitlab-org/gitlab/-/issues/297236
-
 ## Alternatives
 
-A number of other approaches can help authenticated users submit _public_ data which can
-be used to drive automation:
+A number of other approaches can help authenticated users submit data which can be used
+to drive automation:
 
-| approach                                  | project needs                                      | user needs account |
+| approach                                  | project needs                                      | user needs         |
 | ----------------------------------------- | -------------------------------------------------- | ------------------ |
-| GitHub [issue templates][issue-templates] | [some][issue-parser1] [parser][issue-parser2]      | GitHub             |
-| Google [Forms][g-forms]                   | Google account to create form, polling for changes | Google `*`         |
+| GitHub [issue templates][issue-templates] | [some][issue-parser1] [parser][issue-parser2]      | GitHub account     |
+| Google [Forms][g-forms]                   | Google account to create form, polling for changes | Google account `*` |
+| GitLab merge requests                     | GitLab account                                     | GitLab account `+` |
 
-- `*` _while it is **possible** to accept anonymous form submissions, this reduces the
-  cost to spammers, which can make the form useless_
+> - `*` while it is **possible** to accept anonymous form submissions, this reduces the
+>   cost to spammers, which can make the data less valuable to a project
+> - `+` GitLab merge request URLs **can't** include [file content][gl-content-url],
+>   requiring an extra copy & paste by the user
 
 [issue-templates]:
   https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests
 [issue-parser1]: https://github.com/stefanbuck/github-issue-parser
 [issue-parser2]: https://github.com/peter-murray/issue-forms-body-parser
 [g-forms]: https://www.google.com/forms/about
+[gl-content-url]: https://gitlab.com/gitlab-org/gitlab/-/issues/297236
 
 ## Open Source
 
-`prjsf` includes third-party JavaScript and CSS, licensed variously under the `MIT`,
-`BSD-3-Clause` and `ISC` licenses, provided in the distributions
+`urljsf` includes third-party JavaScript and CSS, licensed variously under the `MIT`,
+`BSD-3-Clause` and `ISC` licenses, provided in the distributions.
 
-`prjsf` itself is licensed under the `BSD-3-Clause` license. You can do whatever you
-want with it.
+`urljsf` itself is licensed under the `BSD-3-Clause` license. You can do whatever you
+want with it, but if you change it a lot, it's not the maintainers' problem.

@@ -1,9 +1,9 @@
 """A simple sphinx project."""
-# Copyright (C) prjsf contributors.
+# Copyright (C) urljsf contributors.
 # Distributed under the terms of the Modified BSD License.
 
-extensions = ["prjsf.sphinxext"]
-prjsf = {
+extensions = ["urljsf.sphinxext"]
+urljsf = {
     "css": {
         "variables": {"bs-foo": "xxx-bar"},
         "compact_headings": True,

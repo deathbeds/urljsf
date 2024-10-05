@@ -1,5 +1,5 @@
 __pycache__/
-_prjsf_output/
+_urljsf_output/
 .ipynb_checkpoints/
 .pixi/
 *.tsbuildinfo
@@ -7,4 +7,4 @@ build/
 dist/
 lib/
 node_modules/
-src/prjsf/_static
+src/urljsf/_static

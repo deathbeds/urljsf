@@ -1,7 +1,7 @@
-"$id" = "https://deathbeds.github.io/_static/prjsf/example.schema.json"
+"$id" = "https://deathbeds.github.io/_static/urljsf/example.schema.json"
 "$schema" = "http://json-schema.org/draft-07/schema#"
 title = "Todo"
-description = "a demo of prjsf"
+description = "a demo of urljsf"
 
 [properties.name]
 type = "string"

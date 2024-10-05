@@ -49,8 +49,8 @@ const config = {
   entry: './lib/index.js',
   experiments: { outputModule: true },
   output: {
-    path: path.resolve(__dirname, './dist/prjsf'),
-    filename: 'prjsf.js',
+    path: path.resolve(__dirname, './dist/urljsf'),
+    filename: 'urljsf.js',
     chunkFilename: ({ chunk }) => {
       return `${chunk.id}.${chunk.hash?.slice(0, 8)}.js`;
     },

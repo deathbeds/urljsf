@@ -1,5 +1,5 @@
-"""Directives for ``prjsf.sphinxext``."""
-# Copyright (C) prjsf contributors.
+"""Directives for ``urljsf.sphinxext``."""
+# Copyright (C) urljsf contributors.
 # Distributed under the terms of the Modified BSD License.
 
 from __future__ import annotations
@@ -13,7 +13,7 @@ from sphinx.util.docutils import SphinxDirective
 
 from ..config import Config
 from ..constants import TFORMATS, THEMES
-from ..prjsf import Prjsf
+from ..urljsf import Urljsf
 from .nodes import prform
 
 if TYPE_CHECKING:
@@ -61,20 +61,20 @@ class GitHubPR(SphinxDirective):
         "iframe-style": unchanged,
         "theme": a_theme,
     }
-    _prsjf: Prjsf | None
+    _prsjf: Urljsf | None
 
     def run(self) -> list[nodes.Node]:
         """Generate a single RJSF form."""
         config = self._options_to_config()
-        self._prjsf = Prjsf(config)
-        self._prjsf.deploy_form_files(
-            Path(self.env.app.builder.outdir) / "_static/prjsf-forms"
+        self._urljsf = Urljsf(config)
+        self._urljsf.deploy_form_files(
+            Path(self.env.app.builder.outdir) / "_static/urljsf-forms"
         )
-        return [prform("", self._prjsf.render())]
+        return [prform("", self._urljsf.render())]
 
     def _options_to_config(self) -> Config:
-        """Convert ``sphinx-options`` to ``prjsf_options``."""
-        cfg = self.env.config.__dict__["prjsf"].get
+        """Convert ``sphinx-options`` to ``urljsf_options``."""
+        cfg = self.env.config.__dict__["urljsf"].get
         opt = self.options.get
 
         if self.arguments:
@@ -87,7 +87,7 @@ class GitHubPR(SphinxDirective):
             """Resolve a path to a config value."""
             if url_or_path is None:
                 resolved = None
-            elif Prjsf.is_url(url_or_path):
+            elif Urljsf.is_url(url_or_path):
                 resolved = url_or_path
             else:
                 resolved = str(here / url_or_path)
@@ -99,8 +99,8 @@ class GitHubPR(SphinxDirective):
 
         return Config(
             # meta
-            template="prjsf/sphinx.j2",
-            url_base=f"{rel}/_static/prjsf-forms/",
+            template="urljsf/sphinx.j2",
+            url_base=f"{rel}/_static/urljsf-forms/",
             id_prefix=opt("id-prefix"),
             # required
             github_repo=opt("github-repo", cfg("github_repo")),

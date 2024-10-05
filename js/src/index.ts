@@ -1,8 +1,8 @@
-// Copyright (C) prjsf contributors.
+// Copyright (C) urljsf contributors.
 // Distributed under the terms of the Modified BSD License.
 
 /** a form must declare, at an absolute minimum, its repo */
-const SELECTOR = '[data-prjsf-git-hub-repo]';
+const SELECTOR = '[data-urljsf-git-hub-repo]';
 
 export async function main() {
   const containers = [...document.querySelectorAll(SELECTOR)];

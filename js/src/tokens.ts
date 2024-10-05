@@ -1,25 +1,26 @@
-// Copyright (C) prjsf contributors.
+// Copyright (C) urljsf contributors.
 // Distributed under the terms of the Modified BSD License.
 
 export const META_KEYS = [
-  'prjsfFileName',
-  'prjsfFileNamePattern',
-  'prjsfPruneEmpty',
-  'prjsfIdPrefix',
-  'prjsfIframe',
-  'prjsfIframeStyle',
-  'prjsfTheme',
+  'urljsfFileName',
+  'urljsfFileNamePattern',
+  'urljsfPruneEmpty',
+  'urljsfIdPrefix',
+  'urljsfIframe',
+  'urljsfIframeStyle',
+  'urljsfTheme',
+  'urljsfUrlTemplate',
 ] as const;
 export const PROVIDER_KEYS = [
-  'prjsfGitHubUrl',
-  'prjsfGitHubRepo',
-  'prjsfGitHubBranch',
+  'urljsfGitHubUrl',
+  'urljsfGitHubRepo',
+  'urljsfGitHubBranch',
 ] as const;
-export const URL_KEYS = ['prjsfData', 'prjsfSchema', 'prjsfUiSchema'] as const;
+export const URL_KEYS = ['urljsfData', 'urljsfSchema', 'urljsfUiSchema'] as const;
 export const FORMAT_KEYS = [
-  'prjsfSchemaFormat',
-  'prjsfUiSchemaFormat',
-  'prjsfDataFormat',
+  'urljsfSchemaFormat',
+  'urljsfUiSchemaFormat',
+  'urljsfDataFormat',
 ] as const;
 export const ALL_KEYS = [...PROVIDER_KEYS, ...URL_KEYS, ...FORMAT_KEYS, ...META_KEYS];
 
@@ -34,13 +35,14 @@ export type TDataSet = Partial<{
 }>;
 
 export const DEFAULTS = {
-  prjsfFileNamePattern: `^[^/].+\.(json|yaml|yml|toml)$`,
-  prjsfSchemaFormat: 'json',
-  prjsfUiSchemaFormat: 'json',
-  prjsfDataFormat: 'json',
-  prjsfPruneEmpty: 'true',
-  prjsfGitHubBranch: 'main',
-  prjsfGitHubUrl: 'https://github.com',
-  prjsfIframeStyle: 'width: 100%; height: 80vh;',
-  prjsfTheme: 'bootstrap',
+  urljsfUrlTemplate: '',
+  urljsfFileNamePattern: `^[^/].+\.(json|yaml|yml|toml)$`,
+  urljsfSchemaFormat: 'json',
+  urljsfUiSchemaFormat: 'json',
+  urljsfDataFormat: 'json',
+  urljsfPruneEmpty: 'true',
+  urljsfGitHubBranch: 'main',
+  urljsfGitHubUrl: 'https://github.com',
+  urljsfIframeStyle: 'width: 100%; height: 80vh;',
+  urljsfTheme: 'bootstrap',
 };

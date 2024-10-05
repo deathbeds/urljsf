@@ -1,5 +1,5 @@
-"""Test configuration for ``prjsf``."""
-# Copyright (C) prjsf contributors.
+"""Test configuration for ``urljsf``."""
+# Copyright (C) urljsf contributors.
 # Distributed under the terms of the Modified BSD License.
 
 from __future__ import annotations
@@ -34,11 +34,11 @@ NO_SCHEMA_JSON = ["remote"]
 
 def pytest_html_report_title(report: ReportData) -> None:
     """Provide a ``pytest-html`` page title."""
-    from prjsf import __version__
+    from urljsf import __version__
 
     u = platform.uname()
     py = ".".join(map(str, sys.version_info[:3]))
-    report.title = f"prjsf {__version__} (Python {py}) ({u.system} {u.machine})"
+    report.title = f"urljsf {__version__} (Python {py}) ({u.system} {u.machine})"
 
 
 @pytest.fixture

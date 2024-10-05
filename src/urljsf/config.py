@@ -1,6 +1,6 @@
-"""Configuration for ``prjsf``."""
+"""Configuration for ``urljsf``."""
 
-# Copyright (C) prjsf contributors.
+# Copyright (C) urljsf contributors.
 # Distributed under the terms of the Modified BSD License.
 from __future__ import annotations
 
@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 
 @dataclass
 class Config:
-    """Configuration for ``prjsf``."""
+    """Configuration for ``urljsf``."""
 
     # required...
     github_repo: str
@@ -44,8 +44,8 @@ class Config:
     # cli...
     html_filename: str = "index.html"
     html_title: str | None = None
-    output_dir: Path = Path("./_prjsf_output")
-    template: str = "prjsf/standalone.j2"
+    output_dir: Path = Path("./_urljsf_output")
+    template: str = "urljsf/standalone.j2"
     extra_template_paths: list[Path] = field(default_factory=list)
     # app...
     log_level: str = "DEBUG"

@@ -1,5 +1,5 @@
 {
-  "name": "@deathbeds/prjsf",
+  "name": "@deathbeds/urljsf",
   "version": "0.1.0",
   "description": "Build structured data files for pull requests with JSON schema",
   "license": "LICENSE",

@@ -1,5 +1,5 @@
-"""A sphinx extension for ``prjsf``."""
-# Copyright (C) prjsf contributors.
+"""A sphinx extension for ``urljsf``."""
+# Copyright (C) urljsf contributors.
 # Distributed under the terms of the Modified BSD License.
 
 from __future__ import annotations
@@ -8,14 +8,14 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 from ..constants import THEMES, UTF8
-from ..prjsf import Prjsf
+from ..urljsf import Urljsf
 from .directives import prform
 
 if TYPE_CHECKING:
     from sphinx.application import Sphinx
 
 
-ROOT_CLASS = "prjsf-form"
+ROOT_CLASS = "urljsf-form"
 
 DEFAULT_SCOPES = [
     f".{ROOT_CLASS}",
@@ -52,17 +52,17 @@ def build_finished(app: Sphinx, _err: Exception | None) -> None:
 
     Should only deploy bootstrap if asked.
     """
-    conf = app.config["prjsf"].get
+    conf = app.config["urljsf"].get
     static = Path(app.builder.outdir) / "_static"
 
-    Prjsf.deploy_static(Path(app.builder.outdir) / static)
+    Urljsf.deploy_static(Path(app.builder.outdir) / static)
 
     css = conf("css", {})
 
     chunks = [*variable_css(css), *heading_css(css)]
 
     if chunks:
-        (static / "prjsf/prjsf.css").write_text("\n".join(chunks), **UTF8)
+        (static / "urljsf/urljsf.css").write_text("\n".join(chunks), **UTF8)
 
 
 def html_page_context(
@@ -71,11 +71,11 @@ def html_page_context(
     """Add JS/CSS to the page."""
     if not doctree or not doctree.traverse(prform):
         return
-    conf = app.config["prjsf"].get
+    conf = app.config["urljsf"].get
 
-    app.add_js_file("prjsf/prjsf.js", type="module")
+    app.add_js_file("urljsf/urljsf.js", type="module")
     app.add_css_file(
-        "prjsf/prjsf.js",
+        "urljsf/urljsf.js",
         rel="modulepreload",
         type=None,
     )
@@ -83,8 +83,8 @@ def html_page_context(
     if conf("css", {}).get("add_bootstrap"):
         theme = conf("theme", THEMES[0])
         css = "bootstrap.min" if theme == THEMES[0] else f"themes/{theme}"
-        app.add_css_file(f"prjsf/{css}.css")
+        app.add_css_file(f"urljsf/{css}.css")
 
     css = conf("css", {})
     if "variables" in css or "compact_headings" in css:
-        app.add_css_file("prjsf/prjsf.css")
+        app.add_css_file("urljsf/urljsf.css")

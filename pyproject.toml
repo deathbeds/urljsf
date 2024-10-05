@@ -3,11 +3,11 @@ build-backend = "flit_core.buildapi"
 requires = ["flit_core >=3.9.0,<4.0.0"]
 
 [project]
-name = "prjsf"
+name = "urljsf"
 version = "0.1.0"
 description = "Build structured data files for pull requests with JSON schema"
 readme = "README.md"
-authors = [{name = "prjsf contributors"}]
+authors = [{name = "urljsf contributors"}]
 requires-python = ">=3.9"
 license.text = "BSD-3-Clause"
 classifiers = [
@@ -21,7 +21,7 @@ classifiers = [
   "Topic :: File Formats :: JSON",
   "Topic :: File Formats :: JSON :: JSON Schema",
 ]
-scripts.prjsf = "prjsf.cli:main"
+scripts.urljsf = "urljsf.cli:main"
 dependencies = [
   "jinja2",
 ]
@@ -35,11 +35,11 @@ validate = [
 ]
 
 [project.urls]
-"Bug Tracker" = "https://github.com/deathbeds/prjsf/issues"
-Changelog = "https://github.com/deathbeds/prjsf/blob/main/CHANGELOG.md"
-Documentation = "https://prjsf.rtfd.io"
-PyPI = "https://pypi.org/project/prjsf"
-Source = "https://github.com/deathbeds/prjsf"
+"Bug Tracker" = "https://github.com/deathbeds/urljsf/issues"
+Changelog = "https://github.com/deathbeds/urljsf/blob/main/CHANGELOG.md"
+Documentation = "https://urljsf.rtfd.io"
+PyPI = "https://pypi.org/project/urljsf"
+Source = "https://github.com/deathbeds/urljsf"
 
 [tool.ruff]
 cache-dir = "build/.cache/ruff"
@@ -52,10 +52,10 @@ preview = true
 select = ["ALL"]
 ignore = ["D211", "D213", "COM812", "ISC001", "D203", "DOC501", "DOC201"]
 flake8-copyright.notice-rgx = '''
-# Copyright \(C\) prjsf contributors\.
+# Copyright \(C\) urljsf contributors\.
 # Distributed under the terms of the Modified BSD License\.
 '''
-isort.known-first-party = ["prjsf"]
+isort.known-first-party = ["urljsf"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**/*.py" = ["S101", "PLC0415", "T201", "DOC402", "ARG001", "INP001"]

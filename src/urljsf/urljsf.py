@@ -1,6 +1,6 @@
-"""Main application for ``prjsf``."""
+"""Main application for ``urljsf``."""
 
-# Copyright (C) prjsf contributors.
+# Copyright (C) urljsf contributors.
 # Distributed under the terms of the Modified BSD License.
 from __future__ import annotations
 
@@ -19,19 +19,19 @@ if TYPE_CHECKING:
     from .config import Config
 
 
-class Prjsf:
-    """Main class for ``prjsf``."""
+class Urljsf:
+    """Main class for ``urljsf``."""
 
     config: Config | None = None
     log: Logger
     env: jinja2.Environment
 
     def __init__(self, config: Config) -> None:
-        """Initialize a prjsf."""
+        """Initialize a urljsf."""
         self.log = getLogger(__dist__)
         self.config = config
         self.log.setLevel(self.config.log_level)
-        self.log.debug("prjsf config: %s", self.config)
+        self.log.debug("urljsf config: %s", self.config)
         self.init_env()
 
     def init_env(self) -> None:

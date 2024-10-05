@@ -1,7 +1,7 @@
 "$schema" = "https://pixi.sh/v0.30.0/schema/manifest/schema.json"
 
 [project]
-name = "prjsf"
+name = "urljsf"
 channels = ["conda-forge"]
 platforms = ["linux-64", "osx-64", "osx-arm64", "win-64"]
 
@@ -53,9 +53,9 @@ python -m pip install
 """
 [tasks.py-static--]
 cmd = """
-rm -rf src/prjsf/_static/
-&& cp -r js/dist/prjsf src/prjsf/_static/prjsf
-&& rm -rf src/prjsf/_static/prjsf/demo/
+rm -rf src/urljsf/_static/
+&& cp -r js/dist/urljsf src/urljsf/_static/urljsf
+&& rm -rf src/urljsf/_static/urljsf/demo/
 """
 [tasks.platform]
 cmd = """
@@ -95,7 +95,7 @@ depends-on = ["setup-js"]
 cmd = """pixi r py-static--"""
 depends-on = ["build-js-app"]
 inputs = ["js/dist"]
-outputs = ["src/prjsf/_static", "!**/demo/"]
+outputs = ["src/urljsf/_static", "!**/demo/"]
 
 [feature.tasks-build.tasks.watch-py-static]
 cmd = """
@@ -209,14 +209,14 @@ export PIXI_PLATFORM=$(cat build/platform.txt)
   --self-contained-html
   --cov-report=html:build/reports/test_pytest_htmlcov-$PIXI_PLATFORM/
   --cov-report=term-missing:skip-covered
-  --cov=prjsf
+  --cov=urljsf
   --cov-branch
   --cov-context=test
   --no-cov-on-fail
   --cov-fail-under=100
 """
 depends-on = ["test-pip", "build-py-static", "platform"]
-inputs = ["{tests,src/prjsf}/**/*.{py,rst,json}", "src/prjsf/{_static,_templates}"]
+inputs = ["{tests,src/urljsf}/**/*.{py,rst,json}", "src/urljsf/{_static,_templates}"]
 outputs = ["build/reports/test_*"]
 
 [feature.tasks-test.tasks.test-report]
@@ -263,7 +263,7 @@ export PIXI_PLATFORM=$(cat build/platform.txt)
   --self-contained-html
 """
 depends-on = ["test-oldest-pip", "build-py-static", "platform"]
-inputs = ["{tests,src/prjsf}/**/*.{py,rst,json}", "src/prjsf/{_static,_templates}"]
+inputs = ["{tests,src/urljsf}/**/*.{py,rst,json}", "src/urljsf/{_static,_templates}"]
 outputs = ["build/reports/test-oldest_*"]
 
 
@@ -386,7 +386,7 @@ extensions = [
   "sphinx.ext.autosectionlabel",
   "sphinx_copybutton",
   "sphinxarg.ext",
-  "prjsf.sphinxext",
+  "urljsf.sphinxext",
 ]
 suppress_warnings = ["autosectionlabel.*"]
 exclude_patterns = ["rtd.rst"]
@@ -413,11 +413,11 @@ html_theme_options.icon_links = [
   {name = "PyPI", url = "{{ ppt.project.urls.PyPI }}", icon = "fa-brands fa-python", type = "fontawesome"},
 ]
 
-## prjsf
-prjsf.github_repo = "deathbeds/prjsf"
-prjsf.css.compact_headings = true
+## urljsf
+urljsf.github_repo = "deathbeds/urljsf"
+urljsf.css.compact_headings = true
 
-[tool.sphinx.prjsf.css.variables]
+[tool.sphinx.urljsf.css.variables]
 bs-body-bg = "pst-color-background"
 bs-body-color = "pst-color-text-base"
 bs-card-bg = "pst-color-surface"

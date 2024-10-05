@@ -1,20 +1,20 @@
-(prjsf-sphinxext)=
+(urljsf-sphinxext)=
 
 # Sphinx Extension
 
-`prjsf` was originally built as a pile of `jinja2` hacks to embed in [`sphinx`][sphinx]
+`urljsf` was originally built as a pile of `jinja2` hacks to embed in [`sphinx`][sphinx]
 sites built by [jupyak](https://github.com/deathbeds/jupyak).
 
-`prjsf.sphinxext` formalizes some of these hacks into a mostly-usable pattern.
+`urljsf.sphinxext` formalizes some of these hacks into a mostly-usable pattern.
 
 ## Configure
 
-Add `prjsf` to a project's Sphinx configuration in `conf.py`:
+Add `urljsf` to a project's Sphinx configuration in `conf.py`:
 
 ```py
 # conf.py
 extensions = [
-    "prjsf.sphinxext",
+    "urljsf.sphinxext",
 ]
 ```
 
@@ -22,7 +22,7 @@ Optionally, provide defaults (using `.py`-style `_`, rather than `.rst`-style `-
 
 ```py
 # conf.py
-prjsf = {
+urljsf = {
     "github_url": "https://not-github.org",
     "github_repo": "default-org/repo",
 }
@@ -55,7 +55,7 @@ render each form on a page as its own `iframe` element.
 
 ```py
 # conf.py
-prjsf = {
+urljsf = {
     # force rendering in an iframe (default: False)
     "iframe": True,
     # use a different theme (default: ``bootstrap``)
@@ -72,7 +72,7 @@ themes that use (or abuse) the _hundreds_ of `bootstrap` class names and CSS var
 
 ```py
 # conf.py
-prjsf = {
+urljsf = {
     "css": {
         # whether to deploy vendored bootrap theme CSS (default: False)
         "add_bootstrap": True,
@@ -80,9 +80,9 @@ prjsf = {
         "compact_headings": True,
         # CSS selectors in which to re-map variables (default: as shown)
         "scopes": [
-            ".prsjf-prjsf-form",
-            ".prsjf-prjsf-form .card",
-            ".prsjf-prjsf-form .list-group"
+            ".prsjf-urljsf-form",
+            ".prsjf-urljsf-form .card",
+            ".prsjf-urljsf-form .list-group"
         ],
         # a map of ``--{key}: var(--{value});`` (default: ``{}``)
         "variables": {
@@ -100,7 +100,7 @@ prjsf = {
 }
 ```
 
-If `compact_headings` or `variables` are configured, a `_static/prjsf/prjsf.css` will be
+If `compact_headings` or `variables` are configured, a `_static/urljsf/urljsf.css` will be
 written containing these extensions, and added to pages that
 
 For more advanced uses, consider maintaining a custom stylesheet with

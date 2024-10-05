@@ -1,8 +1,8 @@
 <!--
-Thanks for contributing to prjsf!
+Thanks for contributing to urljsf!
 Please fill out the following items to submit a pull request.
 See the contributing guidelines for more information:
-https://github.com/deathbeds/prjsf/blob/main/CONTRIBUTING.md
+https://github.com/deathbeds/urljsf/blob/main/CONTRIBUTING.md
 -->
 
 ## References
@@ -23,4 +23,4 @@ https://github.com/deathbeds/prjsf/blob/main/CONTRIBUTING.md
 
 ## Backwards-incompatible changes
 
-<!-- Describe any backwards-incompatible changes to prjsf public APIs. -->
+<!-- Describe any backwards-incompatible changes to urljsf public APIs. -->

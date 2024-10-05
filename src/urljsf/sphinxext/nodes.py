@@ -1,5 +1,5 @@
 """Custom docutils nodes."""
-# Copyright (C) prjsf contributors.
+# Copyright (C) urljsf contributors.
 # Distributed under the terms of the Modified BSD License.
 
 from typing import Any

@@ -1,6 +1,6 @@
 # Command Line
 
-The `prjsf` command line interface (CLI) is appropriate for standalone forms, such as to
+The `urljsf` command line interface (CLI) is appropriate for standalone forms, such as to
 be hosted on GitLab pages.
 
 Some additional [advanced options](./advanced.md) are available.
@@ -12,7 +12,7 @@ For more complex use cases, please consider using the [sphinx extension](./sphin
 ## Usage
 
 ```{argparse}
-:module: prjsf.cli
+:module: urljsf.cli
 :func: get_parser
-:prog: prjsf
+:prog: urljsf
 ```

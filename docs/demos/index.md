@@ -1,6 +1,6 @@
 # Demos
 
-This collection of demos show different aspects of `prjsf`.
+This collection of demos show different aspects of `urljsf`.
 
 ```{note}
 None of the repo/branch targets actually _exist_, so feel free to click on the

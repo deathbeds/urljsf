@@ -1,6 +1,6 @@
-"""Sphinx documentation configuration for ``prjsf``."""
+"""Sphinx documentation configuration for ``urljsf``."""
 
-# Copyright (C) prjsf contributors.
+# Copyright (C) urljsf contributors.
 # Distributed under the terms of the Modified BSD License.
 import json
 import sys

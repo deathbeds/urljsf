@@ -1,4 +1,4 @@
-// Copyright (C) prjsf contributors.
+// Copyright (C) urljsf contributors.
 // Distributed under the terms of the Modified BSD License.
 
 /** a set of bootstrap themes */

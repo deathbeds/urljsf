@@ -1,4 +1,4 @@
-// Copyright (C) prjsf contributors.
+// Copyright (C) urljsf contributors.
 // Distributed under the terms of the Modified BSD License.
 import { isObject } from '@rjsf/utils';
 
@@ -41,8 +41,8 @@ export async function getFileContent(
   dataset: TDataSet,
   formData: any,
 ): Promise<string> {
-  const format = dataset.prjsfDataFormat;
-  if (dataset.prjsfPruneEmpty === 'true') {
+  const format = dataset.urljsfDataFormat;
+  if (dataset.urljsfPruneEmpty === 'true') {
     formData = pruneObject(formData);
   }
 
@@ -99,5 +99,5 @@ export function getIdPrefix(dataset: TDataSet): string {
   if (!_DATA_SETS.has(dataset)) {
     _DATA_SETS.set(dataset, _NEXT_DATA_SET++);
   }
-  return dataset.prjsfIdPrefix || `prjsf-${_DATA_SETS.get(dataset)}`;
+  return dataset.urljsfIdPrefix || `urljsf-${_DATA_SETS.get(dataset)}`;
 }

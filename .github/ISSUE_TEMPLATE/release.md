@@ -18,7 +18,7 @@ labels: maintenance
   cd dist
   twine upload *.tar.gz *.whl
   npm login
-  npm publish deathbeds-prjsf*.tgz
+  npm publish deathbeds-urljsf*.tgz
   npm logout
   ```
 - [ ] postmortem
