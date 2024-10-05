@@ -100,8 +100,8 @@ urljsf = {
 }
 ```
 
-If `compact_headings` or `variables` are configured, a `_static/urljsf/urljsf.css` will be
-written containing these extensions, and added to pages that
+If `compact_headings` or `variables` are configured, a `_static/urljsf/urljsf.css` will
+be written containing these extensions, and added to pages that
 
 For more advanced uses, consider maintaining a custom stylesheet with
 [`conf.py:html_css_files`][html-css-files].

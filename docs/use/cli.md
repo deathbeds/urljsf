@@ -1,7 +1,7 @@
 # Command Line
 
-The `urljsf` command line interface (CLI) is appropriate for standalone forms, such as to
-be hosted on GitLab pages.
+The `urljsf` command line interface (CLI) is appropriate for standalone forms, such as
+to be hosted on GitLab pages.
 
 Some additional [advanced options](./advanced.md) are available.
 
