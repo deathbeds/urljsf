@@ -64,6 +64,7 @@
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
+    "json-schema-to-typescript": "^15.0.2",
     "license-webpack-plugin": "^4.0.2",
     "markdownlint-cli2": "^0.14.0",
     "prettier": "^3.3.3",

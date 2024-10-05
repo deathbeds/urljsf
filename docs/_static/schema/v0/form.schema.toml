@@ -1,0 +1,151 @@
+#  ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+# ░░  ░░░░  ░░       ░░░  ░░░░░░░░        ░░░      ░░░        ░░░░░░░░░      ░░░
+# ▒▒  ▒▒▒▒  ▒▒  ▒▒▒▒  ▒▒  ▒▒▒▒▒▒▒▒▒▒▒▒▒▒  ▒▒  ▒▒▒▒▒▒▒▒  ▒▒▒▒▒▒▒▒▒▒▒▒▒▒  ▒▒▒▒  ▒▒
+# ▓▓  ▓▓▓▓  ▓▓       ▓▓▓  ▓▓▓▓▓▓▓▓▓▓▓▓▓▓  ▓▓▓      ▓▓▓      ▓▓▓▓▓▓▓▓▓▓  ▓▓▓▓  ▓▓
+# ██  ████  ██  ███  ███  ████████  ████  ████████  ██  ██████████████  ████  ██
+# ███      ███  ████  ██        ███      ████      ███  ███████████████      ███
+#  ▒▓████████████████████████████████████████████████████████████████████████▓▒
+title = "urljsf v0"
+description = "A schema for building forms to build URLs to build... whatever."
+
+# to business ##################################################################
+"$schema" = "http://json-schema.org/draft-07/schema#"
+"$id" = "https://deathbeds.github.io/urljsf/_static/schema/v0/form.schema.json"
+"$ref" = "#/definitions/urljsf"
+
+[definitions.urljsf] ############################################################
+title = "URL"
+type = "object"
+required = ["url_template", "url_json_schema", "data_json_schema"]
+
+# ursjf required ###############################################################
+[definitions.urljsf.properties.url_template]
+title = "URL Template"
+type = "string"
+minLength = 1
+description = """
+a [nunjucks]-compatible template for the form URL.
+
+The [jinja compatibility layer][jinjacompat] is enabled, allowing for more expressive,
+python-like syntax.
+
+[nunjucks]: https://mozilla.github.io/nunjucks
+[jinjacompat]: https://mozilla.github.io/nunjucks/api.html#installjinjacompat
+"""
+examples = [
+  "https://github.com/deathbeds/urljsf/new/main?fileName=docs/_schema/v0/schema.toml",
+]
+
+[definitions.urljsf.properties.url_json_schema]
+title = "URL JSON Schema"
+type = "string"
+format = "uri-reference"
+minLength = 1
+description = """
+a path to a JSON schema, serialized as JSON, TOML, or (simple) YAML to represent
+the context of the `url_template` field.
+"""
+
+[definitions.urljsf.properties.data_json_schema]
+title = "Data JSON Schema"
+type = "string"
+format = "uri-reference"
+minLength = 1
+description = """
+a path to a JSON schema, serialized as JSON, TOML, or (simple) YAML.
+"""
+
+# optional #####################################################################
+[definitions.urljsf.properties.http_method]
+title = "HTTP Method"
+type = "string"
+default = ["GET"]
+enum = ["GET", "POST", "PUT"]
+description = """
+name of an HTTP method to use
+"""
+
+[definitions.urljsf.properties.http_headers_template]
+title = "HTTP Headers"
+type = "string"
+description = """
+`nunjucks` template for HTTP headers
+"""
+
+[definitions.urljsf.properties.http_body_template]
+title = "HTTP Headers"
+description = """
+`nunjucks` template for the body of HTTP request, such as form fields and API calls
+"""
+
+[definitions.urljsf.properties.url_ui_schema]
+title = "User Interface Schema"
+type = "string"
+format = "uri-reference"
+minLength = 1
+description = """
+_(optional)_ path to an [`rjsf uiSchema`][ui-schema], serialized as JSON, TOML, or (simple) YAML
+to use to control the `url_template` context as constrained by `url_json_schema`.
+
+[ui-schema]: https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/uiSchema
+"""
+
+[definitions.urljsf.properties.data_ui_schema]
+title = "Data User Interface Schema"
+type = "string"
+format = "uri-reference"
+minLength = 1
+description = """
+_(optional)_ path to an [`rjsf uiSchema`][ui-schema], serialized as JSON, TOML, or (simple) YAML.
+
+[ui-schema]: https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/uiSchema
+"""
+
+# real definitions #############################################################
+[definitions.rsjf-props]
+type = "object"
+description = """
+JSON-compatible default values for `rjsf` [`Form.props`][form-props].
+
+[form-props]: https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/form-props
+"""
+
+[definitions.a-theme]
+type = "string"
+description = """
+a name of a theme supported by a compatible version of `urljsf`.
+
+all [bootswatch] themes are available, with the vanilla [`bootstrap`][bs5] by default.
+
+[bs5]: https://getbootstrap.com/docs/5.0
+[bootswatch]: https://bootswatch.com
+"""
+default = "bootstrap"
+enum = [
+  "bootstrap",
+  "cerulean",
+  "cosmo",
+  "cyborg",
+  "darkly",
+  "flatly",
+  "journal",
+  "litera",
+  "lumen",
+  "lux",
+  "materia",
+  "minty",
+  "morph",
+  "pulse",
+  "quartz",
+  "sandstone",
+  "simplex",
+  "sketchy",
+  "slate",
+  "solar",
+  "spacelab",
+  "superhero",
+  "united",
+  "vapor",
+  "yeti",
+  "zephyr",
+]
