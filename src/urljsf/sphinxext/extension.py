@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING, Any
 
 from ..constants import THEMES, UTF8
 from ..urljsf import Urljsf
-from .directives import prform
+from .nodes import prform
 
 if TYPE_CHECKING:
     from sphinx.application import Sphinx

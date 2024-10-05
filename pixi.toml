@@ -333,7 +333,7 @@ test-oldest = [
   "deps-run-oldest",
   "tasks-test-oldest",
 ]
-lint = ["deps-pip", "deps-build", "deps-lint", "tasks-lint"]
+lint = ["deps-pip", "deps-build", "deps-lint", "deps-run", "tasks-lint"]
 docs = ["deps-pip", "deps-docs", "deps-run", "deps-build", "tasks-docs"]
 dev = ["deps-pip", "deps-build", "deps-test", "deps-docs", "deps-lint", "tasks-dev"]
 
