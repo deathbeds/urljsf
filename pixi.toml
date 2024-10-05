@@ -21,6 +21,7 @@ lint = {depends-on = [
   "lint-py-ruff",
   "lint-js-prettier",
   "lint-js-markdownlint",
+  "lint-py-mypy",
 ]}
 build = {depends-on = ["build-js-lib", "build-js-app", "build-py-static"]}
 dist = {depends-on = ["dist-npm", "dist-pypi", "dist-hash"]}
@@ -142,6 +143,15 @@ inputs = ["pyproject.toml", "{src,tests,docs}/**/*.py"]
 cmd = "ruff format --check && ruff check"
 inputs = ["pyproject.toml", "{src,tests,docs}/**/*.py"]
 
+[feature.tasks-lint.tasks.pip-lint]
+cmd = """pixi r -e lint pip-e--"""
+inputs = ["pyproject.toml"]
+
+[feature.tasks-lint.tasks.lint-py-mypy]
+cmd = "mypy -p urljsf"
+inputs = ["pyproject.toml", "{src,tests}/**/*.py"]
+depends-on = ["pip-lint"]
+
 [feature.tasks-lint.tasks.fix-js-prettier]
 cmd = "pixi r prettier-- --write"
 depends-on = ["setup-js"]
@@ -195,7 +205,7 @@ cmd = """
 inputs = ["*.toml"]
 
 # test #########################################################################
-[feature.tasks-dev.tasks.test-pip]
+[feature.tasks-dev.tasks.pip-test]
 cmd = """pixi r -e test pip-e--"""
 inputs = ["pyproject.toml"]
 
@@ -215,7 +225,7 @@ export PIXI_PLATFORM=$(cat build/platform.txt)
   --no-cov-on-fail
   --cov-fail-under=100
 """
-depends-on = ["test-pip", "build-py-static", "platform"]
+depends-on = ["pip-test", "build-py-static", "platform"]
 inputs = ["{tests,src/urljsf}/**/*.{py,rst,json}", "src/urljsf/{_static,_templates}"]
 outputs = ["build/reports/test_*"]
 
@@ -250,7 +260,7 @@ print(f"""
 '''
 
 # test-oldest ##################################################################
-[feature.tasks-test-oldest.tasks.test-oldest-pip]
+[feature.tasks-test-oldest.tasks.pip-test-oldest]
 cmd = """pixi r -e test-oldest pip-e--"""
 inputs = ["pyproject.toml"]
 
@@ -262,16 +272,16 @@ export PIXI_PLATFORM=$(cat build/platform.txt)
   --html=build/reports/test-oldest_pytest_$PIXI_PLATFORM.html
   --self-contained-html
 """
-depends-on = ["test-oldest-pip", "build-py-static", "platform"]
+depends-on = ["pip-test-oldest", "build-py-static", "platform"]
 inputs = ["{tests,src/urljsf}/**/*.{py,rst,json}", "src/urljsf/{_static,_templates}"]
 outputs = ["build/reports/test-oldest_*"]
 
 
-[feature.tasks-dev.tasks.dev-pip]
+[feature.tasks-dev.tasks.pip-dev]
 cmd = """pixi r -e dev pip-e--"""
 inputs = ["pyproject.toml"]
 
-[feature.tasks-docs.tasks.docs-pip]
+[feature.tasks-docs.tasks.pip-docs]
 cmd = """pixi r -e docs pip-e--"""
 inputs = ["pyproject.toml"]
 
@@ -294,7 +304,7 @@ inputs = [
   "docs/**/*.{css,ipynb,md,py}",
   "!**/.ipynb_checkpoints",
 ]
-depends-on = ["docs-pip", "docs-scour"]
+depends-on = ["pip-docs", "docs-scour"]
 outputs = ["build/docs"]
 cmd = """
   export PYDEVD_DISABLE_FILE_VALIDATION=1
@@ -302,7 +312,7 @@ cmd = """
 """
 
 [feature.tasks-docs.tasks.docs-watch]
-depends-on = ["docs-pip"]
+depends-on = ["pip-docs"]
 cmd = """
 rm -rf build/watch-docs
 && sphinx-autobuild docs build/watch-docs
@@ -323,9 +333,9 @@ test-oldest = [
   "deps-run-oldest",
   "tasks-test-oldest",
 ]
-lint = ["deps-build", "deps-lint", "tasks-lint"]
-docs = ["deps-docs", "deps-run", "deps-build", "deps-pip", "tasks-docs"]
-dev = ["deps-build", "deps-test", "deps-docs", "deps-lint", "deps-pip", "tasks-dev"]
+lint = ["deps-pip", "deps-build", "deps-lint", "tasks-lint"]
+docs = ["deps-pip", "deps-docs", "deps-run", "deps-build", "tasks-docs"]
+dev = ["deps-pip", "deps-build", "deps-test", "deps-docs", "deps-lint", "tasks-dev"]
 
 # deps #########################################################################
 [feature.deps-pip.dependencies]
@@ -368,7 +378,8 @@ ruff = "*"
 mypy = "*"
 taplo = "*"
 actionlint-with-all = "*"
-
+types-jinja2 = "*"
+types-docutils = "*"
 
 # tools ########################################################################
 [tool.sphinx]

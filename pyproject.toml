@@ -41,6 +41,46 @@ Documentation = "https://urljsf.rtfd.io"
 PyPI = "https://pypi.org/project/urljsf"
 Source = "https://github.com/deathbeds/urljsf"
 
+[tool.flit.sdist]
+include = ["LICENSE"]
+
+# coverage #####################################################################
+[tool.coverage.run]
+disable_warnings = [
+  "no-data-collected",
+  "module-not-measured",
+  "module-not-imported",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+  "except ImportError as err:",
+  "if TYPE_CHECKING:",
+  """if __name__ == "__main__":""",
+  "pragma: no cover",
+]
+
+[tool.coverage.html]
+show_contexts = true
+
+# mypy #########################################################################
+[tool.mypy]
+cache_dir = "build/.cache/mypy"
+python_version = "3.11"
+strict = true
+show_error_codes = true
+warn_return_any = true
+warn_unused_ignores = true
+
+# pytest #######################################################################
+[tool.pytest.ini_options]
+cache_dir = "build/.cache/pytest"
+generate_report_on_test = true
+script_launch_mode = "subprocess"
+testpaths = ["tests"]
+addopts = ["--color=yes", "-Werror", "--tb=long", "-vv"]
+
+# ruff #########################################################################
 [tool.ruff]
 cache-dir = "build/.cache/ruff"
 extend-exclude = [".ipynb_checkpoints"]
@@ -62,28 +102,3 @@ isort.known-first-party = ["urljsf"]
 "**/sphinxext/*.py" = ["TID252", "ANN401", "ARG001"]
 "docs/**/*.py" = ["INP001"]
 "nodes.py" = ["N801"]
-
-[tool.pytest.ini_options]
-cache_dir = "build/.cache/pytest"
-generate_report_on_test = true
-script_launch_mode = "subprocess"
-testpaths = ["tests"]
-addopts = ["--color=yes", "-Werror", "--tb=long", "-vv"]
-
-[tool.coverage.run]
-disable_warnings = [
-  "no-data-collected",
-  "module-not-measured",
-  "module-not-imported",
-]
-
-[tool.coverage.report]
-exclude_lines = [
-  "except ImportError as err:",
-  "if TYPE_CHECKING:",
-  """if __name__ == "__main__":""",
-  "pragma: no cover",
-]
-
-[tool.coverage.html]
-show_contexts = true

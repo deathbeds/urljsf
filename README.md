@@ -2,7 +2,7 @@
 
 > Build statically-hostable, interactive HTML forms for making web requests
 >
-> _Powered by [`react-json-schema-form`][rjsf] and [bootstrap][bootstrap]._
+> _Powered by [`react-json-schema-form 6`][rjsf] and [`bootstrap 5`][bootstrap]._
 
 [rjsf]: https://github.com/rjsf-team/react-jsonschema-form
 [bootstrap]: https://github.com/twbs/bootstrap
@@ -14,7 +14,8 @@ extension to create JavaScript/HTML forms that jumpstart contibution to data-dri
 - on-demand build services
 - precise test descriptions
 - linter rules
-- pretty much anything that accepts a `POST` or `GET`
+
+... or pretty much anything that accepts a `POST` or `GET`, including email.
 
 When visiting a `urljsf`-built form, users:
 
@@ -22,6 +23,7 @@ When visiting a `urljsf`-built form, users:
   - defined by and validated against a JSON [Schema][json-schema], optionally with...
     - with a customizble [user interface][ui-schema]
     - pre-filled data
+    - custom validation messages
 
 Once the data (and URL metadata) is _validated_, the user sees a button which submits
 the form to any HTTPS endpoint.

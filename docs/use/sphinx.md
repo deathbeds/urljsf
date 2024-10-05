@@ -80,9 +80,9 @@ urljsf = {
         "compact_headings": True,
         # CSS selectors in which to re-map variables (default: as shown)
         "scopes": [
-            ".prsjf-urljsf-form",
-            ".prsjf-urljsf-form .card",
-            ".prsjf-urljsf-form .list-group"
+            ".urljsf-urljsf-form",
+            ".urljsf-urljsf-form .card",
+            ".urljsf-urljsf-form .list-group"
         ],
         # a map of ``--{key}: var(--{value});`` (default: ``{}``)
         "variables": {

@@ -31,7 +31,7 @@ Describe the bug clearly and concisely. Include text-based log output (not scree
 <!--Complete the following for context, and add any other relevant context-->
 
 - Operating System and version:
-- `prsjf` version(s):
+- `urljsf` version(s):
 - `python` version(s):
 - `sphinx` version(s):
 

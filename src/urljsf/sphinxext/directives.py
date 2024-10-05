@@ -61,7 +61,7 @@ class GitHubPR(SphinxDirective):
         "iframe-style": unchanged,
         "theme": a_theme,
     }
-    _prsjf: Urljsf | None
+    _urljsf: Urljsf | None
 
     def run(self) -> list[nodes.Node]:
         """Generate a single RJSF form."""
