@@ -46,6 +46,9 @@ include = ["LICENSE"]
 
 # coverage #####################################################################
 [tool.coverage.run]
+omit = [
+  "src/urljsf/_schema.py",
+]
 disable_warnings = [
   "no-data-collected",
   "module-not-measured",

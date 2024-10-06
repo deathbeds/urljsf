@@ -1,10 +1,11 @@
 #  ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 # ░░  ░░░░  ░░       ░░░  ░░░░░░░░        ░░░      ░░░        ░░░░░░░░░      ░░░
 # ▒▒  ▒▒▒▒  ▒▒  ▒▒▒▒  ▒▒  ▒▒▒▒▒▒▒▒▒▒▒▒▒▒  ▒▒  ▒▒▒▒▒▒▒▒  ▒▒▒▒▒▒▒▒▒▒▒▒▒▒  ▒▒▒▒  ▒▒
-# ▓▓  ▓▓▓▓  ▓▓       ▓▓▓  ▓▓▓▓▓▓▓▓▓▓▓▓▓▓  ▓▓▓      ▓▓▓      ▓▓▓▓▓▓▓▓▓▓  ▓▓▓▓  ▓▓
+# ▓▓  ▓▓▓▓  ▓▓       ▓▓▓  ▓▓▓▓▓▓▓▓▓▓▓▓▓▓  ▓▓▓      ▓▓▓      ▓▓▓▓▓▓▓▓▓▓  ▓  ▓  ▓▓
 # ██  ████  ██  ███  ███  ████████  ████  ████████  ██  ██████████████  ████  ██
 # ███      ███  ████  ██        ███      ████      ███  ███████████████      ███
 #  ▒▓████████████████████████████████████████████████████████████████████████▓▒
+
 title = "urljsf v0"
 description = "A schema for building forms to build URLs to build... whatever."
 
@@ -59,7 +60,7 @@ a path to a JSON schema, serialized as JSON, TOML, or (simple) YAML.
 [definitions.urljsf.properties.http_method]
 title = "HTTP Method"
 type = "string"
-default = ["GET"]
+default = "GET"
 enum = ["GET", "POST", "PUT"]
 description = """
 name of an HTTP method to use
@@ -101,17 +102,10 @@ _(optional)_ path to an [`rjsf uiSchema`][ui-schema], serialized as JSON, TOML, 
 [ui-schema]: https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/uiSchema
 """
 
-# real definitions #############################################################
-[definitions.rsjf-props]
-type = "object"
-description = """
-JSON-compatible default values for `rjsf` [`Form.props`][form-props].
-
-[form-props]: https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/form-props
-"""
-
-[definitions.a-theme]
+[definitions.urljsf.properties.theme]
+title = "Theme"
 type = "string"
+default = "bootstrap"
 description = """
 a name of a theme supported by a compatible version of `urljsf`.
 
@@ -120,7 +114,6 @@ all [bootswatch] themes are available, with the vanilla [`bootstrap`][bs5] by de
 [bs5]: https://getbootstrap.com/docs/5.0
 [bootswatch]: https://bootswatch.com
 """
-default = "bootstrap"
 enum = [
   "bootstrap",
   "cerulean",
@@ -149,3 +142,7 @@ enum = [
   "yeti",
   "zephyr",
 ]
+
+# real definitions #############################################################
+[definitions.rsjf-props]
+"$ref" = "./props.schema.json#" # yep, this broken

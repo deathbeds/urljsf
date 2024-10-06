@@ -1,106 +1,114 @@
 {
-  "$id": "https://deathbeds.github.io/urljsf/_static/schema/v0/form.schema.json",
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "$ref": "#/definitions/urljsf",
   "title": "urljsf v0",
   "description": "A schema for building forms to build URLs to build... whatever.",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://deathbeds.github.io/urljsf/_static/schema/v0/form.schema.json",
+  "$ref": "#/definitions/urljsf",
   "definitions": {
-    "a-theme": {
-      "type": "string",
-      "description": "a name of a theme supported by a compatible version of `urljsf`.\n\nall [bootswatch] themes are available, with the vanilla [`bootstrap`][bs5] by default.\n\n[bs5]: https://getbootstrap.com/docs/5.0\n[bootswatch]: https://bootswatch.com\n",
-      "default": "bootstrap",
-      "enum": [
-        "bootstrap",
-        "cerulean",
-        "cosmo",
-        "cyborg",
-        "darkly",
-        "flatly",
-        "journal",
-        "litera",
-        "lumen",
-        "lux",
-        "materia",
-        "minty",
-        "morph",
-        "pulse",
-        "quartz",
-        "sandstone",
-        "simplex",
-        "sketchy",
-        "slate",
-        "solar",
-        "spacelab",
-        "superhero",
-        "united",
-        "vapor",
-        "yeti",
-        "zephyr"
-      ]
-    },
-    "rsjf-props": {
-      "type": "object",
-      "description": "JSON-compatible default values for `rjsf` [`Form.props`][form-props].\n\n[form-props]: https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/form-props\n"
-    },
     "urljsf": {
-      "type": "object",
       "title": "URL",
+      "type": "object",
+      "required": [
+        "url_template",
+        "url_json_schema",
+        "data_json_schema"
+      ],
       "properties": {
-        "data_json_schema": {
+        "url_template": {
+          "title": "URL Template",
           "type": "string",
-          "title": "Data JSON Schema",
-          "description": "a path to a JSON schema, serialized as JSON, TOML, or (simple) YAML.\n",
-          "format": "uri-reference",
-          "minLength": 1
+          "minLength": 1,
+          "description": "a [nunjucks]-compatible template for the form URL.\n\nThe [jinja compatibility layer][jinjacompat] is enabled, allowing for more expressive,\npython-like syntax.\n\n[nunjucks]: https://mozilla.github.io/nunjucks\n[jinjacompat]: https://mozilla.github.io/nunjucks/api.html#installjinjacompat\n",
+          "examples": [
+            "https://github.com/deathbeds/urljsf/new/main?fileName=docs/_schema/v0/schema.toml"
+          ]
         },
-        "data_ui_schema": {
+        "url_json_schema": {
+          "title": "URL JSON Schema",
           "type": "string",
-          "title": "Data User Interface Schema",
-          "description": "_(optional)_ path to an [`rjsf uiSchema`][ui-schema], serialized as JSON, TOML, or (simple) YAML.\n\n[ui-schema]: https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/uiSchema\n",
           "format": "uri-reference",
-          "minLength": 1
+          "minLength": 1,
+          "description": "a path to a JSON schema, serialized as JSON, TOML, or (simple) YAML to represent\nthe context of the `url_template` field.\n"
+        },
+        "data_json_schema": {
+          "title": "Data JSON Schema",
+          "type": "string",
+          "format": "uri-reference",
+          "minLength": 1,
+          "description": "a path to a JSON schema, serialized as JSON, TOML, or (simple) YAML.\n"
+        },
+        "http_method": {
+          "title": "HTTP Method",
+          "type": "string",
+          "default": "GET",
+          "enum": [
+            "GET",
+            "POST",
+            "PUT"
+          ],
+          "description": "name of an HTTP method to use\n"
+        },
+        "http_headers_template": {
+          "title": "HTTP Headers",
+          "type": "string",
+          "description": "`nunjucks` template for HTTP headers\n"
         },
         "http_body_template": {
           "title": "HTTP Headers",
           "description": "`nunjucks` template for the body of HTTP request, such as form fields and API calls\n"
         },
-        "http_headers_template": {
-          "type": "string",
-          "title": "HTTP Headers",
-          "description": "`nunjucks` template for HTTP headers\n"
-        },
-        "http_method": {
-          "type": "string",
-          "title": "HTTP Method",
-          "description": "name of an HTTP method to use\n",
-          "default": ["GET"],
-          "enum": ["GET", "POST", "PUT"]
-        },
-        "url_json_schema": {
-          "type": "string",
-          "title": "URL JSON Schema",
-          "description": "a path to a JSON schema, serialized as JSON, TOML, or (simple) YAML to represent\nthe context of the `url_template` field.\n",
-          "format": "uri-reference",
-          "minLength": 1
-        },
-        "url_template": {
-          "type": "string",
-          "title": "URL Template",
-          "description": "a [nunjucks]-compatible template for the form URL.\n\nThe [jinja compatibility layer][jinjacompat] is enabled, allowing for more expressive,\npython-like syntax.\n\n[nunjucks]: https://mozilla.github.io/nunjucks\n[jinjacompat]: https://mozilla.github.io/nunjucks/api.html#installjinjacompat\n",
-          "examples": [
-            "https://github.com/deathbeds/urljsf/new/main?fileName=docs/_schema/v0/schema.toml"
-          ],
-          "minLength": 1
-        },
         "url_ui_schema": {
-          "type": "string",
           "title": "User Interface Schema",
-          "description": "_(optional)_ path to an [`rjsf uiSchema`][ui-schema], serialized as JSON, TOML, or (simple) YAML\nto use to control the `url_template` context as constrained by `url_json_schema`.\n\n[ui-schema]: https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/uiSchema\n",
+          "type": "string",
           "format": "uri-reference",
-          "minLength": 1
+          "minLength": 1,
+          "description": "_(optional)_ path to an [`rjsf uiSchema`][ui-schema], serialized as JSON, TOML, or (simple) YAML\nto use to control the `url_template` context as constrained by `url_json_schema`.\n\n[ui-schema]: https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/uiSchema\n"
+        },
+        "data_ui_schema": {
+          "title": "Data User Interface Schema",
+          "type": "string",
+          "format": "uri-reference",
+          "minLength": 1,
+          "description": "_(optional)_ path to an [`rjsf uiSchema`][ui-schema], serialized as JSON, TOML, or (simple) YAML.\n\n[ui-schema]: https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/uiSchema\n"
+        },
+        "theme": {
+          "title": "Theme",
+          "type": "string",
+          "default": "bootstrap",
+          "description": "a name of a theme supported by a compatible version of `urljsf`.\n\nall [bootswatch] themes are available, with the vanilla [`bootstrap`][bs5] by default.\n\n[bs5]: https://getbootstrap.com/docs/5.0\n[bootswatch]: https://bootswatch.com\n",
+          "enum": [
+            "bootstrap",
+            "cerulean",
+            "cosmo",
+            "cyborg",
+            "darkly",
+            "flatly",
+            "journal",
+            "litera",
+            "lumen",
+            "lux",
+            "materia",
+            "minty",
+            "morph",
+            "pulse",
+            "quartz",
+            "sandstone",
+            "simplex",
+            "sketchy",
+            "slate",
+            "solar",
+            "spacelab",
+            "superhero",
+            "united",
+            "vapor",
+            "yeti",
+            "zephyr"
+          ]
         }
-      },
-      "required": ["url_template", "url_json_schema", "data_json_schema"]
+      }
+    },
+    "rsjf-props": {
+      "$ref": "./props.schema.json#"
     }
   }
 }

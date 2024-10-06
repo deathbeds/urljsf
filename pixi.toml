@@ -29,6 +29,12 @@ build = {depends-on = [
   "build-js-app",
   "build-py-static",
 ]}
+build-schema = {depends-on = [
+  "build-schema-props",
+  "build-schema-json",
+  "build-schema-py",
+  "build-schema-ts",
+]}
 dist = {depends-on = ["dist-npm", "dist-pypi", "dist-hash"]}
 test = {depends-on = ["test-pytest", "test-oldest-pytest", "test-report"]}
 docs = {depends-on = ["docs-sphinx"]}
@@ -58,7 +64,7 @@ rm -rf src/urljsf/_static/
 cmd = '''
 mkdir -p build
 && python -c '
-  import platform; u = platform.uname(); print(f"{u.system}-{u.machine}".lower())
+import platform; u = platform.uname(); print(f"{u.system}-{u.machine}".lower())
 ' > build/platform.txt
 '''
 [tasks.pip-e--]
@@ -71,6 +77,35 @@ python -m pip install
   --disable-pip-version-check
   --ignore-installed
 """
+
+[tasks.schema-vars--]
+cmd = '''echo
+  SCHEMA_TOML=$PIXI_PROJECT_ROOT/docs/_static/schema/form.schema.toml
+  SCHEMA_DIR=$PIXI_PROJECT_ROOT/docs/_static/schema/v0
+  SCHEMA_JSON=$PIXI_PROJECT_ROOT/docs/_static/schema/v0/form.schema.json
+  SCHEMA_TS=$PIXI_PROJECT_ROOT/js/src/_schema.ts
+  SCHEMA_PY=$PIXI_PROJECT_ROOT/src/urljsf/_schema'''
+
+[tasks.schema-props-vars--]
+cmd = '''echo
+  TS_SRC=js/src/_props.ts
+  TS_TYPE=Props
+  SCHEMA_JSON=docs/_static/schema/v0/props.schema.json
+'''
+
+[tasks.schema-ts-json--]
+cmd = """
+rm -f $SCHEMA_JSON
+&& yarn ts-json-schema-generator
+  --no-top-ref
+  --no-type-check
+  --tsconfig js/tsconfig.json
+  --type $TS_TYPE
+  --path $TS_SRC
+  --out $SCHEMA_JSON
+&& yarn prettier --write $SCHEMA_JSON
+"""
+
 [tasks.schema-toml-json--]
 cmd = """
 python -c '
@@ -79,8 +114,39 @@ p.Path(s.argv[2]).write_text(
   j.dumps(t.loads(p.Path(s.argv[1]).read_text(**u)), indent=2),
   **u
 )
-'
+' $SCHEMA_TOML $SCHEMA_JSON
 """
+
+[feature.tasks-build.tasks.schema-json-ts--]
+cmd = """
+cd $(dirname $SCHEMA_JSON)
+&& yarn json2ts
+  --style.singleQuote
+  --no-style.semi
+  --no-additionalProperties
+  --unreachableDefinitions
+  --input $SCHEMA_JSON
+  --output $SCHEMA_TS
+&& yarn prettier --write $SCHEMA_TS
+"""
+
+[feature.tasks-build.tasks.schema-json-py--]
+cmd = '''
+datamodel-codegen
+  --input $SCHEMA_DIR
+  --input-file-type jsonschema
+  --output $SCHEMA_PY
+  --output-model-type dataclasses.dataclass
+  --use-union-operator
+  --custom-file-header '"""JSON Schema for ``urljsf``."""
+# Copyright (C) urljsf contributors.
+# Distributed under the terms of the Modified BSD License.'
+&& ruff format $SCHEMA_PY
+&& ruff check --fix-only $SCHEMA_PY
+'''
+
+[feature.tasks-build.tasks.schema-all--]
+cmd = """pixi r schema-toml-json-- && pixi r schema-json-ts--"""
 
 # setup ########################################################################
 [feature.tasks-build.tasks.setup-js]
@@ -111,7 +177,7 @@ inputs = ["pyproject.toml"]
 # build ########################################################################
 [feature.tasks-build.tasks.build-js-lib]
 cmd = "yarn build:lib"
-depends-on = ["setup-js"]
+depends-on = ["setup-js", "build-schema-ts"]
 inputs = ["node_modules/.yarn-state.yml", "js/src", "js/{package,tsconfig}.json"]
 outputs = ["js/lib"]
 
@@ -135,7 +201,7 @@ outputs = ["dist/*.tgz"]
 
 [feature.tasks-build.tasks.dist-pypi]
 cmd = "pyproject-build . --no-isolation"
-depends-on = ["build-py-static"]
+depends-on = ["build-py-static", "build-schema-py"]
 inputs = ["{pyproject.toml,LICENSE,README.md}", "src"]
 outputs = ["dist/*.whl", "dist/*.tar.gz"]
 
@@ -155,15 +221,27 @@ depends-on = ["dist-pypi", "dist-npm"]
 inputs = ["dist", "!dist/SHA256SUMS"]
 outputs = ["dist/SHA256SUMS"]
 
-[feature.tasks-build.tasks.build-schema]
-cmd = """
-export
-  SCHEMA_TOML=docs/_static/schema/v0/form.schema.toml
-  SCHEMA_JSON=docs/_static/schema/v0/form.schema.json
-&& pixi r schema-toml-json-- $SCHEMA_TOML $SCHEMA_JSON
-"""
-inputs = ["docs/_static/schema/v0/form.schema.toml"]
+[feature.tasks-build.tasks.build-schema-props]
+cmd = """export $(pixi r schema-props-vars--) && pixi r schema-ts-json--"""
+inputs = ["js/src/_props.ts"]
+outputs = ["docs/_static/schema/v0/props.schema.json"]
+
+[feature.tasks-build.tasks.build-schema-json]
+cmd = """export $(pixi r schema-vars--) && pixi r schema-toml-json--"""
+inputs = ["docs/_static/schema/form.schema.toml"]
 outputs = ["docs/_static/schema/v0/form.schema.json"]
+
+[feature.tasks-build.tasks.build-schema-ts]
+cmd = """export $(pixi r schema-vars--) && pixi r schema-json-ts--"""
+inputs = ["docs/_static/schema/v0/form.schema.json"]
+outputs = ["js/src/_schema.ts"]
+depends-on = ["build-schema-json"]
+
+[feature.tasks-build.tasks.build-schema-py]
+cmd = """export $(pixi r schema-vars--) && pixi r schema-json-py--"""
+inputs = ["docs/_static/schema/v0/form.schema.json"]
+outputs = ["src/urljsf/_schema"]
+depends-on = ["build-schema-json"]
 
 # fix ##########################################################################
 [feature.tasks-lint.tasks.fix-toml-taplo]
@@ -215,7 +293,6 @@ inputs = ["pyproject.toml", "{src,tests,docs}/**/*.py"]
 cmd = "mypy -p urljsf"
 inputs = ["pyproject.toml", "{src,tests}/**/*.py"]
 depends-on = ["setup-pip-lint"]
-
 
 [feature.tasks-lint.tasks.lint-js-prettier]
 cmd = "pixi r prettier--"
@@ -338,12 +415,15 @@ watchfiles "pixi r py-static--" js/dist
 
 [feature.tasks-build.tasks.watch-schema]
 cmd = """
-export
-  SCHEMA_TOML=docs/_static/schema/v0/form.schema.toml
-  SCHEMA_JSON=docs/_static/schema/v0/form.schema.json
-&& watchfiles
-  "pixi r schema-toml-json-- $SCHEMA_TOML $SCHEMA_JSON"
-  $SCHEMA_TOML
+export $(pixi r schema-vars--)
+&& watchfiles "pixi r schema-all--" $SCHEMA_TOML
+"""
+
+[feature.tasks-build.tasks.watch-schema-props]
+cmd = """
+export $(pixi r schema-props-vars--)
+&& watchfiles "pixi r schema-ts-json--" $TS_SRC
+&& echo ok
 """
 
 [feature.tasks-docs.tasks.watch-docs]
@@ -405,8 +485,10 @@ scour = "*"
 [feature.deps-build.dependencies]
 nodejs = "22.*"
 yarn = "3.6.4"
+datamodel-code-generator = "*"
 python-build = "*"
 watchfiles = "*"
+ruff = "*"
 
 [feature.deps-lint.dependencies]
 ruff = "*"
