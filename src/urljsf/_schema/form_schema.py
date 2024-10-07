@@ -59,6 +59,7 @@ class FileForm:
 
     schema_: AnySchemaLocation
     props: props_schema.Props | None = None
+    prune_empty: bool | None = None
     ui_schema: AnySchemaLocation | None = None
 
 
@@ -80,4 +81,6 @@ class Urljsf:
 
     file_form: FileForm
     url_form: UrlForm
+    iframe: bool | None = None
+    iframe_style: str | None = None
     theme: AnyTheme | None = AnyTheme.bootstrap

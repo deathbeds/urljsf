@@ -8,6 +8,14 @@
     "file_form": {
       "$ref": "#/definitions/file-form"
     },
+    "iframe": {
+      "type": "boolean",
+      "description": "isolate each form on the page in an `iframe`"
+    },
+    "iframe_style": {
+      "type": "string",
+      "description": "additional simple CSS to apply to an `iframe` element (implies `iframe`)"
+    },
     "theme": {
       "$ref": "#/definitions/any-theme"
     },
@@ -73,6 +81,10 @@
       "properties": {
         "props": {
           "$ref": "./props.schema.json#/definitions/Props"
+        },
+        "prune_empty": {
+          "type": "boolean",
+          "description": "prune empty lists, object, etc."
         },
         "schema": {
           "$ref": "#/definitions/any-schema-location"

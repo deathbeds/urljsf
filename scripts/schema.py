@@ -17,12 +17,13 @@ PY_HEADER = '''"""JSON Schema for ``urljsf``."""
 # Copyright (C) urljsf contributors.
 # Distributed under the terms of the Modified BSD License.
 '''
+ROOT = Path(__file__).parent.parent
 
 
 def call(args: list[str | Path], **kwargs: Any) -> int:
     """Call a command with some output."""
     args = list(map(str, args))
-    print(">>>", " \\\n\t".join(args))
+    print(">>>", " \\\n\t".join(args), "\n")
     rc = _call(args, **kwargs)
     if rc:
         print("FAIL", rc)
@@ -117,8 +118,13 @@ def main(in_path: Path, out_path: Path) -> int:
         (".json", ".ts"): json_to_ts,
         (".json", ".py"): json_to_py,
     }[key]
-    return converter(in_path, out_path)
+    rc = converter(in_path, out_path)
+    print(
+        f"""... converted: {in_path.relative_to(ROOT)}
+        to: {out_path.relative_to(ROOT)}"""
+    )
+    return rc
 
 
 if __name__ == "__main__":
-    sys.exit(main(Path(sys.argv[1]), Path(sys.argv[2])))
+    sys.exit(main(Path(sys.argv[1]).resolve(), Path(sys.argv[2]).resolve()))

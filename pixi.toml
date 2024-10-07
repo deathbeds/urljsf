@@ -99,12 +99,12 @@ cmd = """python scripts/schema.py $SCHEMA_JSON $SCHEMA_TS"""
 [feature.tasks-build.tasks.schema-json-py--]
 cmd = """python scripts/schema.py $SCHEMA_JSON $SCHEMA_PY"""
 
-
 [feature.tasks-build.tasks.schema-all--]
 cmd = """
 pixi r build-schema-props
 && pixi r schema-toml-json--
 && pixi r schema-json-ts--
+&& echo "OK"
 """
 
 # setup ########################################################################
@@ -348,7 +348,7 @@ watchfiles "pixi r py-static--" js/dist
 [feature.tasks-build.tasks.watch-schema]
 cmd = """
 export $(pixi r schema-vars--)
-&& watchfiles "pixi r schema-all--" $SCHEMA_TOML $PROPS_TS
+&& watchfiles "pixi r schema-all--" $SCHEMA_TOML $PROPS_TS scripts/schema.py
 """
 
 [feature.tasks-docs.tasks.watch-docs]

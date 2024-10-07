@@ -69,6 +69,14 @@ export type URLTemplate = string;
  */
 export interface Urljsf {
   file_form: FileForm;
+  /**
+   * isolate each form on the page in an `iframe`
+   */
+  iframe?: boolean;
+  /**
+   * additional simple CSS to apply to an `iframe` element (implies `iframe`)
+   */
+  iframe_style?: string;
   theme?: Theme;
   url_form: URLForm;
 }
@@ -80,6 +88,10 @@ export interface Urljsf {
  */
 export interface FileForm {
   props?: Props;
+  /**
+   * prune empty lists, object, etc.
+   */
+  prune_empty?: boolean;
   schema: ASchemaLocation;
   ui_schema?: ASchemaLocation;
 }
