@@ -78,5 +78,4 @@ export type Ignored =
   | 'onError'
   | 'onChange'
   | 'noValidate'
-  | 'acceptcharset'
-  ;
+  | 'acceptcharset';

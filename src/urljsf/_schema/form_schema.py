@@ -8,16 +8,27 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Any
 
-from ..props import schema
+from . import props_schema
 
 
 class HttpMethod(Enum):
+    """name of an HTTP method to use"""
+
     GET = "GET"
     POST = "POST"
     PUT = "PUT"
 
 
 class Theme(Enum):
+    """a name of a theme supported by a compatible version of `urljsf`.
+
+    all [bootswatch] themes are available, with the vanilla [`bootstrap`][bs5] by default.
+
+    [bs5]: https://getbootstrap.com/docs/5.0
+    [bootswatch]: https://bootswatch.com
+
+    """
+
     bootstrap = "bootstrap"
     cerulean = "cerulean"
     cosmo = "cosmo"
@@ -46,20 +57,20 @@ class Theme(Enum):
     zephyr = "zephyr"
 
 
-@dataclass
+@dataclass(slots=True)
 class Urljsf:
-    url_template: str
-    url_json_schema: str
     data_json_schema: str
-    http_method: HttpMethod | None = HttpMethod.GET
-    http_headers_template: str | None = None
-    http_body_template: Any | None = None
-    url_ui_schema: str | None = None
+    url_json_schema: str
+    url_template: str
     data_ui_schema: str | None = None
+    http_body_template: Any | None = None
+    http_headers_template: str | None = None
+    http_method: HttpMethod | None = HttpMethod.GET
     theme: Theme | None = Theme.bootstrap
+    url_ui_schema: str | None = None
 
 
 UrljsfV0 = Urljsf
 
 
-RsjfProps = schema.Model
+RsjfProps = props_schema.Props

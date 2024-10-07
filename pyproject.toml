@@ -46,9 +46,6 @@ include = ["LICENSE"]
 
 # coverage #####################################################################
 [tool.coverage.run]
-omit = [
-  "src/urljsf/_schema.py",
-]
 disable_warnings = [
   "no-data-collected",
   "module-not-measured",
@@ -87,7 +84,7 @@ addopts = ["--color=yes", "-Werror", "--tb=long", "-vv"]
 [tool.ruff]
 cache-dir = "build/.cache/ruff"
 extend-exclude = [".ipynb_checkpoints"]
-include = ["{tests,docs,src}/**/*.{py,ipynb}"]
+include = ["{tests,docs,src,scripts}/**/*.{py,ipynb}"]
 line-length = 88
 preview = true
 
@@ -105,3 +102,5 @@ isort.known-first-party = ["urljsf"]
 "**/sphinxext/*.py" = ["TID252", "ANN401", "ARG001"]
 "docs/**/*.py" = ["INP001"]
 "nodes.py" = ["N801"]
+"**/_schema/*.py" = ["N815", "UP006", "UP035", "TID252", "E501", "D415", "D400"]
+"scripts/*.py" = ["S603", "T201", "INP001", "ANN401", "S404"]

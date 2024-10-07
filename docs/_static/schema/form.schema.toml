@@ -7,7 +7,7 @@
 #  ▒▓████████████████████████████████████████████████████████████████████████▓▒
 
 title = "urljsf v0"
-description = "A schema for building forms to build URLs to build... whatever."
+description = "A schema for building forms for building URLs for building..."
 
 # to business ##################################################################
 "$schema" = "http://json-schema.org/draft-07/schema#"
@@ -145,4 +145,4 @@ enum = [
 
 # real definitions #############################################################
 [definitions.rsjf-props]
-"$ref" = "./props.schema.json#" # yep, this broken
+"$ref" = "./props.schema.json#/definitions/Props"

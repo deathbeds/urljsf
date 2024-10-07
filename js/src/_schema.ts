@@ -6,45 +6,10 @@
  */
 
 /**
- * a [nunjucks]-compatible template for the form URL.
- *
- * The [jinja compatibility layer][jinjacompat] is enabled, allowing for more expressive,
- * python-like syntax.
- *
- * [nunjucks]: https://mozilla.github.io/nunjucks
- * [jinjacompat]: https://mozilla.github.io/nunjucks/api.html#installjinjacompat
- *
- */
-export type URLTemplate = string;
-/**
- * a path to a JSON schema, serialized as JSON, TOML, or (simple) YAML to represent
- * the context of the `url_template` field.
- *
- */
-export type URLJSONSchema = string;
-/**
  * a path to a JSON schema, serialized as JSON, TOML, or (simple) YAML.
  *
  */
 export type DataJSONSchema = string;
-/**
- * name of an HTTP method to use
- *
- */
-export type HTTPMethod = 'GET' | 'POST' | 'PUT';
-/**
- * `nunjucks` template for HTTP headers
- *
- */
-export type HTTPHeaders = string;
-/**
- * _(optional)_ path to an [`rjsf uiSchema`][ui-schema], serialized as JSON, TOML, or (simple) YAML
- * to use to control the `url_template` context as constrained by `url_json_schema`.
- *
- * [ui-schema]: https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/uiSchema
- *
- */
-export type UserInterfaceSchema = string;
 /**
  * _(optional)_ path to an [`rjsf uiSchema`][ui-schema], serialized as JSON, TOML, or (simple) YAML.
  *
@@ -52,6 +17,16 @@ export type UserInterfaceSchema = string;
  *
  */
 export type DataUserInterfaceSchema = string;
+/**
+ * `nunjucks` template for HTTP headers
+ *
+ */
+export type HTTPHeaders1 = string;
+/**
+ * name of an HTTP method to use
+ *
+ */
+export type HTTPMethod = 'GET' | 'POST' | 'PUT';
 /**
  * a name of a theme supported by a compatible version of `urljsf`.
  *
@@ -88,42 +63,52 @@ export type Theme =
   | 'vapor'
   | 'yeti'
   | 'zephyr';
+/**
+ * a path to a JSON schema, serialized as JSON, TOML, or (simple) YAML to represent
+ * the context of the `url_template` field.
+ *
+ */
+export type URLJSONSchema = string;
+/**
+ * a [nunjucks]-compatible template for the form URL.
+ *
+ * The [jinja compatibility layer][jinjacompat] is enabled, allowing for more expressive,
+ * python-like syntax.
+ *
+ * [nunjucks]: https://mozilla.github.io/nunjucks
+ * [jinjacompat]: https://mozilla.github.io/nunjucks/api.html#installjinjacompat
+ *
+ */
+export type URLTemplate = string;
+/**
+ * _(optional)_ path to an [`rjsf uiSchema`][ui-schema], serialized as JSON, TOML, or (simple) YAML
+ * to use to control the `url_template` context as constrained by `url_json_schema`.
+ *
+ * [ui-schema]: https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/uiSchema
+ *
+ */
+export type UserInterfaceSchema = string;
 
 /**
- * A schema for building forms to build URLs to build... whatever.
+ * A schema for building forms for building URLs for building...
  */
 export interface UrljsfV0 {
-  url_template: URLTemplate;
-  url_json_schema: URLJSONSchema;
   data_json_schema: DataJSONSchema;
-  http_method?: HTTPMethod;
-  http_headers_template?: HTTPHeaders;
-  http_body_template?: HTTPHeaders1;
-  url_ui_schema?: UserInterfaceSchema;
   data_ui_schema?: DataUserInterfaceSchema;
+  http_body_template?: HTTPHeaders;
+  http_headers_template?: HTTPHeaders1;
+  http_method?: HTTPMethod;
   theme?: Theme;
+  url_json_schema: URLJSONSchema;
+  url_template: URLTemplate;
+  url_ui_schema?: UserInterfaceSchema;
 }
 /**
  * `nunjucks` template for the body of HTTP request, such as form fields and API calls
  *
  */
-export interface HTTPHeaders1 {
+export interface HTTPHeaders {
   [k: string]: unknown;
-}
-/**
- * This interface was referenced by `UrljsfV0`'s JSON-Schema
- * via the `definition` "urljsf".
- */
-export interface URL {
-  url_template: URLTemplate;
-  url_json_schema: URLJSONSchema;
-  data_json_schema: DataJSONSchema;
-  http_method?: HTTPMethod;
-  http_headers_template?: HTTPHeaders;
-  http_body_template?: HTTPHeaders1;
-  url_ui_schema?: UserInterfaceSchema;
-  data_ui_schema?: DataUserInterfaceSchema;
-  theme?: Theme;
 }
 /**
  * JSON-compatible default values for `rjsf` [`Form.props`][form-props].
@@ -133,7 +118,7 @@ export interface URL {
  * This interface was referenced by `UrljsfV0`'s JSON-Schema
  * via the `definition` "rsjf-props".
  */
-export interface PropsSchema {
+export interface Props {
   /**
    * The value of this prop will be passed to the `accept-charset` HTML attribute on the form
    */
@@ -236,4 +221,19 @@ export interface PropsSchema {
    * The uiSchema for the form
    */
   uiSchema?: {};
+}
+/**
+ * This interface was referenced by `UrljsfV0`'s JSON-Schema
+ * via the `definition` "urljsf".
+ */
+export interface URL {
+  data_json_schema: DataJSONSchema;
+  data_ui_schema?: DataUserInterfaceSchema;
+  http_body_template?: HTTPHeaders;
+  http_headers_template?: HTTPHeaders1;
+  http_method?: HTTPMethod;
+  theme?: Theme;
+  url_json_schema: URLJSONSchema;
+  url_template: URLTemplate;
+  url_ui_schema?: UserInterfaceSchema;
 }
