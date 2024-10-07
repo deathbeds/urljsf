@@ -58,7 +58,7 @@ class Included(Enum):
     target = "target"
 
 
-@dataclass(slots=True)
+@dataclass
 class Overloads:
     """simplifications of important fields which are out of scope to fully support inline.
     """
@@ -80,7 +80,7 @@ class ShowErrorList(Enum):
     bottom = "bottom"
 
 
-@dataclass(slots=True)
+@dataclass
 class Props:
     """JSON-compatible default values for `rjsf` [`Form.props`][form-props].
 

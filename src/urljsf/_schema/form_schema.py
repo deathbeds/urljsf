@@ -52,7 +52,7 @@ class AnyTheme(Enum):
 AnyUrlTemplate = str
 
 
-@dataclass(slots=True)
+@dataclass
 class FileForm:
     """a description of a form that builds a data file
     """
@@ -62,7 +62,7 @@ class FileForm:
     ui_schema: AnySchemaLocation | None = None
 
 
-@dataclass(slots=True)
+@dataclass
 class UrlForm:
     """a definition of a form to build a URL
     """
@@ -73,7 +73,7 @@ class UrlForm:
     ui_schema: AnySchemaLocation | None = None
 
 
-@dataclass(slots=True)
+@dataclass
 class Urljsf:
     """A schema for building forms for building URLs for building...
     """

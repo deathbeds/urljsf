@@ -289,34 +289,7 @@ inputs = ["{tests,src/urljsf}/**/*.{py,rst,json}", "src/urljsf/{_static,_templat
 outputs = ["build/reports/test_*"]
 
 [feature.tasks-test.tasks.test-report]
-cmd = '''
-python -c 'from pathlib import Path;
-print("""
-  <html>
-  <style>
-    html {font-family: sans-serif;}
-    iframe {position: absolute; top: 0; height: 99vh; width: 79vw; right: 0;}
-    ul {display: block; max-width: 19vw;}
-  </style>
-  <body>
-    <ul>""");
-ps = [
-  (
-    f"""./{p.name}{"/index.html" if p.is_dir() else ""}""",
-    " ".join(p.stem.split("_", 2))
-  )
-  for p in sorted(Path("build/reports/").iterdir())
-  if p.is_dir() or p.name.endswith(".html") and p.name != "index.html"
-];
-[print(f"""
-      <li><a href="{u}" target="main">{n}</a></li>""") for u, n in ps];
-print(f"""
-    </ul>
-    <iframe name="main" src="{ps[0][0]}"></iframe>
-  </body>
-</html>""")
-' > build/reports/index.html
-'''
+cmd = "python scripts/report.py build/reports"
 
 # test-oldest ##################################################################
 [feature.tasks-test-oldest.tasks.test-oldest-pytest]

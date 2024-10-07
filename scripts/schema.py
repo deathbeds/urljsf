@@ -94,11 +94,9 @@ def json_to_py(in_path: Path, out_path: Path) -> int:
         """Fix up generated python."""
         for path in out_parent.glob("*.py"):
             text = path.read_text(**UTF8)
-            text = (
-                text.replace("@dataclass", "@dataclass(slots=True)")
-                .replace("from ..props import schema", "from . import props_schema")
-                .replace("schema.Props", "props_schema.Props")
-            )
+            text = text.replace(
+                "from ..props import schema", "from . import props_schema"
+            ).replace("schema.Props", "props_schema.Props")
             path.write_text(text, **UTF8)
         return 0
 
