@@ -2,18 +2,22 @@
 // Distributed under the terms of the Modified BSD License.
 import { isObject } from '@rjsf/utils';
 
-import { ALL_KEYS, DEFAULTS, TDataSet, TUrlKey } from './tokens.js';
+import { Urljsf } from './_schema.js';
+import { MIME_FRAGMENT } from './index.js';
+import { TDataSet, TFormat, TUrlKey } from './tokens.js';
 
 let _NEXT_DATA_SET = 0;
 const _DATA_SETS = new WeakMap<TDataSet, number>();
 
 /** get a dataset with defaults */
-export function getDataSet(el: HTMLElement): TDataSet {
-  const dataset: TDataSet = {};
-  for (const k of [...ALL_KEYS]) {
-    dataset[k] = el.dataset[k] || (DEFAULTS as any as TDataSet)[k];
+export async function getConfig(el: HTMLScriptElement): Promise<Urljsf> {
+  const format = el.type.replace(MIME_FRAGMENT, '') as TFormat;
+
+  if (el.src) {
+    return fetchOne<Urljsf>(el.src, format);
   }
-  return dataset;
+
+  return await parseOne<Urljsf>(el.innerText, format);
 }
 
 /** remove empty objects and arrays */
@@ -70,27 +74,51 @@ export async function fetchData(dataset: TDataSet, key: TUrlKey): Promise<any> {
     return {};
   }
 
-  const response = await fetch(url);
-  let data: any = {};
-  const format = dataset[`${key}Format`] || 'json';
+  return await fetchOne(url);
+}
 
-  if (response.ok) {
-    const text = await response.text();
-    switch (format) {
-      case 'json':
-        data = JSON.parse(text);
-        break;
-      case 'toml':
-        let toml = await import('smol-toml');
-        data = toml.parse(text);
-        break;
-      case 'yaml':
-        let yaml = await import('yaml');
-        data = yaml.parse(text);
-        break;
-    }
+export async function fetchOne<T = Record<string, any>>(
+  url: string | null | undefined,
+  format?: 'json' | 'toml' | 'yaml',
+): Promise<T> {
+  let data = {} as T;
+  if (url == null) {
+    return data;
   }
+  const urlObj = new URL(url, window.location.href);
+  const response = await fetch(urlObj);
+  const { pathname } = urlObj;
+  format =
+    format || pathname.endsWith('.toml')
+      ? 'toml'
+      : pathname.endsWith('.json')
+        ? 'json'
+        : 'yaml';
+  if (response.ok) {
+    data = await parseOne<T>(await response.text(), format);
+  }
+  return data;
+}
 
+export async function parseOne<T = Record<string, any>>(
+  text: string,
+  format: TFormat,
+): Promise<T> {
+  let data = {} as T;
+
+  switch (format) {
+    case 'json':
+      data = JSON.parse(text);
+      break;
+    case 'toml':
+      let toml = await import('smol-toml');
+      data = toml.parse(text) as T;
+      break;
+    case 'yaml':
+      let yaml = await import('yaml');
+      data = yaml.parse(text);
+      break;
+  }
   return data;
 }
 

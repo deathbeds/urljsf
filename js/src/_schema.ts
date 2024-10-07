@@ -87,6 +87,7 @@ export interface Urljsf {
  * via the `definition` "file-form".
  */
 export interface FileForm {
+  form_data?: ASchemaLocation;
   props?: Props;
   /**
    * prune empty lists, object, etc.

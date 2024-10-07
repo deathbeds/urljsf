@@ -11,26 +11,30 @@ import type { RJSFValidationError } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
 import { THEMES } from './themes.js';
-import { DEFAULTS, type TDataSet } from './tokens.js';
-import { fetchData, getDataSet, getFileContent, getIdPrefix } from './utils.js';
+import { DEBUG, DEFAULTS, type TDataSet } from './tokens.js';
+import { fetchOne, getConfig, getFileContent, getIdPrefix } from './utils.js';
 
 /** process a single form
  *
  * @param container - a DOM node with urljsf dataset
  */
-export async function makeOneForm(container: HTMLElement): Promise<void> {
-  const dataset = getDataSet(container);
+export async function makeOneForm(container: HTMLScriptElement): Promise<void> {
+  const config = await getConfig(container);
+  DEBUG && console.log(config);
 
   const [schema, uiSchema, formData] = await Promise.all([
-    fetchData(dataset, 'urljsfSchema'),
-    fetchData(dataset, 'urljsfUiSchema'),
-    fetchData(dataset, 'urljsfData'),
+    fetchOne(config.file_form?.schema),
+    fetchOne(config.file_form?.ui_schema),
+    fetchOne(config.file_form?.form_data),
   ]);
 
-  const initValue = await getFileContent(dataset, formData);
-  const form = formComponent(dataset, initValue, { schema, formData, uiSchema });
-  const isolated = !!dataset.urljsfIframe;
-  render(isolated ? await renderIframe(dataset, form) : form, container);
+  DEBUG && console.log({ schema, uiSchema, formData });
+
+  // const initValue = await getFileContent(dataset, formData);
+  // const form = formComponent(dataset, initValue, { schema, formData, uiSchema });
+  // const isolated = !!dataset.urljsfIframe;
+  // render(isolated ? await renderIframe(dataset, form) : form, container);
+  render(<div></div>, container);
 }
 
 /** a component for a form in a (themed) iframe
@@ -39,7 +43,7 @@ export async function makeOneForm(container: HTMLElement): Promise<void> {
  * @param form - the form element
  * @param container - a DOM node with urljsf dataset
  */
-async function renderIframe(
+export async function renderIframe(
   dataset: TDataSet,
   form: JSX.Element,
 ): Promise<JSX.Element> {

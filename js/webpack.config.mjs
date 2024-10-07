@@ -50,7 +50,7 @@ const config = {
   experiments: { outputModule: true },
   output: {
     path: path.resolve(__dirname, './dist/urljsf'),
-    filename: 'urljsf.js',
+    filename: 'index.js',
     chunkFilename: ({ chunk }) => {
       return `${chunk.id}.${chunk.hash?.slice(0, 8)}.js`;
     },

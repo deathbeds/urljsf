@@ -1,11 +1,11 @@
 // Copyright (C) urljsf contributors.
 // Distributed under the terms of the Modified BSD License.
 
-/** a form must declare, at an absolute minimum, its repo */
-const SELECTOR = '[data-urljsf-git-hub-repo]';
+export const MIME_FRAGMENT = 'application/vnd.deathbeds.prjsf.v0+';
+export const SELECTOR = `script[type^="${MIME_FRAGMENT}"]`;
 
 export async function main() {
-  const containers = [...document.querySelectorAll(SELECTOR)];
+  const containers = [...document.querySelectorAll(SELECTOR)] as HTMLScriptElement[];
 
   if (containers.length) {
     const { makeOneForm } = await import('./render.js');

@@ -54,10 +54,10 @@ AnyUrlTemplate = str
 
 @dataclass
 class FileForm:
-    """a description of a form that builds a data file
-    """
+    """a description of a form that builds a data file"""
 
     schema_: AnySchemaLocation
+    form_data: AnySchemaLocation | None = None
     props: props_schema.Props | None = None
     prune_empty: bool | None = None
     ui_schema: AnySchemaLocation | None = None
@@ -65,8 +65,7 @@ class FileForm:
 
 @dataclass
 class UrlForm:
-    """a definition of a form to build a URL
-    """
+    """a definition of a form to build a URL"""
 
     url_template: AnyUrlTemplate
     props: props_schema.Props | None = None
@@ -76,8 +75,7 @@ class UrlForm:
 
 @dataclass
 class Urljsf:
-    """A schema for building forms for building URLs for building...
-    """
+    """A schema for building forms for building URLs for building..."""
 
     file_form: FileForm
     url_form: UrlForm

@@ -2,20 +2,26 @@
 
 > Build statically-hostable, interactive HTML forms for making web requests
 >
-> _Powered by [`react-json-schema-form 6`][rjsf] and [`bootstrap 5`][bootstrap]._
+> _Powered by [`react-json-schema-form`][rjsf] and
+> [`react-`][react-bootstrap][`bootstrap`][bootstrap]._
 
 [rjsf]: https://github.com/rjsf-team/react-jsonschema-form
 [bootstrap]: https://github.com/twbs/bootstrap
+[react-bootstrap]: https://github.com/react-bootstrap/react-bootstrap
 
-Projects can use `urljsf` as a standalone [CLI tool](#command-line) or [sphinx](#sphinx)
-extension to create JavaScript/HTML forms that jumpstart contibution to data-driven:
+Projects can use `urljsf` as:
+
+- a standalone [CLI tool](#command-line)
+- a [sphinx](#sphinx) extension
+
+... to create JavaScript/HTML forms that jumpstart contibution to data-driven:
 
 - galleries
 - on-demand build services
 - precise test descriptions
 - linter rules
 
-... or pretty much anything that accepts a `POST` or `GET`, including email.
+... or pretty much anything that accepts a `POST` or `GET`, or even email.
 
 When visiting a `urljsf`-built form, users:
 
@@ -26,14 +32,15 @@ When visiting a `urljsf`-built form, users:
     - custom validation messages
 
 Once the data (and URL metadata) is _validated_, the user sees a button which submits
-the form to any HTTPS endpoint.
+the form to an HTTPS endpoint.
 
 While almost _any_ URL can be built, special care is given for _pull requests_, which
-create excellent data for projects and users. For example, the GitHub `/new/` pull
-request URL starts a workflow to:
+create excellent data for projects and users.
 
-- requests the user log into GitHub
-- automatically create a fork owned by the user
+For example, the GitHub `/new/` pull request URL starts a workflow to:
+
+- request the user log into GitHub
+- create a fork owned by the user
 - show _another_ form, with:
   - new `.json`, `.yaml`, or `.toml` file
   - a commit message

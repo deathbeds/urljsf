@@ -104,6 +104,7 @@ cmd = """
 pixi r build-schema-props
 && pixi r schema-toml-json--
 && pixi r schema-json-ts--
+&& pixi r schema-json-py--
 && echo "OK"
 """
 

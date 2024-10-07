@@ -21,7 +21,7 @@ ROOT = Path(__file__).parent.parent
 
 
 def call(args: list[str | Path], **kwargs: Any) -> int:
-    """Call a command with some output."""
+    """Echo and then call a command."""
     args = list(map(str, args))
     print(">>>", " \\\n\t".join(args), "\n")
     rc = _call(args, **kwargs)
@@ -105,7 +105,7 @@ def json_to_py(in_path: Path, out_path: Path) -> int:
         call(args)
         or fix()
         or call(["ruff", "format", f"{out_parent}"])
-        or call(["ruff", "check", "--fix-only", f"{out_parent}"])
+        or call(["ruff", "check", "--fix-only", "--unsafe-fixes", f"{out_parent}"])
     )
 
 

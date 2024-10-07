@@ -79,6 +79,9 @@
       "title": "File Form",
       "description": "a description of a form that builds a data file",
       "properties": {
+        "form_data": {
+          "$ref": "#/definitions/any-schema-location"
+        },
         "props": {
           "$ref": "./props.schema.json#/definitions/Props"
         },

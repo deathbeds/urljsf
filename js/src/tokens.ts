@@ -1,5 +1,6 @@
 // Copyright (C) urljsf contributors.
 // Distributed under the terms of the Modified BSD License.
+export const DEBUG = window.location.href.includes('URLJSF_DEBUG');
 
 export const META_KEYS = [
   'urljsfFileName',
@@ -46,3 +47,5 @@ export const DEFAULTS = {
   urljsfIframeStyle: 'width: 100%; height: 80vh;',
   urljsfTheme: 'bootstrap',
 };
+
+export type TFormat = 'json' | 'yaml' | 'toml';

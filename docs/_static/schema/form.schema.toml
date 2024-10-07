@@ -50,6 +50,7 @@ required = ["schema"]
 [definitions.file-form.properties]
 schema = {"$ref" = "#/definitions/any-schema-location"}
 ui_schema = {"$ref" = "#/definitions/any-schema-location"}
+form_data = {"$ref" = "#/definitions/any-schema-location"}
 props = {"$ref" = "./props.schema.json#/definitions/Props"}
 
 [definitions.file-form.properties.prune_empty]
