@@ -6,103 +6,45 @@
 # ███      ███  ████  ██        ███      ████      ███  ███████████████      ███
 #  ▒▓████████████████████████████████████████████████████████████████████████▓▒
 
-title = "urljsf v0"
+title = "urljsf"
 description = "A schema for building forms for building URLs for building..."
 
-# to business ##################################################################
 "$schema" = "http://json-schema.org/draft-07/schema#"
 "$id" = "https://deathbeds.github.io/urljsf/_static/schema/v0/form.schema.json"
-"$ref" = "#/definitions/urljsf"
-
-[definitions.urljsf] ############################################################
-title = "URL"
 type = "object"
-required = ["url_template", "url_json_schema", "data_json_schema"]
+required = ["url_form", "file_form"]
+[properties]
+url_form = {"$ref" = "#/definitions/url-form"}
+file_form = {"$ref" = "#/definitions/file-form"}
+theme = {"$ref" = "#/definitions/any-theme"}
 
-# ursjf required ###############################################################
-[definitions.urljsf.properties.url_template]
-title = "URL Template"
-type = "string"
-minLength = 1
-description = """
-a [nunjucks]-compatible template for the form URL.
+# url form #####################################################################
+[definitions.url-form]
+title = "URL Form"
+description = "a definition of a form to build a URL"
+type = "object"
+required = ["url_template"]
 
-The [jinja compatibility layer][jinjacompat] is enabled, allowing for more expressive,
-python-like syntax.
+[definitions.url-form.properties]
+url_template = {"$ref" = "#/definitions/any-url-template"}
+schema = {"$ref" = "#/definitions/any-schema-location"}
+ui_schema = {"$ref" = "#/definitions/any-schema-location"}
+props = {"$ref" = "./props.schema.json#/definitions/Props"}
 
-[nunjucks]: https://mozilla.github.io/nunjucks
-[jinjacompat]: https://mozilla.github.io/nunjucks/api.html#installjinjacompat
-"""
-examples = [
-  "https://github.com/deathbeds/urljsf/new/main?fileName=docs/_schema/v0/schema.toml",
-]
+# file form ####################################################################
+[definitions.file-form]
+title = "File Form"
+description = "a description of a form that builds a data file"
+type = "object"
+required = ["schema"]
 
-[definitions.urljsf.properties.url_json_schema]
-title = "URL JSON Schema"
-type = "string"
-format = "uri-reference"
-minLength = 1
-description = """
-a path to a JSON schema, serialized as JSON, TOML, or (simple) YAML to represent
-the context of the `url_template` field.
-"""
+[definitions.file-form.properties]
+schema = {"$ref" = "#/definitions/any-schema-location"}
+ui_schema = {"$ref" = "#/definitions/any-schema-location"}
+props = {"$ref" = "./props.schema.json#/definitions/Props"}
 
-[definitions.urljsf.properties.data_json_schema]
-title = "Data JSON Schema"
-type = "string"
-format = "uri-reference"
-minLength = 1
-description = """
-a path to a JSON schema, serialized as JSON, TOML, or (simple) YAML.
-"""
-
-# optional #####################################################################
-[definitions.urljsf.properties.http_method]
-title = "HTTP Method"
-type = "string"
-default = "GET"
-enum = ["GET", "POST", "PUT"]
-description = """
-name of an HTTP method to use
-"""
-
-[definitions.urljsf.properties.http_headers_template]
-title = "HTTP Headers"
-type = "string"
-description = """
-`nunjucks` template for HTTP headers
-"""
-
-[definitions.urljsf.properties.http_body_template]
-title = "HTTP Headers"
-description = """
-`nunjucks` template for the body of HTTP request, such as form fields and API calls
-"""
-
-[definitions.urljsf.properties.url_ui_schema]
-title = "User Interface Schema"
-type = "string"
-format = "uri-reference"
-minLength = 1
-description = """
-_(optional)_ path to an [`rjsf uiSchema`][ui-schema], serialized as JSON, TOML, or (simple) YAML
-to use to control the `url_template` context as constrained by `url_json_schema`.
-
-[ui-schema]: https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/uiSchema
-"""
-
-[definitions.urljsf.properties.data_ui_schema]
-title = "Data User Interface Schema"
-type = "string"
-format = "uri-reference"
-minLength = 1
-description = """
-_(optional)_ path to an [`rjsf uiSchema`][ui-schema], serialized as JSON, TOML, or (simple) YAML.
-
-[ui-schema]: https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/uiSchema
-"""
-
-[definitions.urljsf.properties.theme]
+# other ########################################################################
+[definitions.any-theme]
 title = "Theme"
 type = "string"
 default = "bootstrap"
@@ -143,6 +85,28 @@ enum = [
   "zephyr",
 ]
 
-# real definitions #############################################################
-[definitions.rsjf-props]
-"$ref" = "./props.schema.json#/definitions/Props"
+[definitions.any-schema-location]
+title = "A Schema Location"
+type = "string"
+format = "uri-reference"
+minLength = 1
+description = """
+a path to a JSON schema, serialized as JSON, TOML, or (simple) YAML.
+"""
+
+[definitions.any-url-template]
+title = "URL Template"
+type = "string"
+minLength = 1
+description = """
+a [nunjucks]-compatible template.
+
+The [jinja compatibility layer][jinjacompat] is enabled, allowing for more expressive,
+python-like syntax.
+
+[nunjucks]: https://mozilla.github.io/nunjucks
+[jinjacompat]: https://mozilla.github.io/nunjucks/api.html#installjinjacompat
+"""
+examples = [
+  "https://github.com/deathbeds/urljsf/new/main?fileName=docs/_schema/v0/schema.toml",
+]

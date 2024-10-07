@@ -60,7 +60,8 @@ class Included(Enum):
 
 @dataclass(slots=True)
 class Overloads:
-    """simplifications of important fields which are out of scope to fully support inline."""
+    """simplifications of important fields which are out of scope to fully support inline.
+    """
 
     focusOnFirstError: bool
     formContext: dict[str, Any]
@@ -71,7 +72,8 @@ class Overloads:
 
 
 class ShowErrorList(Enum):
-    """When this prop is set to `top` or 'bottom', a list of errors (or the custom error list defined in the `ErrorList`) will also show. When set to false, only inline input validation errors will be shown. Set to `top` by default"""
+    """When this prop is set to `top` or 'bottom', a list of errors (or the custom error list defined in the `ErrorList`) will also show. When set to false, only inline input validation errors will be shown. Set to `top` by default
+    """
 
     bool_False = False
     top = "top"

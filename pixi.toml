@@ -102,7 +102,7 @@ cmd = """python scripts/schema.py $SCHEMA_JSON $SCHEMA_PY"""
 
 [feature.tasks-build.tasks.schema-all--]
 cmd = """
-pixi r schema-ts-json--
+pixi r build-schema-props
 && pixi r schema-toml-json--
 && pixi r schema-json-ts--
 """

@@ -8,25 +8,11 @@
 /**
  * a path to a JSON schema, serialized as JSON, TOML, or (simple) YAML.
  *
- */
-export type DataJSONSchema = string;
-/**
- * _(optional)_ path to an [`rjsf uiSchema`][ui-schema], serialized as JSON, TOML, or (simple) YAML.
  *
- * [ui-schema]: https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/uiSchema
- *
+ * This interface was referenced by `Urljsf`'s JSON-Schema
+ * via the `definition` "any-schema-location".
  */
-export type DataUserInterfaceSchema = string;
-/**
- * `nunjucks` template for HTTP headers
- *
- */
-export type HTTPHeaders1 = string;
-/**
- * name of an HTTP method to use
- *
- */
-export type HTTPMethod = 'GET' | 'POST' | 'PUT';
+export type ASchemaLocation = string;
 /**
  * a name of a theme supported by a compatible version of `urljsf`.
  *
@@ -35,6 +21,9 @@ export type HTTPMethod = 'GET' | 'POST' | 'PUT';
  * [bs5]: https://getbootstrap.com/docs/5.0
  * [bootswatch]: https://bootswatch.com
  *
+ *
+ * This interface was referenced by `Urljsf`'s JSON-Schema
+ * via the `definition` "any-theme".
  */
 export type Theme =
   | 'bootstrap'
@@ -64,13 +53,7 @@ export type Theme =
   | 'yeti'
   | 'zephyr';
 /**
- * a path to a JSON schema, serialized as JSON, TOML, or (simple) YAML to represent
- * the context of the `url_template` field.
- *
- */
-export type URLJSONSchema = string;
-/**
- * a [nunjucks]-compatible template for the form URL.
+ * a [nunjucks]-compatible template.
  *
  * The [jinja compatibility layer][jinjacompat] is enabled, allowing for more expressive,
  * python-like syntax.
@@ -78,45 +61,35 @@ export type URLJSONSchema = string;
  * [nunjucks]: https://mozilla.github.io/nunjucks
  * [jinjacompat]: https://mozilla.github.io/nunjucks/api.html#installjinjacompat
  *
+ *
+ * This interface was referenced by `Urljsf`'s JSON-Schema
+ * via the `definition` "any-url-template".
  */
 export type URLTemplate = string;
-/**
- * _(optional)_ path to an [`rjsf uiSchema`][ui-schema], serialized as JSON, TOML, or (simple) YAML
- * to use to control the `url_template` context as constrained by `url_json_schema`.
- *
- * [ui-schema]: https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/uiSchema
- *
- */
-export type UserInterfaceSchema = string;
 
 /**
  * A schema for building forms for building URLs for building...
  */
-export interface UrljsfV0 {
-  data_json_schema: DataJSONSchema;
-  data_ui_schema?: DataUserInterfaceSchema;
-  http_body_template?: HTTPHeaders;
-  http_headers_template?: HTTPHeaders1;
-  http_method?: HTTPMethod;
+export interface Urljsf {
+  file_form: FileForm;
   theme?: Theme;
-  url_json_schema: URLJSONSchema;
-  url_template: URLTemplate;
-  url_ui_schema?: UserInterfaceSchema;
+  url_form: URLForm;
 }
 /**
- * `nunjucks` template for the body of HTTP request, such as form fields and API calls
+ * a description of a form that builds a data file
  *
+ * This interface was referenced by `Urljsf`'s JSON-Schema
+ * via the `definition` "file-form".
  */
-export interface HTTPHeaders {
-  [k: string]: unknown;
+export interface FileForm {
+  props?: Props;
+  schema: ASchemaLocation;
+  ui_schema?: ASchemaLocation;
 }
 /**
  * JSON-compatible default values for `rjsf` [`Form.props`][form-props].
  *
  * [form-props]: https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/form-props
- *
- * This interface was referenced by `UrljsfV0`'s JSON-Schema
- * via the `definition` "rsjf-props".
  */
 export interface Props {
   /**
@@ -223,17 +196,14 @@ export interface Props {
   uiSchema?: {};
 }
 /**
- * This interface was referenced by `UrljsfV0`'s JSON-Schema
- * via the `definition` "urljsf".
+ * a definition of a form to build a URL
+ *
+ * This interface was referenced by `Urljsf`'s JSON-Schema
+ * via the `definition` "url-form".
  */
-export interface URL {
-  data_json_schema: DataJSONSchema;
-  data_ui_schema?: DataUserInterfaceSchema;
-  http_body_template?: HTTPHeaders;
-  http_headers_template?: HTTPHeaders1;
-  http_method?: HTTPMethod;
-  theme?: Theme;
-  url_json_schema: URLJSONSchema;
+export interface URLForm {
+  props?: Props;
+  schema?: ASchemaLocation;
+  ui_schema?: ASchemaLocation;
   url_template: URLTemplate;
-  url_ui_schema?: UserInterfaceSchema;
 }

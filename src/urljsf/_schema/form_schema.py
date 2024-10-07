@@ -6,20 +6,13 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any
 
 from . import props_schema
 
-
-class HttpMethod(Enum):
-    """name of an HTTP method to use"""
-
-    GET = "GET"
-    POST = "POST"
-    PUT = "PUT"
+AnySchemaLocation = str
 
 
-class Theme(Enum):
+class AnyTheme(Enum):
     """a name of a theme supported by a compatible version of `urljsf`.
 
     all [bootswatch] themes are available, with the vanilla [`bootstrap`][bs5] by default.
@@ -57,20 +50,35 @@ class Theme(Enum):
     zephyr = "zephyr"
 
 
+AnyUrlTemplate = str
+
+
+@dataclass(slots=True)
+class FileForm:
+    """a description of a form that builds a data file
+    """
+
+    schema_: AnySchemaLocation
+    props: props_schema.Props | None = None
+    ui_schema: AnySchemaLocation | None = None
+
+
+@dataclass(slots=True)
+class UrlForm:
+    """a definition of a form to build a URL
+    """
+
+    url_template: AnyUrlTemplate
+    props: props_schema.Props | None = None
+    schema_: AnySchemaLocation | None = None
+    ui_schema: AnySchemaLocation | None = None
+
+
 @dataclass(slots=True)
 class Urljsf:
-    data_json_schema: str
-    url_json_schema: str
-    url_template: str
-    data_ui_schema: str | None = None
-    http_body_template: Any | None = None
-    http_headers_template: str | None = None
-    http_method: HttpMethod | None = HttpMethod.GET
-    theme: Theme | None = Theme.bootstrap
-    url_ui_schema: str | None = None
+    """A schema for building forms for building URLs for building...
+    """
 
-
-UrljsfV0 = Urljsf
-
-
-RsjfProps = props_schema.Props
+    file_form: FileForm
+    url_form: UrlForm
+    theme: AnyTheme | None = AnyTheme.bootstrap
