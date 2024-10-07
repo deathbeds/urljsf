@@ -43,7 +43,12 @@ def ts_to_json(in_path: Path, out_path: Path) -> int:
 
 def toml_to_json(in_path: Path, out_path: Path) -> int:
     """Get JSON schema from TOML."""
-    text = json.dumps(tomllib.loads(in_path.read_text(**UTF8)), indent=2)
+    raw = tomllib.loads(in_path.read_text(**UTF8))
+    for def_schema in raw["definitions"].values():
+        desc = def_schema.get("description")
+        if desc:
+            def_schema["description"] = desc.strip()
+    text = json.dumps(raw, indent=2)
     out_path.write_text(text, **UTF8)
     return call(["yarn", "prettier", "--write", out_path])
 

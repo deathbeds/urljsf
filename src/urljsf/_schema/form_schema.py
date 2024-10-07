@@ -19,7 +19,6 @@ class AnyTheme(Enum):
 
     [bs5]: https://getbootstrap.com/docs/5.0
     [bootswatch]: https://bootswatch.com
-
     """
 
     bootstrap = "bootstrap"

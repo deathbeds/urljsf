@@ -8,7 +8,6 @@
 /**
  * a path to a JSON schema, serialized as JSON, TOML, or (simple) YAML.
  *
- *
  * This interface was referenced by `Urljsf`'s JSON-Schema
  * via the `definition` "any-schema-location".
  */
@@ -20,7 +19,6 @@ export type ASchemaLocation = string;
  *
  * [bs5]: https://getbootstrap.com/docs/5.0
  * [bootswatch]: https://bootswatch.com
- *
  *
  * This interface was referenced by `Urljsf`'s JSON-Schema
  * via the `definition` "any-theme".
@@ -60,7 +58,6 @@ export type Theme =
  *
  * [nunjucks]: https://mozilla.github.io/nunjucks
  * [jinjacompat]: https://mozilla.github.io/nunjucks/api.html#installjinjacompat
- *
  *
  * This interface was referenced by `Urljsf`'s JSON-Schema
  * via the `definition` "any-url-template".
