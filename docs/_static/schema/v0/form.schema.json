@@ -104,7 +104,7 @@
           "$ref": "#/definitions/any-schema-location"
         }
       },
-      "required": ["schema"]
+      "required": ["schema", "format"]
     },
     "url-form": {
       "type": "object",

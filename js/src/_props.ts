@@ -1,3 +1,5 @@
+// Copyright (C) urljsf contributors.
+// Distributed under the terms of the Modified BSD License.
 import { FormProps } from '@rjsf/core';
 
 /** JSON-compatible default values for `rjsf` [`Form.props`][form-props].

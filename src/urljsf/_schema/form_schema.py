@@ -65,9 +65,9 @@ AnyUrlTemplate = str
 class FileForm:
     """a description of a form that builds a data file"""
 
+    format: AnyFileFormat
     schema_: AnySchemaLocation
     form_data: AnySchemaLocation | None = None
-    format: AnyFileFormat | None = None
     props: props_schema.Props | None = None
     prune_empty: bool | None = None
     ui_schema: AnySchemaLocation | None = None

@@ -15,7 +15,7 @@ import validator from '@rjsf/validator-ajv8';
 
 import { Urljsf } from './_schema.js';
 import { THEMES } from './themes.js';
-import { DEBUG, DEFAULTS, emptyObject } from './tokens.js';
+import { DEBUG, DEFAULTS, FORM_CLASS, emptyObject } from './tokens.js';
 import { getConfig, getFileContent, getIdPrefix, initFormProps } from './utils.js';
 
 /** process a single form
@@ -45,10 +45,7 @@ export async function makeOneForm(script: HTMLScriptElement): Promise<void> {
  * @param form - the form element
  * @param container - a DOM node with urljsf dataset
  */
-export async function renderIframe(
-  config: Urljsf,
-  form: JSX.Element,
-): Promise<JSX.Element> {
+async function renderIframe(config: Urljsf, form: JSX.Element): Promise<JSX.Element> {
   const { IFrame } = await import('./iframe.js');
   const anyTheme = THEMES as any;
   const { theme } = config;
@@ -73,13 +70,21 @@ export async function renderIframe(
   );
 }
 
-/** a component for a branch option  */
-// function branchOption(branch: string, idx: number): JSX.Element {
-//   return <option key={idx}>{branch}</option>;
-// }
+function onErrorClick(evt: MouseEvent) {
+  const target = evt.currentTarget as HTMLElement;
+  const parent = target.closest(`.${FORM_CLASS}`) as HTMLDivElement;
+  const win = parent?.ownerDocument.defaultView as Window;
+  const errorEl = parent?.querySelector('.has-error');
+  if (errorEl && win) {
+    DEBUG && console.warn(errorEl);
+    const top = errorEl.getBoundingClientRect().top + win.scrollY;
+    DEBUG && console.warn(top);
+    win.scrollTo({ top, behavior: 'smooth' });
+  }
+}
 
 /** a component for a file and URL form */
-export function formComponent(
+function formComponent(
   config: Urljsf,
   initValue: string,
   fileFormProps: Partial<FormProps>,
@@ -87,20 +92,12 @@ export function formComponent(
 ): JSX.Element {
   const URLJSF = () => {
     const idPrefix = getIdPrefix(config);
-    // const filenamePattern = `${dataset.urljsfFileNamePattern || DEFAULTS.urljsfFileNamePattern}`;
-
-    // const branches = (dataset.urljsfGitHubBranch || DEFAULTS.urljsfGitHubBranch)
-    //   .trim()
-    //   .split(' ');
-    // const [value, setValue] = useState(initValue);
+    const [value, setValue] = useState(initValue);
     const [url, setUrl] = useState('#');
     const [fileErrors, setFileErrors] = useState<RJSFValidationError[]>([]);
     const [urlErrors, setUrlErrors] = useState<RJSFValidationError[]>([]);
     const [fileFormData, setFileFormData] = useState(fileFormProps.formData);
     const [urlFormData, setUrlFormData] = useState(urlFormProps.formData);
-    // const [fileName, setFileName] = useState(dataset.urljsfFileName || '');
-    // const [fileNameOk, setFileNameOk] = useState(!!fileName.match(filenamePattern));
-    // const [branch, setBranch] = useState(branches[0]);
 
     const updateUrl = () => {
       // let gh = `${dataset.urljsfGitHubUrl}`.trim().replace(/\/$/, '');
@@ -112,56 +109,31 @@ export function formComponent(
       setUrl('#');
     };
 
-    const onFileFormChange = async (evt: IChangeEvent) => {
-      // let value = await getFileContent(config, evt.formData);
-      // setValue(value);
-      DEBUG && console.log(config);
-      setFileFormData(evt.formData);
-      setFileErrors(evt.errors);
+    const onFileFormChange = async ({ formData, errors }: IChangeEvent) => {
+      let value = await getFileContent(config, formData);
+      setValue(value);
+      setFileFormData(formData);
+      setFileErrors(errors);
+      updateUrl();
+      DEBUG && console.warn(value);
+    };
+
+    const onUrlFormChange = async ({ formData, errors }: IChangeEvent) => {
+      setUrlFormData(formData);
+      setUrlErrors(errors);
       updateUrl();
     };
 
-    const onUrlFormChange = async (evt: IChangeEvent) => {
-      // setValue(value);
-      setUrlFormData(evt.formData);
-      setUrlErrors(evt.errors);
-      updateUrl();
-    };
-
-    // let branchEl: JSX.Element;
-    // if (branches.length == 1) {
-    //   branchEl = <code>{branch}</code>;
-    // } else {
-    //   branchEl = (
-    //     <Form.Control
-    //       as="select"
-    //       size="sm"
-    //       onChange={(e) => setBranch(e.currentTarget.value)}
-    //     >
-    //       {branches.map(branchOption)}
-    //     </Form.Control>
-    //   );
-    // }
-
-    // const badge = (
-    //   <Badge pill className="bg-secondary badge-secondary">
-    //     {dataset.urljsfGitHubRepo}
-    //   </Badge>
-    // );
+    let errors = [...fileErrors, ...urlErrors];
+    DEBUG && console.error(...errors);
 
     let createButton: JSX.Element;
 
-    let errors = [...fileErrors, urlErrors];
-
     if (errors.length) {
-      function onErrorClick() {
-        const errorEl = document.querySelector(`#${idPrefix} .has-error [id]`);
-        errorEl?.scrollIntoView();
-      }
       const errorCount = errors.length;
 
       createButton = (
-        <Button as="a" size="sm" onClick={onErrorClick} variant="danger">
+        <Button size="sm" onClick={onErrorClick} variant="danger">
           {errorCount} Error{errorCount > 1 ? 's' : ''}
         </Button>
       );
@@ -173,60 +145,28 @@ export function formComponent(
       );
     }
 
-    // let filenameClasses = ['font-monospace'];
-    // let filenameEls: JSX.Element[] = [];
-
-    // if (!fileNameOk) {
-    //   filenameClasses.push('is-invalid');
-    //   filenameEls.push(
-    //     <span>
-    //       should match <code>{filenamePattern}</code>
-    //     </span>,
-    //   );
-    // }
-
-    // const onFileNameChange = (value: string) => {
-    //   setFileNameOk(!!value.match(filenamePattern));
-    //   setFileName(value);
-    //   updateUrl();
-    // };
-
-    // const fileNameInput = (
-    //   <Form.Control
-    //     size="sm"
-    //     className={filenameClasses.join(' ')}
-    //     value={fileName}
-    //     pattern={filenamePattern}
-    //     spellcheck={false}
-    //     onChange={(change) => onFileNameChange(change.currentTarget.value)}
-    //   />
-    // );
-
-    // const preview =
-    //   value && fileNameOk && !errors.length
-    //     ? [
-    //         <code>
-    //           <pre>{value}</pre>
-    //         </code>,
-    //       ]
-    //     : [
-    //         <blockquote>
-    //           <i>
-    //             No valid data for <code>{fileName}</code> yet
-    //           </i>
-    //         </blockquote>,
-    //       ];
+    const preview = value
+      ? [
+          <code>
+            <pre>{value}</pre>
+          </code>,
+        ]
+      : [
+          <blockquote>
+            <i>No valid file data yet</i>
+          </blockquote>,
+        ];
 
     return (
-      <div class="urljsf-form">
+      <div className={FORM_CLASS} id={idPrefix}>
         <div>
           <RJSFForm
             {...{
               schema: {},
               liveValidate: true,
               liveOmit: true,
-              idPrefix: `${idPrefix}-`,
-              id: idPrefix,
+              idPrefix: `${idPrefix}-file-`,
+              id: `${idPrefix}-file`,
               ...((config.file_form.props || emptyObject) as any),
               ...fileFormProps,
               validator,
@@ -256,13 +196,10 @@ export function formComponent(
             <Fragment />
           </RJSFForm>
         </div>
-        {/* <div>
-          <label>{fileNameInput} {...filenameEls}</label>
-          <br />
-          {preview}
-        </div>
         <hr />
-        <div>
+        <div>{preview}</div>
+        <hr />
+        {/* <div>
           <Row>
             <Col>
               <Form.Text>repo</Form.Text>

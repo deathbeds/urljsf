@@ -46,7 +46,7 @@ form_data = {"$ref" = "#/definitions/any-schema-location"}
 title = "File Form"
 description = "a description of a form that builds a data file"
 type = "object"
-required = ["schema"]
+required = ["schema", "format"]
 
 [definitions.file-form.properties]
 schema = {"$ref" = "#/definitions/any-schema-location"}

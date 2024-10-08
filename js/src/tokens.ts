@@ -45,3 +45,5 @@ export const DEFAULTS: Partial<Urljsf> = {
 export type TFormat = 'json' | 'yaml' | 'toml';
 
 export const emptyObject = Object.freeze({});
+
+export const FORM_CLASS = 'urljsf-form';
