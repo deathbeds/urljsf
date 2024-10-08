@@ -3,10 +3,14 @@
 import { Fragment, useState } from 'react';
 import { render } from 'react-dom';
 
-// import { Badge, Button, Col, Form, Row } from 'react-bootstrap';
+import {
+  Button,
+  /*Badge, Col, Form, Row*/
+} from 'react-bootstrap';
+
 import type { FormProps, IChangeEvent } from '@rjsf/core';
 import { Form as RJSFForm } from '@rjsf/react-bootstrap';
-// import type { RJSFValidationError } from '@rjsf/utils';
+import type { RJSFValidationError } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
 import { Urljsf } from './_schema.js';
@@ -22,7 +26,6 @@ export async function makeOneForm(script: HTMLScriptElement): Promise<void> {
   const config = await getConfig(script);
   const container = document.createElement('div');
   script.parentNode!.insertBefore(container, script);
-  DEBUG && console.log(config);
 
   const [fileFormProps, urlFormProps] = await Promise.all([
     initFormProps(config.file_form),
@@ -90,8 +93,9 @@ export function formComponent(
     //   .trim()
     //   .split(' ');
     // const [value, setValue] = useState(initValue);
-    // const [url, setUrl] = useState('#');
-    // const [errors, setErrors] = useState<RJSFValidationError[]>([]);
+    const [url, setUrl] = useState('#');
+    const [fileErrors, setFileErrors] = useState<RJSFValidationError[]>([]);
+    const [urlErrors, setUrlErrors] = useState<RJSFValidationError[]>([]);
     const [fileFormData, setFileFormData] = useState(fileFormProps.formData);
     const [urlFormData, setUrlFormData] = useState(urlFormProps.formData);
     // const [fileName, setFileName] = useState(dataset.urljsfFileName || '');
@@ -105,21 +109,22 @@ export function formComponent(
       // url.searchParams.set('value', value);
       // url.searchParams.set('fileName', fileName);
       // setUrl(url.toString());
-      // setUrl('TODO');
+      setUrl('#');
     };
 
     const onFileFormChange = async (evt: IChangeEvent) => {
-      let value = await getFileContent(config, evt.formData);
+      // let value = await getFileContent(config, evt.formData);
       // setValue(value);
-      DEBUG && console.log('value', value);
+      DEBUG && console.log(config);
       setFileFormData(evt.formData);
-      // setErrors(evt.errors);
+      setFileErrors(evt.errors);
       updateUrl();
     };
+
     const onUrlFormChange = async (evt: IChangeEvent) => {
       // setValue(value);
       setUrlFormData(evt.formData);
-      // setErrors(evt.errors);
+      setUrlErrors(evt.errors);
       updateUrl();
     };
 
@@ -144,25 +149,29 @@ export function formComponent(
     //   </Badge>
     // );
 
-    // let createButton: JSX.Element;
+    let createButton: JSX.Element;
 
-    // if (errors.length || !fileNameOk) {
-    //   const errorEl = document.querySelector(`#${idPrefix} .has-error [id]`);
-    //   const errorHref = errorEl ? `#${errorEl.id}` : '#';
-    //   const errorCount = errors.length + (fileNameOk ? 0 : 1);
+    let errors = [...fileErrors, urlErrors];
 
-    //   createButton = (
-    //     <Button as="a" size="sm" href={errorHref} variant="danger">
-    //       {errorCount} Error{errorCount > 1 ? 's' : ''}
-    //     </Button>
-    //   );
-    // } else {
-    //   createButton = (
-    //     <Button as="a" href={url} variant="primary" target="_blank">
-    //       Start Pull Request
-    //     </Button>
-    //   );
-    // }
+    if (errors.length) {
+      function onErrorClick() {
+        const errorEl = document.querySelector(`#${idPrefix} .has-error [id]`);
+        errorEl?.scrollIntoView();
+      }
+      const errorCount = errors.length;
+
+      createButton = (
+        <Button as="a" size="sm" onClick={onErrorClick} variant="danger">
+          {errorCount} Error{errorCount > 1 ? 's' : ''}
+        </Button>
+      );
+    } else {
+      createButton = (
+        <Button as="a" href={url} variant="primary" target="_blank">
+          Start Pull Request
+        </Button>
+      );
+    }
 
     // let filenameClasses = ['font-monospace'];
     // let filenameEls: JSX.Element[] = [];
@@ -272,11 +281,11 @@ export function formComponent(
             </Col>
             <Col style="text-align:right;">
               <br />
-              {createButton}
             </Col>
           </Row>
         </div>
         <hr /> */}
+        {createButton}
       </div>
     );
   };
