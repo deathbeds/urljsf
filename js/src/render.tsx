@@ -3,10 +3,7 @@
 import { Fragment, useState } from 'react';
 import { render } from 'react-dom';
 
-import {
-  Button,
-  /*Badge, Col, Form, Row*/
-} from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 
 import type { FormProps, IChangeEvent } from '@rjsf/core';
 import { Form as RJSFForm } from '@rjsf/react-bootstrap';
@@ -70,19 +67,6 @@ async function renderIframe(config: Urljsf, form: JSX.Element): Promise<JSX.Elem
   );
 }
 
-function onErrorClick(evt: MouseEvent) {
-  const target = evt.currentTarget as HTMLElement;
-  const parent = target.closest(`.${FORM_CLASS}`) as HTMLDivElement;
-  const win = parent?.ownerDocument.defaultView as Window;
-  const errorEl = parent?.querySelector('.has-error');
-  if (errorEl && win) {
-    DEBUG && console.warn(errorEl);
-    const top = errorEl.getBoundingClientRect().top + win.scrollY;
-    DEBUG && console.warn(top);
-    win.scrollTo({ top, behavior: 'smooth' });
-  }
-}
-
 /** a component for a file and URL form */
 function formComponent(
   config: Urljsf,
@@ -115,7 +99,6 @@ function formComponent(
       setFileFormData(formData);
       setFileErrors(errors);
       updateUrl();
-      DEBUG && console.warn(value);
     };
 
     const onUrlFormChange = async ({ formData, errors }: IChangeEvent) => {
@@ -125,7 +108,6 @@ function formComponent(
     };
 
     let errors = [...fileErrors, ...urlErrors];
-    DEBUG && console.error(...errors);
 
     let createButton: JSX.Element;
 
@@ -178,6 +160,8 @@ function formComponent(
           </RJSFForm>
         </div>
         <hr />
+        <div>{preview}</div>
+        <hr />
         <div>
           <RJSFForm
             {...{
@@ -197,35 +181,24 @@ function formComponent(
           </RJSFForm>
         </div>
         <hr />
-        <div>{preview}</div>
-        <hr />
-        {/* <div>
-          <Row>
-            <Col>
-              <Form.Text>repo</Form.Text>
-              <br />
-              {badge}
-            </Col>
-            <Col>
-              <Form.Text>branch</Form.Text>
-              <br />
-              {branchEl}
-            </Col>
-            <Col>
-              <Form.Text>path</Form.Text>
-              <br />
-              <code>{fileName}</code>
-            </Col>
-            <Col style="text-align:right;">
-              <br />
-            </Col>
-          </Row>
-        </div>
-        <hr /> */}
         {createButton}
       </div>
     );
   };
 
   return <URLJSF />;
+}
+
+/** handle scrolling to an element (maybe in an iframe) */
+function onErrorClick(evt: MouseEvent) {
+  const target = evt.currentTarget as HTMLElement;
+  const parent = target.closest(`.${FORM_CLASS}`) as HTMLDivElement;
+  const win = parent?.ownerDocument.defaultView as Window;
+  const errorEl = parent?.querySelector('.has-error');
+  if (errorEl && win) {
+    DEBUG && console.warn(errorEl);
+    const top = errorEl.getBoundingClientRect().top + win.scrollY;
+    DEBUG && console.warn(top);
+    win.scrollTo({ top, behavior: 'smooth' });
+  }
 }
