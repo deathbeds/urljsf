@@ -17,7 +17,7 @@ import { getConfig, getFileContent, getIdPrefix, initFormProps } from './utils.j
 
 /** process a single form
  *
- * @param container - a DOM script with urljsf
+ * @param script - a DOM script with a urljsf mime type
  */
 export async function makeOneForm(script: HTMLScriptElement): Promise<void> {
   const config = await getConfig(script);
@@ -36,12 +36,7 @@ export async function makeOneForm(script: HTMLScriptElement): Promise<void> {
   render(isolated ? await renderIframe(config, form) : form, container);
 }
 
-/** a component for a form in a (themed) iframe
- *
- * @param dataset - the pre-processed dataset with defaults
- * @param form - the form element
- * @param container - a DOM node with urljsf dataset
- */
+/** a component for a form in a (themed) iframe */
 async function renderIframe(config: Urljsf, form: JSX.Element): Promise<JSX.Element> {
   const { IFrame } = await import('./iframe.js');
   const anyTheme = THEMES as any;
@@ -139,23 +134,35 @@ function formComponent(
           </blockquote>,
         ];
 
+    const formPreDefaults = { schema: {}, liveValidate: true, liveOmit: true };
+    const formPostDefaults = { validator };
+
+    const finalFileFormProps = {
+      ...formPreDefaults,
+      idPrefix: `${idPrefix}-file-`,
+      id: `${idPrefix}-file`,
+      ...((config.file_form.props || emptyObject) as any),
+      ...fileFormProps,
+      onChange: onFileFormChange,
+      formData: fileFormData,
+      ...formPostDefaults,
+    };
+
+    const finalUrlFormProps = {
+      ...formPreDefaults,
+      idPrefix: `${idPrefix}-url-`,
+      id: `${idPrefix}-url`,
+      ...((config.url_form.props || emptyObject) as any),
+      ...urlFormProps,
+      onChange: onUrlFormChange,
+      formData: urlFormData,
+      ...formPostDefaults,
+    };
+
     return (
       <div className={FORM_CLASS} id={idPrefix}>
         <div>
-          <RJSFForm
-            {...{
-              schema: {},
-              liveValidate: true,
-              liveOmit: true,
-              idPrefix: `${idPrefix}-file-`,
-              id: `${idPrefix}-file`,
-              ...((config.file_form.props || emptyObject) as any),
-              ...fileFormProps,
-              validator,
-              onChange: onFileFormChange,
-              formData: fileFormData,
-            }}
-          >
+          <RJSFForm {...finalFileFormProps}>
             <Fragment />
           </RJSFForm>
         </div>
@@ -163,20 +170,7 @@ function formComponent(
         <div>{preview}</div>
         <hr />
         <div>
-          <RJSFForm
-            {...{
-              schema: {},
-              liveValidate: true,
-              liveOmit: true,
-              idPrefix: `${idPrefix}-url-`,
-              id: `${idPrefix}-url`,
-              ...((config.url_form.props || emptyObject) as any),
-              ...urlFormProps,
-              validator,
-              onChange: onUrlFormChange,
-              formData: urlFormData,
-            }}
-          >
+          <RJSFForm {...finalUrlFormProps}>
             <Fragment />
           </RJSFForm>
         </div>
