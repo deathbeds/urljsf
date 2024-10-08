@@ -19,8 +19,8 @@
               <script type="application/vnd.deathbeds.prjsf.v0+<%= format %>">
                 <% if(format === 'json'){ %>
 {
+  "template": "https://github.com/deathbeds/urljsf/new/not-a-branch",
   "url_form": {
-    "template": "https://github.com/deathbeds/urljsf/new/not-a-branch"
   },
   "file_form": {
     "format": "json",
@@ -34,9 +34,9 @@
 # yaml
 iframe: true
 theme: sketchy
+url_template: https://github.com/deathbeds/urljsf/new/not-a-branch
 
-url_form:
-  template: https://github.com/deathbeds/urljsf/new/not-a-branch
+url_form: {}
 
 file_form:
   format: yaml
@@ -48,9 +48,10 @@ file_form:
 # toml
 theme = "cyborg"
 iframe = true
+url_template = "https://github.com/deathbeds/urljsf/new/not-a-branch"
 
 [url_form]
-template = "https://github.com/deathbeds/urljsf/new/not-a-branch"
+
 
 [file_form]
 format = "toml"

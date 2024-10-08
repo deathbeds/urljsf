@@ -30,6 +30,7 @@
       "description": "`nunjucks` template for building a URL\n"
     }
   },
+  "additionalProperties": false,
   "definitions": {
     "any-file-format": {
       "title": "File Format",
@@ -112,6 +113,7 @@
           "descripton": "URL for an `rjsf` UI schema to describe the file fields.\n"
         }
       },
+      "additionalProperties": false,
       "required": ["schema", "format"]
     },
     "url-form": {
@@ -136,6 +138,7 @@
           "descripton": "URL for an `rjsf` UI schema to describe the URL fields\n"
         }
       },
+      "additionalProperties": false,
       "required": ["url_template"]
     }
   },

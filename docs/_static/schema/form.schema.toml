@@ -13,6 +13,7 @@ description = "A schema for building forms for building URLs for building..."
 "$id" = "https://deathbeds.github.io/urljsf/_static/schema/v0/form.schema.json"
 type = "object"
 required = ["url_template", "url_form", "file_form"]
+additionalProperties = false
 
 [properties]
 url_template = {"$ref" = "#/definitions/any-url-template", description = """
@@ -44,6 +45,7 @@ title = "URL Form"
 description = "a definition of a form to build a URL"
 type = "object"
 required = ["url_template"]
+additionalProperties = false
 
 [definitions.url-form.properties]
 schema = {"$ref" = "#/definitions/any-schema-location", descripton = """
@@ -66,6 +68,7 @@ title = "File Form"
 description = "a description of a form that builds a data file"
 type = "object"
 required = ["schema", "format"]
+additionalProperties = false
 
 [definitions.file-form.properties]
 format = {"$ref" = "#/definitions/any-file-format"}

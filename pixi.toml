@@ -25,6 +25,7 @@ lint = {depends-on = [
 ]}
 build = {depends-on = [
   "build-schema",
+  "build-js-demo",
   "build-js-lib",
   "build-js-app",
   "build-py-static",
@@ -135,6 +136,11 @@ cmd = """pixi r -e docs pip-e--"""
 inputs = ["pyproject.toml"]
 
 # build ########################################################################
+[feature.tasks-build.tasks.build-js-demo]
+cmd = """python scripts/demo.py"""
+inputs = ["js/demo/{index.html,*.toml}", "scripts/demo.py"]
+outputs = ["js/demo/*.{json,yaml}"]
+
 [feature.tasks-build.tasks.build-js-lib]
 cmd = "yarn build:lib"
 depends-on = ["setup-js", "build-schema-ts"]

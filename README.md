@@ -153,6 +153,7 @@ to drive automation:
 | GitHub [issue templates][issue-templates] | [some][issue-parser1] [parser][issue-parser2]      | GitHub account     |
 | Google [Forms][g-forms]                   | Google account to create form, polling for changes | Google account `*` |
 | GitLab merge requests                     | GitLab account                                     | GitLab account `+` |
+| OpenAPI                                   | Running server                                     | Account on server  |
 
 > - `*` while it is **possible** to accept anonymous form submissions, this reduces the
 >   cost to spammers, which can make the data less valuable to a project
