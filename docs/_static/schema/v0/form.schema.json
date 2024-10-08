@@ -6,7 +6,8 @@
   "description": "A schema for building forms for building URLs for building...",
   "properties": {
     "file_form": {
-      "$ref": "#/definitions/file-form"
+      "$ref": "#/definitions/file-form",
+      "description": "values that contribut the `file_contents` context value of the `url_template`\n"
     },
     "iframe": {
       "type": "boolean",
@@ -14,13 +15,19 @@
     },
     "iframe_style": {
       "type": "string",
-      "description": "additional simple CSS to apply to an `iframe` element (implies `iframe`)"
+      "description": "additional simple CSS to apply to an `iframe` element (implies `iframe`)\n"
     },
     "theme": {
-      "$ref": "#/definitions/any-theme"
+      "$ref": "#/definitions/any-theme",
+      "description": "a theme name to use for the overall form in an iframe\n"
     },
     "url_form": {
-      "$ref": "#/definitions/url-form"
+      "$ref": "#/definitions/url-form",
+      "description": "values that contribute to the `url` context value of the `url_template`\n"
+    },
+    "url_template": {
+      "$ref": "#/definitions/any-url-template",
+      "description": "`nunjucks` template for building a URL\n"
     }
   },
   "definitions": {
@@ -39,7 +46,7 @@
     "any-theme": {
       "type": "string",
       "title": "Theme",
-      "description": "a name of a theme supported by a compatible version of `urljsf`.\n\nall [bootswatch] themes are available, with the vanilla [`bootstrap`][bs5] by default.\n\n[bs5]: https://getbootstrap.com/docs/5.0\n[bootswatch]: https://bootswatch.com",
+      "description": "a name of a theme supported by a compatible version of `urljsf`.\n\nall [bootswatch] themes are available, with the vanilla [`bootstrap`][bs5]\nby default.\n\n[bs5]: https://getbootstrap.com/docs/5.0\n[bootswatch]: https://bootswatch.com",
       "default": "bootstrap",
       "enum": [
         "bootstrap",
@@ -74,9 +81,6 @@
       "type": "string",
       "title": "URL Template",
       "description": "a [nunjucks]-compatible template.\n\nThe [jinja compatibility layer][jinjacompat] is enabled, allowing for more expressive,\npython-like syntax.\n\n[nunjucks]: https://mozilla.github.io/nunjucks\n[jinjacompat]: https://mozilla.github.io/nunjucks/api.html#installjinjacompat",
-      "examples": [
-        "https://github.com/deathbeds/urljsf/new/main?fileName=docs/_schema/v0/schema.toml"
-      ],
       "minLength": 1
     },
     "file-form": {
@@ -85,23 +89,27 @@
       "description": "a description of a form that builds a data file",
       "properties": {
         "form_data": {
-          "$ref": "#/definitions/any-schema-location"
+          "$ref": "#/definitions/any-schema-location",
+          "descripton": "JSON-compatible initial data for file contents\n"
         },
         "format": {
           "$ref": "#/definitions/any-file-format"
         },
         "props": {
-          "$ref": "./props.schema.json#/definitions/Props"
+          "$ref": "./props.schema.json#/definitions/Props",
+          "descripton": "JSON-compatible subset of configuration properties for file contents\n"
         },
         "prune_empty": {
           "type": "boolean",
           "description": "prune empty lists, object, etc."
         },
         "schema": {
-          "$ref": "#/definitions/any-schema-location"
+          "$ref": "#/definitions/any-schema-location",
+          "descripton": "URL for a JSON schema to describe file contents: features not present in Draft 7\nare best-effort.\n"
         },
         "ui_schema": {
-          "$ref": "#/definitions/any-schema-location"
+          "$ref": "#/definitions/any-schema-location",
+          "descripton": "URL for an `rjsf` UI schema to describe the file fields.\n"
         }
       },
       "required": ["schema", "format"]
@@ -112,23 +120,24 @@
       "description": "a definition of a form to build a URL",
       "properties": {
         "form_data": {
-          "$ref": "#/definitions/any-schema-location"
+          "$ref": "#/definitions/any-schema-location",
+          "descripton": "JSON-compatible initial data for URL fields\n"
         },
         "props": {
-          "$ref": "./props.schema.json#/definitions/Props"
+          "$ref": "./props.schema.json#/definitions/Props",
+          "descripton": "JSON-compatible subset of configuration properties for URL fields\n"
         },
         "schema": {
-          "$ref": "#/definitions/any-schema-location"
+          "$ref": "#/definitions/any-schema-location",
+          "descripton": "URL for a JSON schema to describe the URL fields: features not present in\nDraft 7 are best-effort.\n"
         },
         "ui_schema": {
-          "$ref": "#/definitions/any-schema-location"
-        },
-        "url_template": {
-          "$ref": "#/definitions/any-url-template"
+          "$ref": "#/definitions/any-schema-location",
+          "descripton": "URL for an `rjsf` UI schema to describe the URL fields\n"
         }
       },
       "required": ["url_template"]
     }
   },
-  "required": ["url_form", "file_form"]
+  "required": ["url_template", "url_form", "file_form"]
 }

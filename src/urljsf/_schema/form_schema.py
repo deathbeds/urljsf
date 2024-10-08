@@ -24,7 +24,8 @@ AnySchemaLocation = str
 class AnyTheme(Enum):
     """a name of a theme supported by a compatible version of `urljsf`.
 
-    all [bootswatch] themes are available, with the vanilla [`bootstrap`][bs5] by default.
+    all [bootswatch] themes are available, with the vanilla [`bootstrap`][bs5]
+    by default.
 
     [bs5]: https://getbootstrap.com/docs/5.0
     [bootswatch]: https://bootswatch.com
@@ -77,7 +78,6 @@ class FileForm:
 class UrlForm:
     """a definition of a form to build a URL"""
 
-    url_template: AnyUrlTemplate
     form_data: AnySchemaLocation | None = None
     props: props_schema.Props | None = None
     schema_: AnySchemaLocation | None = None
@@ -90,6 +90,7 @@ class Urljsf:
 
     file_form: FileForm
     url_form: UrlForm
+    url_template: AnyUrlTemplate
     iframe: bool | None = None
     iframe_style: str | None = None
     theme: AnyTheme | None = AnyTheme.bootstrap

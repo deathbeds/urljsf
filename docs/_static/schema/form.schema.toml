@@ -1,10 +1,10 @@
-#  ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
-# ░░  ░░░░  ░░       ░░░  ░░░░░░░░        ░░░      ░░░        ░░░░░░░░░      ░░░
-# ▒▒  ▒▒▒▒  ▒▒  ▒▒▒▒  ▒▒  ▒▒▒▒▒▒▒▒▒▒▒▒▒▒  ▒▒  ▒▒▒▒▒▒▒▒  ▒▒▒▒▒▒▒▒▒▒▒▒▒▒  ▒▒▒▒  ▒▒
-# ▓▓  ▓▓▓▓  ▓▓       ▓▓▓  ▓▓▓▓▓▓▓▓▓▓▓▓▓▓  ▓▓▓      ▓▓▓      ▓▓▓▓▓▓▓▓▓▓  ▓  ▓  ▓▓
-# ██  ████  ██  ███  ███  ████████  ████  ████████  ██  ██████████████  ████  ██
-# ███      ███  ████  ██        ███      ████      ███  ███████████████      ███
-#  ▒▓████████████████████████████████████████████████████████████████████████▓▒
+#  ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  #
+# ░░  ░░░░  ░░       ░░░  ░░░░░░░░        ░░░      ░░░        ░░░░░░░      ░░░ #
+# ▒▒  ▒▒▒▒  ▒▒  ▒▒▒▒  ▒▒  ▒▒▒▒▒▒▒▒▒▒▒▒▒▒  ▒▒  ▒▒▒▒▒▒▒▒  ▒▒▒▒▒▒▒▒▒▒▒▒  ▒▒▒▒  ▒▒ #
+# ▓▓  ▓▓▓▓  ▓▓       ▓▓▓  ▓▓▓▓▓▓▓▓▓▓▓▓▓▓  ▓▓▓      ▓▓▓      ▓▓▓▓▓▓▓▓  ▓  ▓  ▓▓ #
+# ██  ████  ██  ███  ███  ████████  ████  ████████  ██  ████████████  ████  ██ #
+# ███      ███  ████  ██        ███      ████      ███  █████████████      ███ #
+#  ▒▓██████████████████████████████████████████████████████████████████████▓▒  #
 
 title = "urljsf"
 description = "A schema for building forms for building URLs for building..."
@@ -12,19 +12,30 @@ description = "A schema for building forms for building URLs for building..."
 "$schema" = "http://json-schema.org/draft-07/schema#"
 "$id" = "https://deathbeds.github.io/urljsf/_static/schema/v0/form.schema.json"
 type = "object"
-required = ["url_form", "file_form"]
+required = ["url_template", "url_form", "file_form"]
 
 [properties]
-url_form = {"$ref" = "#/definitions/url-form"}
-file_form = {"$ref" = "#/definitions/file-form"}
-theme = {"$ref" = "#/definitions/any-theme"}
+url_template = {"$ref" = "#/definitions/any-url-template", description = """
+`nunjucks` template for building a URL
+"""}
+url_form = {"$ref" = "#/definitions/url-form", description = """
+values that contribute to the `url` context value of the `url_template`
+"""}
+file_form = {"$ref" = "#/definitions/file-form", description = """
+values that contribut the `file_contents` context value of the `url_template`
+"""}
+theme = {"$ref" = "#/definitions/any-theme", description = """
+a theme name to use for the overall form in an iframe
+"""}
 
 [properties.iframe]
 description = "isolate each form on the page in an `iframe`"
 type = "boolean"
 
 [properties.iframe_style]
-description = "additional simple CSS to apply to an `iframe` element (implies `iframe`)"
+description = """
+additional simple CSS to apply to an `iframe` element (implies `iframe`)
+"""
 type = "string"
 
 # url form #####################################################################
@@ -35,11 +46,19 @@ type = "object"
 required = ["url_template"]
 
 [definitions.url-form.properties]
-url_template = {"$ref" = "#/definitions/any-url-template"}
-schema = {"$ref" = "#/definitions/any-schema-location"}
-ui_schema = {"$ref" = "#/definitions/any-schema-location"}
-props = {"$ref" = "./props.schema.json#/definitions/Props"}
-form_data = {"$ref" = "#/definitions/any-schema-location"}
+schema = {"$ref" = "#/definitions/any-schema-location", descripton = """
+URL for a JSON schema to describe the URL fields: features not present in
+Draft 7 are best-effort.
+"""}
+ui_schema = {"$ref" = "#/definitions/any-schema-location", descripton = """
+URL for an `rjsf` UI schema to describe the URL fields
+"""}
+form_data = {"$ref" = "#/definitions/any-schema-location", descripton = """
+JSON-compatible initial data for URL fields
+"""}
+props = {"$ref" = "./props.schema.json#/definitions/Props", descripton = """
+JSON-compatible subset of configuration properties for URL fields
+"""}
 
 # file form ####################################################################
 [definitions.file-form]
@@ -49,11 +68,20 @@ type = "object"
 required = ["schema", "format"]
 
 [definitions.file-form.properties]
-schema = {"$ref" = "#/definitions/any-schema-location"}
-ui_schema = {"$ref" = "#/definitions/any-schema-location"}
-form_data = {"$ref" = "#/definitions/any-schema-location"}
-props = {"$ref" = "./props.schema.json#/definitions/Props"}
 format = {"$ref" = "#/definitions/any-file-format"}
+schema = {"$ref" = "#/definitions/any-schema-location", descripton = """
+URL for a JSON schema to describe file contents: features not present in Draft 7
+are best-effort.
+"""}
+ui_schema = {"$ref" = "#/definitions/any-schema-location", descripton = """
+URL for an `rjsf` UI schema to describe the file fields.
+"""}
+form_data = {"$ref" = "#/definitions/any-schema-location", descripton = """
+JSON-compatible initial data for file contents
+"""}
+props = {"$ref" = "./props.schema.json#/definitions/Props", descripton = """
+JSON-compatible subset of configuration properties for file contents
+"""}
 
 [definitions.file-form.properties.prune_empty]
 description = "prune empty lists, object, etc."
@@ -72,7 +100,8 @@ default = "bootstrap"
 description = """
 a name of a theme supported by a compatible version of `urljsf`.
 
-all [bootswatch] themes are available, with the vanilla [`bootstrap`][bs5] by default.
+all [bootswatch] themes are available, with the vanilla [`bootstrap`][bs5]
+by default.
 
 [bs5]: https://getbootstrap.com/docs/5.0
 [bootswatch]: https://bootswatch.com
@@ -128,6 +157,3 @@ python-like syntax.
 [nunjucks]: https://mozilla.github.io/nunjucks
 [jinjacompat]: https://mozilla.github.io/nunjucks/api.html#installjinjacompat
 """
-examples = [
-  "https://github.com/deathbeds/urljsf/new/main?fileName=docs/_schema/v0/schema.toml",
-]
