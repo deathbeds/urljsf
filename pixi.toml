@@ -149,8 +149,8 @@ outputs = ["js/lib"]
 
 [feature.tasks-build.tasks.build-js-app]
 cmd = "yarn build:app"
-depends-on = ["build-js-lib"]
-inputs = ["node_modules/.yarn-state.yml", "js/lib", "js/webpack.config.mjs"]
+depends-on = ["build-js-lib", "build-js-demo"]
+inputs = ["node_modules/.yarn-state.yml", "js/{lib,demo,js/webpack.config.mjs}"]
 outputs = ["js/dist"]
 
 [feature.tasks-build.tasks.build-py-static]
