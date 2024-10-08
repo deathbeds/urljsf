@@ -13,6 +13,13 @@
  */
 export type ASchemaLocation = string;
 /**
+ * a format that can be serialized or deserialized
+ *
+ * This interface was referenced by `Urljsf`'s JSON-Schema
+ * via the `definition` "any-file-format".
+ */
+export type FileFormat = 'json' | 'toml' | 'yaml';
+/**
  * a name of a theme supported by a compatible version of `urljsf`.
  *
  * all [bootswatch] themes are available, with the vanilla [`bootstrap`][bs5] by default.
@@ -88,6 +95,7 @@ export interface Urljsf {
  */
 export interface FileForm {
   form_data?: ASchemaLocation;
+  format?: FileFormat;
   props?: Props;
   /**
    * prune empty lists, object, etc.
@@ -212,6 +220,7 @@ export interface Props {
  * via the `definition` "url-form".
  */
 export interface URLForm {
+  form_data?: ASchemaLocation;
   props?: Props;
   schema?: ASchemaLocation;
   ui_schema?: ASchemaLocation;

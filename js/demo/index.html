@@ -31,6 +31,8 @@
                 <% } %>
                 <% if(format === 'yaml'){ %>
 # yaml
+iframe: true
+theme: sketchy
 
 url_form:
   template: https://github.com/deathbeds/urljsf/new/not-a-branch
@@ -42,6 +44,9 @@ file_form:
                 <% } %>
                 <% if(format === 'toml'){ %>
 # toml
+theme = "cyborg"
+iframe = true
+
 [url_form]
 template = "https://github.com/deathbeds/urljsf/new/not-a-branch"
 

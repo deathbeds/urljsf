@@ -9,6 +9,15 @@ from enum import Enum
 
 from . import props_schema
 
+
+class AnyFileFormat(Enum):
+    """a format that can be serialized or deserialized"""
+
+    json = "json"
+    toml = "toml"
+    yaml = "yaml"
+
+
 AnySchemaLocation = str
 
 
@@ -58,6 +67,7 @@ class FileForm:
 
     schema_: AnySchemaLocation
     form_data: AnySchemaLocation | None = None
+    format: AnyFileFormat | None = None
     props: props_schema.Props | None = None
     prune_empty: bool | None = None
     ui_schema: AnySchemaLocation | None = None
@@ -68,6 +78,7 @@ class UrlForm:
     """a definition of a form to build a URL"""
 
     url_template: AnyUrlTemplate
+    form_data: AnySchemaLocation | None = None
     props: props_schema.Props | None = None
     schema_: AnySchemaLocation | None = None
     ui_schema: AnySchemaLocation | None = None

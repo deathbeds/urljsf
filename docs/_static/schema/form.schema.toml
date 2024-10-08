@@ -39,6 +39,7 @@ url_template = {"$ref" = "#/definitions/any-url-template"}
 schema = {"$ref" = "#/definitions/any-schema-location"}
 ui_schema = {"$ref" = "#/definitions/any-schema-location"}
 props = {"$ref" = "./props.schema.json#/definitions/Props"}
+form_data = {"$ref" = "#/definitions/any-schema-location"}
 
 # file form ####################################################################
 [definitions.file-form]
@@ -52,12 +53,18 @@ schema = {"$ref" = "#/definitions/any-schema-location"}
 ui_schema = {"$ref" = "#/definitions/any-schema-location"}
 form_data = {"$ref" = "#/definitions/any-schema-location"}
 props = {"$ref" = "./props.schema.json#/definitions/Props"}
+format = {"$ref" = "#/definitions/any-file-format"}
 
 [definitions.file-form.properties.prune_empty]
 description = "prune empty lists, object, etc."
 type = "boolean"
 
 # other ########################################################################
+[definitions.any-file-format]
+title = "File Format"
+description = "a format that can be serialized or deserialized"
+enum = ["json", "toml", "yaml"]
+
 [definitions.any-theme]
 title = "Theme"
 type = "string"

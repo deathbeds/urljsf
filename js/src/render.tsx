@@ -1,40 +1,39 @@
 // Copyright (C) urljsf contributors.
 // Distributed under the terms of the Modified BSD License.
-import { createPortal, useState } from 'react';
-import { Fragment, render } from 'react-dom';
+import { Fragment, useState } from 'react';
+import { render } from 'react-dom';
 
-import { Badge, Button, Col, Form, Row } from 'react-bootstrap';
-
+// import { Badge, Button, Col, Form, Row } from 'react-bootstrap';
 import type { FormProps, IChangeEvent } from '@rjsf/core';
 import { Form as RJSFForm } from '@rjsf/react-bootstrap';
-import type { RJSFValidationError } from '@rjsf/utils';
+// import type { RJSFValidationError } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
+import { Urljsf } from './_schema.js';
 import { THEMES } from './themes.js';
-import { DEBUG, DEFAULTS, type TDataSet } from './tokens.js';
-import { fetchOne, getConfig, getFileContent, getIdPrefix } from './utils.js';
+import { DEBUG, DEFAULTS, emptyObject } from './tokens.js';
+import { getConfig, getFileContent, getIdPrefix, initFormProps } from './utils.js';
 
 /** process a single form
  *
- * @param container - a DOM node with urljsf dataset
+ * @param container - a DOM script with urljsf
  */
-export async function makeOneForm(container: HTMLScriptElement): Promise<void> {
-  const config = await getConfig(container);
+export async function makeOneForm(script: HTMLScriptElement): Promise<void> {
+  const config = await getConfig(script);
+  const container = document.createElement('div');
+  script.parentNode!.insertBefore(container, script);
   DEBUG && console.log(config);
 
-  const [schema, uiSchema, formData] = await Promise.all([
-    fetchOne(config.file_form?.schema),
-    fetchOne(config.file_form?.ui_schema),
-    fetchOne(config.file_form?.form_data),
+  const [fileFormProps, urlFormProps] = await Promise.all([
+    initFormProps(config.file_form),
+    initFormProps(config.url_form),
   ]);
 
-  DEBUG && console.log({ schema, uiSchema, formData });
+  const initFileValue = await getFileContent(config, fileFormProps.formData);
 
-  // const initValue = await getFileContent(dataset, formData);
-  // const form = formComponent(dataset, initValue, { schema, formData, uiSchema });
-  // const isolated = !!dataset.urljsfIframe;
-  // render(isolated ? await renderIframe(dataset, form) : form, container);
-  render(<div></div>, container);
+  const form = formComponent(config, initFileValue, fileFormProps, urlFormProps);
+  const isolated = !!(config.iframe || config.iframe_style);
+  render(isolated ? await renderIframe(config, form) : form, container);
 }
 
 /** a component for a form in a (themed) iframe
@@ -44,14 +43,15 @@ export async function makeOneForm(container: HTMLScriptElement): Promise<void> {
  * @param container - a DOM node with urljsf dataset
  */
 export async function renderIframe(
-  dataset: TDataSet,
+  config: Urljsf,
   form: JSX.Element,
 ): Promise<JSX.Element> {
+  const { IFrame } = await import('./iframe.js');
   const anyTheme = THEMES as any;
-  const { urljsfTheme } = dataset;
-  const themeFn = anyTheme[urljsfTheme || DEFAULTS.urljsfTheme] || THEMES.bootstrap;
+  const { theme } = config;
+  const themeFn = anyTheme[theme || 'bootstrap'] || THEMES.bootstrap;
   const cssUrl = (await themeFn()).default;
-  const style = dataset.urljsfIframeStyle || DEFAULTS.urljsfIframeStyle;
+  const style = config.iframe_style || DEFAULTS.iframe_style;
   return (
     <IFrame style={style}>
       <head>
@@ -70,171 +70,184 @@ export async function renderIframe(
   );
 }
 
-/** an interface for iframe props */
-interface IFrameProps {
-  children: JSX.Element | JSX.Element[];
-  style?: string;
-}
-
-/** an iframe component for isolating CSS */
-function IFrame(props: IFrameProps): JSX.Element {
-  const [ref, setRef] = useState<HTMLIFrameElement>();
-  const container = ref?.contentWindow?.document?.body;
-
-  return (
-    <iframe ref={setRef as any} {...props}>
-      {container && createPortal(props.children, container)}
-    </iframe>
-  );
-}
-
 /** a component for a branch option  */
-function branchOption(branch: string, idx: number): JSX.Element {
-  return <option key={idx}>{branch}</option>;
-}
+// function branchOption(branch: string, idx: number): JSX.Element {
+//   return <option key={idx}>{branch}</option>;
+// }
 
-/** a component for a form */
+/** a component for a file and URL form */
 export function formComponent(
-  dataset: TDataSet,
+  config: Urljsf,
   initValue: string,
-  props: Partial<FormProps>,
+  fileFormProps: Partial<FormProps>,
+  urlFormProps: Partial<FormProps>,
 ): JSX.Element {
   const URLJSF = () => {
-    const idPrefix = getIdPrefix(dataset);
-    const filenamePattern = `${dataset.urljsfFileNamePattern || DEFAULTS.urljsfFileNamePattern}`;
+    const idPrefix = getIdPrefix(config);
+    // const filenamePattern = `${dataset.urljsfFileNamePattern || DEFAULTS.urljsfFileNamePattern}`;
 
-    const branches = (dataset.urljsfGitHubBranch || DEFAULTS.urljsfGitHubBranch)
-      .trim()
-      .split(' ');
-    const [value, setValue] = useState(initValue);
-    const [url, setUrl] = useState('#');
-    const [errors, setErrors] = useState<RJSFValidationError[]>([]);
-    const [formData, setFormData] = useState(props.formData);
-    const [fileName, setFileName] = useState(dataset.urljsfFileName || '');
-    const [fileNameOk, setFileNameOk] = useState(!!fileName.match(filenamePattern));
-    const [branch, setBranch] = useState(branches[0]);
+    // const branches = (dataset.urljsfGitHubBranch || DEFAULTS.urljsfGitHubBranch)
+    //   .trim()
+    //   .split(' ');
+    // const [value, setValue] = useState(initValue);
+    // const [url, setUrl] = useState('#');
+    // const [errors, setErrors] = useState<RJSFValidationError[]>([]);
+    const [fileFormData, setFileFormData] = useState(fileFormProps.formData);
+    const [urlFormData, setUrlFormData] = useState(urlFormProps.formData);
+    // const [fileName, setFileName] = useState(dataset.urljsfFileName || '');
+    // const [fileNameOk, setFileNameOk] = useState(!!fileName.match(filenamePattern));
+    // const [branch, setBranch] = useState(branches[0]);
 
     const updateUrl = () => {
-      let gh = `${dataset.urljsfGitHubUrl}`.trim().replace(/\/$/, '');
-      let repo = `${dataset.urljsfGitHubRepo}`.trim();
-      let url = new URL(`${gh}/${repo}/new/${branch}`, window.location.href);
-      url.searchParams.set('value', value);
-      url.searchParams.set('fileName', fileName);
-      setUrl(url.toString());
+      // let gh = `${dataset.urljsfGitHubUrl}`.trim().replace(/\/$/, '');
+      // let repo = `${dataset.urljsfGitHubRepo}`.trim();
+      // let url = new URL(`${gh}/${repo}/new/${branch}`, window.location.href);
+      // url.searchParams.set('value', value);
+      // url.searchParams.set('fileName', fileName);
+      // setUrl(url.toString());
+      // setUrl('TODO');
     };
 
-    const onChange = async (evt: IChangeEvent) => {
-      let value = await getFileContent(dataset, evt.formData);
-      setValue(value);
-      setFormData(evt.formData);
-      setErrors(evt.errors);
+    const onFileFormChange = async (evt: IChangeEvent) => {
+      let value = await getFileContent(config, evt.formData);
+      // setValue(value);
+      DEBUG && console.log('value', value);
+      setFileFormData(evt.formData);
+      // setErrors(evt.errors);
+      updateUrl();
+    };
+    const onUrlFormChange = async (evt: IChangeEvent) => {
+      // setValue(value);
+      setUrlFormData(evt.formData);
+      // setErrors(evt.errors);
       updateUrl();
     };
 
-    const formProps: FormProps = {
-      schema: {},
-      validator,
-      liveValidate: true,
-      idPrefix: `${idPrefix}-`,
-      id: idPrefix,
-      onChange,
-      ...props,
-    };
+    // let branchEl: JSX.Element;
+    // if (branches.length == 1) {
+    //   branchEl = <code>{branch}</code>;
+    // } else {
+    //   branchEl = (
+    //     <Form.Control
+    //       as="select"
+    //       size="sm"
+    //       onChange={(e) => setBranch(e.currentTarget.value)}
+    //     >
+    //       {branches.map(branchOption)}
+    //     </Form.Control>
+    //   );
+    // }
 
-    let branchEl: JSX.Element;
-    if (branches.length == 1) {
-      branchEl = <code>{branch}</code>;
-    } else {
-      branchEl = (
-        <Form.Control
-          as="select"
-          size="sm"
-          onChange={(e) => setBranch(e.currentTarget.value)}
-        >
-          {branches.map(branchOption)}
-        </Form.Control>
-      );
-    }
+    // const badge = (
+    //   <Badge pill className="bg-secondary badge-secondary">
+    //     {dataset.urljsfGitHubRepo}
+    //   </Badge>
+    // );
 
-    const badge = (
-      <Badge pill className="bg-secondary badge-secondary">
-        {dataset.urljsfGitHubRepo}
-      </Badge>
-    );
+    // let createButton: JSX.Element;
 
-    let createButton: JSX.Element;
+    // if (errors.length || !fileNameOk) {
+    //   const errorEl = document.querySelector(`#${idPrefix} .has-error [id]`);
+    //   const errorHref = errorEl ? `#${errorEl.id}` : '#';
+    //   const errorCount = errors.length + (fileNameOk ? 0 : 1);
 
-    if (errors.length || !fileNameOk) {
-      const errorEl = document.querySelector(`#${idPrefix} .has-error [id]`);
-      const errorHref = errorEl ? `#${errorEl.id}` : '#';
-      const errorCount = errors.length + (fileNameOk ? 0 : 1);
+    //   createButton = (
+    //     <Button as="a" size="sm" href={errorHref} variant="danger">
+    //       {errorCount} Error{errorCount > 1 ? 's' : ''}
+    //     </Button>
+    //   );
+    // } else {
+    //   createButton = (
+    //     <Button as="a" href={url} variant="primary" target="_blank">
+    //       Start Pull Request
+    //     </Button>
+    //   );
+    // }
 
-      createButton = (
-        <Button as="a" size="sm" href={errorHref} variant="danger">
-          {errorCount} Error{errorCount > 1 ? 's' : ''}
-        </Button>
-      );
-    } else {
-      createButton = (
-        <Button as="a" href={url} variant="primary" target="_blank">
-          Start Pull Request
-        </Button>
-      );
-    }
+    // let filenameClasses = ['font-monospace'];
+    // let filenameEls: JSX.Element[] = [];
 
-    let filenameClasses = ['font-monospace'];
-    let filenameEls: JSX.Element[] = [];
+    // if (!fileNameOk) {
+    //   filenameClasses.push('is-invalid');
+    //   filenameEls.push(
+    //     <span>
+    //       should match <code>{filenamePattern}</code>
+    //     </span>,
+    //   );
+    // }
 
-    if (!fileNameOk) {
-      filenameClasses.push('is-invalid');
-      filenameEls.push(
-        <span>
-          should match <code>{filenamePattern}</code>
-        </span>,
-      );
-    }
+    // const onFileNameChange = (value: string) => {
+    //   setFileNameOk(!!value.match(filenamePattern));
+    //   setFileName(value);
+    //   updateUrl();
+    // };
 
-    const onFileNameChange = (value: string) => {
-      setFileNameOk(!!value.match(filenamePattern));
-      setFileName(value);
-      updateUrl();
-    };
+    // const fileNameInput = (
+    //   <Form.Control
+    //     size="sm"
+    //     className={filenameClasses.join(' ')}
+    //     value={fileName}
+    //     pattern={filenamePattern}
+    //     spellcheck={false}
+    //     onChange={(change) => onFileNameChange(change.currentTarget.value)}
+    //   />
+    // );
 
-    const fileNameInput = (
-      <Form.Control
-        size="sm"
-        className={filenameClasses.join(' ')}
-        value={fileName}
-        pattern={filenamePattern}
-        spellcheck={false}
-        onChange={(change) => onFileNameChange(change.currentTarget.value)}
-      />
-    );
-
-    const preview =
-      value && fileNameOk && !errors.length
-        ? [
-            <code>
-              <pre>{value}</pre>
-            </code>,
-          ]
-        : [
-            <blockquote>
-              <i>
-                No valid data for <code>{fileName}</code> yet
-              </i>
-            </blockquote>,
-          ];
+    // const preview =
+    //   value && fileNameOk && !errors.length
+    //     ? [
+    //         <code>
+    //           <pre>{value}</pre>
+    //         </code>,
+    //       ]
+    //     : [
+    //         <blockquote>
+    //           <i>
+    //             No valid data for <code>{fileName}</code> yet
+    //           </i>
+    //         </blockquote>,
+    //       ];
 
     return (
       <div class="urljsf-form">
         <div>
-          <RJSFForm {...formProps} formData={formData}>
+          <RJSFForm
+            {...{
+              schema: {},
+              liveValidate: true,
+              liveOmit: true,
+              idPrefix: `${idPrefix}-`,
+              id: idPrefix,
+              ...((config.file_form.props || emptyObject) as any),
+              ...fileFormProps,
+              validator,
+              onChange: onFileFormChange,
+              formData: fileFormData,
+            }}
+          >
             <Fragment />
           </RJSFForm>
         </div>
         <hr />
         <div>
+          <RJSFForm
+            {...{
+              schema: {},
+              liveValidate: true,
+              liveOmit: true,
+              idPrefix: `${idPrefix}-url-`,
+              id: `${idPrefix}-url`,
+              ...((config.url_form.props || emptyObject) as any),
+              ...urlFormProps,
+              validator,
+              onChange: onUrlFormChange,
+              formData: urlFormData,
+            }}
+          >
+            <Fragment />
+          </RJSFForm>
+        </div>
+        {/* <div>
           <label>{fileNameInput} {...filenameEls}</label>
           <br />
           {preview}
@@ -263,7 +276,7 @@ export function formComponent(
             </Col>
           </Row>
         </div>
-        <hr />
+        <hr /> */}
       </div>
     );
   };

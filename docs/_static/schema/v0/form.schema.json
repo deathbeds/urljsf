@@ -24,6 +24,11 @@
     }
   },
   "definitions": {
+    "any-file-format": {
+      "title": "File Format",
+      "description": "a format that can be serialized or deserialized",
+      "enum": ["json", "toml", "yaml"]
+    },
     "any-schema-location": {
       "type": "string",
       "title": "A Schema Location",
@@ -82,6 +87,9 @@
         "form_data": {
           "$ref": "#/definitions/any-schema-location"
         },
+        "format": {
+          "$ref": "#/definitions/any-file-format"
+        },
         "props": {
           "$ref": "./props.schema.json#/definitions/Props"
         },
@@ -103,6 +111,9 @@
       "title": "URL Form",
       "description": "a definition of a form to build a URL",
       "properties": {
+        "form_data": {
+          "$ref": "#/definitions/any-schema-location"
+        },
         "props": {
           "$ref": "./props.schema.json#/definitions/Props"
         },

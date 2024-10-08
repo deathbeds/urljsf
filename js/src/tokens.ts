@@ -1,4 +1,6 @@
 // Copyright (C) urljsf contributors.
+import { Urljsf } from './_schema';
+
 // Distributed under the terms of the Modified BSD License.
 export const DEBUG = window.location.href.includes('URLJSF_DEBUG');
 
@@ -35,17 +37,11 @@ export type TDataSet = Partial<{
   [K in TDataKey]: string | null;
 }>;
 
-export const DEFAULTS = {
-  urljsfUrlTemplate: '',
-  urljsfFileNamePattern: `^[^/].+\.(json|yaml|yml|toml)$`,
-  urljsfSchemaFormat: 'json',
-  urljsfUiSchemaFormat: 'json',
-  urljsfDataFormat: 'json',
-  urljsfPruneEmpty: 'true',
-  urljsfGitHubBranch: 'main',
-  urljsfGitHubUrl: 'https://github.com',
-  urljsfIframeStyle: 'width: 100%; height: 80vh;',
-  urljsfTheme: 'bootstrap',
+export const DEFAULTS: Partial<Urljsf> = {
+  iframe_style: 'width: 100%; height: 80vh;',
+  theme: 'bootstrap',
 };
 
 export type TFormat = 'json' | 'yaml' | 'toml';
+
+export const emptyObject = Object.freeze({});

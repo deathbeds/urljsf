@@ -1,13 +1,14 @@
 // Copyright (C) urljsf contributors.
 // Distributed under the terms of the Modified BSD License.
+import type { FormProps } from '@rjsf/core';
 import { isObject } from '@rjsf/utils';
 
-import { Urljsf } from './_schema.js';
+import { FileForm, URLForm, Urljsf } from './_schema.js';
 import { MIME_FRAGMENT } from './index.js';
 import { TDataSet, TFormat, TUrlKey } from './tokens.js';
 
 let _NEXT_DATA_SET = 0;
-const _DATA_SETS = new WeakMap<TDataSet, number>();
+const _DATA_SETS = new WeakMap<Urljsf, number>();
 
 /** get a dataset with defaults */
 export async function getConfig(el: HTMLScriptElement): Promise<Urljsf> {
@@ -18,6 +19,17 @@ export async function getConfig(el: HTMLScriptElement): Promise<Urljsf> {
   }
 
   return await parseOne<Urljsf>(el.innerText, format);
+}
+
+export async function initFormProps(
+  form: FileForm | URLForm,
+): Promise<Partial<FormProps>> {
+  const [schema, uiSchema, formData] = await Promise.all([
+    fetchOne(form.schema),
+    fetchOne(form.ui_schema),
+    fetchOne(form.form_data),
+  ]);
+  return { schema, uiSchema, formData };
 }
 
 /** remove empty objects and arrays */
@@ -41,12 +53,11 @@ function pruneObject(data: Record<string, any>) {
 }
 
 /** lazily serialize some data */
-export async function getFileContent(
-  dataset: TDataSet,
-  formData: any,
-): Promise<string> {
-  const format = dataset.urljsfDataFormat;
-  if (dataset.urljsfPruneEmpty === 'true') {
+export async function getFileContent(config: Urljsf, formData: any): Promise<string> {
+  const { format, prune_empty } = config.file_form;
+  let value = '';
+
+  if (prune_empty) {
     formData = pruneObject(formData);
   }
 
@@ -56,15 +67,17 @@ export async function getFileContent(
 
   switch (format) {
     case 'json':
-      return JSON.stringify(formData, null, 2);
+      value = JSON.stringify(formData, null, 2);
+      break;
     case 'toml':
       let toml = await import('smol-toml');
-      return toml.stringify(formData);
+      value = toml.stringify(formData);
+      break;
     case 'yaml':
       let yaml = await import('yaml');
-      return yaml.stringify(formData);
+      value = yaml.stringify(formData);
   }
-  return '';
+  return value;
 }
 /** fetch some data and lazily parse it */
 export async function fetchData(dataset: TDataSet, key: TUrlKey): Promise<any> {
@@ -122,10 +135,10 @@ export async function parseOne<T = Record<string, any>>(
   return data;
 }
 
-/** provide an id of last resort for a dataset */
-export function getIdPrefix(dataset: TDataSet): string {
-  if (!_DATA_SETS.has(dataset)) {
-    _DATA_SETS.set(dataset, _NEXT_DATA_SET++);
+/** provide an id of last resort for a config */
+export function getIdPrefix(config: Urljsf): string {
+  if (!_DATA_SETS.has(config)) {
+    _DATA_SETS.set(config, _NEXT_DATA_SET++);
   }
-  return dataset.urljsfIdPrefix || `urljsf-${_DATA_SETS.get(dataset)}`;
+  return config.file_form?.props?.idPrefix || `urljsf-${_DATA_SETS.get(config)}`;
 }
