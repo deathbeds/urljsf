@@ -219,9 +219,10 @@ cmd = """
     --option=column_width=88
     --option=indent_string="  "
     *.toml
-    docs/**/*.toml
+    js/demo/toml/*.toml
+    docs/_static/schema/*.toml
     """
-inputs = ["*.toml", "docs/**/*.toml"]
+inputs = ["*.toml", "{docs,js,src,tests}/**/*.toml"]
 
 [feature.tasks-lint.tasks.fix-js-prettier]
 cmd = "pixi r prettier-- --write"
