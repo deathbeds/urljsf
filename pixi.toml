@@ -138,8 +138,8 @@ inputs = ["pyproject.toml"]
 # build ########################################################################
 [feature.tasks-build.tasks.build-js-demo]
 cmd = """python scripts/demo.py"""
-inputs = ["js/demo/{index.html,*.toml}", "scripts/demo.py"]
-outputs = ["js/demo/*.{json,yaml}"]
+inputs = ["js/demo/toml/", "scripts/demo.py"]
+outputs = ["js/demo/{json,yaml}/"]
 
 [feature.tasks-build.tasks.build-js-lib]
 cmd = "yarn build:lib"

@@ -10,55 +10,24 @@
       <header>
         <h1><code>urljsf</code> examples</h1>
       </header>
+      <nav>
+        <ul>
+        <% _.forEach(formats, function(fmt) { %>
+          <li>
+            <a href="#example-<%= fmt %>"></a>
+          </li>
+        <% }) %>
+        </ul>
+      </nav>
       <main class="bs-main">
         <div class="bs-content">
           <div class="bs-article-container">
-            <% _.forEach(['json', 'toml', 'yaml'], function(format) { %>
+            <% _.forEach(formats, function(fmt) { %>
             <section>
-              <h2 id="example-<%= format %>"><%= format.toUpperCase() %></h2>
-              <script type="application/vnd.deathbeds.prjsf.v0+<%= format %>">
-                <% if(format === 'json'){ %>
-{
-  "template": "https://github.com/deathbeds/urljsf/new/not-a-branch",
-  "url_form": {
-  },
-  "file_form": {
-    "format": "json",
-    "schema": "./example.schema.json",
-    "ui_schema": "./example.uischema.json",
-    "form_data": "./example.data.json"
-  }
-}
-                <% } %>
-                <% if(format === 'yaml'){ %>
-# yaml
-iframe: true
-theme: sketchy
-url_template: https://github.com/deathbeds/urljsf/new/not-a-branch
-
-url_form: {}
-
-file_form:
-  format: yaml
-  schema: ./example.schema.yaml
-  ui_schema: ./example.uischema.yaml
-  form_data: ./example.data.yaml
-                <% } %>
-                <% if(format === 'toml'){ %>
-# toml
-theme = "cyborg"
-iframe = true
-url_template = "https://github.com/deathbeds/urljsf/new/not-a-branch"
-
-[url_form]
-
-
-[file_form]
-format = "toml"
-schema = "./example.schema.toml"
-ui_schema = "./example.uischema.toml"
-form_data = "./example.data.toml"
-                <% } %>
+              <h2 id="example-<%= fmt %>"><%= fmt.toUpperCase() %></h2>
+              <script
+                type="application/vnd.deathbeds.prjsf.v0+<%= fmt %>"
+                src="./<%= fmt %>/urljsf.<%= fmt %>">
               </script>
             </section>
             <% }) %>

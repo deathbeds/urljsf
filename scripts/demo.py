@@ -21,7 +21,7 @@ HERE = Path(__file__).parent
 ROOT = HERE.parent
 DEMO = ROOT / "js/demo"
 INDEX = DEMO / "index.html"
-TOML = sorted(DEMO.glob("*.toml"))
+TOML = sorted(DEMO.glob("toml/*.toml"))
 JSON_FMT = {"sort_keys": True, "indent": 2}
 
 
@@ -30,12 +30,14 @@ ENCODERS = {"yaml": lambda d: _safe_dump(d), "json": lambda d: json.dumps(d, ind
 
 
 def _safe_dump(d: dict[str, Any]) -> str:
+    """Dump yaml to strings."""
     with StringIO() as io:
         yaml.dump(d, io)
         return io.getvalue()
 
 
 def main() -> int:
+    """Update the demo."""
     if not TOML:
         print("no toml in", DEMO)
         return 1
@@ -46,7 +48,7 @@ def main() -> int:
         norm = json.dumps(d, **JSON_FMT)
         stem = toml.stem
         for fmt, encode in ENCODERS.items():
-            out = DEMO / f"{stem}.{fmt}"
+            out = DEMO / f"{fmt}/{stem}.{fmt}"
             if out.exists():
                 old = json.dumps(DECODERS[fmt](out.read_text(**UTF8)), **JSON_FMT)
                 if old == norm:

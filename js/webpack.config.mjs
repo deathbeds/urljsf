@@ -90,6 +90,9 @@ const config = {
       filename: 'demo/index.html',
       template: 'demo/index.html',
       scriptLoading: 'module',
+      templateParameters: {
+        formats: ["json", "toml", "yaml"]
+      }
     }),
     new webpack.ids.HashedModuleIdsPlugin(),
     new JSONLicenseWebpackPlugin(),
