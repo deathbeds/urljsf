@@ -84,15 +84,16 @@ const config = {
   },
   plugins: [
     new CopyPlugin({
-      patterns: [{ from: 'demo/*.{json,toml,yaml}' }],
+      patterns: [{ from: 'demo/*/*.{json,toml,yaml}' }],
     }),
     new HtmlWebpackPlugin({
       filename: 'demo/index.html',
       template: 'demo/index.html',
       scriptLoading: 'module',
+      minify: false,
       templateParameters: {
-        formats: ["json", "toml", "yaml"]
-      }
+        formats: ['json', 'toml', 'yaml'],
+      },
     }),
     new webpack.ids.HashedModuleIdsPlugin(),
     new JSONLicenseWebpackPlugin(),

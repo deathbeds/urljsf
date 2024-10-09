@@ -24,43 +24,61 @@ INDEX = DEMO / "index.html"
 TOML = sorted(DEMO.glob("toml/*.toml"))
 JSON_FMT = {"sort_keys": True, "indent": 2}
 
-
-DECODERS = {"yaml": lambda t: yaml.load(t), "json": lambda t: json.loads(t)}
-ENCODERS = {"yaml": lambda d: _safe_dump(d), "json": lambda d: json.dumps(d, indent=2)}
+DECODERS = {
+    "yaml": lambda t: yaml.load(t),
+    "json": lambda t: json.loads(t),
+}
+ENCODERS = {
+    "yaml": lambda d: _safe_dump(d),
+    "json": lambda d: json.dumps(d, indent=2),
+}
 
 
 def _safe_dump(d: dict[str, Any]) -> str:
-    """Dump yaml to strings."""
+    """Dump YAML to strings."""
     with StringIO() as io:
         yaml.dump(d, io)
         return io.getvalue()
 
 
+def _normalize(d: dict[str, Any]) -> str:
+    return json.dumps(d, **JSON_FMT)
+
+
 def main() -> int:
-    """Update the demo."""
+    """Update the demo JSON and YAML from TOML."""
     if not TOML:
         print("no toml in", DEMO)
         return 1
 
     wrote = []
     for toml in TOML:
-        d = tomllib.loads(toml.read_text(**UTF8))
-        norm = json.dumps(d, **JSON_FMT)
+        raw = toml.read_text(**UTF8)
         stem = toml.stem
         for fmt, encode in ENCODERS.items():
+            print(".", end="")
+            data = tomllib.loads(raw.replace("toml", fmt))
+            if stem == "urljsf":
+                data.update(
+                    iframe=True,
+                )
+            normal = _normalize(data)
             out = DEMO / f"{fmt}/{stem}.{fmt}"
             if out.exists():
-                old = json.dumps(DECODERS[fmt](out.read_text(**UTF8)), **JSON_FMT)
-                if old == norm:
+                old = _normalize(DECODERS[fmt](out.read_text(**UTF8)))
+                if old == normal:
                     continue
+            print("\n... writing", out)
+            out.parent.mkdir(exist_ok=True)
+            out.write_text(encode(data).strip() + "\n", **UTF8)
             wrote += [out]
-            print("... writing", out)
-            out.write_text(encode(d), **UTF8)
 
     rc = 0
 
     if wrote:
         rc = call(["yarn", "prettier", "--write", *wrote])
+    else:
+        print(" ok")
 
     return rc
 

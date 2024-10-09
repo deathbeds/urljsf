@@ -343,6 +343,11 @@ cmd = """
 cmd = "yarn build:lib --watch"
 depends-on = ["setup-js"]
 
+[feature.tasks-build.tasks.watch-js-demo]
+cmd = """
+watchfiles "python scripts/demo.py" scripts/demo.py js/demo/toml
+"""
+
 [feature.tasks-build.tasks.watch-js-app]
 cmd = "yarn build:app --watch"
 depends-on = ["setup-js"]

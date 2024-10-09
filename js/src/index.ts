@@ -5,11 +5,11 @@ export const MIME_FRAGMENT = 'application/vnd.deathbeds.prjsf.v0+';
 export const SELECTOR = `script[type^="${MIME_FRAGMENT}"]`;
 
 export async function main() {
-  const containers = [...document.querySelectorAll(SELECTOR)] as HTMLScriptElement[];
+  const urjsfScripts = [...document.querySelectorAll(SELECTOR)] as HTMLScriptElement[];
 
-  if (containers.length) {
+  if (urjsfScripts.length) {
     const { makeOneForm } = await import('./render.js');
-    containers.forEach(makeOneForm);
+    urjsfScripts.forEach(makeOneForm);
   }
 }
 

@@ -1,0 +1,11 @@
+{
+  "file_form": {
+    "format": "json",
+    "schema": "./json/file.schema.json",
+    "ui_schema": "./json/file.uischema.json",
+    "form_data": "./json/file.data.json"
+  },
+  "iframe": true,
+  "url_form": {},
+  "url_template": "https://github.com/deathbeds/urljsf/new/not-a-branch"
+}

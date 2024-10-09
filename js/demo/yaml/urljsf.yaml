@@ -1,0 +1,8 @@
+file_form:
+  form_data: ./yaml/file.data.yaml
+  format: yaml
+  schema: ./yaml/file.schema.yaml
+  ui_schema: ./yaml/file.uischema.yaml
+iframe: true
+url_form: {}
+url_template: https://github.com/deathbeds/urljsf/new/not-a-branch

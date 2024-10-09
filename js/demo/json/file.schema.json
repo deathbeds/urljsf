@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Todo (json)",
+  "description": "a json demo of urljsf",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "**What** is _this_ list about?"
+    },
+    "tasks": {
+      "type": "array",
+      "description": "What are the tasks?",
+      "items": {
+        "$ref": "#/definitions/Task"
+      }
+    }
+  },
+  "definitions": {
+    "Task": {
+      "type": "object",
+      "properties": {
+        "complete": {
+          "type": "boolean",
+          "description": "Is it done?",
+          "default": false
+        },
+        "deadline": {
+          "type": "string",
+          "description": "When does it need to be done?",
+          "format": "date-time"
+        },
+        "task": {
+          "type": "string",
+          "description": "What needs to be done?"
+        }
+      }
+    }
+  }
+}

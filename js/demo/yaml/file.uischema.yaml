@@ -1,0 +1,4 @@
+name:
+  ui:enableMarkdownInDescription: true
+ui:options:
+  title: yaml (from yaml-based UI schema)

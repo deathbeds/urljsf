@@ -5,7 +5,7 @@ import { isObject } from '@rjsf/utils';
 
 import { FileForm, URLForm, Urljsf } from './_schema.js';
 import { MIME_FRAGMENT } from './index.js';
-import { TDataSet, TFormat, TUrlKey } from './tokens.js';
+import { DEBUG, TFormat } from './tokens.js';
 
 let _NEXT_DATA_SET = 0;
 const _DATA_SETS = new WeakMap<Urljsf, number>();
@@ -13,8 +13,9 @@ const _DATA_SETS = new WeakMap<Urljsf, number>();
 /** get a dataset with defaults */
 export async function getConfig(el: HTMLScriptElement): Promise<Urljsf> {
   const format = el.type.replace(MIME_FRAGMENT, '') as TFormat;
-
+  DEBUG && console.log('urlsjf', format, el);
   if (el.src) {
+    DEBUG && console.warn('fetching', format, el.src);
     return fetchOne<Urljsf>(el.src, format);
   }
 
@@ -65,6 +66,8 @@ export async function getFileContent(config: Urljsf, formData: any): Promise<str
     return '';
   }
 
+  DEBUG && console.warn('dumping', format, formData);
+
   switch (format) {
     case 'json':
       value = JSON.stringify(formData, null, 2);
@@ -79,20 +82,10 @@ export async function getFileContent(config: Urljsf, formData: any): Promise<str
   }
   return value;
 }
-/** fetch some data and lazily parse it */
-export async function fetchData(dataset: TDataSet, key: TUrlKey): Promise<any> {
-  let url = dataset[key];
-
-  if (!url) {
-    return {};
-  }
-
-  return await fetchOne(url);
-}
 
 export async function fetchOne<T = Record<string, any>>(
   url: string | null | undefined,
-  format?: 'json' | 'toml' | 'yaml',
+  format?: TFormat,
 ): Promise<T> {
   let data = {} as T;
   if (url == null) {
@@ -101,12 +94,16 @@ export async function fetchOne<T = Record<string, any>>(
   const urlObj = new URL(url, window.location.href);
   const response = await fetch(urlObj);
   const { pathname } = urlObj;
+  format = (format || pathname.split('.').slice(-1)[0]) as TFormat;
+  format = (format as any) === 'yml' ? 'yaml' : format;
+
   format =
-    format || pathname.endsWith('.toml')
+    format ||
+    (pathname.endsWith('.toml')
       ? 'toml'
       : pathname.endsWith('.json')
         ? 'json'
-        : 'yaml';
+        : 'yaml');
   if (response.ok) {
     data = await parseOne<T>(await response.text(), format);
   }
@@ -118,6 +115,8 @@ export async function parseOne<T = Record<string, any>>(
   format: TFormat,
 ): Promise<T> {
   let data = {} as T;
+
+  DEBUG && console.warn('parsing', format, text);
 
   switch (format) {
     case 'json':

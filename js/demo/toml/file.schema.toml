@@ -1,32 +1,32 @@
-"$id" = "https://deathbeds.github.io/_static/urljsf/example.schema.json"
 "$schema" = "http://json-schema.org/draft-07/schema#"
-title = "Todo"
-description = "a demo of urljsf"
+
+title = "Todo (toml)"
+description = "a toml demo of urljsf"
 
 [properties.name]
 type = "string"
-description = "What is this list about?"
+description = "**What** is _this_ list about?"
 
 [properties.tasks]
 type = "array"
 description = "What are the tasks?"
 
 [properties.tasks.items]
-"$ref" = "#/$defs/Task"
+"$ref" = "#/definitions/Task"
 
-["$defs".Task]
+[definitions.Task]
 type = "object"
 
-["$defs".Task.properties.complete]
+[definitions.Task.properties.complete]
 type = "boolean"
 description = "Is it done?"
 default = false
 
-["$defs".Task.properties.deadline]
+[definitions.Task.properties.deadline]
 type = "string"
 description = "When does it need to be done?"
 format = "date-time"
 
-["$defs".Task.properties.task]
+[definitions.Task.properties.task]
 type = "string"
 description = "What needs to be done?"

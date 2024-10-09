@@ -14,7 +14,7 @@
         <ul>
         <% _.forEach(formats, function(fmt) { %>
           <li>
-            <a href="#example-<%= fmt %>"></a>
+            <a href="#example-<%= fmt %>"><%= fmt.toUpperCase() %></a>
           </li>
         <% }) %>
         </ul>
@@ -24,7 +24,10 @@
           <div class="bs-article-container">
             <% _.forEach(formats, function(fmt) { %>
             <section>
-              <h2 id="example-<%= fmt %>"><%= fmt.toUpperCase() %></h2>
+              <h2 id="example-<%= fmt %>">
+                <a href="#example-<%= fmt %>">#</a>
+                <%= fmt.toUpperCase() %>
+              </h2>
               <script
                 type="application/vnd.deathbeds.prjsf.v0+<%= fmt %>"
                 src="./<%= fmt %>/urljsf.<%= fmt %>">
