@@ -7,11 +7,11 @@ definitions:
         description: Is it done?
         type: boolean
       deadline:
-        description: When does it need to be done?
+        description: '**When** does it need to be done?'
         format: date-time
         type: string
       task:
-        description: What needs to be done?
+        description: '**What** needs to be done?'
         type: string
     type: object
 description: a yaml demo of urljsf
@@ -20,7 +20,7 @@ properties:
     description: '**What** is _this_ list about?'
     type: string
   tasks:
-    description: What are the tasks?
+    description: What are the things that need to get done?
     items:
       $ref: '#/definitions/Task'
     type: array

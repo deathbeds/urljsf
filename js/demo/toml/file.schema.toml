@@ -9,7 +9,7 @@ description = "**What** is _this_ list about?"
 
 [properties.tasks]
 type = "array"
-description = "What are the tasks?"
+description = "What are the things that need to get done?"
 
 [properties.tasks.items]
 "$ref" = "#/definitions/Task"
@@ -24,9 +24,9 @@ default = false
 
 [definitions.Task.properties.deadline]
 type = "string"
-description = "When does it need to be done?"
+description = "**When** does it need to be done?"
 format = "date-time"
 
 [definitions.Task.properties.task]
 type = "string"
-description = "What needs to be done?"
+description = "**What** needs to be done?"

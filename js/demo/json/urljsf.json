@@ -6,6 +6,12 @@
     "form_data": "./json/file.data.json"
   },
   "iframe": true,
-  "url_form": {},
+  "url_form": {
+    "schema": "./json/url.schema.json",
+    "ui_schema": "./json/url.uischema.json",
+    "props": {
+      "showErrorList": false
+    }
+  },
   "url_template": "https://github.com/deathbeds/urljsf/new/not-a-branch"
 }

@@ -1,0 +1,30 @@
+$schema: http://json-schema.org/draft-07/schema#
+properties:
+  branch:
+    description: What branch should it target?
+    oneOf:
+      - const: not-a-branch
+        title: a branch
+      - const: not-yet-another-branch
+        title: another branch
+    type: string
+  fileName:
+    default: tasks/untitled-tasks.yaml
+    description: 'What should the file be called? _It must be in `tasks` and end with `.yaml`._
+
+      '
+    minLength: 5
+    pattern: tasks/[^/]+\.yaml$
+    type: string
+  repo:
+    default: deathbeds/urljsf
+    description: Who should get the PR?
+    enum:
+      - deathbeds/urljsf
+    type: string
+required:
+  - repo
+  - branch
+  - filename
+title: Propose New yaml File
+type: object

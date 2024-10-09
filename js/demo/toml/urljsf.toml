@@ -4,6 +4,9 @@
 url_template = "https://github.com/deathbeds/urljsf/new/not-a-branch"
 
 [url_form]
+schema = "./toml/url.schema.toml"
+ui_schema = "./toml/url.uischema.toml"
+props = {showErrorList = false}
 
 [file_form]
 format = "toml"

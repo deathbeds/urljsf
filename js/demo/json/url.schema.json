@@ -1,0 +1,35 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "title": "Propose New json File",
+  "properties": {
+    "branch": {
+      "type": "string",
+      "description": "What branch should it target?",
+      "oneOf": [
+        {
+          "title": "a branch",
+          "const": "not-a-branch"
+        },
+        {
+          "title": "another branch",
+          "const": "not-yet-another-branch"
+        }
+      ]
+    },
+    "fileName": {
+      "type": "string",
+      "description": "What should the file be called? _It must be in `tasks` and end with `.json`._\n",
+      "default": "tasks/untitled-tasks.json",
+      "minLength": 5,
+      "pattern": "tasks/[^/]+\\.json$"
+    },
+    "repo": {
+      "type": "string",
+      "description": "Who should get the PR?",
+      "default": "deathbeds/urljsf",
+      "enum": ["deathbeds/urljsf"]
+    }
+  },
+  "required": ["repo", "branch", "filename"]
+}

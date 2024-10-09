@@ -92,7 +92,7 @@ const config = {
       scriptLoading: 'module',
       minify: false,
       templateParameters: {
-        formats: ['json', 'toml', 'yaml'],
+        formats: ['toml', 'yaml', 'json'],
       },
     }),
     new webpack.ids.HashedModuleIdsPlugin(),

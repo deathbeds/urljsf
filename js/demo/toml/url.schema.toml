@@ -1,0 +1,27 @@
+"$schema" = "http://json-schema.org/draft-07/schema#"
+title = "Propose New toml File"
+type = "object"
+required = ["repo", "branch", "filename"]
+
+[properties.repo]
+description = "Who should get the PR?"
+type = "string"
+enum = ["deathbeds/urljsf"]
+default = "deathbeds/urljsf"
+
+[properties.branch]
+description = "What branch should it target?"
+type = "string"
+oneOf = [
+  {const = "not-a-branch", title = "a branch"},
+  {const = "not-yet-another-branch", title = "another branch"},
+]
+
+[properties.fileName]
+description = """
+What should the file be called? _It must be in `tasks` and end with `.toml`._
+"""
+type = "string"
+minLength = 5
+pattern = 'tasks/[^/]+\.toml$'
+default = "tasks/untitled-tasks.toml"

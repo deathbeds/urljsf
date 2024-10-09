@@ -4,5 +4,9 @@ file_form:
   schema: ./yaml/file.schema.yaml
   ui_schema: ./yaml/file.uischema.yaml
 iframe: true
-url_form: {}
+url_form:
+  props:
+    showErrorList: false
+  schema: ./yaml/url.schema.yaml
+  ui_schema: ./yaml/url.uischema.yaml
 url_template: https://github.com/deathbeds/urljsf/new/not-a-branch

@@ -9,7 +9,7 @@
     },
     "tasks": {
       "type": "array",
-      "description": "What are the tasks?",
+      "description": "What are the things that need to get done?",
       "items": {
         "$ref": "#/definitions/Task"
       }
@@ -26,12 +26,12 @@
         },
         "deadline": {
           "type": "string",
-          "description": "When does it need to be done?",
+          "description": "**When** does it need to be done?",
           "format": "date-time"
         },
         "task": {
           "type": "string",
-          "description": "What needs to be done?"
+          "description": "**What** needs to be done?"
         }
       }
     }
