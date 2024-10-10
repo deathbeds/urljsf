@@ -21,44 +21,6 @@ class AnyFileFormat(Enum):
 AnySchemaLocation = str
 
 
-class AnyTheme(Enum):
-    """a name of a theme supported by a compatible version of `urljsf`.
-
-    all [bootswatch] themes are available, with the vanilla [`bootstrap`][bs5]
-    by default.
-
-    [bs5]: https://getbootstrap.com/docs/5.0
-    [bootswatch]: https://bootswatch.com
-    """
-
-    bootstrap = "bootstrap"
-    cerulean = "cerulean"
-    cosmo = "cosmo"
-    cyborg = "cyborg"
-    darkly = "darkly"
-    flatly = "flatly"
-    journal = "journal"
-    litera = "litera"
-    lumen = "lumen"
-    lux = "lux"
-    materia = "materia"
-    minty = "minty"
-    morph = "morph"
-    pulse = "pulse"
-    quartz = "quartz"
-    sandstone = "sandstone"
-    simplex = "simplex"
-    sketchy = "sketchy"
-    slate = "slate"
-    solar = "solar"
-    spacelab = "spacelab"
-    superhero = "superhero"
-    united = "united"
-    vapor = "vapor"
-    yeti = "yeti"
-    zephyr = "zephyr"
-
-
 AnyUrlTemplate = str
 
 
@@ -93,4 +55,3 @@ class Urljsf:
     url_template: AnyUrlTemplate
     iframe: bool | None = None
     iframe_style: str | None = None
-    theme: AnyTheme | None = AnyTheme.bootstrap

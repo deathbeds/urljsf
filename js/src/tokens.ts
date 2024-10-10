@@ -39,7 +39,6 @@ export type TDataSet = Partial<{
 
 export const DEFAULTS: Partial<Urljsf> = {
   iframe_style: 'width: 100%; height: 80vh;',
-  theme: 'bootstrap',
 };
 
 export type TFormat = 'json' | 'yaml' | 'toml';

@@ -21,7 +21,6 @@
     "@rjsf/react-bootstrap": "^6.0.0-alpha.0",
     "@rjsf/utils": "^6.0.0-alpha.0",
     "@rjsf/validator-ajv8": "^6.0.0-alpha.0",
-    "bootswatch": "^5.3.3",
     "nunjucks": "^3.2.4",
     "preact": "^10.24.0",
     "react-bootstrap": "^2.10.5",

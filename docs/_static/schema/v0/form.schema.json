@@ -17,10 +17,6 @@
       "type": "string",
       "description": "additional simple CSS to apply to an `iframe` element (implies `iframe`)\n"
     },
-    "theme": {
-      "$ref": "#/definitions/any-theme",
-      "description": "a theme name to use for the overall form in an iframe\n"
-    },
     "url_form": {
       "$ref": "#/definitions/url-form",
       "description": "values that contribute to the `url` context value of the `url_template`\n"
@@ -43,40 +39,6 @@
       "description": "a path to a JSON schema, serialized as JSON, TOML, or (simple) YAML.",
       "format": "uri-reference",
       "minLength": 1
-    },
-    "any-theme": {
-      "type": "string",
-      "title": "Theme",
-      "description": "a name of a theme supported by a compatible version of `urljsf`.\n\nall [bootswatch] themes are available, with the vanilla [`bootstrap`][bs5]\nby default.\n\n[bs5]: https://getbootstrap.com/docs/5.0\n[bootswatch]: https://bootswatch.com",
-      "default": "bootstrap",
-      "enum": [
-        "bootstrap",
-        "cerulean",
-        "cosmo",
-        "cyborg",
-        "darkly",
-        "flatly",
-        "journal",
-        "litera",
-        "lumen",
-        "lux",
-        "materia",
-        "minty",
-        "morph",
-        "pulse",
-        "quartz",
-        "sandstone",
-        "simplex",
-        "sketchy",
-        "slate",
-        "solar",
-        "spacelab",
-        "superhero",
-        "united",
-        "vapor",
-        "yeti",
-        "zephyr"
-      ]
     },
     "any-url-template": {
       "type": "string",

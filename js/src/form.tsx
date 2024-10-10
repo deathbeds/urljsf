@@ -11,7 +11,6 @@ import type { RJSFValidationError } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
 import { Urljsf } from './_schema.js';
-import { THEMES } from './themes.js';
 import { DEBUG, DEFAULTS, FORM_CLASS, emptyObject } from './tokens.js';
 import { getConfig, getFileContent, getIdPrefix, initFormProps } from './utils.js';
 
@@ -39,10 +38,7 @@ export async function makeOneForm(script: HTMLScriptElement): Promise<void> {
 /** a component for a form in a (themed) iframe */
 async function renderIframe(config: Urljsf, form: JSX.Element): Promise<JSX.Element> {
   const { IFrame } = await import('./iframe.js');
-  const anyTheme = THEMES as any;
-  const { theme } = config;
-  const themeFn = anyTheme[theme || 'bootstrap'] || THEMES.bootstrap;
-  const cssUrl = (await themeFn()).default;
+  const cssUrl = (await import('bootstrap/dist/css/bootstrap.min.css')).default;
   const style = config.iframe_style || DEFAULTS.iframe_style;
   return (
     <IFrame style={style}>

@@ -25,9 +25,6 @@ values that contribute to the `url` context value of the `url_template`
 file_form = {"$ref" = "#/definitions/file-form", description = """
 values that contribut the `file_contents` context value of the `url_template`
 """}
-theme = {"$ref" = "#/definitions/any-theme", description = """
-a theme name to use for the overall form in an iframe
-"""}
 
 [properties.iframe]
 description = "isolate each form on the page in an `iframe`"
@@ -95,48 +92,6 @@ type = "boolean"
 title = "File Format"
 description = "a format that can be serialized or deserialized"
 enum = ["json", "toml", "yaml"]
-
-[definitions.any-theme]
-title = "Theme"
-type = "string"
-default = "bootstrap"
-description = """
-a name of a theme supported by a compatible version of `urljsf`.
-
-all [bootswatch] themes are available, with the vanilla [`bootstrap`][bs5]
-by default.
-
-[bs5]: https://getbootstrap.com/docs/5.0
-[bootswatch]: https://bootswatch.com
-"""
-enum = [
-  "bootstrap",
-  "cerulean",
-  "cosmo",
-  "cyborg",
-  "darkly",
-  "flatly",
-  "journal",
-  "litera",
-  "lumen",
-  "lux",
-  "materia",
-  "minty",
-  "morph",
-  "pulse",
-  "quartz",
-  "sandstone",
-  "simplex",
-  "sketchy",
-  "slate",
-  "solar",
-  "spacelab",
-  "superhero",
-  "united",
-  "vapor",
-  "yeti",
-  "zephyr",
-]
 
 [definitions.any-schema-location]
 title = "A Schema Location"

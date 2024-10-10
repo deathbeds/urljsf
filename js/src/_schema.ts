@@ -25,37 +25,6 @@ export type ASchemaLocation1 = string;
  */
 export type ASchemaLocation2 = string;
 /**
- * a theme name to use for the overall form in an iframe
- *
- */
-export type Theme =
-  | 'bootstrap'
-  | 'cerulean'
-  | 'cosmo'
-  | 'cyborg'
-  | 'darkly'
-  | 'flatly'
-  | 'journal'
-  | 'litera'
-  | 'lumen'
-  | 'lux'
-  | 'materia'
-  | 'minty'
-  | 'morph'
-  | 'pulse'
-  | 'quartz'
-  | 'sandstone'
-  | 'simplex'
-  | 'sketchy'
-  | 'slate'
-  | 'solar'
-  | 'spacelab'
-  | 'superhero'
-  | 'united'
-  | 'vapor'
-  | 'yeti'
-  | 'zephyr';
-/**
  * a path to a JSON schema, serialized as JSON, TOML, or (simple) YAML.
  */
 export type ASchemaLocation3 = string;
@@ -79,45 +48,6 @@ export type URLTemplate = string;
  * via the `definition` "any-schema-location".
  */
 export type ASchemaLocation6 = string;
-/**
- * a name of a theme supported by a compatible version of `urljsf`.
- *
- * all [bootswatch] themes are available, with the vanilla [`bootstrap`][bs5]
- * by default.
- *
- * [bs5]: https://getbootstrap.com/docs/5.0
- * [bootswatch]: https://bootswatch.com
- *
- * This interface was referenced by `Urljsf`'s JSON-Schema
- * via the `definition` "any-theme".
- */
-export type Theme1 =
-  | 'bootstrap'
-  | 'cerulean'
-  | 'cosmo'
-  | 'cyborg'
-  | 'darkly'
-  | 'flatly'
-  | 'journal'
-  | 'litera'
-  | 'lumen'
-  | 'lux'
-  | 'materia'
-  | 'minty'
-  | 'morph'
-  | 'pulse'
-  | 'quartz'
-  | 'sandstone'
-  | 'simplex'
-  | 'sketchy'
-  | 'slate'
-  | 'solar'
-  | 'spacelab'
-  | 'superhero'
-  | 'united'
-  | 'vapor'
-  | 'yeti'
-  | 'zephyr';
 /**
  * a [nunjucks]-compatible template.
  *
@@ -146,7 +76,6 @@ export interface Urljsf {
    *
    */
   iframe_style?: string;
-  theme?: Theme;
   url_form: URLForm;
   url_template: URLTemplate;
 }
