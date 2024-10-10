@@ -1,7 +1,7 @@
 "$schema" = "http://json-schema.org/draft-07/schema#"
 title = "Propose New toml File"
 type = "object"
-required = ["repo", "branch", "filename"]
+required = ["repo", "branch", "fileName"]
 
 [properties.repo]
 description = "Who should get the PR?"

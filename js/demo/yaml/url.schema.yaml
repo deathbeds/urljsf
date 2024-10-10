@@ -25,6 +25,6 @@ properties:
 required:
   - repo
   - branch
-  - filename
+  - fileName
 title: Propose New yaml File
 type: object

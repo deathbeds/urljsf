@@ -58,6 +58,11 @@ async function renderIframe(config: Urljsf, form: JSX.Element): Promise<JSX.Elem
   );
 }
 
+interface IErrors {
+  url: RJSFValidationError[];
+  file: RJSFValidationError[];
+}
+
 /** a component for a file and URL form */
 function formComponent(
   config: Urljsf,
@@ -69,8 +74,7 @@ function formComponent(
     const idPrefix = getIdPrefix(config);
     const [value, setValue] = useState(initValue);
     const [url, setUrl] = useState('#');
-    const [fileErrors, setFileErrors] = useState<RJSFValidationError[]>([]);
-    const [urlErrors, setUrlErrors] = useState<RJSFValidationError[]>([]);
+    const [errors, setErrors] = useState<IErrors>({ url: [], file: [] });
     const [fileFormData, setFileFormData] = useState(fileFormProps.formData);
     const [urlFormData, setUrlFormData] = useState(urlFormProps.formData);
 
@@ -84,35 +88,33 @@ function formComponent(
       setUrl('#');
     };
 
-    const onFileFormChange = async ({ formData, errors }: IChangeEvent) => {
-      let value = await getFileContent(config, formData);
+    const onFileFormChange = async (evt: IChangeEvent) => {
+      let value = await getFileContent(config, evt.formData);
       setValue(value);
-      setFileFormData(formData);
-      setFileErrors(errors);
+      setFileFormData(evt.formData);
+      setErrors({ ...errors, file: evt.errors });
       updateUrl();
     };
 
-    const onUrlFormChange = async ({ formData, errors }: IChangeEvent) => {
-      setUrlFormData(formData);
-      setUrlErrors(errors);
+    const onUrlFormChange = async (evt: IChangeEvent) => {
+      setUrlFormData(evt.formData);
+      setErrors({ ...errors, url: evt.errors });
       updateUrl();
     };
 
-    let errors = [...fileErrors, ...urlErrors];
+    let errorCount = [...errors.file, ...errors.url].length;
+    DEBUG && errorCount && console.error('errors', ...errors.file, ...errors.url);
 
     let createButton: JSX.Element;
-
-    if (errors.length) {
-      const errorCount = errors.length;
-
+    if (errorCount) {
       createButton = (
-        <Button size="sm" onClick={onErrorClick} variant="danger">
+        <Button size="lg" onClick={onErrorClick} variant="danger">
           {errorCount} Error{errorCount > 1 ? 's' : ''}
         </Button>
       );
     } else {
       createButton = (
-        <Button as="a" href={url} variant="primary" target="_blank">
+        <Button size="lg" as="a" href={url} variant="primary" target="_blank">
           Start Pull Request
         </Button>
       );

@@ -31,5 +31,5 @@
       "enum": ["deathbeds/urljsf"]
     }
   },
-  "required": ["repo", "branch", "filename"]
+  "required": ["repo", "branch", "fileName"]
 }
