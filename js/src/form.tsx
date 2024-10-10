@@ -75,31 +75,32 @@ function formComponent(
     const [value, setValue] = useState(initValue);
     const [url, setUrl] = useState('#');
     const [errors, setErrors] = useState<IErrors>({ url: [], file: [] });
-    const [fileFormData, setFileFormData] = useState(fileFormProps.formData);
-    const [urlFormData, setUrlFormData] = useState(urlFormProps.formData);
-
-    const updateUrl = () => {
-      // let gh = `${dataset.urljsfGitHubUrl}`.trim().replace(/\/$/, '');
-      // let repo = `${dataset.urljsfGitHubRepo}`.trim();
-      // let url = new URL(`${gh}/${repo}/new/${branch}`, window.location.href);
-      // url.searchParams.set('value', value);
-      // url.searchParams.set('fileName', fileName);
-      // setUrl(url.toString());
-      setUrl('#');
-    };
+    const [context, setContext] = useState({
+      config,
+      url: urlFormProps.formData,
+      file: fileFormProps.formData,
+      fileData: value,
+    });
 
     const onFileFormChange = async (evt: IChangeEvent) => {
       let value = await getFileContent(config, evt.formData);
       setValue(value);
-      setFileFormData(evt.formData);
+      setContext({ ...context, file: evt.formData });
       setErrors({ ...errors, file: evt.errors });
       updateUrl();
     };
 
     const onUrlFormChange = async (evt: IChangeEvent) => {
-      setUrlFormData(evt.formData);
+      setContext({ ...context, url: evt.formData });
       setErrors({ ...errors, url: evt.errors });
       updateUrl();
+    };
+
+    const updateUrl = async () => {
+      DEBUG && console.warn('render', config.url_template, context);
+      const nunjucks = await import('nunjucks');
+      const url = nunjucks.renderString(config.url_template, context);
+      setUrl(url);
     };
 
     let errorCount = [...errors.file, ...errors.url].length;
@@ -142,7 +143,7 @@ function formComponent(
       ...((config.file_form.props || emptyObject) as any),
       ...fileFormProps,
       onChange: onFileFormChange,
-      formData: fileFormData,
+      formData: context.file,
       ...formPostDefaults,
     };
 
@@ -153,7 +154,7 @@ function formComponent(
       ...((config.url_form.props || emptyObject) as any),
       ...urlFormProps,
       onChange: onUrlFormChange,
-      formData: urlFormData,
+      formData: context.url,
       ...formPostDefaults,
     };
 
