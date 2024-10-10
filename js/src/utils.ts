@@ -1,10 +1,11 @@
 // Copyright (C) urljsf contributors.
 // Distributed under the terms of the Modified BSD License.
 import type { FormProps } from '@rjsf/core';
-import { isObject } from '@rjsf/utils';
+import { UiSchema, isObject } from '@rjsf/utils';
 
 import { FileForm, URLForm, Urljsf } from './_schema.js';
 import { MIME_FRAGMENT } from './index.js';
+import { ObjectGridTemplate } from './object-template.js';
 import { DEBUG, TFormat } from './tokens.js';
 
 let _NEXT_DATA_SET = 0;
@@ -22,15 +23,20 @@ export async function getConfig(el: HTMLScriptElement): Promise<Urljsf> {
   return await parseOne<Urljsf>(el.innerText, format);
 }
 
+/** initialize form props with defaults */
 export async function initFormProps(
   form: FileForm | URLForm,
 ): Promise<Partial<FormProps>> {
-  const [schema, uiSchema, formData] = await Promise.all([
+  let [schema, uiSchema, formData] = await Promise.all([
     fetchOne(form.schema),
     fetchOne(form.ui_schema),
     fetchOne(form.form_data),
   ]);
-  return { schema, uiSchema, formData };
+
+  const uiOverloads: UiSchema = {};
+  uiOverloads['ui:ObjectFieldTemplate'] = ObjectGridTemplate;
+
+  return { schema, uiSchema: { ...uiSchema, ...uiOverloads }, formData };
 }
 
 /** remove empty objects and arrays */

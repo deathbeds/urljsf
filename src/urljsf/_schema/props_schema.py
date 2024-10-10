@@ -11,7 +11,7 @@ from typing import Any
 Model = Any
 
 
-class Desired(Enum):
+class DesiredProps(Enum):
     translateString = "translateString"
     transformErrors = "transformErrors"
     extraErrors = "extraErrors"
@@ -21,7 +21,7 @@ class Desired(Enum):
     fields = "fields"
 
 
-class Ignored(Enum):
+class IgnoredProps(Enum):
     validator = "validator"
     children = "children"
     experimental_defaultFormStateBehavior = "experimental_defaultFormStateBehavior"
@@ -36,7 +36,7 @@ class Ignored(Enum):
     acceptcharset = "acceptcharset"
 
 
-class Included(Enum):
+class IncludedProps(Enum):
     acceptCharset = "acceptCharset"
     action = "action"
     autoComplete = "autoComplete"
@@ -58,6 +58,48 @@ class Included(Enum):
     target = "target"
 
 
+class ShowErrorList(Enum):
+    """When this prop is set to `top` or 'bottom', a list of errors (or the custom error list defined in the `ErrorList`) will also show. When set to false, only inline input validation errors will be shown. Set to `top` by default"""
+
+    bool_False = False
+    top = "top"
+    bottom = "bottom"
+
+
+@dataclass
+class UrljsfGrid:
+    addButton: list[str] | None = None
+    children: dict[str, list[str]] | None = None
+    default: list[str] | None = None
+
+
+@dataclass
+class UIOptions:
+    urljsfGrid: UrljsfGrid | None = None
+
+
+@dataclass
+class UiUrljsfGrid:
+    addButton: list[str] | None = None
+    children: dict[str, list[str]] | None = None
+    default: list[str] | None = None
+
+
+@dataclass
+class UISchema:
+    """an rjsf ui schema, with light extension"""
+
+    ui_options: UIOptions | None = None
+    ui_urljsfGrid: UiUrljsfGrid | None = None
+
+
+@dataclass
+class UrljsfGridOptions:
+    addButton: list[str]
+    children: dict[str, list[str]]
+    default: list[str]
+
+
 @dataclass
 class Overloads:
     """simplifications of important fields which are out of scope to fully support inline."""
@@ -67,15 +109,7 @@ class Overloads:
     formData: dict[str, Any]
     schema_: dict[str, Any]
     tagName: str
-    uiSchema: dict[str, Any]
-
-
-class ShowErrorList(Enum):
-    """When this prop is set to `top` or 'bottom', a list of errors (or the custom error list defined in the `ErrorList`) will also show. When set to false, only inline input validation errors will be shown. Set to `top` by default"""
-
-    bool_False = False
-    top = "top"
-    bottom = "bottom"
+    uiSchema: UISchema
 
 
 @dataclass
@@ -109,4 +143,4 @@ class Props:
     showErrorList: ShowErrorList | None = None
     tagName: str | None = None
     target: str | None = None
-    uiSchema: dict[str, Any] | None = None
+    uiSchema: UISchema | None = None

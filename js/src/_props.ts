@@ -7,15 +7,34 @@ import { FormProps } from '@rjsf/core';
  * [form-props]: https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/form-props
  */
 export interface Props
-  extends Omit<FormProps, keyof Overloads | Ignored | Desired>,
+  extends Omit<FormProps, keyof Overloads | IgnoredProps | DesiredProps>,
     Partial<Overloads> {}
+
+export interface UrljsfGridOptions {
+  default: string[];
+  children: Record<string, string[]>;
+  addButton: string[];
+}
+
+export interface UIOptions {
+  urljsfGrid?: Partial<UrljsfGridOptions>;
+  [key: string]: any;
+}
+
+/** an rjsf ui schema, with light extension
+ */
+export interface UISchema {
+  'ui:urljsfGrid'?: Partial<UrljsfGridOptions>;
+  'ui:options'?: UIOptions;
+  [key: string]: any;
+}
 
 /**
  * simplifications of important fields which are out of scope to fully support inline.
  */
 export interface Overloads {
   /** The uiSchema for the form */
-  uiSchema: Record<string, any>;
+  uiSchema: UISchema;
   /** The JSON schema object for the form */
   schema: Record<string, any>;
   /** globals for custom UI */
@@ -35,7 +54,7 @@ export interface Overloads {
 }
 
 /* known-good keys that serialized directly to JSON primitives. */
-export type Included =
+export type IncludedProps =
   | 'acceptCharset'
   | 'action'
   | 'autoComplete'
@@ -57,7 +76,7 @@ export type Included =
   | 'target';
 
 /* types we'd like to have, either as nunjucks, json lookup tables, etc. */
-export type Desired =
+export type DesiredProps =
   | 'translateString'
   | 'transformErrors'
   | 'extraErrors'
@@ -68,7 +87,7 @@ export type Desired =
   | 'fields';
 
 /* known-bad keys */
-export type Ignored =
+export type IgnoredProps =
   | 'validator'
   | 'children'
   | 'experimental_defaultFormStateBehavior'

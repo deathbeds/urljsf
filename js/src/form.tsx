@@ -3,7 +3,7 @@
 import { Fragment, useState } from 'react';
 import { render } from 'react-dom';
 
-import { Button } from 'react-bootstrap';
+import Button from 'react-bootstrap/esm/Button.js';
 
 import type { FormProps, IChangeEvent } from '@rjsf/core';
 import { Form as RJSFForm } from '@rjsf/react-bootstrap';

@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "definitions": {
-    "Desired": {
+    "DesiredProps": {
       "type": "string",
       "enum": [
         "translateString",
@@ -13,7 +13,7 @@
         "fields"
       ]
     },
-    "Ignored": {
+    "IgnoredProps": {
       "type": "string",
       "enum": [
         "validator",
@@ -30,7 +30,7 @@
         "acceptcharset"
       ]
     },
-    "Included": {
+    "IncludedProps": {
       "type": "string",
       "enum": [
         "acceptCharset",
@@ -79,7 +79,7 @@
           "description": "It's possible to change the default `form` tag name to a different HTML tag, which can be helpful if you are nesting forms. However, native browser form behaviour, such as submitting when the `Enter` key is pressed, may no longer work"
         },
         "uiSchema": {
-          "type": "object",
+          "$ref": "#/definitions/UISchema",
           "description": "The uiSchema for the form"
         }
       },
@@ -195,11 +195,107 @@
           "description": "The value of this prop will be passed to the `target` HTML attribute on the form"
         },
         "uiSchema": {
-          "type": "object",
+          "$ref": "#/definitions/UISchema",
           "description": "The uiSchema for the form"
         }
       },
       "additionalProperties": false
+    },
+    "UIOptions": {
+      "type": "object",
+      "properties": {
+        "urljsfGrid": {
+          "type": "object",
+          "properties": {
+            "addButton": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "children": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "default": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    },
+    "UISchema": {
+      "type": "object",
+      "description": "an rjsf ui schema, with light extension",
+      "properties": {
+        "ui:options": {
+          "$ref": "#/definitions/UIOptions"
+        },
+        "ui:urljsfGrid": {
+          "type": "object",
+          "properties": {
+            "addButton": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "children": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "default": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    },
+    "UrljsfGridOptions": {
+      "type": "object",
+      "properties": {
+        "addButton": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "children": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "default": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false,
+      "required": ["default", "children", "addButton"]
     }
   }
 }

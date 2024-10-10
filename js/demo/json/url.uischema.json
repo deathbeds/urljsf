@@ -1,5 +1,14 @@
 {
   "ui:globalOptions": {
     "enableMarkdownInDescription": true
+  },
+  "ui:options": {
+    "urljsfGrid": {
+      "children": {
+        "branch": ["col-md-4"],
+        "fileName": ["col-md-4"],
+        "repo": ["col-md-4"]
+      }
+    }
   }
 }

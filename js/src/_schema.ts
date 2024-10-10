@@ -269,10 +269,29 @@ export interface Props {
    * The value of this prop will be passed to the `target` HTML attribute on the form
    */
   target?: string;
-  /**
-   * The uiSchema for the form
-   */
-  uiSchema?: {};
+  uiSchema?: UISchema;
+}
+/**
+ * The uiSchema for the form
+ */
+export interface UISchema {
+  'ui:options'?: UIOptions;
+  'ui:urljsfGrid'?: {
+    addButton?: string[];
+    children?: {
+      [k: string]: string[];
+    };
+    default?: string[];
+  };
+}
+export interface UIOptions {
+  urljsfGrid?: {
+    addButton?: string[];
+    children?: {
+      [k: string]: string[];
+    };
+    default?: string[];
+  };
 }
 /**
  * values that contribute to the `url` context value of the `url_template`
@@ -388,10 +407,7 @@ export interface Props1 {
    * The value of this prop will be passed to the `target` HTML attribute on the form
    */
   target?: string;
-  /**
-   * The uiSchema for the form
-   */
-  uiSchema?: {};
+  uiSchema?: UISchema;
 }
 /**
  * a description of a form that builds a data file
