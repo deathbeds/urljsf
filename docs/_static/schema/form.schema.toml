@@ -66,11 +66,12 @@ python-like syntax. Some addition filters are included:
 """
 
 [definitions.templates.properties]
-url = {"$ref" = "#/definitions/any-url-template", description = """
-the URL to build
+url = {"$ref" = "#/definitions/any-template", description = """
+the URL to build. all whitespace will be trimmed, then joined with no delimiter.
 """}
-submit_button = {"$ref" = "#/definitions/any-md-template", description = """
-text to show on the button when a form is valid
+submit_button = {"$ref" = "#/definitions/any-template", description = """
+text to show on the button when a form is valid. multiple lines will be joined
+with `\\n`, then leading and trailing whitespace will be trimmed.
 """}
 
 # url form #####################################################################
@@ -139,16 +140,8 @@ description = """
 a path to a JSON schema, serialized as JSON, TOML, or (simple) YAML.
 """
 
-[definitions.any-url-template]
-title = "URL Template"
-type = "string"
-minLength = 1
-description = """
-"""
-
-[definitions.any-md-template]
-title = "Markdown Template"
-type = "string"
-minLength = 1
-description = """a URL template where
-"""
+[definitions.any-template]
+anyOf = [
+  {type = "string"},
+  {type = "array", items = {type = "string"}, minItems = 1},
+]

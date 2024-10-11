@@ -37,23 +37,6 @@ export type ASchemaLocation4 = string;
  */
 export type ASchemaLocation5 = string;
 /**
- * text to show on the button when a form is valid
- *
- */
-export type MarkdownTemplate = string;
-/**
- * the URL to build
- *
- */
-export type URLTemplate = string;
-/**
- * a URL template where
- *
- * This interface was referenced by `Urljsf`'s JSON-Schema
- * via the `definition` "any-md-template".
- */
-export type MarkdownTemplate1 = string;
-/**
  * a path to a JSON schema, serialized as JSON, TOML, or (simple) YAML.
  *
  * This interface was referenced by `Urljsf`'s JSON-Schema
@@ -62,9 +45,9 @@ export type MarkdownTemplate1 = string;
 export type ASchemaLocation6 = string;
 /**
  * This interface was referenced by `Urljsf`'s JSON-Schema
- * via the `definition` "any-url-template".
+ * via the `definition` "any-template".
  */
-export type URLTemplate1 = string;
+export type AnyTemplate = string | [string, ...string[]];
 
 /**
  * A schema for building forms for building URLs for building...
@@ -352,8 +335,17 @@ export interface Props1 {
  *
  */
 export interface Templates {
-  submit_button: MarkdownTemplate;
-  url: URLTemplate;
+  /**
+   * text to show on the button when a form is valid. multiple lines will be joined
+   * with `\n`, then leading and trailing whitespace will be trimmed.
+   *
+   */
+  submit_button: string | [string, ...string[]];
+  /**
+   * the URL to build. all whitespace will be trimmed, then joined with no delimiter.
+   *
+   */
+  url: string | [string, ...string[]];
 }
 /**
  * a description of a form that builds a data file
@@ -399,8 +391,17 @@ export interface Forms1 {
  * via the `definition` "templates".
  */
 export interface Templates1 {
-  submit_button: MarkdownTemplate;
-  url: URLTemplate;
+  /**
+   * text to show on the button when a form is valid. multiple lines will be joined
+   * with `\n`, then leading and trailing whitespace will be trimmed.
+   *
+   */
+  submit_button: string | [string, ...string[]];
+  /**
+   * the URL to build. all whitespace will be trimmed, then joined with no delimiter.
+   *
+   */
+  url: string | [string, ...string[]];
 }
 /**
  * a definition of a form to build a URL

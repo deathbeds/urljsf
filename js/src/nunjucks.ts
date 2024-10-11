@@ -2,8 +2,36 @@
 // Distributed under the terms of the Modified BSD License.
 import type nunjucks from 'nunjucks';
 
+import { IContext } from './tokens.js';
+import { reduceTrimmedLines } from './utils.js';
+
 export async function ensureNunjucks(): Promise<nunjucks.Environment> {
   return await Private.ensureNunjucks();
+}
+
+export function renderUrl(options: IRenderOptions): string {
+  const template = Array.isArray(options.template)
+    ? options.template.join('\n')
+    : options.template;
+
+  return options.env
+    .renderString(template, options.context)
+    .split('\n')
+    .reduce(reduceTrimmedLines)
+    .trim();
+}
+
+export function renderMarkdown(options: IRenderOptions): string {
+  const template = Array.isArray(options.template)
+    ? options.template.join('\n')
+    : options.template;
+  return options.env.renderString(template, options.context).trim();
+}
+
+export interface IRenderOptions {
+  template: string | string[];
+  context: IContext;
+  env: nunjucks.Environment;
 }
 
 namespace Private {

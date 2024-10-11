@@ -15,7 +15,7 @@ import Markdown from 'markdown-to-jsx';
 import type { MarkdownToJSX } from 'markdown-to-jsx';
 
 import { Urljsf } from './_schema.js';
-import { ensureNunjucks } from './nunjucks.js';
+import { ensureNunjucks, renderMarkdown, renderUrl } from './nunjucks.js';
 import {
   DEFAULTS,
   FORM_CLASS,
@@ -24,13 +24,7 @@ import {
   IFormProps,
   emptyObject,
 } from './tokens.js';
-import {
-  getConfig,
-  getFileContent,
-  getIdPrefix,
-  initFormProps,
-  reduceTrimmedLines,
-} from './utils.js';
+import { getConfig, getFileContent, getIdPrefix, initFormProps } from './utils.js';
 
 const FORM_PRE_DEFAULTS: Partial<FormProps> = {
   schema: {},
@@ -124,16 +118,21 @@ function formComponent(props: IFormProps): JSX.Element {
   const context = signal(initContext);
   const errors = signal(initErrors);
 
-  const errorCount = computed(() => [...errors.value.file, ...errors.value.url].length);
   const url = computed(() =>
-    nunjucksEnv
-      .renderString(config.templates.url, context.value)
-      .split('\n')
-      .reduce(reduceTrimmedLines),
+    renderUrl({
+      template: config.templates.url,
+      context: context.value,
+      env: nunjucksEnv,
+    }),
   );
   const submitText = computed(() =>
-    nunjucksEnv.renderString(config.templates.submit_button, context.value),
+    renderMarkdown({
+      template: config.templates.submit_button,
+      context: context.value,
+      env: nunjucksEnv,
+    }),
   );
+  const errorCount = computed(() => [...errors.value.file, ...errors.value.url].length);
 
   const onFileFormChange = async (evt: IChangeEvent) => {
     const value = await getFileContent(config, evt.formData);

@@ -29,12 +29,6 @@
       "description": "a format that can be serialized or deserialized",
       "enum": ["json", "toml", "yaml"]
     },
-    "any-md-template": {
-      "type": "string",
-      "title": "Markdown Template",
-      "description": "a URL template where",
-      "minLength": 1
-    },
     "any-schema-location": {
       "type": "string",
       "title": "A Schema Location",
@@ -42,11 +36,19 @@
       "format": "uri-reference",
       "minLength": 1
     },
-    "any-url-template": {
-      "type": "string",
-      "title": "URL Template",
-      "description": "",
-      "minLength": 1
+    "any-template": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        }
+      ]
     },
     "file-form": {
       "type": "object",
@@ -100,12 +102,12 @@
       "description": "[`nunjucks`][nunjucks] strings (or lists of strings) that control how strings are built\nfrom forms.\n\nThe [jinja compatibility layer][jinjacompat] is enabled, allowing for more expressive,\npython-like syntax. Some addition filters are included:\n\n- `base64` turns a string into its [Base64]-encoded alternative\n\n[nunjucks]: https://mozilla.github.io/nunjucks/templating.html\n[jinjacompat]: https://mozilla.github.io/nunjucks/api.html#installjinjacompat\n[Base64]: https://developer.mozilla.org/en-US/docs/Glossary/Base64",
       "properties": {
         "submit_button": {
-          "$ref": "#/definitions/any-md-template",
-          "description": "text to show on the button when a form is valid\n"
+          "$ref": "#/definitions/any-template",
+          "description": "text to show on the button when a form is valid. multiple lines will be joined\nwith `\\n`, then leading and trailing whitespace will be trimmed.\n"
         },
         "url": {
-          "$ref": "#/definitions/any-url-template",
-          "description": "the URL to build\n"
+          "$ref": "#/definitions/any-template",
+          "description": "the URL to build. all whitespace will be trimmed, then joined with no delimiter.\n"
         }
       },
       "required": ["url", "submit_button"]

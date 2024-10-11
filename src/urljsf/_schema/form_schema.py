@@ -18,13 +18,10 @@ class AnyFileFormat(Enum):
     yaml = "yaml"
 
 
-AnyMdTemplate = str
-
-
 AnySchemaLocation = str
 
 
-AnyUrlTemplate = str
+AnyTemplate = str | list[str]
 
 
 @dataclass
@@ -42,8 +39,8 @@ class Templates:
     [Base64]: https://developer.mozilla.org/en-US/docs/Glossary/Base64
     """
 
-    submit_button: AnyMdTemplate
-    url: AnyUrlTemplate
+    submit_button: AnyTemplate
+    url: AnyTemplate
 
 
 @dataclass
