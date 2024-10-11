@@ -76,6 +76,11 @@ export interface Urljsf {
    *
    */
   iframe_style?: string;
+  /**
+   * `nunjucks` template for the submit button text
+   *
+   */
+  submit_template: string;
   url_form: URLForm;
   url_template: URLTemplate;
 }

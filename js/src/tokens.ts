@@ -1,4 +1,9 @@
 // Copyright (C) urljsf contributors.
+import type { FormProps } from '@rjsf/core';
+import type { RJSFValidationError } from '@rjsf/utils';
+
+import type Nunjucks from 'nunjucks';
+
 import { Urljsf } from './_schema';
 
 // Distributed under the terms of the Modified BSD License.
@@ -46,3 +51,23 @@ export type TFormat = 'json' | 'yaml' | 'toml';
 export const emptyObject = Object.freeze({});
 
 export const FORM_CLASS = 'urljsf-form';
+
+export interface IErrors {
+  url: RJSFValidationError[];
+  file: RJSFValidationError[];
+}
+
+export interface IContext {
+  config: Urljsf;
+  url: Record<string, any>;
+  file: Record<string, any>;
+  text: string;
+}
+
+export interface IFormProps {
+  config: Urljsf;
+  initText: string;
+  fileFormProps: Partial<FormProps>;
+  urlFormProps: Partial<FormProps>;
+  nunjucks: typeof Nunjucks;
+}

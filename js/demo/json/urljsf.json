@@ -6,6 +6,7 @@
     "form_data": "./json/file.data.json"
   },
   "iframe": true,
+  "submit_template": "Start new JSON Pull Request to **{{ url.repo }}**\n",
   "url_form": {
     "schema": "./json/url.schema.json",
     "ui_schema": "./json/url.uischema.json",

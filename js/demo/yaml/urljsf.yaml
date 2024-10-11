@@ -3,6 +3,8 @@ url_template: |
   {{
       {"filename": url.filename, "value": text } | urlencode | safe
   }}
+submit_template: |
+  Start new YAML Pull Request to **{{ url.repo }}**
 url_form:
   schema: ./yaml/url.schema.yaml
   ui_schema: ./yaml/url.uischema.yaml

@@ -12,12 +12,15 @@ description = "A schema for building forms for building URLs for building..."
 "$schema" = "http://json-schema.org/draft-07/schema#"
 "$id" = "https://deathbeds.github.io/urljsf/_static/schema/v0/form.schema.json"
 type = "object"
-required = ["url_template", "url_form", "file_form"]
+required = ["url_template", "submit_template", "url_form", "file_form"]
 additionalProperties = false
 
 [properties]
 url_template = {"$ref" = "#/definitions/any-url-template", description = """
 `nunjucks` template for building a URL
+"""}
+submit_template = {type = "string", description = """
+`nunjucks` template for the submit button text
 """}
 url_form = {"$ref" = "#/definitions/url-form", description = """
 values that contribute to the `url` context value of the `url_template`

@@ -16,11 +16,11 @@ const GLOBAL_UI = 'ui:globalOptions';
 /** get a dataset with defaults */
 export async function getConfig(el: HTMLScriptElement): Promise<Urljsf> {
   const format = el.type.replace(MIME_FRAGMENT, '') as TFormat;
-  if (el.src) {
-    return fetchOne<Urljsf>(el.src, format);
-  }
+  const config = await (el.src
+    ? fetchOne<Urljsf>(el.src, format)
+    : parseOne<Urljsf>(el.innerText, format));
 
-  return await parseOne<Urljsf>(el.innerText, format);
+  return config;
 }
 
 /** initialize form props with defaults */
@@ -33,16 +33,17 @@ export async function initFormProps(
     fetchOne(form.form_data),
   ]);
 
-  const props = {
+  const props: Omit<FormProps, 'validator'> = {
+    formData,
     schema,
     uiSchema: {
       ...uiSchema,
       [GLOBAL_UI]: {
+        enableMarkdownInDescription: true,
         ...(uiSchema[GLOBAL_UI] || emptyObject),
         ObjectFieldTemplate: ObjectGridTemplate,
       },
     },
-    formData,
   };
 
   return props;
@@ -73,7 +74,7 @@ export async function getFileContent(config: Urljsf, formData: any): Promise<str
   const { format, prune_empty } = config.file_form;
   let value = '';
 
-  if (prune_empty) {
+  if (prune_empty !== false) {
     formData = pruneObject(formData);
   }
 
@@ -151,4 +152,8 @@ export function getIdPrefix(config: Urljsf): string {
     _DATA_SETS.set(config, _NEXT_DATA_SET++);
   }
   return config.file_form?.props?.idPrefix || `urljsf-${_DATA_SETS.get(config)}`;
+}
+
+export function reduceTrimmedLines(memo: string, line: string): string {
+  return `${memo}${line.trim()}`;
 }

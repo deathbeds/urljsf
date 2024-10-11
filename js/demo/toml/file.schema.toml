@@ -2,31 +2,37 @@
 
 title = "Todo (TOML)"
 description = "a TOML demo of urljsf"
+required = ["name", "tasks"]
 
 [properties.name]
 type = "string"
 description = "**What** is _this_ list about?"
+minItems = 3
 
 [properties.tasks]
 type = "array"
-description = "What are the things that need to get done?"
+description = "What is at least one thing that needs to get done?"
+minItems = 1
+maxItems = 10
 
 [properties.tasks.items]
 "$ref" = "#/definitions/Task"
 
 [definitions.Task]
 type = "object"
+required = ["task"]
 
 [definitions.Task.properties.complete]
+description = "done?"
 type = "boolean"
-description = "Is it done?"
 default = false
 
 [definitions.Task.properties.task]
 type = "string"
 description = "**What** needs to be done?"
+minLength = 1
 
 [definitions.Task.properties.deadline]
 type = "string"
 description = "**When** does it need to be done?"
-format = "date-time"
+format = "date"

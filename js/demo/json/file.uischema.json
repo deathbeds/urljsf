@@ -12,9 +12,6 @@
       }
     }
   },
-  "ui:globalOptions": {
-    "enableMarkdownInDescription": true
-  },
   "ui:options": {
     "title": "JSON (from JSON-based UI schema)"
   }

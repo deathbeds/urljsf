@@ -51,6 +51,7 @@ class Urljsf:
     """A schema for building forms for building URLs for building..."""
 
     file_form: FileForm
+    submit_template: str
     url_form: UrlForm
     url_template: AnyUrlTemplate
     iframe: bool | None = None

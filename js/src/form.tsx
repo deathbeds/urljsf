@@ -4,39 +4,57 @@ import { Fragment } from 'react';
 import { render } from 'react-dom';
 
 import Button from 'react-bootstrap/esm/Button.js';
+import { ButtonProps } from 'react-bootstrap/esm/Button.js';
 
 import type { FormProps, IChangeEvent } from '@rjsf/core';
 import { Form as RJSFForm } from '@rjsf/react-bootstrap';
-import type { RJSFValidationError } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
 import { batch, computed, signal } from '@preact/signals';
-import type Nunjucks from 'nunjucks';
+import Markdown from 'markdown-to-jsx';
+import type { MarkdownToJSX } from 'markdown-to-jsx';
 
 import { Urljsf } from './_schema.js';
 import { ensureNunjucks } from './nunjucks.js';
-import { DEFAULTS, FORM_CLASS, emptyObject } from './tokens.js';
-import { getConfig, getFileContent, getIdPrefix, initFormProps } from './utils.js';
+import {
+  DEFAULTS,
+  FORM_CLASS,
+  IContext,
+  IErrors,
+  IFormProps,
+  emptyObject,
+} from './tokens.js';
+import {
+  getConfig,
+  getFileContent,
+  getIdPrefix,
+  initFormProps,
+  reduceTrimmedLines,
+} from './utils.js';
 
-interface IErrors {
-  url: RJSFValidationError[];
-  file: RJSFValidationError[];
-}
+const FORM_PRE_DEFAULTS: Partial<FormProps> = {
+  schema: {},
+  liveValidate: true,
+  liveOmit: true,
+  showErrorList: 'bottom',
+};
+const FORM_POST_DEFAULTS: Partial<FormProps> = { validator };
 
-interface IContext {
-  config: Urljsf;
-  url: Record<string, any>;
-  file: Record<string, any>;
-  text: string;
-}
+const SUBMIT_MD_OPTIONS: MarkdownToJSX.Options = {
+  forceInline: true,
+  forceBlock: false,
+  forceWrapper: false,
+};
 
-interface IFormProps {
-  config: Urljsf;
-  initText: string;
-  fileFormProps: Partial<FormProps>;
-  urlFormProps: Partial<FormProps>;
-  nunjucks: typeof Nunjucks;
-}
+const BTN_COMMON: Pick<ButtonProps, 'size' | 'className'> = {
+  size: 'lg',
+  className: 'col-12',
+};
+
+const SUBMIT_DEFAULT: Pick<ButtonProps, 'variant' | 'target'> = {
+  variant: 'primary',
+  target: '_blank',
+};
 
 /** process a single form
  *
@@ -108,7 +126,13 @@ function formComponent(props: IFormProps): JSX.Element {
 
   const errorCount = computed(() => [...errors.value.file, ...errors.value.url].length);
   const url = computed(() =>
-    nunjucks.renderString(config.url_template, context.value).replace('\n', ''),
+    nunjucks
+      .renderString(config.url_template, context.value)
+      .split('\n')
+      .reduce(reduceTrimmedLines),
+  );
+  const submitText = computed(() =>
+    nunjucks.renderString(config.submit_template, context.value),
   );
 
   const URLJSF = () => {
@@ -128,17 +152,17 @@ function formComponent(props: IFormProps): JSX.Element {
       });
     };
 
-    let createButton: JSX.Element;
+    let submitButton: JSX.Element;
     if (errorCount.value) {
-      createButton = (
-        <Button size="lg" onClick={onErrorClick} variant="danger">
+      submitButton = (
+        <Button onClick={onErrorClick} variant="danger" {...BTN_COMMON}>
           {errorCount} Error{errorCount.value > 1 ? 's' : ''}
         </Button>
       );
     } else {
-      createButton = (
-        <Button size="lg" as="a" href={url.value} variant="primary" target="_blank">
-          Start Pull Request
+      submitButton = (
+        <Button as="a" href={url.value} {...SUBMIT_DEFAULT} {...BTN_COMMON}>
+          <Markdown options={SUBMIT_MD_OPTIONS}>{submitText.value}</Markdown>
         </Button>
       );
     }
@@ -155,29 +179,26 @@ function formComponent(props: IFormProps): JSX.Element {
           </blockquote>,
         ];
 
-    const formPreDefaults = { schema: {}, liveValidate: true, liveOmit: true };
-    const formPostDefaults = { validator };
-
     const finalFileFormProps = {
-      ...formPreDefaults,
+      ...FORM_PRE_DEFAULTS,
       idPrefix: `${idPrefix}-file-`,
       id: `${idPrefix}-file`,
       ...((config.file_form.props || emptyObject) as any),
       ...fileFormProps,
       onChange: onFileFormChange,
       formData: context.value.file,
-      ...formPostDefaults,
+      ...FORM_POST_DEFAULTS,
     };
 
     const finalUrlFormProps = {
-      ...formPreDefaults,
+      ...FORM_PRE_DEFAULTS,
       idPrefix: `${idPrefix}-url-`,
       id: `${idPrefix}-url`,
       ...((config.url_form.props || emptyObject) as any),
       ...urlFormProps,
       onChange: onUrlFormChange,
       formData: context.value.url,
-      ...formPostDefaults,
+      ...FORM_POST_DEFAULTS,
     };
 
     return (
@@ -196,7 +217,7 @@ function formComponent(props: IFormProps): JSX.Element {
           </RJSFForm>
         </div>
         <hr />
-        {createButton}
+        {submitButton}
       </div>
     );
   };

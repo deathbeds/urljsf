@@ -1,27 +1,36 @@
 $schema: http://json-schema.org/draft-07/schema#
 title: Todo (YAML)
 description: a YAML demo of urljsf
+required:
+  - name
+  - tasks
 properties:
   name:
     type: string
     description: '**What** is _this_ list about?'
+    minItems: 3
   tasks:
     type: array
-    description: What are the things that need to get done?
+    description: What is at least one thing that needs to get done?
+    minItems: 1
+    maxItems: 10
     items:
       $ref: '#/definitions/Task'
 definitions:
   Task:
     type: object
+    required:
+      - task
     properties:
       complete:
+        description: done?
         type: boolean
-        description: Is it done?
         default: false
-      deadline:
-        type: string
-        description: '**When** does it need to be done?'
-        format: date-time
       task:
         type: string
         description: '**What** needs to be done?'
+        minLength: 1
+      deadline:
+        type: string
+        description: '**When** does it need to be done?'
+        format: date

@@ -1,6 +1,3 @@
-["ui:globalOptions"]
-enableMarkdownInDescription = true
-
 ["ui:options".urljsfGrid.children]
 repo = ["col-md-4"]
 branch = ["col-md-4"]

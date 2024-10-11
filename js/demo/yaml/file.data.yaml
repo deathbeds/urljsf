@@ -1,4 +1,1 @@
-tasks:
-  - task: write the YAML demo
-    deadline: '2023-12-08T00:09:56+00:00'
-    complete: false
+name: My YAML tasks

@@ -1,6 +1,3 @@
-["ui:globalOptions"]
-enableMarkdownInDescription = true
-
 ["ui:options"]
 title = "TOML (from TOML-based UI schema)"
 

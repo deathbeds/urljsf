@@ -17,6 +17,10 @@
       "type": "string",
       "description": "additional simple CSS to apply to an `iframe` element (implies `iframe`)\n"
     },
+    "submit_template": {
+      "type": "string",
+      "description": "`nunjucks` template for the submit button text\n"
+    },
     "url_form": {
       "$ref": "#/definitions/url-form",
       "description": "values that contribute to the `url` context value of the `url_template`\n"
@@ -104,5 +108,5 @@
       "required": ["url_template"]
     }
   },
-  "required": ["url_template", "url_form", "file_form"]
+  "required": ["url_template", "submit_template", "url_form", "file_form"]
 }

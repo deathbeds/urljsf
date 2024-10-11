@@ -1,7 +1,4 @@
 {
-  "ui:globalOptions": {
-    "enableMarkdownInDescription": true
-  },
   "ui:options": {
     "urljsfGrid": {
       "children": {
