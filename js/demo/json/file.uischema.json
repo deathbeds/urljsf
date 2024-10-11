@@ -3,6 +3,6 @@
     "enableMarkdownInDescription": true
   },
   "ui:options": {
-    "title": "json (from json-based UI schema)"
+    "title": "JSON (from JSON-based UI schema)"
   }
 }

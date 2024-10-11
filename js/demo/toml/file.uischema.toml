@@ -2,4 +2,4 @@
 enableMarkdownInDescription = true
 
 ["ui:options"]
-title = "toml (from toml-based UI schema)"
+title = "TOML (from TOML-based UI schema)"

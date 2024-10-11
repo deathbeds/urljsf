@@ -4,4 +4,4 @@ enableMarkdownInDescription = true
 ["ui:options".urljsfGrid.children]
 repo = ["col-md-4"]
 branch = ["col-md-4"]
-fileName = ["col-md-4"]
+filename = ["col-md-4"]

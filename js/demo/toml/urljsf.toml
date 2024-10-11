@@ -1,7 +1,12 @@
 # this is the reference example, all others formats are generated from here
 # TODO: add a relative $schema
 
-url_template = "https://github.com/deathbeds/urljsf/new/not-a-branch"
+url_template = """
+https://github.com/{{ url.repo }}/new/{{ url.branch }}?
+{{
+    {"filename": url.filename, "value": text } | urlencode | safe
+}}
+"""
 
 [url_form]
 schema = "./toml/url.schema.toml"

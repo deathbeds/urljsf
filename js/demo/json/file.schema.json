@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "Todo (json)",
-  "description": "a json demo of urljsf",
+  "title": "Todo (JSON)",
+  "description": "a JSON demo of urljsf",
   "properties": {
     "name": {
       "type": "string",

@@ -9,11 +9,8 @@ from pathlib import Path
 from subprocess import call
 from typing import Any
 
+import ruamel.yaml.representer
 import tomllib
-from ruamel.yaml import YAML
-
-yaml = YAML(typ="safe")
-yaml.default_flow_style = False
 
 UTF8 = {"encoding": "utf-8"}
 
@@ -34,10 +31,35 @@ ENCODERS = {
 }
 
 
+class YamlRepresenter(ruamel.yaml.representer.RoundTripRepresenter):
+    def represent_str(self, s: str) -> ruamel.yaml.ScalarNode:
+        if "\n" in s:
+            return self.represent_scalar("tag:yaml.org,2002:str", s, style="|")
+        return self.represent_scalar("tag:yaml.org,2002:str", s)
+
+
+YamlRepresenter.add_representer(str, YamlRepresenter.represent_str)
+
+yaml = ruamel.yaml.YAML(typ="safe")
+yaml.default_flow_style = False
+yaml.Representer = YamlRepresenter
+
+
+def _preserve_order(obj: any) -> any:
+    """Replace with order-preserving yaml."""
+    if isinstance(obj, dict):
+        return ruamel.yaml.CommentedMap(obj)
+    if isinstance(obj, (str, int, bool, float)):
+        return obj
+    if isinstance(obj, (list, tuple)):
+        return [_preserve_order(v) for v in obj]
+    raise ValueError(obj)
+
+
 def _safe_dump(d: dict[str, Any]) -> str:
     """Dump YAML to strings."""
     with StringIO() as io:
-        yaml.dump(d, io)
+        yaml.dump(_preserve_order(d), io)
         return io.getvalue()
 
 
@@ -57,11 +79,9 @@ def main() -> int:
         stem = toml.stem
         for fmt, encode in ENCODERS.items():
             print(".", end="")
-            data = tomllib.loads(raw.replace("toml", fmt))
+            data = tomllib.loads(raw.replace("toml", fmt).replace("TOML", fmt.upper()))
             if stem == "urljsf":
-                data.update(
-                    iframe=True,
-                )
+                data.update(iframe=True)
             normal = _normalize(data)
             out = DEMO / f"{fmt}/{stem}.{fmt}"
             if out.exists():
@@ -70,7 +90,9 @@ def main() -> int:
                     continue
             print("\n... writing", out)
             out.parent.mkdir(exist_ok=True)
-            out.write_text(encode(data).strip() + "\n", **UTF8)
+            text = encode(data).strip()
+            print(text)
+            out.write_text(text + "\n", **UTF8)
             wrote += [out]
 
     rc = 0

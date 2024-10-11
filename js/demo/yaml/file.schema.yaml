@@ -1,27 +1,27 @@
 $schema: http://json-schema.org/draft-07/schema#
-definitions:
-  Task:
-    properties:
-      complete:
-        default: false
-        description: Is it done?
-        type: boolean
-      deadline:
-        description: '**When** does it need to be done?'
-        format: date-time
-        type: string
-      task:
-        description: '**What** needs to be done?'
-        type: string
-    type: object
-description: a yaml demo of urljsf
+title: Todo (YAML)
+description: a YAML demo of urljsf
 properties:
   name:
-    description: '**What** is _this_ list about?'
     type: string
+    description: '**What** is _this_ list about?'
   tasks:
+    type: array
     description: What are the things that need to get done?
     items:
       $ref: '#/definitions/Task'
-    type: array
-title: Todo (yaml)
+definitions:
+  Task:
+    type: object
+    properties:
+      complete:
+        type: boolean
+        description: Is it done?
+        default: false
+      deadline:
+        type: string
+        description: '**When** does it need to be done?'
+        format: date-time
+      task:
+        type: string
+        description: '**What** needs to be done?'

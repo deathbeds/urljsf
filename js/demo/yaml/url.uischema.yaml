@@ -3,9 +3,9 @@ ui:globalOptions:
 ui:options:
   urljsfGrid:
     children:
+      repo:
+        - col-md-4
       branch:
         - col-md-4
-      fileName:
-        - col-md-4
-      repo:
+      filename:
         - col-md-4

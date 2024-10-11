@@ -1,7 +1,7 @@
 "$schema" = "http://json-schema.org/draft-07/schema#"
 
-title = "Todo (toml)"
-description = "a toml demo of urljsf"
+title = "Todo (TOML)"
+description = "a TOML demo of urljsf"
 
 [properties.name]
 type = "string"

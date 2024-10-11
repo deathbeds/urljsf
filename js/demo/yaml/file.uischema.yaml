@@ -1,4 +1,4 @@
 ui:globalOptions:
   enableMarkdownInDescription: true
 ui:options:
-  title: yaml (from yaml-based UI schema)
+  title: YAML (from YAML-based UI schema)

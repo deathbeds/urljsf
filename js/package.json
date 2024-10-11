@@ -17,6 +17,7 @@
     "watch:lib": "jlpm build:lib --watch --verbose --preserveWatchOutput"
   },
   "dependencies": {
+    "@preact/signals": "^1.3.0",
     "@rjsf/core": "^6.0.0-alpha.0",
     "@rjsf/react-bootstrap": "^6.0.0-alpha.0",
     "@rjsf/utils": "^6.0.0-alpha.0",
