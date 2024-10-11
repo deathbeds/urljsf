@@ -12,21 +12,15 @@ description = "A schema for building forms for building URLs for building..."
 "$schema" = "http://json-schema.org/draft-07/schema#"
 "$id" = "https://deathbeds.github.io/urljsf/_static/schema/v0/form.schema.json"
 type = "object"
-required = ["url_template", "submit_template", "url_form", "file_form"]
+required = ["forms", "templates"]
 additionalProperties = false
 
 [properties]
-url_template = {"$ref" = "#/definitions/any-url-template", description = """
-`nunjucks` template for building a URL
+forms = {"$ref" = "#/definitions/forms", description = """
+forms that describe how to build the URL
 """}
-submit_template = {type = "string", description = """
-`nunjucks` template for the submit button text
-"""}
-url_form = {"$ref" = "#/definitions/url-form", description = """
-values that contribute to the `url` context value of the `url_template`
-"""}
-file_form = {"$ref" = "#/definitions/file-form", description = """
-values that contribut the `file_contents` context value of the `url_template`
+templates = {"$ref" = "#/definitions/templates", description = """
+`nunjucks` templates that control URLs for machines and markdown for humans
 """}
 
 [properties.iframe]
@@ -38,6 +32,46 @@ description = """
 additional simple CSS to apply to an `iframe` element (implies `iframe`)
 """
 type = "string"
+
+# forms ########################################################################
+[definitions.forms]
+type = "object"
+required = ["url", "file"]
+description = "forms used to build and populate a URL"
+
+[definitions.forms.properties.url]
+description = "control the inputs to a valid URL"
+"$ref" = "#/definitions/url-form"
+
+[definitions.forms.properties.file]
+description = "control the inputs to a JSON, TOML, or YAML file"
+"$ref" = "#/definitions/file-form"
+
+# templates ####################################################################
+[definitions.templates]
+type = "object"
+required = ["url", "submit_button"]
+description = """
+[`nunjucks`][nunjucks] strings (or lists of strings) that control how strings are built
+from forms.
+
+The [jinja compatibility layer][jinjacompat] is enabled, allowing for more expressive,
+python-like syntax. Some addition filters are included:
+
+- `base64` turns a string into its [Base64]-encoded alternative
+
+[nunjucks]: https://mozilla.github.io/nunjucks/templating.html
+[jinjacompat]: https://mozilla.github.io/nunjucks/api.html#installjinjacompat
+[Base64]: https://developer.mozilla.org/en-US/docs/Glossary/Base64
+"""
+
+[definitions.templates.properties]
+url = {"$ref" = "#/definitions/any-url-template", description = """
+the URL to build
+"""}
+submit_button = {"$ref" = "#/definitions/any-md-template", description = """
+text to show on the button when a form is valid
+"""}
 
 # url form #####################################################################
 [definitions.url-form]
@@ -110,11 +144,11 @@ title = "URL Template"
 type = "string"
 minLength = 1
 description = """
-a [nunjucks]-compatible template.
+"""
 
-The [jinja compatibility layer][jinjacompat] is enabled, allowing for more expressive,
-python-like syntax.
-
-[nunjucks]: https://mozilla.github.io/nunjucks
-[jinjacompat]: https://mozilla.github.io/nunjucks/api.html#installjinjacompat
+[definitions.any-md-template]
+title = "Markdown Template"
+type = "string"
+minLength = 1
+description = """a URL template where
 """

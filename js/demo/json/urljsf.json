@@ -1,17 +1,21 @@
 {
-  "file_form": {
-    "format": "json",
-    "schema": "./json/file.schema.json",
-    "ui_schema": "./json/file.uischema.json",
-    "form_data": "./json/file.data.json"
-  },
-  "submit_template": "![open PRs on {{ url.repo }}][b] Start new JSON Pull Request\n\n[b]: https://img.shields.io/github/issues-pr/{{ url.repo }}?logo=github&label={{ url.repo | urlencode }}&color=blue\n",
-  "url_form": {
-    "schema": "./json/url.schema.json",
-    "ui_schema": "./json/url.uischema.json",
-    "props": {
-      "showErrorList": false
+  "forms": {
+    "url": {
+      "schema": "./json/url.schema.json",
+      "ui_schema": "./json/url.uischema.json",
+      "props": {
+        "showErrorList": false
+      }
+    },
+    "file": {
+      "format": "json",
+      "schema": "./json/file.schema.json",
+      "ui_schema": "./json/file.uischema.json",
+      "form_data": "./json/file.data.json"
     }
   },
-  "url_template": "https://github.com/{{ url.repo }}/new/{{ url.branch }}?\n{{\n    {\"filename\": url.filename, \"value\": text } | urlencode | safe\n}}\n"
+  "templates": {
+    "url": "https://github.com/{{ url.repo }}/new/{{ url.branch }}?\n{{\n    {\"filename\": url.filename, \"value\": text } | urlencode | safe\n}}\n",
+    "submit_button": "![open PRs on {{ url.repo }}][b] Start new JSON Pull Request\n\n[b]: https://img.shields.io/github/issues-pr/{{ url.repo }}?logo=github&label={{ url.repo | urlencode }}&color=blue\n"
+  }
 }

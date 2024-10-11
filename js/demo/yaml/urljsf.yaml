@@ -1,20 +1,22 @@
-url_template: |
-  https://github.com/{{ url.repo }}/new/{{ url.branch }}?
-  {{
-      {"filename": url.filename, "value": text } | urlencode | safe
-  }}
-submit_template: |
-  ![open PRs on {{ url.repo }}][b] Start new YAML Pull Request
+forms:
+  url:
+    schema: ./yaml/url.schema.yaml
+    ui_schema: ./yaml/url.uischema.yaml
+    props:
+      showErrorList: false
+  file:
+    format: yaml
+    schema: ./yaml/file.schema.yaml
+    ui_schema: ./yaml/file.uischema.yaml
+    form_data: ./yaml/file.data.yaml
+templates:
+  url: |
+    https://github.com/{{ url.repo }}/new/{{ url.branch }}?
+    {{
+        {"filename": url.filename, "value": text } | urlencode | safe
+    }}
+  submit_button: |
+    ![open PRs on {{ url.repo }}][b] Start new YAML Pull Request
 
-  [b]: https://img.shields.io/github/issues-pr/{{ url.repo }}?logo=github&label={{ url.repo | urlencode }}&color=blue
-url_form:
-  schema: ./yaml/url.schema.yaml
-  ui_schema: ./yaml/url.uischema.yaml
-  props:
-    showErrorList: false
-file_form:
-  format: yaml
-  schema: ./yaml/file.schema.yaml
-  ui_schema: ./yaml/file.uischema.yaml
-  form_data: ./yaml/file.data.yaml
+    [b]: https://img.shields.io/github/issues-pr/{{ url.repo }}?logo=github&label={{ url.repo | urlencode }}&color=blue
 iframe: true

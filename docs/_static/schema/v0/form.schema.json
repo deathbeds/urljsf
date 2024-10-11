@@ -5,9 +5,9 @@
   "title": "urljsf",
   "description": "A schema for building forms for building URLs for building...",
   "properties": {
-    "file_form": {
-      "$ref": "#/definitions/file-form",
-      "description": "values that contribut the `file_contents` context value of the `url_template`\n"
+    "forms": {
+      "$ref": "#/definitions/forms",
+      "description": "forms that describe how to build the URL\n"
     },
     "iframe": {
       "type": "boolean",
@@ -17,17 +17,9 @@
       "type": "string",
       "description": "additional simple CSS to apply to an `iframe` element (implies `iframe`)\n"
     },
-    "submit_template": {
-      "type": "string",
-      "description": "`nunjucks` template for the submit button text\n"
-    },
-    "url_form": {
-      "$ref": "#/definitions/url-form",
-      "description": "values that contribute to the `url` context value of the `url_template`\n"
-    },
-    "url_template": {
-      "$ref": "#/definitions/any-url-template",
-      "description": "`nunjucks` template for building a URL\n"
+    "templates": {
+      "$ref": "#/definitions/templates",
+      "description": "`nunjucks` templates that control URLs for machines and markdown for humans\n"
     }
   },
   "additionalProperties": false,
@@ -36,6 +28,12 @@
       "title": "File Format",
       "description": "a format that can be serialized or deserialized",
       "enum": ["json", "toml", "yaml"]
+    },
+    "any-md-template": {
+      "type": "string",
+      "title": "Markdown Template",
+      "description": "a URL template where",
+      "minLength": 1
     },
     "any-schema-location": {
       "type": "string",
@@ -47,7 +45,7 @@
     "any-url-template": {
       "type": "string",
       "title": "URL Template",
-      "description": "a [nunjucks]-compatible template.\n\nThe [jinja compatibility layer][jinjacompat] is enabled, allowing for more expressive,\npython-like syntax.\n\n[nunjucks]: https://mozilla.github.io/nunjucks\n[jinjacompat]: https://mozilla.github.io/nunjucks/api.html#installjinjacompat",
+      "description": "",
       "minLength": 1
     },
     "file-form": {
@@ -82,6 +80,36 @@
       "additionalProperties": false,
       "required": ["schema", "format"]
     },
+    "forms": {
+      "type": "object",
+      "description": "forms used to build and populate a URL",
+      "properties": {
+        "file": {
+          "$ref": "#/definitions/file-form",
+          "description": "control the inputs to a JSON, TOML, or YAML file"
+        },
+        "url": {
+          "$ref": "#/definitions/url-form",
+          "description": "control the inputs to a valid URL"
+        }
+      },
+      "required": ["url", "file"]
+    },
+    "templates": {
+      "type": "object",
+      "description": "[`nunjucks`][nunjucks] strings (or lists of strings) that control how strings are built\nfrom forms.\n\nThe [jinja compatibility layer][jinjacompat] is enabled, allowing for more expressive,\npython-like syntax. Some addition filters are included:\n\n- `base64` turns a string into its [Base64]-encoded alternative\n\n[nunjucks]: https://mozilla.github.io/nunjucks/templating.html\n[jinjacompat]: https://mozilla.github.io/nunjucks/api.html#installjinjacompat\n[Base64]: https://developer.mozilla.org/en-US/docs/Glossary/Base64",
+      "properties": {
+        "submit_button": {
+          "$ref": "#/definitions/any-md-template",
+          "description": "text to show on the button when a form is valid\n"
+        },
+        "url": {
+          "$ref": "#/definitions/any-url-template",
+          "description": "the URL to build\n"
+        }
+      },
+      "required": ["url", "submit_button"]
+    },
     "url-form": {
       "type": "object",
       "title": "URL Form",
@@ -108,5 +136,5 @@
       "required": ["url_template"]
     }
   },
-  "required": ["url_template", "submit_template", "url_form", "file_form"]
+  "required": ["forms", "templates"]
 }

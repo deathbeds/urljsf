@@ -71,7 +71,7 @@ function pruneObject(data: Record<string, any>) {
 
 /** lazily serialize some data */
 export async function getFileContent(config: Urljsf, formData: any): Promise<string> {
-  const { format, prune_empty } = config.file_form;
+  const { format, prune_empty } = config.forms.file;
   let value = '';
 
   if (prune_empty !== false) {
@@ -151,7 +151,7 @@ export function getIdPrefix(config: Urljsf): string {
   if (!_DATA_SETS.has(config)) {
     _DATA_SETS.set(config, _NEXT_DATA_SET++);
   }
-  return config.file_form?.props?.idPrefix || `urljsf-${_DATA_SETS.get(config)}`;
+  return config.forms.file?.props?.idPrefix || `urljsf-${_DATA_SETS.get(config)}`;
 }
 
 export function reduceTrimmedLines(memo: string, line: string): string {

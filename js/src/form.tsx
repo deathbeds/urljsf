@@ -66,8 +66,8 @@ export async function makeOneForm(script: HTMLScriptElement): Promise<void> {
   script.parentNode!.insertBefore(container, script);
 
   const [fileFormProps, urlFormProps] = await Promise.all([
-    initFormProps(config.file_form),
-    initFormProps(config.url_form),
+    initFormProps(config.forms.file),
+    initFormProps(config.forms.url),
   ]);
 
   const [nunjucksEnv, initText] = await Promise.all([
@@ -127,31 +127,48 @@ function formComponent(props: IFormProps): JSX.Element {
   const errorCount = computed(() => [...errors.value.file, ...errors.value.url].length);
   const url = computed(() =>
     nunjucksEnv
-      .renderString(config.url_template, context.value)
+      .renderString(config.templates.url, context.value)
       .split('\n')
       .reduce(reduceTrimmedLines),
   );
   const submitText = computed(() =>
-    nunjucksEnv.renderString(config.submit_template, context.value),
+    nunjucksEnv.renderString(config.templates.submit_button, context.value),
   );
 
+  const onFileFormChange = async (evt: IChangeEvent) => {
+    const value = await getFileContent(config, evt.formData);
+    batch(() => {
+      text.value = value;
+      context.value = { ...context.value, file: evt.formData };
+      errors.value = { ...errors.value, file: evt.errors };
+    });
+  };
+
+  const onUrlFormChange = async (evt: IChangeEvent) => {
+    batch(() => {
+      context.value = { ...context.value, url: evt.formData };
+      errors.value = { ...errors.value, url: evt.errors };
+    });
+  };
+
+  function formProps(form: 'file' | 'url'): FormProps {
+    const [onChange, initProps] =
+      form == 'file'
+        ? [onFileFormChange, fileFormProps]
+        : [onUrlFormChange, urlFormProps];
+    return {
+      ...FORM_PRE_DEFAULTS,
+      idPrefix: `${idPrefix}-${form}-`,
+      id: `${idPrefix}-${form}`,
+      ...((config.forms[form].props || emptyObject) as any),
+      ...initProps,
+      onChange,
+      formData: context.value[form],
+      ...FORM_POST_DEFAULTS,
+    };
+  }
+
   const URLJSF = () => {
-    const onFileFormChange = async (evt: IChangeEvent) => {
-      const value = await getFileContent(config, evt.formData);
-      batch(() => {
-        text.value = value;
-        context.value = { ...context.value, file: evt.formData };
-        errors.value = { ...errors.value, file: evt.errors };
-      });
-    };
-
-    const onUrlFormChange = async (evt: IChangeEvent) => {
-      batch(() => {
-        context.value = { ...context.value, url: evt.formData };
-        errors.value = { ...errors.value, url: evt.errors };
-      });
-    };
-
     let submitButton: JSX.Element;
     if (errorCount.value) {
       submitButton = (
@@ -167,38 +184,16 @@ function formComponent(props: IFormProps): JSX.Element {
       );
     }
 
-    const finalFileFormProps = {
-      ...FORM_PRE_DEFAULTS,
-      idPrefix: `${idPrefix}-file-`,
-      id: `${idPrefix}-file`,
-      ...((config.file_form.props || emptyObject) as any),
-      ...fileFormProps,
-      onChange: onFileFormChange,
-      formData: context.value.file,
-      ...FORM_POST_DEFAULTS,
-    };
-
-    const finalUrlFormProps = {
-      ...FORM_PRE_DEFAULTS,
-      idPrefix: `${idPrefix}-url-`,
-      id: `${idPrefix}-url`,
-      ...((config.url_form.props || emptyObject) as any),
-      ...urlFormProps,
-      onChange: onUrlFormChange,
-      formData: context.value.url,
-      ...FORM_POST_DEFAULTS,
-    };
-
     return (
       <div className={FORM_CLASS} id={idPrefix}>
         <div>
-          <RJSFForm {...finalFileFormProps}>
+          <RJSFForm {...formProps('file')}>
             <Fragment />
           </RJSFForm>
         </div>
         <hr />
         <div>
-          <RJSFForm {...finalUrlFormProps}>
+          <RJSFForm {...formProps('url')}>
             <Fragment />
           </RJSFForm>
         </div>

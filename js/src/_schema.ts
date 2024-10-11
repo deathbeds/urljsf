@@ -37,10 +37,22 @@ export type ASchemaLocation4 = string;
  */
 export type ASchemaLocation5 = string;
 /**
- * `nunjucks` template for building a URL
+ * text to show on the button when a form is valid
+ *
+ */
+export type MarkdownTemplate = string;
+/**
+ * the URL to build
  *
  */
 export type URLTemplate = string;
+/**
+ * a URL template where
+ *
+ * This interface was referenced by `Urljsf`'s JSON-Schema
+ * via the `definition` "any-md-template".
+ */
+export type MarkdownTemplate1 = string;
 /**
  * a path to a JSON schema, serialized as JSON, TOML, or (simple) YAML.
  *
@@ -49,14 +61,6 @@ export type URLTemplate = string;
  */
 export type ASchemaLocation6 = string;
 /**
- * a [nunjucks]-compatible template.
- *
- * The [jinja compatibility layer][jinjacompat] is enabled, allowing for more expressive,
- * python-like syntax.
- *
- * [nunjucks]: https://mozilla.github.io/nunjucks
- * [jinjacompat]: https://mozilla.github.io/nunjucks/api.html#installjinjacompat
- *
  * This interface was referenced by `Urljsf`'s JSON-Schema
  * via the `definition` "any-url-template".
  */
@@ -66,7 +70,7 @@ export type URLTemplate1 = string;
  * A schema for building forms for building URLs for building...
  */
 export interface Urljsf {
-  file_form: FileForm;
+  forms: Forms;
   /**
    * isolate each form on the page in an `iframe`
    */
@@ -76,17 +80,18 @@ export interface Urljsf {
    *
    */
   iframe_style?: string;
-  /**
-   * `nunjucks` template for the submit button text
-   *
-   */
-  submit_template: string;
-  url_form: URLForm;
-  url_template: URLTemplate;
+  templates: Templates;
 }
 /**
- * values that contribut the `file_contents` context value of the `url_template`
+ * forms that describe how to build the URL
  *
+ */
+export interface Forms {
+  file: FileForm;
+  url: URLForm;
+}
+/**
+ * control the inputs to a JSON, TOML, or YAML file
  */
 export interface FileForm {
   form_data?: ASchemaLocation;
@@ -228,8 +233,7 @@ export interface UIOptions {
   };
 }
 /**
- * values that contribute to the `url` context value of the `url_template`
- *
+ * control the inputs to a valid URL
  */
 export interface URLForm {
   form_data?: ASchemaLocation3;
@@ -344,6 +348,14 @@ export interface Props1 {
   uiSchema?: UISchema;
 }
 /**
+ * `nunjucks` templates that control URLs for machines and markdown for humans
+ *
+ */
+export interface Templates {
+  submit_button: MarkdownTemplate;
+  url: URLTemplate;
+}
+/**
  * a description of a form that builds a data file
  *
  * This interface was referenced by `Urljsf`'s JSON-Schema
@@ -359,6 +371,36 @@ export interface FileForm1 {
   prune_empty?: boolean;
   schema: ASchemaLocation1;
   ui_schema?: ASchemaLocation2;
+}
+/**
+ * forms used to build and populate a URL
+ *
+ * This interface was referenced by `Urljsf`'s JSON-Schema
+ * via the `definition` "forms".
+ */
+export interface Forms1 {
+  file: FileForm;
+  url: URLForm;
+}
+/**
+ * [`nunjucks`][nunjucks] strings (or lists of strings) that control how strings are built
+ * from forms.
+ *
+ * The [jinja compatibility layer][jinjacompat] is enabled, allowing for more expressive,
+ * python-like syntax. Some addition filters are included:
+ *
+ * - `base64` turns a string into its [Base64]-encoded alternative
+ *
+ * [nunjucks]: https://mozilla.github.io/nunjucks/templating.html
+ * [jinjacompat]: https://mozilla.github.io/nunjucks/api.html#installjinjacompat
+ * [Base64]: https://developer.mozilla.org/en-US/docs/Glossary/Base64
+ *
+ * This interface was referenced by `Urljsf`'s JSON-Schema
+ * via the `definition` "templates".
+ */
+export interface Templates1 {
+  submit_button: MarkdownTemplate;
+  url: URLTemplate;
 }
 /**
  * a definition of a form to build a URL

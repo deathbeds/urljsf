@@ -18,10 +18,32 @@ class AnyFileFormat(Enum):
     yaml = "yaml"
 
 
+AnyMdTemplate = str
+
+
 AnySchemaLocation = str
 
 
 AnyUrlTemplate = str
+
+
+@dataclass
+class Templates:
+    """[`nunjucks`][nunjucks] strings (or lists of strings) that control how strings are built
+    from forms.
+
+    The [jinja compatibility layer][jinjacompat] is enabled, allowing for more expressive,
+    python-like syntax. Some addition filters are included:
+
+    - `base64` turns a string into its [Base64]-encoded alternative
+
+    [nunjucks]: https://mozilla.github.io/nunjucks/templating.html
+    [jinjacompat]: https://mozilla.github.io/nunjucks/api.html#installjinjacompat
+    [Base64]: https://developer.mozilla.org/en-US/docs/Glossary/Base64
+    """
+
+    submit_button: AnyMdTemplate
+    url: AnyUrlTemplate
 
 
 @dataclass
@@ -47,12 +69,18 @@ class UrlForm:
 
 
 @dataclass
+class Forms:
+    """forms used to build and populate a URL"""
+
+    file: FileForm
+    url: UrlForm
+
+
+@dataclass
 class Urljsf:
     """A schema for building forms for building URLs for building..."""
 
-    file_form: FileForm
-    submit_template: str
-    url_form: UrlForm
-    url_template: AnyUrlTemplate
+    forms: Forms
+    templates: Templates
     iframe: bool | None = None
     iframe_style: str | None = None

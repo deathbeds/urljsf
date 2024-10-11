@@ -1,25 +1,27 @@
 # this is the reference example, all others formats are generated from here
 # TODO: add a relative $schema
 
-url_template = """
+
+[forms.url]
+schema = "./toml/url.schema.toml"
+ui_schema = "./toml/url.uischema.toml"
+props = {showErrorList = false}
+
+[forms.file]
+format = "toml"
+schema = "./toml/file.schema.toml"
+ui_schema = "./toml/file.uischema.toml"
+form_data = "./toml/file.data.toml"
+
+[templates]
+url = """
 https://github.com/{{ url.repo }}/new/{{ url.branch }}?
 {{
     {"filename": url.filename, "value": text } | urlencode | safe
 }}
 """
-submit_template = """
+submit_button = """
 ![open PRs on {{ url.repo }}][b] Start new TOML Pull Request
 
 [b]: https://img.shields.io/github/issues-pr/{{ url.repo }}?logo=github&label={{ url.repo | urlencode }}&color=blue
 """
-
-[url_form]
-schema = "./toml/url.schema.toml"
-ui_schema = "./toml/url.uischema.toml"
-props = {showErrorList = false}
-
-[file_form]
-format = "toml"
-schema = "./toml/file.schema.toml"
-ui_schema = "./toml/file.uischema.toml"
-form_data = "./toml/file.data.toml"
