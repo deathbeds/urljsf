@@ -1,15 +1,17 @@
 // Copyright (C) urljsf contributors.
 // Distributed under the terms of the Modified BSD License.
 import type { FormProps } from '@rjsf/core';
-import { UiSchema, isObject } from '@rjsf/utils';
+import { isObject } from '@rjsf/utils';
 
 import { FileForm, URLForm, Urljsf } from './_schema.js';
 import { MIME_FRAGMENT } from './index.js';
 import { ObjectGridTemplate } from './object-template.js';
-import { TFormat } from './tokens.js';
+import { TFormat, emptyObject } from './tokens.js';
 
 let _NEXT_DATA_SET = 0;
 const _DATA_SETS = new WeakMap<Urljsf, number>();
+
+const GLOBAL_UI = 'ui:globalOptions';
 
 /** get a dataset with defaults */
 export async function getConfig(el: HTMLScriptElement): Promise<Urljsf> {
@@ -31,10 +33,19 @@ export async function initFormProps(
     fetchOne(form.form_data),
   ]);
 
-  const uiOverloads: UiSchema = {};
-  uiOverloads['ui:ObjectFieldTemplate'] = ObjectGridTemplate;
+  const props = {
+    schema,
+    uiSchema: {
+      ...uiSchema,
+      [GLOBAL_UI]: {
+        ...(uiSchema[GLOBAL_UI] || emptyObject),
+        ObjectFieldTemplate: ObjectGridTemplate,
+      },
+    },
+    formData,
+  };
 
-  return { schema, uiSchema: { ...uiSchema, ...uiOverloads }, formData };
+  return props;
 }
 
 /** remove empty objects and arrays */

@@ -22,11 +22,11 @@ type = "boolean"
 description = "Is it done?"
 default = false
 
+[definitions.Task.properties.task]
+type = "string"
+description = "**What** needs to be done?"
+
 [definitions.Task.properties.deadline]
 type = "string"
 description = "**When** does it need to be done?"
 format = "date-time"
-
-[definitions.Task.properties.task]
-type = "string"
-description = "**What** needs to be done?"

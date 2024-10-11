@@ -1,4 +1,17 @@
 {
+  "tasks": {
+    "items": {
+      "ui:options": {
+        "urljsfGrid": {
+          "children": {
+            "complete": ["col-md-3"],
+            "deadline": ["col-md-4"],
+            "task": ["col-md-5"]
+          }
+        }
+      }
+    }
+  },
   "ui:globalOptions": {
     "enableMarkdownInDescription": true
   },

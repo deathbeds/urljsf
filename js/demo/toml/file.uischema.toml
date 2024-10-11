@@ -3,3 +3,8 @@ enableMarkdownInDescription = true
 
 ["ui:options"]
 title = "TOML (from TOML-based UI schema)"
+
+[tasks.items."ui:options".urljsfGrid.children]
+complete = ["col-md-3"]
+task = ["col-md-5"]
+deadline = ["col-md-4"]

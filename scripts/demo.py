@@ -91,7 +91,6 @@ def main() -> int:
             print("\n... writing", out)
             out.parent.mkdir(exist_ok=True)
             text = encode(data).strip()
-            print(text)
             out.write_text(text + "\n", **UTF8)
             wrote += [out]
 
