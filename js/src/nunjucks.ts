@@ -1,18 +1,18 @@
 // Copyright (C) urljsf contributors.
 // Distributed under the terms of the Modified BSD License.
-import type Nunjucks from 'nunjucks';
+import type nunjucks from 'nunjucks';
 
-export async function ensureNunjucks(): Promise<typeof Nunjucks> {
+export async function ensureNunjucks(): Promise<nunjucks.Environment> {
   return await Private.ensureNunjucks();
 }
 
 namespace Private {
-  let _nunjucks: typeof Nunjucks | null = null;
-  let _loading: Promise<typeof Nunjucks> | null = null;
+  let _env: nunjucks.Environment | null = null;
+  let _loading: Promise<nunjucks.Environment> | null = null;
 
-  export async function ensureNunjucks(): Promise<typeof Nunjucks> {
-    if (_nunjucks) {
-      return _nunjucks;
+  export async function ensureNunjucks(): Promise<nunjucks.Environment> {
+    if (_env) {
+      return _env;
     }
     if (_loading) {
       return await _loading;
@@ -21,8 +21,10 @@ namespace Private {
       try {
         const nunjucks = await import('nunjucks');
         nunjucks.installJinjaCompat();
-        _nunjucks = nunjucks;
-        resolve(nunjucks);
+        const env = new nunjucks.Environment();
+        env.addFilter('base64', btoa);
+        _env = env;
+        resolve(env);
       } catch (err) {
         reject(err);
       }

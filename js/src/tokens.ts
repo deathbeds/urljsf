@@ -2,7 +2,7 @@
 import type { FormProps } from '@rjsf/core';
 import type { RJSFValidationError } from '@rjsf/utils';
 
-import type Nunjucks from 'nunjucks';
+import type nunjucks from 'nunjucks';
 
 import { Urljsf } from './_schema';
 
@@ -69,5 +69,5 @@ export interface IFormProps {
   initText: string;
   fileFormProps: Partial<FormProps>;
   urlFormProps: Partial<FormProps>;
-  nunjucks: typeof Nunjucks;
+  nunjucksEnv: nunjucks.Environment;
 }

@@ -70,7 +70,7 @@ export async function makeOneForm(script: HTMLScriptElement): Promise<void> {
     initFormProps(config.url_form),
   ]);
 
-  const [nunjucks, initText] = await Promise.all([
+  const [nunjucksEnv, initText] = await Promise.all([
     ensureNunjucks(),
     getFileContent(config, fileFormProps.formData),
   ]);
@@ -80,7 +80,7 @@ export async function makeOneForm(script: HTMLScriptElement): Promise<void> {
     initText,
     fileFormProps,
     urlFormProps,
-    nunjucks,
+    nunjucksEnv,
   });
   const isolated = !!(config.iframe || config.iframe_style);
   render(isolated ? await renderIframe(config, form) : form, container);
@@ -111,7 +111,7 @@ async function renderIframe(config: Urljsf, form: JSX.Element): Promise<JSX.Elem
 
 /** a component for a file and URL form */
 function formComponent(props: IFormProps): JSX.Element {
-  const { config, initText, fileFormProps, urlFormProps, nunjucks } = props;
+  const { config, initText, fileFormProps, urlFormProps, nunjucksEnv } = props;
   const idPrefix = getIdPrefix(config);
   const initContext: IContext = {
     config,
@@ -126,13 +126,13 @@ function formComponent(props: IFormProps): JSX.Element {
 
   const errorCount = computed(() => [...errors.value.file, ...errors.value.url].length);
   const url = computed(() =>
-    nunjucks
+    nunjucksEnv
       .renderString(config.url_template, context.value)
       .split('\n')
       .reduce(reduceTrimmedLines),
   );
   const submitText = computed(() =>
-    nunjucks.renderString(config.submit_template, context.value),
+    nunjucksEnv.renderString(config.submit_template, context.value),
   );
 
   const URLJSF = () => {
