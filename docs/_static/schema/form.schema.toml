@@ -73,6 +73,10 @@ submit_button = {"$ref" = "#/definitions/any-template", description = """
 text to show on the button when a form is valid. multiple lines will be joined
 with `\\n`, then leading and trailing whitespace will be trimmed.
 """}
+custom_errors = {"$ref" = "#/definitions/any-template", description = """
+a markdown string, which if rendered to _any_ non-whitespace, will be treated as
+an error, preventing the submit button from being shown.
+"""}
 
 # url form #####################################################################
 [definitions.url-form]

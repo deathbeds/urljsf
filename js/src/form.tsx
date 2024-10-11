@@ -10,7 +10,7 @@ import type { FormProps, IChangeEvent } from '@rjsf/core';
 import { Form as RJSFForm } from '@rjsf/react-bootstrap';
 import validator from '@rjsf/validator-ajv8';
 
-import { batch, computed, signal } from '@preact/signals';
+import { ReadonlySignal, batch, computed, signal } from '@preact/signals';
 import Markdown from 'markdown-to-jsx';
 import type { MarkdownToJSX } from 'markdown-to-jsx';
 
@@ -132,7 +132,30 @@ function formComponent(props: IFormProps): JSX.Element {
       env: nunjucksEnv,
     }),
   );
-  const errorCount = computed(() => [...errors.value.file, ...errors.value.url].length);
+
+  const { custom_errors } = config.templates;
+
+  let customErrors: ReadonlySignal<string> | null = null;
+
+  if (custom_errors) {
+    customErrors = computed(() => {
+      console.warn('custom');
+      return renderMarkdown({
+        template: custom_errors,
+        context: context.value,
+        env: nunjucksEnv,
+      }).trim();
+    });
+  }
+
+  const errorCount = computed(
+    () =>
+      [
+        ...errors.value.file,
+        ...errors.value.url,
+        ...(customErrors?.value ? [customErrors.value] : []),
+      ].length,
+  );
 
   const onFileFormChange = async (evt: IChangeEvent) => {
     const value = await getFileContent(config, evt.formData);
@@ -169,7 +192,11 @@ function formComponent(props: IFormProps): JSX.Element {
 
   const URLJSF = () => {
     let submitButton: JSX.Element;
-    if (errorCount.value) {
+    let customErrorEl: JSX.Element = <></>;
+    if (errorCount.value || customErrors?.value) {
+      if (customErrors?.value) {
+        customErrorEl = <Markdown>{customErrors.value}</Markdown>;
+      }
       submitButton = (
         <Button onClick={onErrorClick} variant="danger" {...BTN_COMMON}>
           {errorCount} Error{errorCount.value > 1 ? 's' : ''}
@@ -197,6 +224,7 @@ function formComponent(props: IFormProps): JSX.Element {
           </RJSFForm>
         </div>
         <hr />
+        {customErrorEl}
         {submitButton}
       </div>
     );

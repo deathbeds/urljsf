@@ -2,10 +2,7 @@
   "forms": {
     "url": {
       "schema": "./json/url.schema.json",
-      "ui_schema": "./json/url.uischema.json",
-      "props": {
-        "showErrorList": false
-      }
+      "ui_schema": "./json/url.uischema.json"
     },
     "file": {
       "format": "json",
@@ -16,6 +13,7 @@
   },
   "templates": {
     "url": "https://github.com/{{ url.repo }}/new/{{ url.branch }}?\n{{\n    {\"filename\": url.filename, \"value\": text } | urlencode | safe\n}}\n",
-    "submit_button": "![open PRs on {{ url.repo }}][b] Start new JSON Pull Request\n\n[b]: https://img.shields.io/github/issues-pr/{{ url.repo }}?logo=github&label={{ url.repo | urlencode }}&color=blue\n"
+    "submit_button": "![open PRs on {{ url.repo }}][b] Start new JSON Pull Request\n\n[b]: https://img.shields.io/github/issues-pr/{{ url.repo }}?logo=github&label={{ url.repo | urlencode }}&color=blue\n",
+    "custom_errors": "{% for name, tasks in file.tasks | default([]) | groupby(\"task\") %}\n{% set dupes = tasks | length %}\n{% if dupes > 1 %}\n- \ud83d\udca5 {{ dupes }} tasks have the name _\"{{ name }}\"_\n{% endif %}\n{% endfor %}\n"
   }
 }

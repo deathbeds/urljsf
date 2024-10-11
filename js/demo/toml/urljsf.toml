@@ -5,7 +5,6 @@
 [forms.url]
 schema = "./toml/url.schema.toml"
 ui_schema = "./toml/url.uischema.toml"
-props = {showErrorList = false}
 
 [forms.file]
 format = "toml"
@@ -20,8 +19,18 @@ https://github.com/{{ url.repo }}/new/{{ url.branch }}?
     {"filename": url.filename, "value": text } | urlencode | safe
 }}
 """
+
 submit_button = """
 ![open PRs on {{ url.repo }}][b] Start new TOML Pull Request
 
 [b]: https://img.shields.io/github/issues-pr/{{ url.repo }}?logo=github&label={{ url.repo | urlencode }}&color=blue
+"""
+
+custom_errors = """
+{% for name, tasks in file.tasks | default([]) | groupby("task") %}
+{% set dupes = tasks | length %}
+{% if dupes > 1 %}
+- 💥 {{ dupes }} tasks have the name _"{{ name }}"_
+{% endif %}
+{% endfor %}
 """

@@ -101,6 +101,10 @@
       "type": "object",
       "description": "[`nunjucks`][nunjucks] strings (or lists of strings) that control how strings are built\nfrom forms.\n\nThe [jinja compatibility layer][jinjacompat] is enabled, allowing for more expressive,\npython-like syntax. Some addition filters are included:\n\n- `base64` turns a string into its [Base64]-encoded alternative\n\n[nunjucks]: https://mozilla.github.io/nunjucks/templating.html\n[jinjacompat]: https://mozilla.github.io/nunjucks/api.html#installjinjacompat\n[Base64]: https://developer.mozilla.org/en-US/docs/Glossary/Base64",
       "properties": {
+        "custom_errors": {
+          "$ref": "#/definitions/any-template",
+          "description": "a markdown string, which if rendered to _any_ non-whitespace, will be treated as\nan error, preventing the submit button from being shown.\n"
+        },
         "submit_button": {
           "$ref": "#/definitions/any-template",
           "description": "text to show on the button when a form is valid. multiple lines will be joined\nwith `\\n`, then leading and trailing whitespace will be trimmed.\n"

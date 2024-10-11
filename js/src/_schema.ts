@@ -336,6 +336,12 @@ export interface Props1 {
  */
 export interface Templates {
   /**
+   * a markdown string, which if rendered to _any_ non-whitespace, will be treated as
+   * an error, preventing the submit button from being shown.
+   *
+   */
+  custom_errors?: string | [string, ...string[]];
+  /**
    * text to show on the button when a form is valid. multiple lines will be joined
    * with `\n`, then leading and trailing whitespace will be trimmed.
    *
@@ -391,6 +397,12 @@ export interface Forms1 {
  * via the `definition` "templates".
  */
 export interface Templates1 {
+  /**
+   * a markdown string, which if rendered to _any_ non-whitespace, will be treated as
+   * an error, preventing the submit button from being shown.
+   *
+   */
+  custom_errors?: string | [string, ...string[]];
   /**
    * text to show on the button when a form is valid. multiple lines will be joined
    * with `\n`, then leading and trailing whitespace will be trimmed.

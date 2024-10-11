@@ -2,8 +2,6 @@ forms:
   url:
     schema: ./yaml/url.schema.yaml
     ui_schema: ./yaml/url.uischema.yaml
-    props:
-      showErrorList: false
   file:
     format: yaml
     schema: ./yaml/file.schema.yaml
@@ -19,4 +17,7 @@ templates:
     ![open PRs on {{ url.repo }}][b] Start new YAML Pull Request
 
     [b]: https://img.shields.io/github/issues-pr/{{ url.repo }}?logo=github&label={{ url.repo | urlencode }}&color=blue
+  custom_errors:
+    "{% for name, tasks in file.tasks | default([]) | groupby(\"task\") %}\n{% set dupes = tasks | length %}\n{% if
+    dupes > 1 %}\n- \U0001F4A5 {{ dupes }} tasks have the name _\"{{ name }}\"_\n{% endif %}\n{% endfor %}\n"
 iframe: true

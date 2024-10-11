@@ -41,6 +41,7 @@ class Templates:
 
     submit_button: AnyTemplate
     url: AnyTemplate
+    custom_errors: AnyTemplate | None = None
 
 
 @dataclass
