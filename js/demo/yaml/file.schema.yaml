@@ -1,5 +1,5 @@
 $schema: http://json-schema.org/draft-07/schema#
-title: Todo (YAML)
+title: A Task List
 description: a YAML demo of urljsf
 required:
   - name

@@ -36,7 +36,7 @@ const FORM_PRE_DEFAULTS: Partial<FormProps> = {
   schema: {},
   liveValidate: true,
   liveOmit: true,
-  showErrorList: 'bottom',
+  showErrorList: false,
 };
 const FORM_POST_DEFAULTS: Partial<FormProps> = { validator };
 
@@ -52,7 +52,7 @@ const BTN_COMMON: Pick<ButtonProps, 'size' | 'className'> = {
 };
 
 const SUBMIT_DEFAULT: Pick<ButtonProps, 'variant' | 'target'> = {
-  variant: 'primary',
+  variant: 'success',
   target: '_blank',
 };
 
@@ -167,18 +167,6 @@ function formComponent(props: IFormProps): JSX.Element {
       );
     }
 
-    const preview = text.value
-      ? [
-          <code>
-            <pre>{text.value}</pre>
-          </code>,
-        ]
-      : [
-          <blockquote>
-            <i>No valid file data yet</i>
-          </blockquote>,
-        ];
-
     const finalFileFormProps = {
       ...FORM_PRE_DEFAULTS,
       idPrefix: `${idPrefix}-file-`,
@@ -208,8 +196,6 @@ function formComponent(props: IFormProps): JSX.Element {
             <Fragment />
           </RJSFForm>
         </div>
-        <hr />
-        <div>{preview}</div>
         <hr />
         <div>
           <RJSFForm {...finalUrlFormProps}>

@@ -1,5 +1,5 @@
 ["ui:options"]
-title = "TOML (from TOML-based UI schema)"
+title = "A Task List (from TOML-based UI schema)"
 
 [tasks.items."ui:options".urljsfGrid.children]
 complete = ["col-md-3"]

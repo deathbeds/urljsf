@@ -80,7 +80,7 @@ def main() -> int:
         for fmt, encode in ENCODERS.items():
             print(".", end="")
             data = tomllib.loads(raw.replace("toml", fmt).replace("TOML", fmt.upper()))
-            if stem == "urljsf":
+            if stem == "urljsf" and fmt == "yaml":
                 data.update(iframe=True)
             normal = _normalize(data)
             out = DEMO / f"{fmt}/{stem}.{fmt}"

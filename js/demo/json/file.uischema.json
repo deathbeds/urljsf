@@ -13,6 +13,6 @@
     }
   },
   "ui:options": {
-    "title": "JSON (from JSON-based UI schema)"
+    "title": "A Task List (from JSON-based UI schema)"
   }
 }

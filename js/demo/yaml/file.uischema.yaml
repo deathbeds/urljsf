@@ -1,5 +1,5 @@
 ui:options:
-  title: YAML (from YAML-based UI schema)
+  title: A Task List (from YAML-based UI schema)
 tasks:
   items:
     ui:options:
