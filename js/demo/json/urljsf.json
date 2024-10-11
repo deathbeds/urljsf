@@ -5,7 +5,7 @@
     "ui_schema": "./json/file.uischema.json",
     "form_data": "./json/file.data.json"
   },
-  "submit_template": "Start new JSON Pull Request to **{{ url.repo }}**\n",
+  "submit_template": "![open PRs on {{ url.repo }}][b] Start new JSON Pull Request\n\n[b]: https://img.shields.io/github/issues-pr/{{ url.repo }}?logo=github&label={{ url.repo | urlencode }}&color=blue\n",
   "url_form": {
     "schema": "./json/url.schema.json",
     "ui_schema": "./json/url.uischema.json",
