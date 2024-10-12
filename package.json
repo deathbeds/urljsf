@@ -9,6 +9,7 @@
     "build": "cd js && yarn build",
     "build:app": "cd js && yarn build:app",
     "build:lib": "cd js && yarn build:lib",
+    "build:schema": "cd js/schema/v0 && json2ts",
     "watch": "cd js && yarn watch"
   },
   "prettier": {
@@ -75,7 +76,8 @@
   },
   "markdownlint-cli2": {
     "config": {
-      "line-length": false
+      "line-length": false,
+      "first-line-h1": false
     }
   }
 }

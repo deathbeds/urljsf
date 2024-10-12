@@ -88,14 +88,14 @@ type = "object"
 additionalProperties = false
 
 [definitions.url-form.properties]
-schema = {"$ref" = "#/definitions/any-schema-location", descripton = """
+schema = {"$ref" = "#/definitions/any-schema", descripton = """
 URL for a JSON schema to describe the URL fields: features not present in
 Draft 7 are best-effort.
 """}
-ui_schema = {"$ref" = "#/definitions/any-schema-location", descripton = """
+ui_schema = {"$ref" = "#/definitions/any-schema", descripton = """
 URL for an `rjsf` UI schema to describe the URL fields
 """}
-form_data = {"$ref" = "#/definitions/any-schema-location", descripton = """
+form_data = {"$ref" = "#/definitions/any-schema", descripton = """
 JSON-compatible initial data for URL fields
 """}
 props = {"$ref" = "./props.schema.json#/definitions/Props", descripton = """
@@ -112,14 +112,14 @@ additionalProperties = false
 
 [definitions.file-form.properties]
 format = {"$ref" = "#/definitions/any-file-format"}
-schema = {"$ref" = "#/definitions/any-schema-location", descripton = """
+schema = {"$ref" = "#/definitions/any-schema", descripton = """
 URL for a JSON schema to describe file contents: features not present in Draft 7
 are best-effort.
 """}
-ui_schema = {"$ref" = "#/definitions/any-schema-location", descripton = """
+ui_schema = {"$ref" = "#/definitions/any-schema", descripton = """
 URL for an `rjsf` UI schema to describe the file fields.
 """}
-form_data = {"$ref" = "#/definitions/any-schema-location", descripton = """
+form_data = {"$ref" = "#/definitions/any-schema", descripton = """
 JSON-compatible initial data for file contents
 """}
 props = {"$ref" = "./props.schema.json#/definitions/Props", descripton = """
@@ -146,8 +146,19 @@ string will be considered failing.
 """
 additionalProperties = {"$ref" = "#/definitions/any-template"}
 
+[definitions.any-schema]
+title = "A Schema"
+oneOf = [
+  {title = "Schema By URL", "$ref" = "#/definitions/any-schema-location"},
+  {title = "Inline Object", "$ref" = "#/definitions/any-object"},
+]
+
+[definitions.any-object]
+title = "An Inline Object"
+description = "An line object"
+type = "object"
+
 [definitions.any-schema-location]
-title = "A Schema Location"
 type = "string"
 format = "uri-reference"
 minLength = 1

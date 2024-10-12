@@ -12,6 +12,8 @@ from typing import Any
 
 import tomllib
 
+VERBOSE = False
+CMD_DELIM = " \\\n\t" if VERBOSE else " "
 UTF8 = {"encoding": "utf-8"}
 PY_HEADER = '''"""JSON Schema for ``urljsf``."""
 # Copyright (C) urljsf contributors.
@@ -23,7 +25,8 @@ ROOT = Path(__file__).parent.parent
 def call(args: list[str | Path], **kwargs: Any) -> int:
     """Echo and then call a command."""
     args = list(map(str, args))
-    print(">>>", " \\\n\t".join(args), "\n")
+    print("In:", kwargs.get("cwd", ROOT))
+    print(">>>", CMD_DELIM.join(args), "\n")
     rc = _call(args, **kwargs)
     if rc:
         print("FAIL", rc)
@@ -58,7 +61,7 @@ def json_to_ts(in_path: Path, out_path: Path) -> int:
     """Get TypeScript from JSON Schema."""
     args = [
         "yarn",
-        "json2ts",
+        "build:schema",
         "--style.singleQuote",
         "--no-style.semi",
         "--no-additionalProperties",
@@ -66,7 +69,7 @@ def json_to_ts(in_path: Path, out_path: Path) -> int:
         f"--input={in_path}",
         f"--output={out_path}",
     ]
-    return call(args, cwd=str(in_path.parent)) or call([
+    return call(args) or call([
         "yarn",
         "prettier",
         "--write",

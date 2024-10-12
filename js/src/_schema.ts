@@ -5,10 +5,11 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
+export type ASchema = SchemaByURL | InlineObject;
 /**
  * a path to a JSON schema, serialized as JSON, TOML, or (simple) YAML.
  */
-export type ASchemaLocation = string;
+export type SchemaByURL = string;
 /**
  * a format that can be serialized or deserialized
  *
@@ -16,43 +17,35 @@ export type ASchemaLocation = string;
  * via the `definition` "any-file-format".
  */
 export type FileFormat = 'json' | 'toml' | 'yaml';
-/**
- * a path to a JSON schema, serialized as JSON, TOML, or (simple) YAML.
- */
-export type ASchemaLocation1 = string;
-/**
- * a path to a JSON schema, serialized as JSON, TOML, or (simple) YAML.
- */
-export type ASchemaLocation2 = string;
-/**
- * a path to a JSON schema, serialized as JSON, TOML, or (simple) YAML.
- */
-export type ASchemaLocation3 = string;
-/**
- * a path to a JSON schema, serialized as JSON, TOML, or (simple) YAML.
- */
-export type ASchemaLocation4 = string;
-/**
- * a path to a JSON schema, serialized as JSON, TOML, or (simple) YAML.
- */
-export type ASchemaLocation5 = string;
+export type ASchema1 = SchemaByURL | InlineObject;
+export type ASchema2 = SchemaByURL | InlineObject;
+export type ASchema3 = SchemaByURL | InlineObject;
+export type ASchema4 = SchemaByURL | InlineObject;
+export type ASchema5 = SchemaByURL | InlineObject;
 /**
  * This interface was referenced by `Urljsf`'s JSON-Schema
  * via the `definition` "any-template".
  */
 export type AnyTemplate = string | [string, ...string[]];
 /**
+ * This interface was referenced by `Urljsf`'s JSON-Schema
+ * via the `definition` "any-schema".
+ */
+export type ASchema6 = SchemaByURL | InlineObject;
+/**
  * a path to a JSON schema, serialized as JSON, TOML, or (simple) YAML.
  *
  * This interface was referenced by `Urljsf`'s JSON-Schema
  * via the `definition` "any-schema-location".
  */
-export type ASchemaLocation6 = string;
+export type AnySchemaLocation = string;
 
 /**
  * A schema for building forms for building URLs for building...
  */
 export interface Urljsf {
+  $id?: string;
+  $schema?: string;
   forms: Forms;
   /**
    * isolate each form on the page in an `iframe`
@@ -77,16 +70,20 @@ export interface Forms {
  * control the inputs to a JSON, TOML, or YAML file
  */
 export interface FileForm {
-  form_data?: ASchemaLocation;
+  form_data?: ASchema;
   format: FileFormat;
   props?: Props;
   /**
    * prune empty lists, object, etc.
    */
   prune_empty?: boolean;
-  schema: ASchemaLocation1;
-  ui_schema?: ASchemaLocation2;
+  schema: ASchema1;
+  ui_schema?: ASchema2;
 }
+/**
+ * An line object
+ */
+export interface InlineObject {}
 /**
  * JSON-compatible default values for `rjsf` [`Form.props`][form-props].
  *
@@ -219,10 +216,10 @@ export interface UIOptions {
  * control the inputs to a valid URL
  */
 export interface URLForm {
-  form_data?: ASchemaLocation3;
+  form_data?: ASchema3;
   props?: Props1;
-  schema?: ASchemaLocation4;
-  ui_schema?: ASchemaLocation5;
+  schema?: ASchema4;
+  ui_schema?: ASchema5;
 }
 /**
  * JSON-compatible default values for `rjsf` [`Form.props`][form-props].
@@ -357,6 +354,13 @@ export interface Checks {
   [k: string]: AnyTemplate;
 }
 /**
+ * An line object
+ *
+ * This interface was referenced by `Urljsf`'s JSON-Schema
+ * via the `definition` "any-object".
+ */
+export interface AnInlineObject {}
+/**
  * `nunjucks` templates keyed by their label: any evaluating to a non-whitespace
  * string will be considered failing.
  *
@@ -373,15 +377,15 @@ export interface Checks1 {
  * via the `definition` "file-form".
  */
 export interface FileForm1 {
-  form_data?: ASchemaLocation;
+  form_data?: ASchema;
   format: FileFormat;
   props?: Props;
   /**
    * prune empty lists, object, etc.
    */
   prune_empty?: boolean;
-  schema: ASchemaLocation1;
-  ui_schema?: ASchemaLocation2;
+  schema: ASchema1;
+  ui_schema?: ASchema2;
 }
 /**
  * forms used to build and populate a URL
@@ -430,8 +434,8 @@ export interface Templates1 {
  * via the `definition` "url-form".
  */
 export interface URLForm1 {
-  form_data?: ASchemaLocation3;
+  form_data?: ASchema3;
   props?: Props1;
-  schema?: ASchemaLocation4;
-  ui_schema?: ASchemaLocation5;
+  schema?: ASchema4;
+  ui_schema?: ASchema5;
 }

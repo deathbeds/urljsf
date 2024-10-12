@@ -18,6 +18,11 @@ class AnyFileFormat(Enum):
     yaml = "yaml"
 
 
+@dataclass
+class AnyObject:
+    """An line object"""
+
+
 AnySchemaLocation = str
 
 
@@ -47,26 +52,29 @@ class Templates:
     checks: Checks | None = None
 
 
+AnySchema = AnySchemaLocation | AnyObject
+
+
 @dataclass
 class FileForm:
     """a description of a form that builds a data file"""
 
     format: AnyFileFormat
-    schema_: AnySchemaLocation
-    form_data: AnySchemaLocation | None = None
+    schema_: AnySchema
+    form_data: AnySchema | None = None
     props: props_schema.Props | None = None
     prune_empty: bool | None = None
-    ui_schema: AnySchemaLocation | None = None
+    ui_schema: AnySchema | None = None
 
 
 @dataclass
 class UrlForm:
     """a definition of a form to build a URL"""
 
-    form_data: AnySchemaLocation | None = None
+    form_data: AnySchema | None = None
     props: props_schema.Props | None = None
-    schema_: AnySchemaLocation | None = None
-    ui_schema: AnySchemaLocation | None = None
+    schema_: AnySchema | None = None
+    ui_schema: AnySchema | None = None
 
 
 @dataclass
@@ -83,5 +91,7 @@ class Urljsf:
 
     forms: Forms
     templates: Templates
+    field_id: str | None = None
+    field_schema: str | None = None
     iframe: bool | None = None
     iframe_style: str | None = None

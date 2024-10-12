@@ -39,16 +39,18 @@ Describe the bug clearly and concisely. Include text-based log output (not scree
 
 <details><summary>Browser Console Output</summary>
 
-```
-  Paste the output from your browser console here
+```js
+// Paste the output from your browser console here
 ```
 
 </details>
 
 <details><summary>Sphinx log</summary>
 
-```
+```txt
 Paste the output from the temporary sphinx log here
 ```
 
 </details>
+
+<!-- markdownlint-disable-file no-inline-html -->

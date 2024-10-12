@@ -3,7 +3,7 @@
 import type { FormProps } from '@rjsf/core';
 import { UIOptionsType, isObject } from '@rjsf/utils';
 
-import { FileForm, URLForm, Urljsf } from './_schema.js';
+import { FileForm, InlineObject, URLForm, Urljsf } from './_schema.js';
 import { LabeledAddButton } from './components/add-button.js';
 import { ArrayFieldItemTemplate } from './components/array-item.js';
 import { ArrayFieldTemplate } from './components/array-template.js';
@@ -40,20 +40,20 @@ export async function initFormProps(
   form: FileForm | URLForm,
 ): Promise<Partial<FormProps>> {
   let [schema, uiSchema, formData] = await Promise.all([
-    fetchOne(form.schema),
-    fetchOne(form.ui_schema),
-    fetchOne(form.form_data),
+    fetchOneOrObject(form.schema),
+    fetchOneOrObject(form.ui_schema),
+    fetchOneOrObject(form.form_data),
   ]);
 
   const props: Omit<FormProps, 'validator'> = {
     formData,
-    schema,
+    schema: schema as any,
     templates: TEMPLATES,
     uiSchema: {
-      ...uiSchema,
+      ...(uiSchema as any),
       [GLOBAL_UI]: {
         enableMarkdownInDescription: true,
-        ...(uiSchema[GLOBAL_UI] || emptyObject),
+        ...((uiSchema as any)[GLOBAL_UI] || emptyObject),
         ...TEMPLATES,
       },
     },
@@ -108,6 +108,16 @@ export async function getFileContent(config: Urljsf, formData: any): Promise<str
       value = yaml.stringify(formData);
   }
   return value;
+}
+
+export async function fetchOneOrObject<T = Record<string, any>>(
+  urlOrObject: T | string | null | undefined | InlineObject,
+  format?: TFormat,
+): Promise<T> {
+  if (urlOrObject && typeof urlOrObject == 'object') {
+    return urlOrObject as T;
+  }
+  return await fetchOne<T>(urlOrObject as any, format);
 }
 
 export async function fetchOne<T = Record<string, any>>(

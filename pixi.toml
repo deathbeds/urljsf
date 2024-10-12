@@ -196,6 +196,7 @@ outputs = ["js/schema/v0/props.schema.json"]
 cmd = """export $(pixi r schema-vars--) && pixi r schema-toml-json--"""
 inputs = ["js/schema/form.schema.toml", "scripts/schema.py"]
 outputs = ["js/schema/v0/form.schema.json"]
+depends-on = ["setup-js"]
 
 [feature.tasks-build.tasks.build-schema-ts]
 cmd = """export $(pixi r schema-vars--) && pixi r schema-json-ts--"""

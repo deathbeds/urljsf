@@ -11,6 +11,7 @@
 
 Projects can use `urljsf` as:
 
+- a [JavaScript library](#js-library)
 - a standalone [CLI tool](#command-line)
 - a [sphinx](#sphinx) extension
 
@@ -31,8 +32,8 @@ When visiting a `urljsf`-built form, users:
     - pre-filled data
     - custom validation messages
 
-Once the data (and URL metadata) is _validated_, the user sees a button which submits
-the form to an HTTPS endpoint.
+Once the data is _validated_, the user sees a button which submits the form to an HTTPS
+endpoint, either by opening a new window, or directly.
 
 While almost _any_ URL can be built, special care is given for _pull requests_, which
 create excellent data for projects and users.
@@ -93,8 +94,52 @@ For example, the GitHub `/new/` pull request URL starts a workflow to:
 
 ## Usage
 
+### JS Library
+
 `urljsf` works as a standalone site generator for simple sites, or integrates with the
 `sphinx` documentation system.
+
+A very simple form might look like:
+
+```html
+<html>
+  <head>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      integrity="sha256-PI8n5gCcz9cQqQXm3PEtDuPG8qx9oFsFctPg0S5zb8g="
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <script type="application/vnd.deathbeds.prjsf.v0+toml">
+      [forms.url]
+      schema = "./toml/url.schema.toml"
+      ui_schema = "./toml/url.uischema.toml"
+
+      [forms.file]
+      format = "toml"
+      schema = "./toml/file.schema.toml"
+      ui_schema = "./toml/file.uischema.toml"
+      form_data = "./toml/file.data.toml"
+
+      [templates]
+      url = """
+      https://github.com/{{ url.repo }}/new/{{ url.branch }}?
+      {{
+          {"filename": url.filename, "value": text } | urlencode | safe
+      }}
+      """
+
+      """
+    </script>
+    <script
+      type="module"
+      src="https://deathbeds.github.io/prjsf/_static/index.js"
+    ></script>
+  </body>
+</html>
+```
 
 ### Command Line
 
