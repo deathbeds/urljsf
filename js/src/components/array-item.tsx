@@ -42,10 +42,7 @@ export function ArrayFieldItemTemplate<
   return (
     <div>
       <Row className="mb-2 d-flex align-items-center">
-        <Col xs="10" lg="10" className="order-2">
-          {children}
-        </Col>
-        <Col xs="1" lg="1" className="py-0 order-3">
+        <Col xs="1" lg="1" className="py-0">
           {hasToolbar && (
             <div className="d-flex flex-row flex-wrap justify-content-between">
               {(hasMoveUp || hasMoveDown) && (
@@ -85,7 +82,10 @@ export function ArrayFieldItemTemplate<
             </div>
           )}
         </Col>
-        <Col xs="1" lg="1" className="py-0 order-1">
+        <Col xs="10" lg="10">
+          {children}
+        </Col>
+        <Col xs="1" lg="1" className="py-0">
           {hasRemove && (
             <div className="m-0 p-0">
               <RemoveButton
