@@ -59,6 +59,7 @@ description = "TODO: should be rolled into webpack build/watch"
 cmd = """
 rm -rf src/urljsf/_static/
 && cp -r js/dist/urljsf src/urljsf/_static/urljsf
+&& cp -r js/schema src/urljsf/_static/schema
 && rm -rf src/urljsf/_static/urljsf/demo/
 """
 [tasks.platform--]
@@ -156,7 +157,7 @@ outputs = ["js/dist"]
 [feature.tasks-build.tasks.build-py-static]
 cmd = """pixi r py-static--"""
 depends-on = ["build-js-app"]
-inputs = ["js/dist"]
+inputs = ["js/{dist,schema}"]
 outputs = ["src/urljsf/_static", "!**/demo/"]
 
 [feature.tasks-build.tasks.dist-npm]
