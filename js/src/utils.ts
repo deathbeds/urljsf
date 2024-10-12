@@ -4,6 +4,8 @@ import type { FormProps } from '@rjsf/core';
 import { UIOptionsType, isObject } from '@rjsf/utils';
 
 import { FileForm, URLForm, Urljsf } from './_schema.js';
+import { LabeledAddButton } from './components/add-button.js';
+import { ArrayFieldItemTemplate } from './components/array-item.js';
 import { ArrayFieldTemplate } from './components/array-template.js';
 import { ObjectGridTemplate } from './components/object-template.js';
 import { MIME_FRAGMENT } from './index.js';
@@ -17,6 +19,10 @@ const GLOBAL_UI = 'ui:globalOptions';
 const TEMPLATES = {
   ArrayFieldTemplate,
   ObjectFieldTemplate: ObjectGridTemplate,
+  ArrayFieldItemTemplate,
+  ButtonTemplates: {
+    AddButton: LabeledAddButton,
+  },
 };
 
 /** get a dataset with defaults */

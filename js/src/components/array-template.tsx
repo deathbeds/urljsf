@@ -64,6 +64,7 @@ export function ArrayFieldTemplate<
     ) : (
       description
     );
+
   return (
     <div>
       <Row className="p-0 m-0">
@@ -84,27 +85,29 @@ export function ArrayFieldTemplate<
             registry={registry}
           />
           <Container fluid key={`array-item-list-${idSchema.$id}`} className="p-0 m-0">
-            {items &&
-              items.map(
-                ({ key, ...itemProps }: ArrayFieldTemplateItemType<T, S, F>) => (
-                  <ArrayFieldItemTemplate key={key} {...itemProps} />
-                ),
-              )}
+            <Row>
+              <Col xs={12}>
+                {items &&
+                  items.map(
+                    ({ key, ...itemProps }: ArrayFieldTemplateItemType<T, S, F>) => (
+                      <ArrayFieldItemTemplate key={key} {...itemProps} />
+                    ),
+                  )}
+              </Col>
+            </Row>
             {canAdd && (
-              <Container className="">
-                <Row className="mt-2">
-                  <Col xs={11}></Col>
-                  <Col xs={1} className="py-0">
-                    <AddButton
-                      className="array-item-add"
-                      onClick={onAddClick}
-                      disabled={disabled || readonly}
-                      uiSchema={uiSchema}
-                      registry={registry}
-                    />
-                  </Col>
-                </Row>
-              </Container>
+              <Row>
+                <Col xs={12} className="py-0">
+                  <AddButton
+                    className="array-item-add align-bottom"
+                    onClick={onAddClick}
+                    disabled={disabled || readonly}
+                    uiSchema={uiSchema}
+                    registry={registry}
+                    title={uiSchema?.title || schema.title || title}
+                  />
+                </Col>
+              </Row>
             )}
           </Container>
         </Col>

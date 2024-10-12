@@ -1,6 +1,9 @@
 ["ui:options"]
 title = "A Task List (from TOML-based UI schema)"
 
+[tasks."ui:options"]
+copyable = true
+
 [tasks.items."ui:options".urljsfGrid.children]
 complete = ["col-md-3"]
 task = ["col-md-5"]

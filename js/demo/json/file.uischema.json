@@ -10,6 +10,9 @@
           }
         }
       }
+    },
+    "ui:options": {
+      "copyable": true
     }
   },
   "ui:options": {

@@ -1,6 +1,8 @@
 ui:options:
   title: A Task List (from YAML-based UI schema)
 tasks:
+  ui:options:
+    copyable: true
   items:
     ui:options:
       urljsfGrid:
