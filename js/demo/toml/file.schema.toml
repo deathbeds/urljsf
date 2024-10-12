@@ -6,7 +6,13 @@ This form validates user-provided data for a single TOML file.
 
 > _Some tasks have been left to be done below to show various features._
 """
-required = ["name", "tasks"]
+required = ["$schema", "name", "tasks"]
+
+[properties."$schema"]
+type = "string"
+format = "uri-reference"
+const = "../json/file.schema.json"
+default = "../json/file.schema.json"
 
 [properties.name]
 type = "string"

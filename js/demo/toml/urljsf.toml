@@ -1,6 +1,5 @@
 # this is the reference example, all others formats are generated from here
-# TODO: add a relative $schema
-
+"$schema" = "../../schema/v0/form.schema.json"
 
 [forms.url]
 schema = "./toml/url.schema.toml"

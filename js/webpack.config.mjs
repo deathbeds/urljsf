@@ -84,7 +84,7 @@ const config = {
   },
   plugins: [
     new CopyPlugin({
-      patterns: [{ from: 'demo/*/*.{json,toml,yaml}' }],
+      patterns: [{ from: 'demo/*/*.{json,toml,yaml}' }, { from: 'schema/*/*.json' }],
     }),
     new HtmlWebpackPlugin({
       filename: 'demo/index.html',

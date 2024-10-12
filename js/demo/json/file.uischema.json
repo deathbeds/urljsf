@@ -1,4 +1,9 @@
 {
+  "$schema": {
+    "ui:options": {
+      "widget": "hidden"
+    }
+  },
   "tasks": {
     "items": {
       "ui:options": {

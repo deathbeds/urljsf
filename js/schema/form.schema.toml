@@ -16,6 +16,8 @@ required = ["forms", "templates"]
 additionalProperties = false
 
 [properties]
+"$schema" = {type = "string", format = "uri-reference"}
+"$id" = {type = "string", format = "uri-reference"}
 forms = {"$ref" = "#/definitions/forms", description = """
 forms that describe how to build the URL
 """}
@@ -83,7 +85,6 @@ an error, preventing the submit button from being shown.
 title = "URL Form"
 description = "a definition of a form to build a URL"
 type = "object"
-required = ["url_template"]
 additionalProperties = false
 
 [definitions.url-form.properties]

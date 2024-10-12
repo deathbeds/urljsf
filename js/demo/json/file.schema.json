@@ -3,6 +3,12 @@
   "title": "A Task List",
   "description": "This form validates user-provided data for a single JSON file.\n\n> _Some tasks have been left to be done below to show various features._\n",
   "properties": {
+    "$schema": {
+      "type": "string",
+      "const": "../json/file.schema.json",
+      "default": "../json/file.schema.json",
+      "format": "uri-reference"
+    },
     "name": {
       "type": "string",
       "description": "**What** is _this_ list about?",
@@ -41,5 +47,5 @@
       "required": ["task"]
     }
   },
-  "required": ["name", "tasks"]
+  "required": ["$schema", "name", "tasks"]
 }

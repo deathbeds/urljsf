@@ -1,3 +1,4 @@
+$schema: ../../schema/v0/form.schema.json
 forms:
   url:
     schema: ./yaml/url.schema.yaml

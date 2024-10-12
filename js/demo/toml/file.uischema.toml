@@ -1,6 +1,9 @@
 ["ui:options"]
 title = "A Task List (from TOML-based UI schema)"
 
+["$schema"."ui:options"]
+widget = "hidden"
+
 [tasks."ui:options"]
 copyable = true
 

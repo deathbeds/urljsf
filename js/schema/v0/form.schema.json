@@ -5,6 +5,14 @@
   "title": "urljsf",
   "description": "A schema for building forms for building URLs for building...",
   "properties": {
+    "$id": {
+      "type": "string",
+      "format": "uri-reference"
+    },
+    "$schema": {
+      "type": "string",
+      "format": "uri-reference"
+    },
     "forms": {
       "$ref": "#/definitions/forms",
       "description": "forms that describe how to build the URL\n"
@@ -146,8 +154,7 @@
           "descripton": "URL for an `rjsf` UI schema to describe the URL fields\n"
         }
       },
-      "additionalProperties": false,
-      "required": ["url_template"]
+      "additionalProperties": false
     }
   },
   "required": ["forms", "templates"]

@@ -5,9 +5,15 @@ description: |
 
   > _Some tasks have been left to be done below to show various features._
 required:
+  - $schema
   - name
   - tasks
 properties:
+  $schema:
+    type: string
+    format: uri-reference
+    const: ../json/file.schema.json
+    default: ../json/file.schema.json
   name:
     type: string
     description: '**What** is _this_ list about?'

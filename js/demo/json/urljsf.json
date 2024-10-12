@@ -1,4 +1,5 @@
 {
+  "$schema": "../../schema/v0/form.schema.json",
   "forms": {
     "url": {
       "schema": "./json/url.schema.json",
