@@ -25,6 +25,11 @@
       "type": "string",
       "description": "additional simple CSS to apply to an `iframe` element (implies `iframe`)\n"
     },
+    "no_bootstrap": {
+      "type": "boolean",
+      "description": "don't try to add a link to bootstrap if missing.",
+      "default": false
+    },
     "templates": {
       "$ref": "#/definitions/templates",
       "description": "`nunjucks` templates that control URLs for machines and markdown for humans\n"

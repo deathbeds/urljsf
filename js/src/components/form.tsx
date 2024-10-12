@@ -58,12 +58,14 @@ const SUBMIT_DEFAULT: Pick<ButtonProps, 'variant' | 'target'> = {
  */
 export async function makeOneForm(script: HTMLScriptElement): Promise<void> {
   const config = await getConfig(script);
+
   const container = document.createElement('div');
   script.parentNode!.insertBefore(container, script);
 
-  const [fileFormProps, urlFormProps] = await Promise.all([
+  const [fileFormProps, urlFormProps, _bootstrap] = await Promise.all([
     config.forms.file == null ? null : initFormProps(config.forms.file),
     initFormProps(config.forms.url),
+    ensureBootstrap(config),
   ]);
 
   const [nunjucksEnv, initText] = await Promise.all([
@@ -77,7 +79,6 @@ export async function makeOneForm(script: HTMLScriptElement): Promise<void> {
   if (isolated) {
     render(await renderIframe(config, form), container);
   } else {
-    await ensureBootstrap();
     render(isolated ? await renderIframe(config, form) : form, container);
   }
 }

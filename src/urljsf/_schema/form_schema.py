@@ -95,3 +95,4 @@ class Urljsf:
     field_schema: str | None = None
     iframe: bool | None = None
     iframe_style: str | None = None
+    no_bootstrap: bool | None = False

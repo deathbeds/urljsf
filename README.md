@@ -113,13 +113,18 @@ A very simple usage is an `.html` file that links to resources on the internet.
 <script type="module" src="https://deathbeds.github.io/prjsf/_static/index.js"></script>
 ```
 
-This technique has many limitations. Slightly better would be to download a GitHub
-release and unpack it, serving the files next to it.
+This technique has _many_ limitations, and is **not recommended**.
+
+Some ways to improve:
+
+- download a GitHub release and unpack it, serving the files next to it
+- ensure bootstrap is loaded _before_ the script, with a `link` tag in a `head`.
+- on the `script` element, use a `src` to point to a valid `urljsf` definition
 
 ### Command Line
 
 The `urljsf` command line generates a ready-to-serve, standalone site with all required
-static assets. Written in `python`, it can reuse the extension JSON schema support in
+static assets. Written in `python`, it can reuse the extensive JSON schema support in
 the python ecosystem, such as `msgspec` or `pydantic`.
 
 ```bash
@@ -154,7 +159,7 @@ directive, and more advanced use cases.
 ## Limitations
 
 - `react-json-schema-form` cannot represent all possible data structures, such as
-  writing a _new_ JSON schema in JSON schema, or many features added after Draft 7
+  writing a _new_ JSON schema _in_ JSON schema, or many features added after Draft 7
 - the generated scripts _won't_ work when served from `file://` due to browser CORS
   headers requirements for `type="module"` scripts
 - the [`sphinx`](#sphinx) integration is only tested with the `html` builder

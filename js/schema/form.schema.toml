@@ -35,6 +35,11 @@ additional simple CSS to apply to an `iframe` element (implies `iframe`)
 """
 type = "string"
 
+[properties.no_bootstrap]
+type = "boolean"
+default = false
+description = """don't try to add a link to bootstrap if missing."""
+
 # forms ########################################################################
 [definitions.forms]
 type = "object"

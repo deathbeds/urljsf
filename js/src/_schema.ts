@@ -56,6 +56,10 @@ export interface Urljsf {
    *
    */
   iframe_style?: string;
+  /**
+   * don't try to add a link to bootstrap if missing.
+   */
+  no_bootstrap?: boolean;
   templates: Templates;
 }
 /**
