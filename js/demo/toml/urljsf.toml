@@ -32,7 +32,7 @@ submit_button = """
 {% for name, tasks in file.tasks | default([]) | groupby("task") %}
 {% set dupes = tasks | length %}
 {% if dupes > 1 %}
-- {{ dupes }} tasks have the name _"{{ name }}"_
+- [ ] {{ dupes }} tasks have the name _"{{ name }}"_
 {% endif %}
 {% endfor %}
 """

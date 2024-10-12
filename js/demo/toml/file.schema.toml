@@ -1,7 +1,11 @@
 "$schema" = "http://json-schema.org/draft-07/schema#"
 
 title = "A Task List"
-description = "a TOML demo of urljsf"
+description = """
+This form validates user-provided data for a single TOML file.
+
+> _Some tasks have been left to be done below to show various features._
+"""
 required = ["name", "tasks"]
 
 [properties.name]
@@ -11,7 +15,7 @@ minItems = 3
 
 [properties.tasks]
 type = "array"
-description = "What is at least one thing that needs to get done?"
+description = "What is **at least** one **unique** thing that needs to get done?"
 minItems = 1
 maxItems = 10
 

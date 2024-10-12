@@ -14,8 +14,11 @@ import {
   titleId,
 } from '@rjsf/utils';
 
-import { UrljsfGridOptions } from './_props.js';
-import { emptyObject } from './tokens.js';
+import Markdown from 'markdown-to-jsx';
+
+import { UrljsfGridOptions } from '../_props.js';
+import { emptyObject } from '../tokens.js';
+import { useMarkdown } from '../utils.js';
 
 const DEFAULT_GRID_OPTIONS: UrljsfGridOptions = {
   default: ['col-12'],
@@ -64,6 +67,13 @@ export function ObjectGridTemplate<
 
   const addButtonClasses = ['object-property-expand', ...gridOptions.addButton];
 
+  let richDescription =
+    description && useMarkdown(uiOptions) ? (
+      <Markdown>{description}</Markdown>
+    ) : (
+      description
+    );
+
   return (
     <>
       {title && (
@@ -76,10 +86,10 @@ export function ObjectGridTemplate<
           registry={registry}
         />
       )}
-      {description && (
+      {richDescription && (
         <DescriptionFieldTemplate
           id={descriptionId<T>(idSchema)}
-          description={description}
+          description={richDescription}
           schema={schema}
           uiSchema={uiSchema}
           registry={registry}

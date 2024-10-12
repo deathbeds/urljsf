@@ -8,7 +8,7 @@ export async function main() {
   const urjsfScripts = [...document.querySelectorAll(SELECTOR)] as HTMLScriptElement[];
 
   if (urjsfScripts.length) {
-    const { makeOneForm } = await import('./form.js');
+    const { makeOneForm } = await import('./components/form.js');
     urjsfScripts.forEach(makeOneForm);
   }
 }

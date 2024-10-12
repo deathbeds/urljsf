@@ -1,17 +1,23 @@
 // Copyright (C) urljsf contributors.
 // Distributed under the terms of the Modified BSD License.
 import type { FormProps } from '@rjsf/core';
-import { isObject } from '@rjsf/utils';
+import { UIOptionsType, isObject } from '@rjsf/utils';
 
 import { FileForm, URLForm, Urljsf } from './_schema.js';
+import { ArrayFieldTemplate } from './components/array-template.js';
+import { ObjectGridTemplate } from './components/object-template.js';
 import { MIME_FRAGMENT } from './index.js';
-import { ObjectGridTemplate } from './object-template.js';
 import { TFormat, emptyObject } from './tokens.js';
 
 let _NEXT_DATA_SET = 0;
 const _DATA_SETS = new WeakMap<Urljsf, number>();
 
 const GLOBAL_UI = 'ui:globalOptions';
+
+const TEMPLATES = {
+  ArrayFieldTemplate,
+  ObjectFieldTemplate: ObjectGridTemplate,
+};
 
 /** get a dataset with defaults */
 export async function getConfig(el: HTMLScriptElement): Promise<Urljsf> {
@@ -36,12 +42,13 @@ export async function initFormProps(
   const props: Omit<FormProps, 'validator'> = {
     formData,
     schema,
+    templates: TEMPLATES,
     uiSchema: {
       ...uiSchema,
       [GLOBAL_UI]: {
         enableMarkdownInDescription: true,
         ...(uiSchema[GLOBAL_UI] || emptyObject),
-        ObjectFieldTemplate: ObjectGridTemplate,
+        ...TEMPLATES,
       },
     },
   };
@@ -156,4 +163,20 @@ export function getIdPrefix(config: Urljsf): string {
 
 export function reduceTrimmedLines(memo: string, line: string): string {
   return `${memo}${line.trim()}`;
+}
+
+const MD_KEY = 'enableMarkdownInDescription';
+
+export function useMarkdown(uiOptions: UIOptionsType): boolean {
+  const globalOptions: Record<string, any> = (uiOptions.globalOptions ||
+    emptyObject) as any;
+  const useMarkdown =
+    uiOptions[MD_KEY] != null
+      ? uiOptions[MD_KEY]
+      : globalOptions &&
+          typeof globalOptions == 'object' &&
+          globalOptions[MD_KEY] != null
+        ? globalOptions[MD_KEY]
+        : true;
+  return useMarkdown;
 }

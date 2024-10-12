@@ -52,7 +52,7 @@ yarn prettier
 """
 [tasks.markdownlint--]
 cmd = """
-yarn markdownlint-cli2 "*.md" "{docs,tests,src,js,.github}/**/*.{md}"
+yarn markdownlint-cli2 "*.md" "{docs,tests,src,js,.github}/**/*.md"
 """
 [tasks.py-static--]
 description = "TODO: should be rolled into webpack build/watch"
@@ -235,7 +235,7 @@ inputs = [
 [feature.tasks-lint.tasks.fix-js-markdownlint]
 cmd = "pixi r markdownlint-- --fix"
 depends-on = ["setup-js"]
-inputs = ["*.{md,json}", "{docs,tests,src,js,.github}/**/*.{md}", "!src/**/_static"]
+inputs = ["*.{md,json}", "{docs,tests,src,js,.github}/**/*.md", "!src/**/_static"]
 
 [feature.tasks-lint.tasks.fix-js-dedupe]
 cmd = "yarn yarn-berry-deduplicate --fail --strategy fewer"
@@ -273,7 +273,7 @@ inputs = [
 [feature.tasks-lint.tasks.lint-js-markdownlint]
 cmd = "pixi r markdownlint--"
 depends-on = ["setup-js"]
-inputs = ["*.{md,json}", "{docs,tests,src,js,.github}/**/*.{md}", "!src/**/_static"]
+inputs = ["*.{md,json}", "{docs,tests,src,js,.github}/**/*.md", "!src/**/_static"]
 
 # test #########################################################################
 [feature.tasks-test.tasks.test-pytest]
@@ -362,6 +362,12 @@ watchfiles "pixi r py-static--" js/dist
 cmd = """
 export $(pixi r schema-vars--)
 && watchfiles "pixi r schema-all--" $SCHEMA_TOML $PROPS_TS scripts/schema.py
+"""
+
+[feature.tasks-build.tasks.serve-demo]
+cmd = """
+cd js/dist
+&& python -m http.server -b 127.0.0.1
 """
 
 [feature.tasks-docs.tasks.watch-docs]

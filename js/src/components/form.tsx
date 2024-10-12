@@ -14,8 +14,8 @@ import { ReadonlySignal, batch, computed, signal } from '@preact/signals';
 import Markdown from 'markdown-to-jsx';
 import type { MarkdownToJSX } from 'markdown-to-jsx';
 
-import { Urljsf } from './_schema.js';
-import { ensureNunjucks, renderMarkdown, renderUrl } from './nunjucks.js';
+import { Urljsf } from '../_schema.js';
+import { ensureNunjucks, renderMarkdown, renderUrl } from '../nunjucks.js';
 import {
   DEFAULTS,
   FORM_CLASS,
@@ -23,8 +23,9 @@ import {
   IErrors,
   IFormProps,
   emptyObject,
-} from './tokens.js';
-import { getConfig, getFileContent, getIdPrefix, initFormProps } from './utils.js';
+} from '../tokens.js';
+import { getConfig, getFileContent, getIdPrefix, initFormProps } from '../utils.js';
+import { CheckItem } from './check-item.js';
 
 const FORM_PRE_DEFAULTS: Partial<FormProps> = {
   schema: {},
@@ -69,13 +70,8 @@ export async function makeOneForm(script: HTMLScriptElement): Promise<void> {
     getFileContent(config, fileFormProps.formData),
   ]);
 
-  const form = formComponent({
-    config,
-    initText,
-    fileFormProps,
-    urlFormProps,
-    nunjucksEnv,
-  });
+  const props = { config, initText, fileFormProps, urlFormProps, nunjucksEnv };
+  const form = <UrljsfForm {...props} />;
   const isolated = !!(config.iframe || config.iframe_style);
   render(isolated ? await renderIframe(config, form) : form, container);
 }
@@ -104,7 +100,7 @@ async function renderIframe(config: Urljsf, form: JSX.Element): Promise<JSX.Elem
 }
 
 /** a component for a file and URL form */
-function formComponent(props: IFormProps): JSX.Element {
+function UrljsfForm(props: IFormProps): JSX.Element {
   const { config, initText, fileFormProps, urlFormProps, nunjucksEnv } = props;
   const idPrefix = getIdPrefix(config);
   const initContext: IContext = {
@@ -181,7 +177,7 @@ function formComponent(props: IFormProps): JSX.Element {
     });
   };
 
-  function formProps(form: 'file' | 'url'): FormProps {
+  function makeFormProps(form: 'file' | 'url'): FormProps {
     const [onChange, initProps] =
       form == 'file'
         ? [onFileFormChange, fileFormProps]
@@ -202,30 +198,30 @@ function formComponent(props: IFormProps): JSX.Element {
     let submitButton: JSX.Element;
     const checkItems: JSX.Element[] = [];
 
+    const formProps = {
+      file: makeFormProps('file'),
+      url: makeFormProps('url'),
+    };
+
+    for (const form of ['file', 'url']) {
+      const label =
+        formProps[form as 'file' | 'url'].schema.title ||
+        (form == 'url' ? 'URL' : 'File');
+      checkItems.push(
+        CheckItem({
+          label,
+          result: errors.value[form as 'file' | 'url'],
+          key: `form-${form}`,
+          markdown: true,
+        }),
+      );
+    }
+
     if (checks && checkResults?.value) {
       for (const key of Object.keys(checks)) {
         const result = checkResults.value[key];
         checkItems.push(
-          <li className="list-group-item" key={`${!result}-${key}`}>
-            <div className="form-check">
-              <input
-                className="form-check-input"
-                type="checkbox"
-                checked={!result}
-                disabled
-              ></input>
-              <label className="form-check-label">
-                <em>{key}</em>
-              </label>
-            </div>
-            {!result ? (
-              <></>
-            ) : (
-              <div>
-                <Markdown>{result}</Markdown>
-              </div>
-            )}
-          </li>,
+          CheckItem({ label: key, result, markdown: true, key: `${!result}-${key}` }),
         );
       }
     }
@@ -247,13 +243,13 @@ function formComponent(props: IFormProps): JSX.Element {
     return (
       <div className={FORM_CLASS} id={idPrefix}>
         <div>
-          <RJSFForm {...formProps('file')}>
+          <RJSFForm {...formProps.file}>
             <Fragment />
           </RJSFForm>
         </div>
         <hr />
         <div>
-          <RJSFForm {...formProps('url')}>
+          <RJSFForm {...formProps.url}>
             <Fragment />
           </RJSFForm>
         </div>
