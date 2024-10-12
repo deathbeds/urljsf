@@ -82,9 +82,9 @@ python -m pip install
 [tasks.schema-vars--]
 cmd = '''echo
   PROPS_TS=js/src/_props.ts
-  PROPS_JSON=docs/_static/schema/v0/props.schema.json
-  SCHEMA_TOML=$PIXI_PROJECT_ROOT/docs/_static/schema/form.schema.toml
-  SCHEMA_JSON=$PIXI_PROJECT_ROOT/docs/_static/schema/v0/form.schema.json
+  PROPS_JSON=js/schema/v0/props.schema.json
+  SCHEMA_TOML=$PIXI_PROJECT_ROOT/js/schema/form.schema.toml
+  SCHEMA_JSON=$PIXI_PROJECT_ROOT/js/schema/v0/form.schema.json
   SCHEMA_TS=$PIXI_PROJECT_ROOT/js/src/_schema.ts
   SCHEMA_PY=$PIXI_PROJECT_ROOT/src/urljsf/_schema/__init__.py'''
 
@@ -190,22 +190,22 @@ outputs = ["dist/SHA256SUMS"]
 [feature.tasks-build.tasks.build-schema-props]
 cmd = """export $(pixi r schema-vars--) && pixi r schema-ts-json--"""
 inputs = ["js/src/_props.ts", "scripts/schema.py"]
-outputs = ["docs/_static/schema/v0/props.schema.json"]
+outputs = ["js/schema/v0/props.schema.json"]
 
 [feature.tasks-build.tasks.build-schema-json]
 cmd = """export $(pixi r schema-vars--) && pixi r schema-toml-json--"""
-inputs = ["docs/_static/schema/form.schema.toml", "scripts/schema.py"]
-outputs = ["docs/_static/schema/v0/form.schema.json"]
+inputs = ["js/schema/form.schema.toml", "scripts/schema.py"]
+outputs = ["js/schema/v0/form.schema.json"]
 
 [feature.tasks-build.tasks.build-schema-ts]
 cmd = """export $(pixi r schema-vars--) && pixi r schema-json-ts--"""
-inputs = ["docs/_static/schema/v0/form.schema.json", "scripts/schema.py"]
+inputs = ["js/schema/v0/form.schema.json", "scripts/schema.py"]
 outputs = ["js/src/_schema.ts"]
 depends-on = ["build-schema-json"]
 
 [feature.tasks-build.tasks.build-schema-py]
 cmd = """export $(pixi r schema-vars--) && pixi r schema-json-py--"""
-inputs = ["docs/_static/schema/v0", "scripts/schema.py"]
+inputs = ["js/schema/v0", "scripts/schema.py"]
 outputs = ["src/urljsf/_schema"]
 depends-on = ["build-schema-json"]
 
@@ -220,7 +220,7 @@ cmd = """
     --option=indent_string="  "
     *.toml
     js/demo/toml/*.toml
-    docs/_static/schema/*.toml
+    js/schema/*.toml
     """
 inputs = ["*.toml", "{docs,js,src,tests}/**/*.toml"]
 
