@@ -26,11 +26,13 @@ submit_button = """
 [b]: https://img.shields.io/github/issues-pr/{{ url.repo }}?logo=github&label={{ url.repo | urlencode }}&color=blue
 """
 
-custom_errors = """
+[templates.checks]
+
+"Unique Names" = """
 {% for name, tasks in file.tasks | default([]) | groupby("task") %}
 {% set dupes = tasks | length %}
 {% if dupes > 1 %}
-- 💥 {{ dupes }} tasks have the name _"{{ name }}"_
+- {{ dupes }} tasks have the name _"{{ name }}"_
 {% endif %}
 {% endfor %}
 """

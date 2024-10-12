@@ -133,18 +133,26 @@ function formComponent(props: IFormProps): JSX.Element {
     }),
   );
 
-  const { custom_errors } = config.templates;
+  const { checks } = config.templates;
+  const checkCount = !checks ? 0 : Object.keys(checks).length;
 
-  let customErrors: ReadonlySignal<string> | null = null;
+  let checkResults: ReadonlySignal<Record<string, string>> | null = null;
 
-  if (custom_errors) {
-    customErrors = computed(() => {
-      console.warn('custom');
-      return renderMarkdown({
-        template: custom_errors,
-        context: context.value,
-        env: nunjucksEnv,
-      }).trim();
+  if (checks && checkCount) {
+    checkResults = computed(() => {
+      const errors: Record<string, string> = {};
+      for (const [label, template] of Object.entries(checks)) {
+        const rendered = renderMarkdown({
+          template: template,
+          context: context.value,
+          env: nunjucksEnv,
+        }).trim();
+
+        if (rendered) {
+          errors[label] = rendered;
+        }
+      }
+      return errors;
     });
   }
 
@@ -153,7 +161,7 @@ function formComponent(props: IFormProps): JSX.Element {
       [
         ...errors.value.file,
         ...errors.value.url,
-        ...(customErrors?.value ? [customErrors.value] : []),
+        ...(checkResults?.value ? Object.keys(checkResults.value) : []),
       ].length,
   );
 
@@ -192,11 +200,37 @@ function formComponent(props: IFormProps): JSX.Element {
 
   const URLJSF = () => {
     let submitButton: JSX.Element;
-    let customErrorEl: JSX.Element = <></>;
-    if (errorCount.value || customErrors?.value) {
-      if (customErrors?.value) {
-        customErrorEl = <Markdown>{customErrors.value}</Markdown>;
+    const checkItems: JSX.Element[] = [];
+
+    if (checks && checkResults?.value) {
+      for (const key of Object.keys(checks)) {
+        const result = checkResults.value[key];
+        checkItems.push(
+          <li className="list-group-item" key={`${!result}-${key}`}>
+            <div className="form-check">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                checked={!result}
+                disabled
+              ></input>
+              <label className="form-check-label">
+                <em>{key}</em>
+              </label>
+            </div>
+            {!result ? (
+              <></>
+            ) : (
+              <div>
+                <Markdown>{result}</Markdown>
+              </div>
+            )}
+          </li>,
+        );
       }
+    }
+
+    if (errorCount.value) {
       submitButton = (
         <Button onClick={onErrorClick} variant="danger" {...BTN_COMMON}>
           {errorCount} Error{errorCount.value > 1 ? 's' : ''}
@@ -223,9 +257,10 @@ function formComponent(props: IFormProps): JSX.Element {
             <Fragment />
           </RJSFForm>
         </div>
-        <hr />
-        {customErrorEl}
-        {submitButton}
+        <li className="list-group">
+          {...checkItems}
+          <li className=" list-group-item">{submitButton}</li>
+        </li>
       </div>
     );
   };

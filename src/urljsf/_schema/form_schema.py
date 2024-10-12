@@ -24,6 +24,9 @@ AnySchemaLocation = str
 AnyTemplate = str | list[str]
 
 
+Checks = dict[str, AnyTemplate] | None
+
+
 @dataclass
 class Templates:
     """[`nunjucks`][nunjucks] strings (or lists of strings) that control how strings are built
@@ -41,7 +44,7 @@ class Templates:
 
     submit_button: AnyTemplate
     url: AnyTemplate
-    custom_errors: AnyTemplate | None = None
+    checks: Checks | None = None
 
 
 @dataclass

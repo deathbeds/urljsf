@@ -17,7 +17,12 @@ templates:
     ![open PRs on {{ url.repo }}][b] Start new YAML Pull Request
 
     [b]: https://img.shields.io/github/issues-pr/{{ url.repo }}?logo=github&label={{ url.repo | urlencode }}&color=blue
-  custom_errors:
-    "{% for name, tasks in file.tasks | default([]) | groupby(\"task\") %}\n{% set dupes = tasks | length %}\n{% if
-    dupes > 1 %}\n- \U0001F4A5 {{ dupes }} tasks have the name _\"{{ name }}\"_\n{% endif %}\n{% endfor %}\n"
+  checks:
+    Unique Names: |
+      {% for name, tasks in file.tasks | default([]) | groupby("task") %}
+      {% set dupes = tasks | length %}
+      {% if dupes > 1 %}
+      - {{ dupes }} tasks have the name _"{{ name }}"_
+      {% endif %}
+      {% endfor %}
 iframe: true

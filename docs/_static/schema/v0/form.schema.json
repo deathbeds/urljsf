@@ -25,6 +25,7 @@
   "additionalProperties": false,
   "definitions": {
     "any-file-format": {
+      "type": "string",
       "title": "File Format",
       "description": "a format that can be serialized or deserialized",
       "enum": ["json", "toml", "yaml"]
@@ -49,6 +50,13 @@
           "minItems": 1
         }
       ]
+    },
+    "checks": {
+      "type": "object",
+      "description": "`nunjucks` templates keyed by their label: any evaluating to a non-whitespace\nstring will be considered failing.",
+      "additionalProperties": {
+        "$ref": "#/definitions/any-template"
+      }
     },
     "file-form": {
       "type": "object",
@@ -101,9 +109,9 @@
       "type": "object",
       "description": "[`nunjucks`][nunjucks] strings (or lists of strings) that control how strings are built\nfrom forms.\n\nThe [jinja compatibility layer][jinjacompat] is enabled, allowing for more expressive,\npython-like syntax. Some addition filters are included:\n\n- `base64` turns a string into its [Base64]-encoded alternative\n\n[nunjucks]: https://mozilla.github.io/nunjucks/templating.html\n[jinjacompat]: https://mozilla.github.io/nunjucks/api.html#installjinjacompat\n[Base64]: https://developer.mozilla.org/en-US/docs/Glossary/Base64",
       "properties": {
-        "custom_errors": {
-          "$ref": "#/definitions/any-template",
-          "description": "a markdown string, which if rendered to _any_ non-whitespace, will be treated as\nan error, preventing the submit button from being shown.\n"
+        "checks": {
+          "$ref": "#/definitions/checks",
+          "description": "markdown templates, which if rendered to _any_ non-whitespace, will be treated as\nan error, preventing the submit button from being shown.\n"
         },
         "submit_button": {
           "$ref": "#/definitions/any-template",

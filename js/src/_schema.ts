@@ -37,17 +37,17 @@ export type ASchemaLocation4 = string;
  */
 export type ASchemaLocation5 = string;
 /**
+ * This interface was referenced by `Urljsf`'s JSON-Schema
+ * via the `definition` "any-template".
+ */
+export type AnyTemplate = string | [string, ...string[]];
+/**
  * a path to a JSON schema, serialized as JSON, TOML, or (simple) YAML.
  *
  * This interface was referenced by `Urljsf`'s JSON-Schema
  * via the `definition` "any-schema-location".
  */
 export type ASchemaLocation6 = string;
-/**
- * This interface was referenced by `Urljsf`'s JSON-Schema
- * via the `definition` "any-template".
- */
-export type AnyTemplate = string | [string, ...string[]];
 
 /**
  * A schema for building forms for building URLs for building...
@@ -335,12 +335,7 @@ export interface Props1 {
  *
  */
 export interface Templates {
-  /**
-   * a markdown string, which if rendered to _any_ non-whitespace, will be treated as
-   * an error, preventing the submit button from being shown.
-   *
-   */
-  custom_errors?: string | [string, ...string[]];
+  checks?: Checks;
   /**
    * text to show on the button when a form is valid. multiple lines will be joined
    * with `\n`, then leading and trailing whitespace will be trimmed.
@@ -352,6 +347,24 @@ export interface Templates {
    *
    */
   url: string | [string, ...string[]];
+}
+/**
+ * markdown templates, which if rendered to _any_ non-whitespace, will be treated as
+ * an error, preventing the submit button from being shown.
+ *
+ */
+export interface Checks {
+  [k: string]: AnyTemplate;
+}
+/**
+ * `nunjucks` templates keyed by their label: any evaluating to a non-whitespace
+ * string will be considered failing.
+ *
+ * This interface was referenced by `Urljsf`'s JSON-Schema
+ * via the `definition` "checks".
+ */
+export interface Checks1 {
+  [k: string]: AnyTemplate;
 }
 /**
  * a description of a form that builds a data file
@@ -397,12 +410,7 @@ export interface Forms1 {
  * via the `definition` "templates".
  */
 export interface Templates1 {
-  /**
-   * a markdown string, which if rendered to _any_ non-whitespace, will be treated as
-   * an error, preventing the submit button from being shown.
-   *
-   */
-  custom_errors?: string | [string, ...string[]];
+  checks?: Checks;
   /**
    * text to show on the button when a form is valid. multiple lines will be joined
    * with `\n`, then leading and trailing whitespace will be trimmed.
