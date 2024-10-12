@@ -15,6 +15,7 @@ import Markdown from 'markdown-to-jsx';
 import type { MarkdownToJSX } from 'markdown-to-jsx';
 
 import { Urljsf } from '../_schema.js';
+import { ensureBootstrap, getBoostrapCss } from '../bootstrap.js';
 import { ensureNunjucks, renderMarkdown, renderUrl } from '../nunjucks.js';
 import {
   DEFAULTS,
@@ -73,13 +74,18 @@ export async function makeOneForm(script: HTMLScriptElement): Promise<void> {
   const props = { config, initText, fileFormProps, urlFormProps, nunjucksEnv };
   const form = <UrljsfForm {...props} />;
   const isolated = !!(config.iframe || config.iframe_style);
-  render(isolated ? await renderIframe(config, form) : form, container);
+  if (isolated) {
+    render(await renderIframe(config, form), container);
+  } else {
+    await ensureBootstrap();
+    render(isolated ? await renderIframe(config, form) : form, container);
+  }
 }
 
 /** a component for a form in a (themed) iframe */
 async function renderIframe(config: Urljsf, form: JSX.Element): Promise<JSX.Element> {
   const { IFrame } = await import('./iframe.js');
-  const cssUrl = (await import('bootstrap/dist/css/bootstrap.min.css')).default;
+  const cssUrl = await getBoostrapCss();
   const style = config.iframe_style || DEFAULTS.iframe_style;
   return (
     <IFrame style={style}>

@@ -46,6 +46,8 @@ export const DEFAULTS: Partial<Urljsf> = {
   iframe_style: 'width: 100%; height: 80vh;',
 };
 
+export const BOOTSTRAP_ID = 'urljsf-bootstrap';
+
 export type TFormat = 'json' | 'yaml' | 'toml';
 
 export const emptyObject = Object.freeze({});
