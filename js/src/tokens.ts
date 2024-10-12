@@ -67,7 +67,7 @@ export interface IContext {
 export interface IFormProps {
   config: Urljsf;
   initText: string;
-  fileFormProps: Partial<FormProps>;
+  fileFormProps: Partial<FormProps> | null;
   urlFormProps: Partial<FormProps>;
   nunjucksEnv: nunjucks.Environment;
 }

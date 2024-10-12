@@ -38,7 +38,7 @@ type = "string"
 # forms ########################################################################
 [definitions.forms]
 type = "object"
-required = ["url", "file"]
+required = ["url"]
 description = "forms used to build and populate a URL"
 
 [definitions.forms.properties.url]

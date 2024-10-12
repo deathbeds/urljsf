@@ -84,7 +84,11 @@ function pruneObject(data: Record<string, any>) {
 
 /** lazily serialize some data */
 export async function getFileContent(config: Urljsf, formData: any): Promise<string> {
-  const { format, prune_empty } = config.forms.file;
+  const fileForm = config.forms.file;
+  if (fileForm == null) {
+    return '';
+  }
+  const { format, prune_empty } = fileForm;
   let value = '';
 
   if (prune_empty !== false) {

@@ -63,7 +63,7 @@ export interface Urljsf {
  *
  */
 export interface Forms {
-  file: FileForm;
+  file?: FileForm;
   url: URLForm;
 }
 /**
@@ -394,7 +394,7 @@ export interface FileForm1 {
  * via the `definition` "forms".
  */
 export interface Forms1 {
-  file: FileForm;
+  file?: FileForm;
   url: URLForm;
 }
 /**

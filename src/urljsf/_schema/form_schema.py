@@ -81,8 +81,8 @@ class UrlForm:
 class Forms:
     """forms used to build and populate a URL"""
 
-    file: FileForm
     url: UrlForm
+    file: FileForm | None = None
 
 
 @dataclass

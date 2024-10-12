@@ -61,13 +61,13 @@ export async function makeOneForm(script: HTMLScriptElement): Promise<void> {
   script.parentNode!.insertBefore(container, script);
 
   const [fileFormProps, urlFormProps] = await Promise.all([
-    initFormProps(config.forms.file),
+    config.forms.file == null ? null : initFormProps(config.forms.file),
     initFormProps(config.forms.url),
   ]);
 
   const [nunjucksEnv, initText] = await Promise.all([
     ensureNunjucks(),
-    getFileContent(config, fileFormProps.formData),
+    fileFormProps == null ? '' : getFileContent(config, fileFormProps.formData),
   ]);
 
   const props = { config, initText, fileFormProps, urlFormProps, nunjucksEnv };
@@ -106,13 +106,14 @@ function UrljsfForm(props: IFormProps): JSX.Element {
   const initContext: IContext = {
     config,
     url: urlFormProps.formData,
-    file: fileFormProps.formData,
+    file: fileFormProps == null ? emptyObject : fileFormProps.formData,
     text: initText,
   };
   const initErrors: IErrors = { url: [], file: [] };
   const text = signal(initText);
   const context = signal(initContext);
   const errors = signal(initErrors);
+  const defaultSubmit = urlFormProps.schema?.title || 'Submit';
 
   const url = computed(() =>
     renderUrl({
@@ -123,7 +124,7 @@ function UrljsfForm(props: IFormProps): JSX.Element {
   );
   const submitText = computed(() =>
     renderMarkdown({
-      template: config.templates.submit_button,
+      template: config.templates.submit_button || defaultSubmit,
       context: context.value,
       env: nunjucksEnv,
     }),
@@ -186,7 +187,7 @@ function UrljsfForm(props: IFormProps): JSX.Element {
       ...FORM_PRE_DEFAULTS,
       idPrefix: `${idPrefix}-${form}-`,
       id: `${idPrefix}-${form}`,
-      ...((config.forms[form].props || emptyObject) as any),
+      ...((config.forms[form]?.props || emptyObject) as any),
       ...initProps,
       onChange,
       formData: context.value[form],
@@ -204,6 +205,9 @@ function UrljsfForm(props: IFormProps): JSX.Element {
     };
 
     for (const form of ['file', 'url']) {
+      if (form == 'file' && !fileFormProps) {
+        continue;
+      }
       const label =
         formProps[form as 'file' | 'url'].schema.title ||
         (form == 'url' ? 'URL' : 'File');
@@ -242,12 +246,14 @@ function UrljsfForm(props: IFormProps): JSX.Element {
 
     return (
       <div className={FORM_CLASS} id={idPrefix}>
-        <div>
-          <RJSFForm {...formProps.file}>
-            <Fragment />
-          </RJSFForm>
-        </div>
-        <hr />
+        {config.forms.file && (
+          <div>
+            <RJSFForm {...formProps.file}>
+              <Fragment />
+            </RJSFForm>
+            <hr />
+          </div>
+        )}
         <div>
           <RJSFForm {...formProps.url}>
             <Fragment />

@@ -128,7 +128,7 @@
           "description": "control the inputs to a valid URL"
         }
       },
-      "required": ["url", "file"]
+      "required": ["url"]
     },
     "templates": {
       "type": "object",
