@@ -11,8 +11,11 @@
  *
  * This interface was referenced by `Urljsf`'s JSON-Schema
  * via the `definition` "any-css".
+ *
+ * This interface was referenced by `CssVariables1`'s JSON-Schema definition
+ * via the `patternProperty` "^.*$".
  */
-export type AnyCss = string | CssVariables1;
+export type AnyCss = string | {};
 export type ASchema = SchemaByURL | InlineObject;
 /**
  * a path to a JSON schema, serialized as JSON, TOML, or (simple) YAML.
@@ -76,13 +79,6 @@ export interface Urljsf {
  *
  */
 export interface CssVariables {
-  [k: string]: AnyCss;
-}
-/**
- * This interface was referenced by `Urljsf`'s JSON-Schema
- * via the `definition` "css-variables".
- */
-export interface CssVariables1 {
   [k: string]: AnyCss;
 }
 /**
@@ -396,6 +392,13 @@ export interface AnInlineObject {}
  */
 export interface Checks1 {
   [k: string]: AnyTemplate;
+}
+/**
+ * This interface was referenced by `Urljsf`'s JSON-Schema
+ * via the `definition` "css-variables".
+ */
+export interface CssVariables1 {
+  [k: string]: AnyCss;
 }
 /**
  * a description of a form that builds a data file

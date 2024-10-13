@@ -181,7 +181,7 @@ patternProperties.'^.*$'."$ref" = "#/definitions/any-css"
 [definitions.any-css]
 oneOf = [
   {type = "string"},
-  {"$ref" = "#/definitions/css-variables"},
+  {type = "object"},
 ]
 
 # other ########################################################################

@@ -6,13 +6,18 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from .source import DataSource
 
 
 @dataclass
 class Config:
     """Configuration for ``urljsf``."""
 
-    definition: Path
+    input_: str | None = None
+    definition: DataSource | None = None
 
     # meta...
     url_base: str = "./"

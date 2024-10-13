@@ -6,8 +6,11 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import Enum
+from typing import Any
 
 from . import props_schema
+
+AnyCss = str | dict[str, Any]
 
 
 class AnyFileFormat(Enum):
@@ -30,6 +33,9 @@ AnyTemplate = str | list[str]
 
 
 Checks = dict[str, AnyTemplate] | None
+
+
+CssVariables = dict[str, AnyCss]
 
 
 @dataclass
@@ -97,9 +103,3 @@ class Urljsf:
     iframe: bool | None = None
     iframe_style: str | None = None
     no_bootstrap: bool | None = False
-
-
-AnyCss = str | CssVariables
-
-
-CssVariables = dict[str, AnyCss]

@@ -16,7 +16,9 @@ def get_parser() -> ArgumentParser:
     """Get a parser for the command line arguments."""
     parser = ArgumentParser(__dist__, add_help=False, description=__doc__)
     parser.add_argument(
-        "definition", type=Path, help="a urljsf definition file as JSON, TOML, or YAML"
+        "input_",
+        metavar="INPUT",
+        help="a urljsf definition file as JSON, TOML, or YAML",
     )
     parser.add_argument(
         "-o",

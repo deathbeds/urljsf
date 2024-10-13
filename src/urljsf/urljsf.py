@@ -4,7 +4,6 @@
 # Distributed under the terms of the Modified BSD License.
 from __future__ import annotations
 
-import hashlib
 import json
 import re
 from logging import Logger, getLogger
@@ -14,6 +13,7 @@ from typing import TYPE_CHECKING, Any
 import jinja2
 
 from .constants import STATIC, TEMPLATES, __dist__
+from .source import DataSource
 
 if TYPE_CHECKING:
     from .config import Config
@@ -47,6 +47,10 @@ class Urljsf:
         """Generate output."""
         cfg = self.config
         self.log.debug("config: %s", cfg)
+        self.load_definition()
+        if not cfg.definition:
+            self.log.error("No definition found")
+            return 1
         self.deploy_form_files(cfg.output_dir)
         # rendered = self.render()
         # cfg.output_dir.mkdir(parents=True, exist_ok=True)
@@ -56,10 +60,19 @@ class Urljsf:
         print("OH NO")
         return 1
 
-    def deploy_form_files(self, path: Path) -> None:
+    def load_definition(self) -> None:
+        """Load a configuration from a file or dotted python module."""
+        cfg = self.config
+
+        input_path = Path(cfg.input_)
+
+        if input_path.exists():
+            cfg.definition = DataSource(input_path)
+
+    def deploy_form_files(self, out_path: Path) -> None:
         """Copy the schema, uiSchema, and data files."""
         cfg = self.config
-        raise NotImplementedError("not deploying yet")
+        raise NotImplementedError(cfg.definition)
 
     def from_file_or_py(
         self,
@@ -85,15 +98,14 @@ class Urljsf:
         else:
             in_path = Path(file_name)
             in_bytes = in_path.read_bytes()
-            resolved = self.write_hashed(in_bytes, in_path.name, static_path)
+            resolved = self.write(in_bytes, in_path.name, static_path)
         return resolved
 
     @staticmethod
-    def write_hashed(in_bytes: bytes, name: str, static_path: Path) -> str:
+    def write(in_bytes: bytes, name: str, static_path: Path) -> str:
         """Write a file to disk with a hash-based cache buster."""
-        shasum = hashlib.sha256(in_bytes).hexdigest()[:8]
         stem, ext = name.rsplit(".", 1)
-        out_path = static_path / f"{stem}-{shasum}.{ext}"
+        out_path = static_path / f"{stem}.{ext}"
         if not out_path.exists():
             out_path.parent.mkdir(parents=True, exist_ok=True)
             out_path.write_bytes(in_bytes)

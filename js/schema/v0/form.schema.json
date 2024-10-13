@@ -47,7 +47,7 @@
           "type": "string"
         },
         {
-          "$ref": "#/definitions/css-variables"
+          "type": "object"
         }
       ]
     },
