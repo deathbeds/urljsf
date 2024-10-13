@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from .source import DataSource
+    from .source import DefSource
 
 
 @dataclass
@@ -17,7 +17,7 @@ class Config:
     """Configuration for ``urljsf``."""
 
     input_: str | None = None
-    definition: DataSource | None = None
+    definition: DefSource | None = None
 
     # meta...
     url_base: str = "./"

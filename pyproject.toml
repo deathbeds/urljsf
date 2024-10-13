@@ -24,11 +24,16 @@ classifiers = [
 scripts.urljsf = "urljsf.cli:main"
 dependencies = [
   "jinja2",
+  "tomli; python_version < 3.11",
+  "jsonschema[format]",
 ]
 
 [project.optional-dependencies]
 sphinx = [
   "sphinx >=6.1",
+]
+yaml = [
+  "ruamel.yaml",
 ]
 validate = [
   "jsonschema[format] >=4.18",

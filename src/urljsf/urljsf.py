@@ -13,7 +13,7 @@ from typing import TYPE_CHECKING, Any
 import jinja2
 
 from .constants import STATIC, TEMPLATES, __dist__
-from .source import DataSource
+from .source import DefSource
 
 if TYPE_CHECKING:
     from .config import Config
@@ -48,9 +48,15 @@ class Urljsf:
         cfg = self.config
         self.log.debug("config: %s", cfg)
         self.load_definition()
+
         if not cfg.definition:
             self.log.error("No definition found")
             return 1
+        if cfg.definition.validation_errors:
+            self.log.error(
+                "Found vaidation errors: %s", cfg.definition.validation_errors
+            )
+
         self.deploy_form_files(cfg.output_dir)
         # rendered = self.render()
         # cfg.output_dir.mkdir(parents=True, exist_ok=True)
@@ -60,14 +66,14 @@ class Urljsf:
         print("OH NO")
         return 1
 
-    def load_definition(self) -> None:
+    def load_definition(self) -> bool:
         """Load a configuration from a file or dotted python module."""
         cfg = self.config
 
         input_path = Path(cfg.input_)
 
         if input_path.exists():
-            cfg.definition = DataSource(input_path)
+            cfg.definition = DefSource(input_path)
 
     def deploy_form_files(self, out_path: Path) -> None:
         """Copy the schema, uiSchema, and data files."""
