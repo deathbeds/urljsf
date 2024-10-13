@@ -93,6 +93,13 @@ class Urljsf:
     templates: Templates
     field_id: str | None = None
     field_schema: str | None = None
+    css_variables: CssVariables | None = None
     iframe: bool | None = None
     iframe_style: str | None = None
     no_bootstrap: bool | None = False
+
+
+AnyCss = str | CssVariables
+
+
+CssVariables = dict[str, AnyCss]

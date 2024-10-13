@@ -48,24 +48,18 @@ class Urljsf:
         cfg = self.config
         self.log.debug("config: %s", cfg)
         self.deploy_form_files(cfg.output_dir)
-        rendered = self.render()
-        cfg.output_dir.mkdir(parents=True, exist_ok=True)
-        out_html = cfg.output_dir / cfg.html_filename
-        out_html.write_text(rendered, encoding="utf-8")
-        self.deploy_static(cfg.output_dir / "_static")
-        return 0
+        # rendered = self.render()
+        # cfg.output_dir.mkdir(parents=True, exist_ok=True)
+        # out_html = cfg.output_dir / cfg.html_filename
+        # out_html.write_text(rendered, encoding="utf-8")
+        # self.deploy_static(cfg.output_dir / "_static")
+        print("OH NO")
+        return 1
 
     def deploy_form_files(self, path: Path) -> None:
         """Copy the schema, uiSchema, and data files."""
         cfg = self.config
-
-        cfg.schema = self.from_file_or_py(path, cfg.schema, cfg.py_schema)
-        cfg.ui_schema = self.from_file_or_py(
-            path,
-            cfg.ui_schema,
-            cfg.py_ui_schema,
-        )
-        cfg.data = self.from_file_or_py(path, cfg.data, cfg.py_data)
+        raise NotImplementedError("not deploying yet")
 
     def from_file_or_py(
         self,

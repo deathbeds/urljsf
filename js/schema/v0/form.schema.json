@@ -13,6 +13,10 @@
       "type": "string",
       "format": "uri-reference"
     },
+    "css_variables": {
+      "$ref": "#/definitions/css-variables",
+      "description": "CSS variables, scoped to this form or specific selectors\n"
+    },
     "forms": {
       "$ref": "#/definitions/forms",
       "description": "forms that describe how to build the URL\n"
@@ -37,6 +41,16 @@
   },
   "additionalProperties": false,
   "definitions": {
+    "any-css": {
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "$ref": "#/definitions/css-variables"
+        }
+      ]
+    },
     "any-file-format": {
       "type": "string",
       "title": "File Format",
@@ -86,6 +100,14 @@
       "description": "`nunjucks` templates keyed by their label: any evaluating to a non-whitespace\nstring will be considered failing.",
       "additionalProperties": {
         "$ref": "#/definitions/any-template"
+      }
+    },
+    "css-variables": {
+      "type": "object",
+      "patternProperties": {
+        "^.*$": {
+          "$ref": "#/definitions/any-css"
+        }
       }
     },
     "file-form": {

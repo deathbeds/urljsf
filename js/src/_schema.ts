@@ -5,6 +5,14 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
+/**
+ * This interface was referenced by `CssVariables`'s JSON-Schema definition
+ * via the `patternProperty` "^.*$".
+ *
+ * This interface was referenced by `Urljsf`'s JSON-Schema
+ * via the `definition` "any-css".
+ */
+export type AnyCss = string | CssVariables1;
 export type ASchema = SchemaByURL | InlineObject;
 /**
  * a path to a JSON schema, serialized as JSON, TOML, or (simple) YAML.
@@ -46,6 +54,7 @@ export type AnySchemaLocation = string;
 export interface Urljsf {
   $id?: string;
   $schema?: string;
+  css_variables?: CssVariables;
   forms: Forms;
   /**
    * isolate each form on the page in an `iframe`
@@ -61,6 +70,20 @@ export interface Urljsf {
    */
   no_bootstrap?: boolean;
   templates: Templates;
+}
+/**
+ * CSS variables, scoped to this form or specific selectors
+ *
+ */
+export interface CssVariables {
+  [k: string]: AnyCss;
+}
+/**
+ * This interface was referenced by `Urljsf`'s JSON-Schema
+ * via the `definition` "css-variables".
+ */
+export interface CssVariables1 {
+  [k: string]: AnyCss;
 }
 /**
  * forms that describe how to build the URL

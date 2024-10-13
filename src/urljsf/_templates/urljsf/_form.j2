@@ -1,22 +1,5 @@
 {% macro urljsf() -%}
-<div
-    data-urljsf-git-hub-repo="{{ github_repo }}"
-    data-urljsf-git-hub-branch="{{ github_branch }}"
-    data-urljsf-schema="{{ get_url(schema) }}"
-    {% if ui_schema %}data-urljsf-ui-schema="{{ get_url(ui_schema) }}"{% endif %}
-    {% if data %}data-urljsf-data="{{ get_url(data) }}"{% endif %}
-    {% if github_url %}data-urljsf-git-hub-url="{{ github_url }}"{% endif %}
-    {% if data_format %}data-urljsf-data-format="{{ data_format }}"{% endif %}
-    {% if pr_filename %}data-urljsf-file-name="{{ pr_filename }}"{% endif %}
-    {% if pr_filename_pattern %}data-urljsf-file-name-template="{{ pr_filename_pattern }}"{% endif %}
-    {% if schema_format %}data-urljsf-schema-format="{{ schema_format }}"{% endif %}
-    {% if ui_schema_format %}data-urljsf-ui-schema-format="{{ ui_schema_format }}"{% endif %}
-    {% if id_prefix %}data-urljsf-id-prefix="{{ id_prefix }}"{% endif %}
-    {% if prune_empty is defined and prune_empty is not none %}data-urljsf-prune-empty="{{ prune_empty | string | lower }}"{% endif %}
-    {% if iframe is defined and iframe %}data-urljsf-iframe="true"{% endif %}
-    {% if iframe_style %}data-urljsf-iframe-style="{{ iframe_style }}"{% endif %}
-    {% if theme %}data-urljsf-theme="{{ theme }}"{% endif %}
-></div>
+<script type="{{ mime_prefix }}+{{ format }}"></script>
 {%- endmacro %}
 
 {% macro get_url(url) -%}

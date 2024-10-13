@@ -2,11 +2,6 @@
 <!doctype html>
 <html>
   {% set static = url_base ~ "_static/urljsf" %}
-  {% set theme_url = "bootstrap.min.css" %}
-
-  {% if theme is defined and theme != "bootstrap" %}
-    {% set theme_url = "themes/" ~ theme ~ ".min.css" %}
-  {% endif %}
 
   {% block html_head %}
   <head>
@@ -17,28 +12,29 @@
     {% endif %}
     {% endblock %}
     {% block html_style %}
-    <link
-      rel="stylesheet"
-      href="{{ static }}/{{ theme_url }}"
-    />
+    <link rel="stylesheet" href="{{ static }}/bootstrap.min.css" />
     {% endblock %}
     {% block extra_head %}{% endblock %}
   </head>
   {% endblock %}
   <body>
+    {% block before_form %}
     <div class="col-lg-8 mx-auto p-3 py-md-5">
       {% block before_main %}{% endblock %}
       <main class="bs-main">
         <div class="bs-content">
           <div class="bs-article-container">
             <section>
+    {% endblock before_form %}
               {{ form.urljsf() }}
+    {% block after_form %}
             </section>
           </div>
         </div>
       </main>
       {% block after_main %}{% endblock %}
     </div>
+    {% block after_form %}
     {% block body_script %}
     <script type="module" src="{{ static }}/urljsf.js"></script>
     {% endblock %}

@@ -1,3 +1,5 @@
+// Copyright (C) urljsf contributors.
+// Distributed under the terms of the Modified BSD License.
 import { CSSProperties } from 'react';
 
 import Col from 'react-bootstrap/esm/Col.js';

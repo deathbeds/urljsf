@@ -27,6 +27,7 @@ import {
 } from '../tokens.js';
 import { getConfig, getFileContent, getIdPrefix, initFormProps } from '../utils.js';
 import { CheckItem } from './check-item.js';
+import { Style } from './style.js';
 
 const FORM_PRE_DEFAULTS: Partial<FormProps> = {
   schema: {},
@@ -202,6 +203,12 @@ function UrljsfForm(props: IFormProps): JSX.Element {
     };
   }
 
+  let style = !config.css_variables ? (
+    <></>
+  ) : (
+    <Style forId={idPrefix} styles={config.css_variables}></Style>
+  );
+
   const URLJSF = () => {
     let submitButton: JSX.Element;
     const checkItems: JSX.Element[] = [];
@@ -253,6 +260,7 @@ function UrljsfForm(props: IFormProps): JSX.Element {
 
     return (
       <div className={FORM_CLASS} id={idPrefix}>
+        {style}
         {config.forms.file && (
           <div>
             <RJSFForm {...formProps.file}>

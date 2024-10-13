@@ -24,6 +24,9 @@ forms that describe how to build the URL
 templates = {"$ref" = "#/definitions/templates", description = """
 `nunjucks` templates that control URLs for machines and markdown for humans
 """}
+css_variables = {"$ref" = "#/definitions/css-variables", description = """
+CSS variables, scoped to this form or specific selectors
+"""}
 
 [properties.iframe]
 description = "isolate each form on the page in an `iframe`"
@@ -135,13 +138,6 @@ JSON-compatible subset of configuration properties for file contents
 description = "prune empty lists, object, etc."
 type = "boolean"
 
-# other ########################################################################
-[definitions.any-file-format]
-title = "File Format"
-type = "string"
-description = "a format that can be serialized or deserialized"
-enum = ["json", "toml", "yaml"]
-
 # templating ###################################################################
 [definitions.checks]
 type = "object"
@@ -176,3 +172,21 @@ anyOf = [
   {type = "string"},
   {type = "array", items = {type = "string"}, minItems = 1},
 ]
+
+# style ########################################################################
+[definitions.css-variables]
+type = "object"
+patternProperties.'^.*$'."$ref" = "#/definitions/any-css"
+
+[definitions.any-css]
+oneOf = [
+  {type = "string"},
+  {"$ref" = "#/definitions/css-variables"},
+]
+
+# other ########################################################################
+[definitions.any-file-format]
+title = "File Format"
+type = "string"
+description = "a format that can be serialized or deserialized"
+enum = ["json", "toml", "yaml"]

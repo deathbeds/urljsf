@@ -26,4 +26,10 @@ templates:
       - [ ] {{ dupes }} tasks have the name _"{{ name }}"_
       {% endif %}
       {% endfor %}
+css_variables:
+  --bs-danger-rgb: var(--bs-warning-rgb)
+  --bs-form-invalid-border-color: var(--bs-warning-text-emphasis)
+  --bs-form-invalid-color: var(--bs-warning-text-emphasis)
+  .btn-danger:
+    --bs-btn-bg: var(--bs-warning-text-emphasis)
 iframe: true

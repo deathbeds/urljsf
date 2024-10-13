@@ -26,7 +26,6 @@ submit_button = """
 """
 
 [templates.checks]
-
 "Unique Names" = """
 {% for name, tasks in file.tasks | default([]) | groupby("task") %}
 {% set dupes = tasks | length %}
@@ -35,3 +34,11 @@ submit_button = """
 {% endif %}
 {% endfor %}
 """
+
+[css_variables]
+"--bs-danger-rgb" = "var(--bs-warning-rgb)"
+"--bs-form-invalid-border-color" = "var(--bs-warning-text-emphasis)"
+"--bs-form-invalid-color" = "var(--bs-warning-text-emphasis)"
+
+[css_variables.".btn-danger"]
+"--bs-btn-bg" = "var(--bs-warning-text-emphasis)"
