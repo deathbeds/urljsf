@@ -5,8 +5,9 @@
 
 from __future__ import annotations
 
+import json
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Callable
 
 from ._schema import FileFormat
 from ._schema import Urljsf as UrljsfSchema
@@ -16,7 +17,7 @@ from .schema import URLJSF_VALIDATOR
 if TYPE_CHECKING:
     from pathlib import Path
 
-    from jsonschema.protocols import Validator
+    from jsonschema import Draft7Validator
 
 
 @dataclass
@@ -28,6 +29,7 @@ class DataSource:
     format: FileFormat | None = None
 
     def __post_init__(self) -> None:
+        """Trigger parsing."""
         self.parse()
 
     def parse(self) -> None:
@@ -38,7 +40,7 @@ class DataSource:
             try:
                 import tomllib
             except ImportError:
-                import tomli as tomllib
+                import tomli as tomllib  # type: ignore[no-redef]
 
             self.raw = tomllib.loads(text)
             self.format = "toml"
@@ -48,8 +50,6 @@ class DataSource:
             self.raw = YAML(typ="safe").load(text)
             self.format = "yaml"
         elif suffix == ".json":
-            import json
-
             self.raw = json.loads(text)
             self.format = "json"
         else:
@@ -59,19 +59,30 @@ class DataSource:
 
 @dataclass
 class ValidatedSource(DataSource):
-    validator: Validator | None = None
-    validation_errors: list[Any] | None = None
-    as_type: type = field(default_factory=lambda: lambda: dict)
-    data: dict[str, Any] = None
+    """A validated source."""
 
-    def __post_init__(self) -> None:
-        super().__post_init__()
+    validator: Draft7Validator | None = None
+    validation_errors: list[Any] | None = None
+    as_type: Callable[..., Any] = field(default_factory=lambda: lambda: dict)
+    data: Any | None = None
+
+    def parse(self) -> None:
+        """Validate, and attempt to parse the data."""
+        super().parse()
+        if not self.validator:  # pragma: no cover
+            msg = f"No validator for {self.__class__.__name__}"
+            raise NotImplementedError(msg)
+        if self.raw is None:  # pragma: no cover
+            msg = f"No data for {self.__class__.__name__}"
+            raise NotImplementedError(msg)
         self.validation_errors = [*self.validator.iter_errors(self.raw)]
         self.data = self.as_type(**self.raw)
 
 
 @dataclass
 class DefSource(ValidatedSource):
+    """A validated ``urljsf`` definition."""
+
     data: UrljsfSchema | None = None
-    as_type: type[UrljsfSchema] = field(default_factory=lambda: UrljsfSchema)
-    validator: Validator = field(default_factory=lambda: URLJSF_VALIDATOR)
+    as_type: Callable[..., UrljsfSchema] = field(default_factory=lambda: UrljsfSchema)
+    validator: Draft7Validator = field(default_factory=lambda: URLJSF_VALIDATOR)

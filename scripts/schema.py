@@ -96,7 +96,8 @@ def json_to_py(in_path: Path, out_path: Path) -> int:
         f"--python={out_path}",
     ]
 
-    def _fix():
+    def _fix() -> int:
+        """Fix python output."""
         out_path.write_text(
             "\n".join([
                 '"""Generated schema for ``urljsf``"""',

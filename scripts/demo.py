@@ -1,4 +1,6 @@
-"""Update the js demo."""
+"""Update the js demo source files."""
+# Copyright (C) urljsf contributors.
+# Distributed under the terms of the Modified BSD License.
 
 from __future__ import annotations
 
@@ -32,7 +34,10 @@ ENCODERS = {
 
 
 class YamlRepresenter(ruamel.yaml.representer.RoundTripRepresenter):
+    """A custom  YAML representer."""
+
     def represent_str(self, s: str) -> ruamel.yaml.ScalarNode:
+        """Force sane strings."""
         if "\n" in s:
             return self.represent_scalar("tag:yaml.org,2002:str", s, style="|")
         return self.represent_scalar("tag:yaml.org,2002:str", s)
@@ -64,6 +69,7 @@ def _safe_dump(d: dict[str, Any]) -> str:
 
 
 def _normalize(d: dict[str, Any]) -> str:
+    """Generate normalized JSON."""
     return json.dumps(d, **JSON_FMT)
 
 

@@ -107,14 +107,16 @@ isort.known-first-party = ["urljsf"]
 "**/sphinxext/*.py" = ["TID252", "ANN401", "ARG001"]
 "docs/**/*.py" = ["INP001"]
 "nodes.py" = ["N801"]
-"**/_schema/*.py" = [
+"**/_schema.py" = [
+  "D205",
+  "D400",
+  "D415",
+  "E501",
   "N815",
+  "TCH001",
+  "TID252",
   "UP006",
   "UP035",
-  "TID252",
-  "E501",
-  "D415",
-  "D400",
-  "TCH001",
 ]
-"scripts/*.py" = ["S603", "T201", "INP001", "ANN401", "S404"]
+"scripts/*.py" = ["S603", "T201", "INP001", "ANN401", "S404", "S607", "PLW0108"]
+"**/source.py" = ["PLC0415"]

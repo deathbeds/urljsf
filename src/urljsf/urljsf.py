@@ -77,6 +77,7 @@ class Urljsf:
 
     @property
     def definition(self) -> UrljsfSchema:
+        """Get the validated source."""
         if TYPE_CHECKING:
             assert self.config.definition.data is not None
         return self.config.definition.data

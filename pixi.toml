@@ -412,6 +412,7 @@ flit = ">=3.9.0,<4.0.0a0"
 [feature.deps-run.dependencies]
 sphinx = ">=6.1"
 python = ">=3.9"
+jsonschema = ">=4.18"
 
 [feature.deps-run-oldest.dependencies]
 sphinx = "6.1.*"
@@ -435,12 +436,13 @@ sphinx-argparse = "*"
 scour = "*"
 
 [feature.deps-build.dependencies]
-nodejs = "22.*"
-yarn = "3.6.4"
 jsonschema-gentypes = "*"
+nodejs = "22.*"
 python-build = "*"
-watchfiles = "*"
+"ruamel.yaml" = "*"
 ruff = "*"
+watchfiles = "*"
+yarn = "3.6.4"
 
 [feature.deps-lint.dependencies]
 ruff = "*"
@@ -449,6 +451,7 @@ taplo = "*"
 actionlint-with-all = "*"
 types-jinja2 = "*"
 types-docutils = "*"
+types-jsonschema = "*"
 
 # tools ########################################################################
 [tool.sphinx]
