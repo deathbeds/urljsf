@@ -16,6 +16,7 @@ from .constants import STATIC, TEMPLATES, __dist__
 from .source import DefSource
 
 if TYPE_CHECKING:
+    from ._schema.form_schema import Urljsf as UrljsfSchema
     from .config import Config
 
 
@@ -54,7 +55,7 @@ class Urljsf:
             return 1
         if cfg.definition.validation_errors:
             self.log.error(
-                "Found vaidation errors: %s", cfg.definition.validation_errors
+                "Found validation errors: %s", cfg.definition.validation_errors
             )
 
         self.deploy_form_files(cfg.output_dir)
@@ -63,7 +64,6 @@ class Urljsf:
         # out_html = cfg.output_dir / cfg.html_filename
         # out_html.write_text(rendered, encoding="utf-8")
         # self.deploy_static(cfg.output_dir / "_static")
-        print("OH NO")
         return 1
 
     def load_definition(self) -> bool:
@@ -75,10 +75,17 @@ class Urljsf:
         if input_path.exists():
             cfg.definition = DefSource(input_path)
 
+    @property
+    def definition(self) -> UrljsfSchema:
+        if TYPE_CHECKING:
+            assert self.config.definition.data is not None
+        return self.config.definition.data
+
     def deploy_form_files(self, out_path: Path) -> None:
         """Copy the schema, uiSchema, and data files."""
-        cfg = self.config
-        raise NotImplementedError(cfg.definition)
+        defn = self.definition
+
+        raise NotImplementedError(defn)
 
     def from_file_or_py(
         self,

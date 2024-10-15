@@ -82,24 +82,26 @@ python -m pip install
 
 [tasks.schema-vars--]
 cmd = '''echo
-  PROPS_TS=js/src/_props.ts
-  PROPS_JSON=js/schema/v0/props.schema.json
+  PROPS_TS=$PIXI_PROJECT_ROOT/js/src/_props.ts
+  PROPS_JSON=$PIXI_PROJECT_ROOT/js/schema/v0/props.schema.json
   SCHEMA_TOML=$PIXI_PROJECT_ROOT/js/schema/form.schema.toml
   SCHEMA_JSON=$PIXI_PROJECT_ROOT/js/schema/v0/form.schema.json
   SCHEMA_TS=$PIXI_PROJECT_ROOT/js/src/_schema.ts
-  SCHEMA_PY=$PIXI_PROJECT_ROOT/src/urljsf/_schema/__init__.py'''
-
+  SCHEMA_PY=$PIXI_PROJECT_ROOT/src/urljsf/_schema.py
+'''
 [tasks.schema-ts-json--]
 cmd = """python scripts/schema.py $PROPS_TS $PROPS_JSON"""
 
 [tasks.schema-toml-json--]
-cmd = """python scripts/schema.py $SCHEMA_TOML $SCHEMA_JSON"""
+cmd = """python scripts/schema.py $SCHEMA_TOML $SCHEMA_JSON $PROPS_JSON"""
 
 [feature.tasks-build.tasks.schema-json-ts--]
 cmd = """python scripts/schema.py $SCHEMA_JSON $SCHEMA_TS"""
 
 [feature.tasks-build.tasks.schema-json-py--]
-cmd = """python scripts/schema.py $SCHEMA_JSON $SCHEMA_PY"""
+cmd = """
+python scripts/schema.py $SCHEMA_JSON $SCHEMA_PY
+"""
 
 [feature.tasks-build.tasks.schema-all--]
 cmd = """
@@ -195,7 +197,11 @@ outputs = ["js/schema/v0/props.schema.json"]
 
 [feature.tasks-build.tasks.build-schema-json]
 cmd = """export $(pixi r schema-vars--) && pixi r schema-toml-json--"""
-inputs = ["js/schema/form.schema.toml", "scripts/schema.py"]
+inputs = [
+  "js/schema/form.schema.toml",
+  "js/schema/v0/props.schema.json",
+  "scripts/schema.py",
+]
 outputs = ["js/schema/v0/form.schema.json"]
 depends-on = ["setup-js"]
 
@@ -207,8 +213,8 @@ depends-on = ["build-schema-json"]
 
 [feature.tasks-build.tasks.build-schema-py]
 cmd = """export $(pixi r schema-vars--) && pixi r schema-json-py--"""
-inputs = ["js/schema/v0", "scripts/schema.py"]
-outputs = ["src/urljsf/_schema"]
+inputs = ["js/schema/v0", "scripts/schema.py", "scripts/jsonschema-gentypes.yaml"]
+outputs = ["src/urljsf/_schema.py"]
 depends-on = ["build-schema-json"]
 
 # fix ##########################################################################
@@ -431,7 +437,7 @@ scour = "*"
 [feature.deps-build.dependencies]
 nodejs = "22.*"
 yarn = "3.6.4"
-datamodel-code-generator = "*"
+jsonschema-gentypes = "*"
 python-build = "*"
 watchfiles = "*"
 ruff = "*"

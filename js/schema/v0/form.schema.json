@@ -41,6 +41,182 @@
   },
   "additionalProperties": false,
   "definitions": {
+    "Props": {
+      "type": "object",
+      "description": "JSON-compatible default values for `rjsf` [`Form.props`][form-props].\n\n[form-props]: https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/form-props",
+      "properties": {
+        "acceptCharset": {
+          "type": "string",
+          "description": "The value of this prop will be passed to the `accept-charset` HTML attribute on the form"
+        },
+        "action": {
+          "type": "string",
+          "description": "The value of this prop will be passed to the `action` HTML attribute on the form\n\nNOTE: this just renders the `action` attribute in the HTML markup. There is no real network request being sent to this `action` on submit. Instead, react-jsonschema-form catches the submit event with `event.preventDefault()` and then calls the `onSubmit` function, where you could send a request programmatically with `fetch` or similar."
+        },
+        "autoComplete": {
+          "type": "string",
+          "description": "The value of this prop will be passed to the `autocomplete` HTML attribute on the form"
+        },
+        "className": {
+          "type": "string",
+          "description": "The value of this prop will be passed to the `class` HTML attribute on the form"
+        },
+        "disabled": {
+          "type": "boolean",
+          "description": "It's possible to disable the whole form by setting the `disabled` prop. The `disabled` prop is then forwarded down to each field of the form. If you just want to disable some fields, see the `ui:disabled` parameter in `uiSchema`"
+        },
+        "enctype": {
+          "type": "string",
+          "description": "The value of this prop will be passed to the `enctype` HTML attribute on the form"
+        },
+        "extraErrorsBlockSubmit": {
+          "type": "boolean",
+          "description": "If set to true, causes the `extraErrors` to become blocking when the form is submitted"
+        },
+        "focusOnFirstError": {
+          "type": "boolean",
+          "description": "If set to true, then the first field with an error will receive the focus when the form is submitted with errors"
+        },
+        "formContext": {
+          "type": "object",
+          "description": "globals for custom UI"
+        },
+        "formData": {
+          "type": "object",
+          "description": "The data for the form, used to prefill a form with existing data"
+        },
+        "id": {
+          "type": "string",
+          "description": "The value of this prop will be passed to the `id` HTML attribute on the form"
+        },
+        "idPrefix": {
+          "type": "string",
+          "description": "To avoid collisions with existing ids in the DOM, it is possible to change the prefix used for ids; Default is `root`"
+        },
+        "idSeparator": {
+          "type": "string",
+          "description": "To avoid using a path separator that is present in field names, it is possible to change the separator used for ids (Default is `_`)"
+        },
+        "liveOmit": {
+          "type": "boolean",
+          "description": "If `omitExtraData` and `liveOmit` are both set to true, then extra form data values that are not in any form field will be removed whenever `onChange` is called. Set to `false` by default"
+        },
+        "liveValidate": {
+          "type": "boolean",
+          "description": "If set to true, the form will perform validation and show any validation errors whenever the form data is changed, rather than just on submit"
+        },
+        "method": {
+          "type": "string",
+          "description": "The value of this prop will be passed to the `method` HTML attribute on the form"
+        },
+        "name": {
+          "type": "string",
+          "description": "The value of this prop will be passed to the `name` HTML attribute on the form"
+        },
+        "noHtml5Validate": {
+          "type": "boolean",
+          "description": "If set to true, turns off HTML5 validation on the form; Set to `false` by default"
+        },
+        "omitExtraData": {
+          "type": "boolean",
+          "description": "If set to true, then extra form data values that are not in any form field will be removed whenever `onSubmit` is called. Set to `false` by default."
+        },
+        "readonly": {
+          "type": "boolean",
+          "description": "It's possible to make the whole form read-only by setting the `readonly` prop. The `readonly` prop is then forwarded down to each field of the form. If you just want to make some fields read-only, see the `ui:readonly` parameter in `uiSchema`"
+        },
+        "schema": {
+          "type": "object",
+          "description": "The JSON schema object for the form"
+        },
+        "showErrorList": {
+          "type": ["boolean", "string"],
+          "description": "When this prop is set to `top` or 'bottom', a list of errors (or the custom error list defined in the `ErrorList`) will also show. When set to false, only inline input validation errors will be shown. Set to `top` by default",
+          "enum": [false, "top", "bottom"]
+        },
+        "tagName": {
+          "type": "string",
+          "description": "It's possible to change the default `form` tag name to a different HTML tag, which can be helpful if you are nesting forms. However, native browser form behaviour, such as submitting when the `Enter` key is pressed, may no longer work"
+        },
+        "target": {
+          "type": "string",
+          "description": "The value of this prop will be passed to the `target` HTML attribute on the form"
+        },
+        "uiSchema": {
+          "$ref": "#/definitions/UISchema",
+          "description": "The uiSchema for the form"
+        }
+      },
+      "additionalProperties": false
+    },
+    "UIOptions": {
+      "type": "object",
+      "properties": {
+        "urljsfGrid": {
+          "type": "object",
+          "properties": {
+            "addButton": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "children": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "default": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    },
+    "UISchema": {
+      "type": "object",
+      "description": "an rjsf ui schema, with light extension",
+      "properties": {
+        "ui:options": {
+          "$ref": "#/definitions/UIOptions"
+        },
+        "ui:urljsfGrid": {
+          "type": "object",
+          "properties": {
+            "addButton": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "children": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "default": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    },
     "any-css": {
       "oneOf": [
         {
@@ -123,7 +299,7 @@
           "$ref": "#/definitions/any-file-format"
         },
         "props": {
-          "$ref": "./props.schema.json#/definitions/Props",
+          "$ref": "#/definitions/Props",
           "descripton": "JSON-compatible subset of configuration properties for file contents\n"
         },
         "prune_empty": {
@@ -186,7 +362,7 @@
           "descripton": "JSON-compatible initial data for URL fields\n"
         },
         "props": {
-          "$ref": "./props.schema.json#/definitions/Props",
+          "$ref": "#/definitions/Props",
           "descripton": "JSON-compatible subset of configuration properties for URL fields\n"
         },
         "schema": {

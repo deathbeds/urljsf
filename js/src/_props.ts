@@ -6,7 +6,7 @@ import { FormProps } from '@rjsf/core';
  *
  * [form-props]: https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/form-props
  */
-export interface Props
+export default interface Props
   extends Omit<FormProps, keyof Overloads | IgnoredProps | DesiredProps>,
     Partial<Overloads> {}
 
@@ -53,30 +53,8 @@ export interface Overloads {
   tagName: string;
 }
 
-/* known-good keys that serialized directly to JSON primitives. */
-export type IncludedProps =
-  | 'acceptCharset'
-  | 'action'
-  | 'autoComplete'
-  | 'className'
-  | 'disabled'
-  | 'enctype'
-  | 'extraErrorsBlockSubmit'
-  | 'id'
-  | 'idPrefix'
-  | 'idSeparator'
-  | 'liveOmit'
-  | 'liveValidate'
-  | 'method'
-  | 'name'
-  | 'noHtml5Validate'
-  | 'omitExtraData'
-  | 'readonly'
-  | 'showErrorList'
-  | 'target';
-
 /* types we'd like to have, either as nunjucks, json lookup tables, etc. */
-export type DesiredProps =
+type DesiredProps =
   | 'translateString'
   | 'transformErrors'
   | 'extraErrors'
@@ -86,8 +64,8 @@ export type DesiredProps =
   | 'templates'
   | 'fields';
 
-/* known-bad keys */
-export type IgnoredProps =
+/* known unrepresentable keys */
+type IgnoredProps =
   | 'validator'
   | 'children'
   | 'experimental_defaultFormStateBehavior'

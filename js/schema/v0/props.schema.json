@@ -1,98 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "$ref": "#/definitions/Props",
   "definitions": {
-    "DesiredProps": {
-      "type": "string",
-      "enum": [
-        "translateString",
-        "transformErrors",
-        "extraErrors",
-        "customValidate",
-        "widgets",
-        "templates",
-        "fields"
-      ]
-    },
-    "IgnoredProps": {
-      "type": "string",
-      "enum": [
-        "validator",
-        "children",
-        "experimental_defaultFormStateBehavior",
-        "_internalFormWrapper",
-        "ref",
-        "onFocus",
-        "onBlur",
-        "onSubmit",
-        "onError",
-        "onChange",
-        "noValidate",
-        "acceptcharset"
-      ]
-    },
-    "IncludedProps": {
-      "type": "string",
-      "enum": [
-        "acceptCharset",
-        "action",
-        "autoComplete",
-        "className",
-        "disabled",
-        "enctype",
-        "extraErrorsBlockSubmit",
-        "id",
-        "idPrefix",
-        "idSeparator",
-        "liveOmit",
-        "liveValidate",
-        "method",
-        "name",
-        "noHtml5Validate",
-        "omitExtraData",
-        "readonly",
-        "showErrorList",
-        "target"
-      ]
-    },
-    "Overloads": {
-      "type": "object",
-      "description": "simplifications of important fields which are out of scope to fully support inline.",
-      "properties": {
-        "focusOnFirstError": {
-          "type": "boolean",
-          "description": "If set to true, then the first field with an error will receive the focus when the form is submitted with errors"
-        },
-        "formContext": {
-          "type": "object",
-          "description": "globals for custom UI"
-        },
-        "formData": {
-          "type": "object",
-          "description": "The data for the form, used to prefill a form with existing data"
-        },
-        "schema": {
-          "type": "object",
-          "description": "The JSON schema object for the form"
-        },
-        "tagName": {
-          "type": "string",
-          "description": "It's possible to change the default `form` tag name to a different HTML tag, which can be helpful if you are nesting forms. However, native browser form behaviour, such as submitting when the `Enter` key is pressed, may no longer work"
-        },
-        "uiSchema": {
-          "$ref": "#/definitions/UISchema",
-          "description": "The uiSchema for the form"
-        }
-      },
-      "additionalProperties": false,
-      "required": [
-        "uiSchema",
-        "schema",
-        "formContext",
-        "formData",
-        "focusOnFirstError",
-        "tagName"
-      ]
-    },
     "Props": {
       "type": "object",
       "description": "JSON-compatible default values for `rjsf` [`Form.props`][form-props].\n\n[form-props]: https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/form-props",
@@ -268,34 +177,6 @@
           "additionalProperties": false
         }
       }
-    },
-    "UrljsfGridOptions": {
-      "type": "object",
-      "properties": {
-        "addButton": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "children": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        },
-        "default": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        }
-      },
-      "additionalProperties": false,
-      "required": ["default", "children", "addButton"]
     }
   }
 }
