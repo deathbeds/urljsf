@@ -12,7 +12,8 @@
     {% endif %}
     {% endblock %}
     {% block html_style %}
-    <link rel="stylesheet" href="{{ static }}/bootstrap.min.css" />
+    <link rel="stylesheet"
+      href="{% block bootstrap_url %}{{ static }}/bootstrap.min.css{% endblock %}" />
     {% endblock %}
     {% block extra_head %}{% endblock %}
   </head>
@@ -34,9 +35,9 @@
       </main>
       {% block after_main %}{% endblock %}
     </div>
-    {% block after_form %}
+    {% endblock after_form %}
     {% block body_script %}
-    <script type="module" src="{{ static }}/urljsf.js"></script>
+    <script type="module" src="{{ static }}/index.js"></script>
     {% endblock %}
   </body>
 </html>

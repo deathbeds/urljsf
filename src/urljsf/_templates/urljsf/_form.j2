@@ -1,11 +1,5 @@
 {% macro urljsf() -%}
-<script type="{{ mime_prefix }}+{{ format }}"></script>
-{%- endmacro %}
-
-{% macro get_url(url) -%}
-    {%- if url.startswith('http://') or url.startswith('https://') -%}
-        {{ url }}
-    {%- else -%}
-        {{ url_base }}{{ url }}
-    {%- endif -%}
+<script type="{{ mime_prefix }}+json">
+{{ definition_json | tojson(indent=2) }}
+</script>
 {%- endmacro %}
