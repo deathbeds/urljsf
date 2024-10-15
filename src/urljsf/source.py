@@ -61,7 +61,7 @@ class DataSource:
 class ValidatedSource(DataSource):
     validator: Validator | None = None
     validation_errors: list[Any] | None = None
-    as_type: type = field(default_factory=lambda: dict)
+    as_type: type = field(default_factory=lambda: lambda: dict)
     data: dict[str, Any] = None
 
     def __post_init__(self) -> None:
@@ -73,5 +73,5 @@ class ValidatedSource(DataSource):
 @dataclass
 class DefSource(ValidatedSource):
     data: UrljsfSchema | None = None
-    as_type: type[UrljsfSchema] = field(default_factory=UrljsfSchema)
+    as_type: type[UrljsfSchema] = field(default_factory=lambda: UrljsfSchema)
     validator: Validator = field(default_factory=lambda: URLJSF_VALIDATOR)

@@ -24,7 +24,7 @@ classifiers = [
 scripts.urljsf = "urljsf.cli:main"
 dependencies = [
   "jinja2",
-  "tomli; python_version < 3.11",
+  "tomli; python_version < '3.11'",
   "jsonschema[format]",
 ]
 

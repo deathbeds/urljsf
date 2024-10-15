@@ -122,7 +122,7 @@ outputs = ["node_modules/.yarn-state.yml"]
 cmd = """pixi r -e lint pip-e--"""
 inputs = ["pyproject.toml"]
 
-[feature.tasks-dev.tasks.setup-pip-test]
+[feature.tasks-test.tasks.setup-pip-test]
 cmd = """pixi r -e test pip-e--"""
 inputs = ["pyproject.toml"]
 
