@@ -4,14 +4,27 @@
 
 from __future__ import annotations
 
+import io
+import json
 import os
 import platform
 import shutil
 import sys
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 import pytest
+
+try:
+    import tomllib
+except ImportError:
+    import tomli as tomllib  # type: ignore[no-redef]
+
+import tomli_w
+from ruamel.yaml import YAML as YAML_
+
+YAML = YAML_(typ="safe")
+
 
 if TYPE_CHECKING:
     from collections.abc import Generator
@@ -35,6 +48,8 @@ pytest_plugins = ("sphinx.testing.fixtures",)
 
 #: names of fixture projects that won't deploy `schema.json`
 NO_SCHEMA_JSON = ["remote"]
+
+FORMATS = ["json", "toml", "yaml"]
 
 
 def pytest_html_report_title(report: ReportData) -> None:
@@ -65,15 +80,154 @@ def py_tmp_path(tmp_path: Path) -> Generator[Path, None, None]:
 
 @pytest.fixture(params=sorted(ALL_SPHINX_PROJECTS.keys()))
 def a_sphinx_project(request: pytest.FixtureRequest, tmp_path: Path) -> Path:
-    """Project a project fixture."""
+    """Provide a sphinx project."""
     dest = tmp_path / "src"
     shutil.copytree(SPHINX_PROJECTS / request.param, dest)
     return request.param
 
 
 @pytest.fixture(params=sorted(ALL_VALID_CLI_PROJECTS.keys()))
-def a_valid_cli_project(request: pytest.FixtureRequest, tmp_path: Path) -> Path:
-    """Project a project fixture."""
+def a_valid_cli_project(request: pytest.FixtureRequest, tmp_path: Path) -> str:
+    """Provide a CLI project."""
     dest = tmp_path / "src"
     shutil.copytree(VALID_CLI_PROJECTS / request.param, dest)
     return request.param
+
+
+@pytest.fixture(params=FORMATS)
+def a_format(request: pytest.FixtureRequest) -> str:
+    """Provide a format."""
+    return request.param
+
+
+@pytest.fixture(params=sorted(ALL_VALID_CLI_PROJECTS.keys()))
+def a_valid_formatted_cli_project(
+    request: pytest.FixtureRequest,
+    tmp_path: Path,
+    a_format: str,
+) -> Path:
+    """Provide a project fixture in different formats."""
+    a_valid_cli_project = request.param
+    dest = tmp_path / "src"
+    original = VALID_CLI_PROJECTS / request.param
+    original_defn = original / f"urljsf.{a_format}"
+    if original_defn.exists():
+        pytest.skip(f"{a_valid_cli_project} is already {a_format}")
+
+    shutil.copytree(original, dest)
+    old_defn, data = _load_any("urljsf", dest)
+    old_defn.unlink()
+
+    suffix = f".{a_format}"
+    defn_as_fmt = _dumps(data, suffix)
+    new_defn = dest / f"urljsf{suffix}"
+    new_defn.write_text(defn_as_fmt, **UTF8)
+    return f"{a_valid_cli_project}-as-{a_format}"
+
+
+@pytest.fixture(params=sorted(ALL_VALID_CLI_PROJECTS.keys()))
+def a_valid_extracted_cli_project(
+    request: pytest.FixtureRequest,
+    a_format: str,
+    tmp_path: Path,
+) -> Path:
+    """Provide a project fixture with data extracted to files."""
+    a_valid_cli_project = request.param
+    dest = tmp_path / "src"
+    original = VALID_CLI_PROJECTS / request.param
+
+    shutil.copytree(original, dest)
+    old_defn, data = _load_any("urljsf", dest)
+    old_defn.unlink()
+
+    suffix = f".{a_format}"
+
+    for name, form in data["forms"].items():
+        for field in ["schema", "ui_schema", "props", "form_data"]:
+            value = form.get(field)
+            if not isinstance(value, dict):
+                continue
+            field_path = dest / f"{name}-{field}{suffix}"
+            field_path.write_text(_dumps(value, suffix), **UTF8)
+            form[field] = f"./{field_path.name}"
+
+    defn_as_fmt = _dumps(data, suffix)
+    new_defn = dest / f"urljsf{suffix}"
+    new_defn.write_text(defn_as_fmt, **UTF8)
+    return f"{a_valid_cli_project}-as-{a_format}-extracted"
+
+
+@pytest.fixture(params=sorted(ALL_VALID_CLI_PROJECTS.keys()))
+def a_valid_py_cli_project(
+    request: pytest.FixtureRequest,
+    a_format: str,
+    tmp_path: Path,
+) -> Path:
+    """Provide a project fixture."""
+    a_valid_cli_project = request.param
+    dest = tmp_path / "src"
+    original = VALID_CLI_PROJECTS / request.param
+
+    shutil.copytree(original, dest)
+    old_defn, data = _load_any("urljsf", dest)
+    old_defn.unlink()
+
+    suffix = f".{a_format}"
+
+    for name, form in data["forms"].items():
+        for field in ["schema", "ui_schema", "props", "form_data"]:
+            value = form.get(field)
+            if not isinstance(value, dict):
+                continue
+            field_path = dest / f"{name}-{field}{suffix}"
+            field_path.write_text(_dumps(value, suffix), **UTF8)
+            form[field] = f"./{field_path.name}"
+
+    defn_as_fmt = _dumps(data, suffix)
+    new_defn = dest / f"urljsf{suffix}"
+    new_defn.write_text(defn_as_fmt, **UTF8)
+    return f"{a_valid_cli_project}-as-{a_format}-extracted"
+
+
+def _load_any(stem: str, path: Path) -> tuple[Path, dict[str, Any]]:
+    """Load a fixtured file as data."""
+    src: Path | None = None
+    data: dict[str, Any] = None
+    for fmt in FORMATS:
+        src = path / f"{stem}.{fmt}"
+        if not src.exists():
+            continue
+        data = _parse(src)
+        break
+
+    assert src is not None
+    return src, data
+
+
+def _parse(path: Path) -> dict[str, Any]:
+    """Parse something."""
+    text = path.read_text(**UTF8)
+    suffix = path.suffix
+    if suffix == ".toml":
+        return tomllib.loads(text)
+    if suffix in {".yaml", ".yml"}:
+        return YAML.load(text)
+    if suffix == ".json":
+        return json.loads(text)
+    msg = f"Can't parse {path}"
+    raise NotImplementedError(msg)
+
+
+def _dumps(data: dict[str, Any], suffix: str) -> str:
+    """Dump something."""
+    if suffix == ".toml":
+        return tomli_w.dumps(data)
+    if suffix in {".yaml", ".yml"}:
+        with io.StringIO() as fp:
+            YAML.dump(data, fp)
+            return fp.getvalue()
+    elif suffix == ".json":
+        return json.dumps(data, indent=2)
+    else:
+        msg = f"Can't dump {data}"
+        raise NotImplementedError(msg)

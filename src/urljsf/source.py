@@ -105,7 +105,7 @@ class DefSource(ValidatedSource):
                     continue
                 if isinstance(value, str):
                     form[key] = self.resolve_url(value)
-                else:
+                else:  # pragma: no cover
                     msg = f"{name}.{form}.{key} was unexpected: {value}"
                     raise BadImportError(msg)
 
@@ -116,5 +116,5 @@ class DefSource(ValidatedSource):
         if url.startswith("."):
             source = DataSource(self.path.parent / url)
             return source.raw
-        msg = f"unexpected url {url}"
-        raise NotImplementedError(msg)
+        msg = f"unexpected url {url}"  # pragma: no cover
+        raise NotImplementedError(msg)  # pragma: no cover

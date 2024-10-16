@@ -11,9 +11,6 @@ if TYPE_CHECKING:
 
     from pytest_console_scripts import ScriptRunner
 
-SIMPLE_SCHEMA = {"type": "object", "properties": {"foo": {"type": "string"}}}
-GH = ["-g", "https://github.com/org/repo/new/branch"]
-
 
 def test_cli_help(script_runner: ScriptRunner) -> None:
     """Verify help is printed."""
@@ -32,56 +29,34 @@ def test_cli_version(script_runner: ScriptRunner) -> None:
 def test_cli_run(
     script_runner: ScriptRunner, a_valid_cli_project: str, tmp_path: Path
 ) -> None:
-    """Verify a site is built."""
-    src = tmp_path / "src"
+    """Verify a site is built from a project."""
+    _assert_builds(tmp_path / "src", script_runner)
+
+
+def test_cli_run_format(
+    script_runner: ScriptRunner, a_valid_formatted_cli_project: str, tmp_path: Path
+) -> None:
+    """Verify a site is built from a derived project."""
+    _assert_builds(tmp_path / "src", script_runner)
+
+
+def test_cli_run_extracted(
+    script_runner: ScriptRunner, a_valid_extracted_cli_project: str, tmp_path: Path
+) -> None:
+    """Verify a site is built from extracted files."""
+    _assert_builds(tmp_path / "src", script_runner)
+
+
+def _assert_builds(src: Path, script_runner: ScriptRunner):
     all_files = [*src.glob("urljsf.*")]
     assert all_files
     defn = [p for p in all_files if p.stem == "urljsf"][0]
-    r = script_runner.run(["urljsf", f"src/{defn.name}"], cwd=str(tmp_path))
+    r = script_runner.run(["urljsf", f"src/{defn.name}"], cwd=str(src.parent))
     assert r.success
-    assert_outputs(tmp_path)
+    _assert_outputs(src.parent)
 
 
-# def test_cli_urls(script_runner: ScriptRunner, tmp_path: Path) -> None:
-#     """Verify remote URLs can be used."""
-#     url = "https://foo.bar/schema.json"
-#     r = script_runner.run(
-#         ["urljsf", *GH, "-s", url, "-d", url, "-u", url], cwd=str(tmp_path)
-#     )
-#     assert r.success
-#     assert_outputs(tmp_path)
-
-
-# @pytest.mark.parametrize("py_style", ["simple", "nested"])
-# def test_cli_run_py(
-#     script_runner: ScriptRunner, py_tmp_path: Path, py_style: str
-# ) -> None:
-#     """Verify a site is built with a python schema."""
-#     if py_style == "simple":
-#         (py_tmp_path / "schema.py").write_text(
-#             f"""SCHEMA = {json.dumps(SIMPLE_SCHEMA)}""", **UTF8
-#         )
-#         dotted = "schema:SCHEMA"
-#         extra_files = ["schema-schema-*.json"]
-#     elif py_style == "nested":
-#         nested = py_tmp_path / "nested"
-#         nested.mkdir()
-#         (nested / "__init__.py").write_text("# empty", **UTF8)
-#         (nested / "schema.py").write_text(
-#             f"""get_schema = lambda: {json.dumps(SIMPLE_SCHEMA)}""", **UTF8
-#         )
-#         dotted = "nested.schema:get_schema"
-#         extra_files = ["nested.schema-get_schema-*.json"]
-
-#     r = script_runner.run(
-#         ["urljsf", *GH, "--py-schema", dotted],
-#         cwd=str(py_tmp_path),
-#     )
-#     assert r.success
-#     assert_outputs(py_tmp_path, extra_files=extra_files)
-
-
-def assert_outputs(
+def _assert_outputs(
     path: Path, *, out: Path | None = None, extra_files: list[Path] | None = None
 ) -> None:
     """Assert a number of files exist."""

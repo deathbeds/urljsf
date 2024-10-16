@@ -425,6 +425,7 @@ pytest-cov = "*"
 pytest-html = "*"
 pytest-xdist = "*"
 coverage = ">=7"
+"ruamel.yaml" = "*"
 pytest-console-scripts = "*"
 
 [feature.deps-docs.dependencies]
