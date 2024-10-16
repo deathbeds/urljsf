@@ -4,8 +4,7 @@
 
 from __future__ import annotations
 
-import os
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -53,19 +52,16 @@ def test_cli_run_py(
 ) -> None:
     """Verify a site is built from python files."""
     src = tmp_path / "src"
-    env = dict(os.environ)
-    env.update(PYTHONPATH=str(src))
-    _assert_builds(src, script_runner, env=env)
+    _assert_builds(src, script_runner)
 
 
-def _assert_builds(src: Path, script_runner: ScriptRunner, **run_kwargs: Any):
+def _assert_builds(src: Path, script_runner: ScriptRunner) -> None:
     all_files = [*src.glob("urljsf.*")]
     assert all_files
-    defn = [p for p in all_files if p.stem == "urljsf"][0]
+    defn = next(p for p in all_files if p.stem == "urljsf")
     r = script_runner.run(
         ["urljsf", f"src/{defn.name}"],
         cwd=str(src.parent),
-        **run_kwargs,
     )
     assert r.success
     _assert_outputs(src.parent)

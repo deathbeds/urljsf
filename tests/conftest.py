@@ -162,7 +162,8 @@ def a_valid_py_cli_project(
     request: pytest.FixtureRequest,
     a_format: str,
     tmp_path: Path,
-) -> Path:
+    monkeypatch: pytest.MonkeyPatch,
+) -> str:
     """Provide a project fixture."""
     a_valid_cli_project = request.param
     dest = tmp_path / "src"
@@ -187,6 +188,8 @@ def a_valid_py_cli_project(
     defn_as_fmt = _dumps(data, suffix)
     new_defn = dest / f"urljsf{suffix}"
     new_defn.write_text(defn_as_fmt, **UTF8)
+
+    monkeypatch.setenv("PYTHONPATH", str(dest))
     return f"{a_valid_cli_project}-as-py"
 
 

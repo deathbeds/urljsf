@@ -84,7 +84,9 @@ class ValidatedSource(DataSource):
 
     def validate(self) -> None:
         """Capture validation errors."""
-        self.validation_errors = [*self.validator.iter_errors(self.raw)]
+        self.validation_errors = (
+            [*self.validator.iter_errors(self.raw)] if self.validator else []
+        )
 
 
 @dataclass
@@ -98,7 +100,14 @@ class DefSource(ValidatedSource):
     def parse(self) -> None:
         """Extend parsing with path resolution."""
         super().parse()
-        for name, form in self.raw["forms"].items():
+        if self.raw is None:  # pragma: no cover
+            msg = f"unexpected empty rawy data {self}"
+            raise NotImplementedError(msg)
+
+        for form_name in ["url", "file"]:
+            form = self.raw["forms"].get(form_name)
+            if form is None:
+                continue
             for key in ["schema", "ui_schema", "props", "form_data"]:
                 value = form.get(key)
                 if value is None or isinstance(value, dict):
@@ -106,7 +115,7 @@ class DefSource(ValidatedSource):
                 if isinstance(value, str):
                     form[key] = self.resolve_url(value)
                 else:  # pragma: no cover
-                    msg = f"{name}.{form}.{key} was unexpected: {value}"
+                    msg = f"{form_name}.{form}.{key} was unexpected: {value}"
                     raise BadImportError(msg)
 
     def resolve_url(self, url: str) -> dict[str, Any]:
@@ -115,6 +124,7 @@ class DefSource(ValidatedSource):
             return import_dotted_dict(url[3:])
         if url.startswith("."):
             source = DataSource(self.path.parent / url)
-            return source.raw
+            if source.raw is not None:
+                return source.raw
         msg = f"unexpected url {url}"  # pragma: no cover
         raise NotImplementedError(msg)  # pragma: no cover
