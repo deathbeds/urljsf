@@ -1,7 +1,7 @@
 """Main application for ``urljsf``."""
-
 # Copyright (C) urljsf contributors.
 # Distributed under the terms of the Modified BSD License.
+
 from __future__ import annotations
 
 import json
@@ -14,6 +14,7 @@ from typing import TYPE_CHECKING, Any
 import jinja2
 
 from .constants import MIME_PREFIX, STATIC, TEMPLATES, __dist__
+from .errors import InvalidDefinitionError, InvalidInputError
 from .source import DefSource
 
 if TYPE_CHECKING:
@@ -66,9 +67,13 @@ class Urljsf:
         self.deploy_static(cfg.output_dir / "_static")
         return 1
 
-    def load_definition(self) -> bool:
+    def load_definition(self) -> None:
         """Load a configuration from a file or dotted python module."""
         cfg = self.config
+
+        if cfg.input_ is None:
+            msg = f"No valid input from {cfg}"
+            raise InvalidInputError(msg)
 
         input_path = Path(cfg.input_)
 
@@ -78,8 +83,9 @@ class Urljsf:
     @property
     def definition(self) -> UrljsfSchema:
         """Get the validated source."""
-        if TYPE_CHECKING:
-            assert self.config.definition.data is not None
+        if self.config.definition is None or self.config.definition.data is None:
+            msg = "No urljsf definition found"
+            raise InvalidDefinitionError(msg)
         return self.config.definition.data
 
     def from_file_or_py(
@@ -106,7 +112,7 @@ class Urljsf:
         else:
             in_path = Path(file_name)
             in_bytes = in_path.read_bytes()
-            resolved = self.write(in_bytes, in_path.name, static_path)
+            resolved = self.write_hashed(in_bytes, in_path.name, static_path)
         return resolved
 
     @staticmethod

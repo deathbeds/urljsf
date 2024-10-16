@@ -1,7 +1,7 @@
 """Constants for ``urljsf``."""
-
 # Copyright (C) urljsf contributors.
 # Distributed under the terms of the Modified BSD License.
+
 from pathlib import Path
 
 __dist__ = "urljsf"
