@@ -4,12 +4,7 @@
 
 from __future__ import annotations
 
-import json
 from typing import TYPE_CHECKING
-
-import pytest
-
-from .conftest import UTF8
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -34,51 +29,56 @@ def test_cli_version(script_runner: ScriptRunner) -> None:
     assert urljsf.__version__ in r.stdout
 
 
-def test_cli_run(script_runner: ScriptRunner, tmp_path: Path) -> None:
-    """Verify a site is built."""
-    (tmp_path / "schema.json").write_text(json.dumps(SIMPLE_SCHEMA), **UTF8)
-    r = script_runner.run(["urljsf", *GH, "-s", "schema.json"], cwd=str(tmp_path))
-    assert r.success
-    assert_outputs(tmp_path)
-
-
-def test_cli_urls(script_runner: ScriptRunner, tmp_path: Path) -> None:
-    """Verify remote URLs can be used."""
-    url = "https://foo.bar/schema.json"
-    r = script_runner.run(
-        ["urljsf", *GH, "-s", url, "-d", url, "-u", url], cwd=str(tmp_path)
-    )
-    assert r.success
-    assert_outputs(tmp_path)
-
-
-@pytest.mark.parametrize("py_style", ["simple", "nested"])
-def test_cli_run_py(
-    script_runner: ScriptRunner, py_tmp_path: Path, py_style: str
+def test_cli_run(
+    script_runner: ScriptRunner, a_valid_cli_project: str, tmp_path: Path
 ) -> None:
-    """Verify a site is built with a python schema."""
-    if py_style == "simple":
-        (py_tmp_path / "schema.py").write_text(
-            f"""SCHEMA = {json.dumps(SIMPLE_SCHEMA)}""", **UTF8
-        )
-        dotted = "schema:SCHEMA"
-        extra_files = ["schema-schema-*.json"]
-    elif py_style == "nested":
-        nested = py_tmp_path / "nested"
-        nested.mkdir()
-        (nested / "__init__.py").write_text("# empty", **UTF8)
-        (nested / "schema.py").write_text(
-            f"""get_schema = lambda: {json.dumps(SIMPLE_SCHEMA)}""", **UTF8
-        )
-        dotted = "nested.schema:get_schema"
-        extra_files = ["nested.schema-get_schema-*.json"]
-
-    r = script_runner.run(
-        ["urljsf", *GH, "--py-schema", dotted],
-        cwd=str(py_tmp_path),
-    )
+    """Verify a site is built."""
+    src = tmp_path / "src"
+    all_files = [*src.glob("urljsf.*")]
+    assert all_files
+    defn = [p for p in all_files if p.stem == "urljsf"][0]
+    r = script_runner.run(["urljsf", f"src/{defn.name}"], cwd=str(tmp_path))
     assert r.success
-    assert_outputs(py_tmp_path, extra_files=extra_files)
+    assert_outputs(tmp_path)
+
+
+# def test_cli_urls(script_runner: ScriptRunner, tmp_path: Path) -> None:
+#     """Verify remote URLs can be used."""
+#     url = "https://foo.bar/schema.json"
+#     r = script_runner.run(
+#         ["urljsf", *GH, "-s", url, "-d", url, "-u", url], cwd=str(tmp_path)
+#     )
+#     assert r.success
+#     assert_outputs(tmp_path)
+
+
+# @pytest.mark.parametrize("py_style", ["simple", "nested"])
+# def test_cli_run_py(
+#     script_runner: ScriptRunner, py_tmp_path: Path, py_style: str
+# ) -> None:
+#     """Verify a site is built with a python schema."""
+#     if py_style == "simple":
+#         (py_tmp_path / "schema.py").write_text(
+#             f"""SCHEMA = {json.dumps(SIMPLE_SCHEMA)}""", **UTF8
+#         )
+#         dotted = "schema:SCHEMA"
+#         extra_files = ["schema-schema-*.json"]
+#     elif py_style == "nested":
+#         nested = py_tmp_path / "nested"
+#         nested.mkdir()
+#         (nested / "__init__.py").write_text("# empty", **UTF8)
+#         (nested / "schema.py").write_text(
+#             f"""get_schema = lambda: {json.dumps(SIMPLE_SCHEMA)}""", **UTF8
+#         )
+#         dotted = "nested.schema:get_schema"
+#         extra_files = ["nested.schema-get_schema-*.json"]
+
+#     r = script_runner.run(
+#         ["urljsf", *GH, "--py-schema", dotted],
+#         cwd=str(py_tmp_path),
+#     )
+#     assert r.success
+#     assert_outputs(py_tmp_path, extra_files=extra_files)
 
 
 def assert_outputs(

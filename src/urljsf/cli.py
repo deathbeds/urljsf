@@ -50,6 +50,8 @@ def get_parser() -> ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     """Run the command line interface."""
     parser = get_parser()
-    config = Config(**vars(parser.parse_args(argv)))
+    parsed_args = parser.parse_args(argv)
+    config = Config(**vars(parsed_args))
     urljsf = Urljsf(config)
+    urljsf.log.error("argv: %s", parsed_args)
     return urljsf.run_cli()

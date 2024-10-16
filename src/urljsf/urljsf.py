@@ -53,7 +53,7 @@ class Urljsf:
         self.load_definition()
 
         if not cfg.definition:
-            self.log.error("No definition found")
+            self.log.error("No definition found %s", self.config)
             return 1
         if cfg.definition.validation_errors:
             self.log.error(
@@ -65,7 +65,7 @@ class Urljsf:
         out_html = cfg.output_dir / cfg.html_filename
         out_html.write_text(rendered, encoding="utf-8")
         self.deploy_static(cfg.output_dir / "_static")
-        return 1
+        return 0
 
     def load_definition(self) -> None:
         """Load a configuration from a file or dotted python module."""
@@ -78,7 +78,10 @@ class Urljsf:
         input_path = Path(cfg.input_)
 
         if input_path.exists():
-            cfg.definition = DefSource(input_path)
+            cfg.definition = DefSource(input_path, log=self.log)
+        else:
+            msg = "No urljsf definition found"
+            raise InvalidDefinitionError(msg)
 
     @property
     def definition(self) -> UrljsfSchema:

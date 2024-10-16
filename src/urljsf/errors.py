@@ -13,3 +13,7 @@ class InvalidInputError(UrljsfError, ValueError):
 
 class InvalidDefinitionError(UrljsfError, ValueError):
     """No valid defintion."""
+
+
+class BadImportError(UrljsfError, ValueError):
+    """An unxpected import."""

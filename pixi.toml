@@ -60,7 +60,7 @@ cmd = """
 rm -rf src/urljsf/_static/
 && cp -r js/dist/urljsf src/urljsf/_static/urljsf
 && cp -r js/schema src/urljsf/_static/schema
-&& rm -rf src/urljsf/_static/urljsf/demo/
+&& rm -rf src/urljsf/_static/urljsf/demo/ src/urljsf/_static/schema/*.toml
 """
 [tasks.platform--]
 cmd = '''
@@ -159,7 +159,7 @@ outputs = ["js/dist"]
 [feature.tasks-build.tasks.build-py-static]
 cmd = """pixi r py-static--"""
 depends-on = ["build-js-app"]
-inputs = ["js/{dist,schema}"]
+inputs = ["js/{dist,schema}/**"]
 outputs = ["src/urljsf/_static", "!**/demo/"]
 
 [feature.tasks-build.tasks.dist-npm]
@@ -229,6 +229,7 @@ cmd = """
     *.toml
     js/demo/toml/*.toml
     js/schema/*.toml
+    tests/fixtures/*/*/*/*.toml
     """
 inputs = ["*.toml", "{docs,js,src,tests}/**/*.toml"]
 

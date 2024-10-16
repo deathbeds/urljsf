@@ -23,8 +23,13 @@ SEP = ";" if WIN else ":"
 UTF8 = {"encoding": "utf-8"}
 HERE = Path(__file__).parent
 FIXTURES = HERE / "fixtures"
-PROJECTS = FIXTURES / "projects"
-FIXTURE_PROJECTS = {p.name: p for p in PROJECTS.glob("*") if p.is_dir()}
+
+SPHINX_PROJECTS = FIXTURES / "sphinx"
+ALL_SPHINX_PROJECTS = {p.name: p for p in SPHINX_PROJECTS.glob("*") if p.is_dir()}
+
+CLI_PROJECTS = FIXTURES / "cli"
+VALID_CLI_PROJECTS = CLI_PROJECTS / "valid"
+ALL_VALID_CLI_PROJECTS = {p.name: p for p in VALID_CLI_PROJECTS.glob("*") if p.is_dir()}
 
 pytest_plugins = ("sphinx.testing.fixtures",)
 
@@ -58,9 +63,17 @@ def py_tmp_path(tmp_path: Path) -> Generator[Path, None, None]:
         os.environ.pop(var_name)
 
 
-@pytest.fixture(params=sorted(FIXTURE_PROJECTS.keys()))
-def a_project(request: pytest.FixtureRequest, tmp_path: Path) -> Path:
+@pytest.fixture(params=sorted(ALL_SPHINX_PROJECTS.keys()))
+def a_sphinx_project(request: pytest.FixtureRequest, tmp_path: Path) -> Path:
     """Project a project fixture."""
     dest = tmp_path / "src"
-    shutil.copytree(PROJECTS / request.param, dest)
+    shutil.copytree(SPHINX_PROJECTS / request.param, dest)
+    return request.param
+
+
+@pytest.fixture(params=sorted(ALL_VALID_CLI_PROJECTS.keys()))
+def a_valid_cli_project(request: pytest.FixtureRequest, tmp_path: Path) -> Path:
+    """Project a project fixture."""
+    dest = tmp_path / "src"
+    shutil.copytree(VALID_CLI_PROJECTS / request.param, dest)
     return request.param
