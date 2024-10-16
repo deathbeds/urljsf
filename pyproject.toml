@@ -60,6 +60,7 @@ disable_warnings = [
 [tool.coverage.report]
 exclude_lines = [
   "except ImportError as err:",
+  "except ImportError:",
   "if TYPE_CHECKING:",
   """if __name__ == "__main__":""",
   "pragma: no cover",

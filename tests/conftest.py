@@ -142,12 +142,12 @@ def a_valid_extracted_cli_project(
 
     suffix = f".{a_format}"
 
-    for name, form in data["forms"].items():
+    for form_name, form in data["forms"].items():
         for field in ["schema", "ui_schema", "props", "form_data"]:
             value = form.get(field)
             if not isinstance(value, dict):
                 continue
-            field_path = dest / f"{name}-{field}{suffix}"
+            field_path = dest / f"{form_name}-{field}{suffix}"
             field_path.write_text(_dumps(value, suffix), **UTF8)
             form[field] = f"./{field_path.name}"
 
@@ -174,19 +174,20 @@ def a_valid_py_cli_project(
 
     suffix = f".{a_format}"
 
-    for name, form in data["forms"].items():
+    for form_name, form in data["forms"].items():
         for field in ["schema", "ui_schema", "props", "form_data"]:
             value = form.get(field)
             if not isinstance(value, dict):
                 continue
-            field_path = dest / f"{name}-{field}{suffix}"
-            field_path.write_text(_dumps(value, suffix), **UTF8)
-            form[field] = f"./{field_path.name}"
+            member = field.upper()
+            field_path = dest / f"{form_name}_{field}.py"
+            field_path.write_text(f"{member} = {value}", **UTF8)
+            form[field] = f"py:{field_path.stem}:{member}"
 
     defn_as_fmt = _dumps(data, suffix)
     new_defn = dest / f"urljsf{suffix}"
     new_defn.write_text(defn_as_fmt, **UTF8)
-    return f"{a_valid_cli_project}-as-{a_format}-extracted"
+    return f"{a_valid_cli_project}-as-py"
 
 
 def _load_any(stem: str, path: Path) -> tuple[Path, dict[str, Any]]:

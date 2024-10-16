@@ -55,7 +55,7 @@ class DataSource:
         elif suffix == ".json":
             self.raw = json.loads(text)
             self.format = "json"
-        else:
+        else:  # pragma: no cover
             msg = f"Can't parse {self.path}"
             raise NotImplementedError(msg)
         self.log.error("parsed %s: %s", self.format, self.path)
