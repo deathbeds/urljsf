@@ -418,7 +418,7 @@ jsonschema = ">=4.18"
 [feature.deps-run-oldest.dependencies]
 python = "3.9.*"
 sphinx = "6.1.*"
-typing_extensions = ">=4.0.0"
+typing_extensions = "4.0.0"
 
 [feature.deps-test.dependencies]
 pytest = ">=8"
@@ -500,15 +500,12 @@ html_theme_options.icon_links = [
 ]
 
 ## urljsf
-urljsf.github_repo = "deathbeds/urljsf"
-urljsf.css.compact_headings = true
-
-[tool.sphinx.urljsf.css.variables]
-bs-body-bg = "pst-color-background"
-bs-body-color = "pst-color-text-base"
-bs-card-bg = "pst-color-surface"
-bs-card-cap-bg = "pst-color-danger-bg"
-bs-danger-text-emphasis = "pst-color-danger-highlight"
-bs-list-group-bg = "pst-color-background"
-bs-list-group-color = "pst-color-text-base"
-bs-secondary-color = "pst-color-text-base"
+[tool.sphinx.urljsf.css_variables]
+--bs-body-bg = "var(--pst-color-background)"
+--bs-body-color = "var(--pst-color-text-base)"
+--bs-card-bg = "var(--pst-color-surface)"
+--bs-card-cap-bg = "var(--pst-color-danger-bg)"
+--bs-danger-text-emphasis = "var(--pst-color-danger-highlight)"
+--bs-list-group-bg = "var(--pst-color-background)"
+--bs-list-group-color = "var(--pst-color-text-base)"
+--bs-secondary-color = "var(--pst-color-text-base)"

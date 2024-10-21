@@ -41,5 +41,3 @@ def html_page_context(
         rel="modulepreload",
         type=None,
     )
-
-    app.add_css_file("urljsf/bootstrap.min.css")
