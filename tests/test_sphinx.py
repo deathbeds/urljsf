@@ -4,21 +4,20 @@
 
 from pathlib import Path
 
-import pytest
 from pytest_console_scripts import ScriptRunner
 
-from .conftest import NO_SCHEMA_JSON
-
-pytest.skip("[wip] sphinx", allow_module_level=True)
+from .conftest import UTF8
 
 
 def test_sphinx_build(
     a_sphinx_project: str, script_runner: ScriptRunner, tmp_path: Path
 ) -> None:
     """Verify a site builds."""
+    from urljsf.constants import MIME_PREFIX
+
     build = tmp_path / "build"
 
-    args = ["sphinx-build", "-b", "html", "src", "build"]
+    args = ["sphinx-build", "-b", "html", "src", "build", "-vvv", "-W"]
     res = script_runner.run(args, cwd=str(tmp_path))
 
     assert res.success
@@ -26,7 +25,8 @@ def test_sphinx_build(
     built = sorted(build.rglob("*"))
     print("\n".join(list(map(str, built))))
     static = build / "_static"
-    assert (static / "urljsf/urljsf.js").exists()
-    if a_sphinx_project not in NO_SCHEMA_JSON:
-        found = sorted(static.glob("urljsf-forms/schema-*.json"))
-        assert found
+    assert (static / "urljsf/index.js").exists()
+    index_ = build / "index.html"
+    index_text = index_.read_text(**UTF8)
+    assert "urljsf/index.js" in index_text
+    assert MIME_PREFIX in index_text

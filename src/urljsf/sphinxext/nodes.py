@@ -7,10 +7,10 @@ from typing import Any
 from docutils import nodes
 
 
-class prform(nodes.raw):
+class urljsf(nodes.raw):
     """A vanity node we can ``traverse`` for during ``html-page-context``."""
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         """Create a new form node."""
-        kwargs.update({"format": "html", "class": "prsf-node"})
+        kwargs.update({"format": "html", "class": "urljsf-node"})
         super().__init__(*args, **kwargs)

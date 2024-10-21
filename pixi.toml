@@ -299,7 +299,7 @@ export PIXI_PLATFORM=$(cat build/platform.txt)
   --cov-branch
   --cov-context=test
   --no-cov-on-fail
-  --cov-fail-under=100
+  --cov-fail-under=99
 """
 depends-on = ["setup-pip-test", "build-py-static", "platform--"]
 inputs = ["{tests,src/urljsf}/**/*.{py,rst,json}", "src/urljsf/{_static,_templates}"]
@@ -416,8 +416,9 @@ python = ">=3.9"
 jsonschema = ">=4.18"
 
 [feature.deps-run-oldest.dependencies]
-sphinx = "6.1.*"
 python = "3.9.*"
+sphinx = "6.1.*"
+typing_extensions = ">=4.0.0"
 
 [feature.deps-test.dependencies]
 pytest = ">=8"

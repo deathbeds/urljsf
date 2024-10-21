@@ -66,6 +66,9 @@ class Urljsf:
 
     def load_definition(self) -> None:
         """Load a configuration from a file or dotted python module."""
+        if self.config.definition:
+            return
+
         cfg = self.config
 
         if cfg.input_ is None:  # pragma: no cover
@@ -77,7 +80,7 @@ class Urljsf:
         if input_path.exists():
             cfg.definition = DefSource(input_path, log=self.log)
         else:  # pragma: no cover
-            msg = "No urljsf definition found"
+            msg = f"No form definition found in {self.config}"
             raise InvalidDefinitionError(msg)
 
     @property
@@ -85,9 +88,9 @@ class Urljsf:
         """Get the validated source."""
         bad = self.config.definition is None or self.config.definition.data is None
         if bad:  # pragma: no cover
-            msg = "No urljsf definition found"
+            msg = f"No form definition found in {self.config}"
             raise InvalidDefinitionError(msg)
-        return self.config.definition.data
+        return self.config.definition.data  # type: ignore[return-value,union-attr]
 
     def render(self) -> str:
         """Render a template."""

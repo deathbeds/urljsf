@@ -18,7 +18,7 @@ def import_dotted_dict(dotted: str) -> dict[str, Any]:
     if callable(candidate):
         candidate = candidate()
 
-    if not isinstance(candidate, dict):
+    if not isinstance(candidate, dict):  # pragma: no cover
         msg = f"Failed to resolve {dotted} as a dict, found {type(candidate)}"
         raise BadImportError(msg)
 

@@ -3,9 +3,3 @@
 # Distributed under the terms of the Modified BSD License.
 
 extensions = ["urljsf.sphinxext"]
-urljsf = {
-    "css": {
-        "variables": {"bs-foo": "xxx-bar"},
-        "compact_headings": True,
-    }
-}

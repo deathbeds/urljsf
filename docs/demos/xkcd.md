@@ -1,10 +1,9 @@
-form1
-=====
+# XKCD Demo
 
-Text above form
+> show a single form.
 
-.. urljsf::
-    :format: toml
+```{urljsf}
+:format: toml
 
     [forms.url.schema]
     title = "pick an xkcd"
@@ -19,5 +18,4 @@ Text above form
     [templates]
     url = "https://xkcd.com/{{ url.xkcd }}"
     submit_button = "see xkcd #{{ url.xkcd }}"
-
-Text after form
+```

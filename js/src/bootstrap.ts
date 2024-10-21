@@ -7,6 +7,7 @@ let _bootstrapCss: string;
 
 const BOOTSTRAP_LINK_SELECTOR = `
   link[href*="bootstrap.min.css"],
+  link[href*="bootstrap.css"],
   link#${BOOTSTRAP_ID}
 `;
 

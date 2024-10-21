@@ -7,7 +7,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ..constants import __version__
-from .directives import GitHubPR
+from .directives.urljsf import UrljsfDirective
 from .extension import build_finished, html_page_context
 
 if TYPE_CHECKING:
@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 
 def setup(app: Sphinx) -> ExtensionMetadata:
     """Set up the sphinx extension."""
-    app.add_directive("github-pr", GitHubPR)
+    app.add_directive("urljsf", UrljsfDirective)
     app.add_config_value("urljsf", {}, "env")
     app.connect("build-finished", build_finished)
     app.connect("html-page-context", html_page_context)

@@ -1,8 +1,18 @@
-"""Generated schema for ``urljsf``."""
+"""Generated schema for ``urljsf``"""
 # Copyright (C) urljsf contributors.
 # Distributed under the terms of the Modified BSD License.
 
-from typing import Any, Literal, Required, TypedDict, Union
+from __future__ import annotations
+
+import sys
+
+if sys.version_info >= (3, 11):  # pragma: no cover
+    from typing import Any, Dict, List, Literal, Required, TypedDict, Union
+else:  # pragma: no cover
+    from typing import Any, Dict, List, Literal, TypedDict, Union
+
+    from typing_extensions import Required
+
 
 ASchema = Union["_AnySchemaLocation", "AnInlineObject"]
 """
@@ -13,7 +23,7 @@ Subtype: "_AnySchemaLocation", "AnInlineObject"
 """
 
 
-AnInlineObject = dict[str, Any]
+AnInlineObject = Dict[str, Any]
 """
 An Inline Object.
 
@@ -27,7 +37,7 @@ class FileForm(TypedDict, total=False):
     a description of a form that builds a data file
     """
 
-    form_data: "ASchema"
+    form_data: ASchema
     """
     A Schema.
 
@@ -35,7 +45,7 @@ class FileForm(TypedDict, total=False):
     Subtype: "_AnySchemaLocation", "AnInlineObject"
     """
 
-    format: Required["FileFormat"]
+    format: Required[FileFormat]
     """
     File Format.
 
@@ -44,7 +54,7 @@ class FileForm(TypedDict, total=False):
     Required property
     """
 
-    props: "_Props"
+    props: _Props
     """
     JSON-compatible default values for `rjsf` [`Form.props`][form-props].
 
@@ -54,7 +64,7 @@ class FileForm(TypedDict, total=False):
     prune_empty: bool
     """ prune empty lists, object, etc. """
 
-    schema: Required["ASchema"]
+    schema: Required[ASchema]
     """
     A Schema.
 
@@ -64,7 +74,7 @@ class FileForm(TypedDict, total=False):
     Required property
     """
 
-    ui_schema: "ASchema"
+    ui_schema: ASchema
     """
     A Schema.
 
@@ -93,7 +103,7 @@ class UrlForm(TypedDict, total=False):
     a definition of a form to build a URL
     """
 
-    form_data: "ASchema"
+    form_data: ASchema
     """
     A Schema.
 
@@ -101,14 +111,14 @@ class UrlForm(TypedDict, total=False):
     Subtype: "_AnySchemaLocation", "AnInlineObject"
     """
 
-    props: "_Props"
+    props: _Props
     """
     JSON-compatible default values for `rjsf` [`Form.props`][form-props].
 
     [form-props]: https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/form-props
     """
 
-    schema: "ASchema"
+    schema: ASchema
     """
     A Schema.
 
@@ -116,7 +126,7 @@ class UrlForm(TypedDict, total=False):
     Subtype: "_AnySchemaLocation", "AnInlineObject"
     """
 
-    ui_schema: "ASchema"
+    ui_schema: ASchema
     """
     A Schema.
 
@@ -135,7 +145,7 @@ Urljsf = TypedDict(
         "$id": str,
         # | format: uri-reference
         "$schema": str,
-        "css_variables": dict[str, "_AnyCss"],
+        "css_variables": Dict[str, "_AnyCss"],
         # | forms used to build and populate a URL
         # |
         # | Required property
@@ -168,7 +178,7 @@ Urljsf = TypedDict(
 )
 
 
-_AnyCss = Union[str, dict[str, Any]]
+_AnyCss = Union[str, Dict[str, Any]]
 """ Aggregation type: oneOf """
 
 
@@ -185,11 +195,11 @@ _AnyTemplate = Union[str, "_AnyTemplateAnyof1"]
 """ Aggregation type: anyOf """
 
 
-_AnyTemplateAnyof1 = list[str]
+_AnyTemplateAnyof1 = List[str]
 """ minItems: 1 """
 
 
-_Checks = dict[str, "_AnyTemplate"]
+_Checks = Dict[str, "_AnyTemplate"]
 """
 `nunjucks` templates keyed by their label: any evaluating to a non-whitespace
 string will be considered failing.
@@ -197,16 +207,16 @@ string will be considered failing.
 
 
 class _Forms(TypedDict, total=False):
-    """forms used to build and populate a URL."""
+    """forms used to build and populate a URL"""
 
-    file: "FileForm"
+    file: FileForm
     """
     File Form.
 
     a description of a form that builds a data file
     """
 
-    url: Required["UrlForm"]
+    url: Required[UrlForm]
     """
     URL Form.
 
@@ -250,10 +260,10 @@ class _Props(TypedDict, total=False):
     focusOnFirstError: bool
     """ If set to true, then the first field with an error will receive the focus when the form is submitted with errors """
 
-    formContext: dict[str, Any]
+    formContext: Dict[str, Any]
     """ globals for custom UI """
 
-    formData: dict[str, Any]
+    formData: Dict[str, Any]
     """ The data for the form, used to prefill a form with existing data """
 
     id: str
@@ -286,10 +296,10 @@ class _Props(TypedDict, total=False):
     readonly: bool
     """ It's possible to make the whole form read-only by setting the `readonly` prop. The `readonly` prop is then forwarded down to each field of the form. If you just want to make some fields read-only, see the `ui:readonly` parameter in `uiSchema` """
 
-    schema: dict[str, Any]
+    schema: Dict[str, Any]
     """ The JSON schema object for the form """
 
-    showErrorList: "_PropsShowerrorlist"
+    showErrorList: _PropsShowerrorlist
     """ When this prop is set to `top` or 'bottom', a list of errors (or the custom error list defined in the `ErrorList`) will also show. When set to false, only inline input validation errors will be shown. Set to `top` by default """
 
     tagName: str
@@ -298,7 +308,7 @@ class _Props(TypedDict, total=False):
     target: str
     """ The value of this prop will be passed to the `target` HTML attribute on the form """
 
-    uiSchema: "_Uischema"
+    uiSchema: _Uischema
     """ an rjsf ui schema, with light extension """
 
 
@@ -326,20 +336,20 @@ class _Templates(TypedDict, total=False):
     [Base64]: https://developer.mozilla.org/en-US/docs/Glossary/Base64
     """
 
-    checks: "_Checks"
+    checks: _Checks
     """
     `nunjucks` templates keyed by their label: any evaluating to a non-whitespace
     string will be considered failing.
     """
 
-    submit_button: Required["_AnyTemplate"]
+    submit_button: Required[_AnyTemplate]
     """
     Aggregation type: anyOf
 
     Required property
     """
 
-    url: Required["_AnyTemplate"]
+    url: Required[_AnyTemplate]
     """
     Aggregation type: anyOf
 
@@ -352,13 +362,13 @@ _URLJSF_NO_BOOTSTRAP_DEFAULT = False
 
 
 class _Uioptions(TypedDict, total=False):
-    urljsfGrid: "_UioptionsUrljsfgrid"
+    urljsfGrid: _UioptionsUrljsfgrid
 
 
 class _UioptionsUrljsfgrid(TypedDict, total=False):
-    addButton: list[str]
-    children: dict[str, list[str]]
-    default: list[str]
+    addButton: List[str]
+    children: Dict[str, List[str]]
+    default: List[str]
 
 
 # | an rjsf ui schema, with light extension
@@ -373,6 +383,6 @@ _Uischema = TypedDict(
 
 
 class _UischemaUiColonUrljsfgrid(TypedDict, total=False):
-    addButton: list[str]
-    children: dict[str, list[str]]
-    default: list[str]
+    addButton: List[str]
+    children: Dict[str, List[str]]
+    default: List[str]

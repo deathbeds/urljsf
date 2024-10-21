@@ -10,10 +10,5 @@ _Create Pull Request_ button to see a `404`.
 ```{toctree}
 :maxdepth: 2
 
-simple
-pets
-multiple
-python
-iframe
-kitchen-sink
+xkcd
 ```

@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 class Config:
     """Configuration for ``urljsf``."""
 
-    input_: str | None = None
+    input_: str | None
     definition: DefSource | None = None
 
     # meta...

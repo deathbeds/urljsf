@@ -11,7 +11,7 @@ from typing import TYPE_CHECKING, Any, Callable
 
 from ._schema import FileFormat
 from ._schema import Urljsf as UrljsfSchema
-from .constants import UTF8
+from .constants import EXTENSION_FORMAT, UTF8
 from .errors import BadImportError
 from .schema import URLJSF_VALIDATOR
 from .utils import import_dotted_dict
@@ -26,8 +26,9 @@ if TYPE_CHECKING:
 class DataSource:
     """Parsed data from a source."""
 
-    path: Path
+    path: Path | None = None
     raw: dict[str, Any] | None = None
+    text: str | None = None
     format: FileFormat | None = None
     log: logging.Logger = field(default_factory=logging.getLogger)
 
@@ -35,28 +36,48 @@ class DataSource:
         """Trigger parsing."""
         self.parse()
 
+    def suffix(self) -> str:
+        """Get the file type suffix."""
+        if TYPE_CHECKING:
+            assert self.path
+
+        return self.path.suffix
+
+    def read_text(self) -> str:
+        """Get the source of a path."""
+        if TYPE_CHECKING:
+            assert self.path
+        return self.path.read_text(**UTF8)
+
+    def guess_format(self) -> FileFormat:
+        """Guess the format from a suffix."""
+        suffix = self.suffix()
+        fmt = EXTENSION_FORMAT.get(suffix)
+        if TYPE_CHECKING:
+            assert fmt is not None
+        return fmt
+
     def parse(self) -> None:
         """Parse a path."""
-        suffix = self.path.suffix
-        text = self.path.read_text(**UTF8)
-        if suffix == ".toml":
+        fmt = self.format = self.format or self.guess_format()
+        text = self.text = self.text or self.read_text()
+
+        if fmt == "toml":
             try:
                 import tomllib
             except ImportError:
                 import tomli as tomllib  # type: ignore[no-redef]
 
             self.raw = tomllib.loads(text)
-            self.format = "toml"
-        elif suffix in {".yaml", ".yml"}:
+        elif fmt == "yaml":
             from ruamel.yaml import YAML
 
             self.raw = YAML(typ="safe").load(text)
-            self.format = "yaml"
-        elif suffix == ".json":
+        elif fmt == "json":
             self.raw = json.loads(text)
             self.format = "json"
         else:  # pragma: no cover
-            msg = f"Can't parse {self.path}"
+            msg = f"Can't parse {self.format}: {self.path}"
             raise NotImplementedError(msg)
         self.log.error("parsed %s: %s", self.format, self.path)
 
@@ -96,6 +117,7 @@ class DefSource(ValidatedSource):
     data: UrljsfSchema | None = None
     as_type: Callable[..., UrljsfSchema] = field(default_factory=lambda: UrljsfSchema)
     validator: Draft7Validator = field(default_factory=lambda: URLJSF_VALIDATOR)
+    resource_path: Path | None = None
 
     def parse(self) -> None:
         """Extend parsing with path resolution."""
@@ -123,7 +145,11 @@ class DefSource(ValidatedSource):
         if url.startswith("py:"):
             return import_dotted_dict(url[3:])
         if url.startswith("."):
-            source = DataSource(self.path.parent / url)
+            rel_path = self.resource_path or (self.path.parent if self.path else None)
+            if rel_path is None:  # pragma: no cover
+                msg = f"no rel path for {self}"
+                raise NotImplementedError(msg)
+            source = DataSource(rel_path / url)
             if source.raw is not None:
                 return source.raw
         msg = f"unexpected url {url}"  # pragma: no cover
