@@ -14,7 +14,7 @@ from ._schema import Urljsf as UrljsfSchema
 from .constants import EXTENSION_FORMAT, UTF8
 from .errors import BadImportError
 from .schema import URLJSF_VALIDATOR
-from .utils import import_dotted_dict
+from .utils import import_dotted_dict, merge_deep
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -90,6 +90,7 @@ class ValidatedSource(DataSource):
     validation_errors: list[Any] = field(default_factory=list)
     as_type: Callable[..., Any] = field(default_factory=lambda: lambda: dict)
     data: Any | None = None
+    defaults: dict[str, Any] | None = None
 
     def parse(self) -> None:
         """Validate, and attempt to parse the data."""
@@ -100,7 +101,10 @@ class ValidatedSource(DataSource):
         if self.raw is None:  # pragma: no cover
             msg = f"No data for {self.__class__.__name__}"
             raise NotImplementedError(msg)
+
+        self.raw = merge_deep(self.defaults, self.raw)
         self.validate()
+
         self.data = self.as_type(**self.raw)
 
     def validate(self) -> None:
@@ -123,7 +127,7 @@ class DefSource(ValidatedSource):
         """Extend parsing with path resolution."""
         super().parse()
         if self.raw is None:  # pragma: no cover
-            msg = f"unexpected empty rawy data {self}"
+            msg = f"unexpected empty raw data {self}"
             raise NotImplementedError(msg)
 
         for form_name in ["url", "file"]:

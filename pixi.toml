@@ -506,6 +506,9 @@ html_theme_options.icon_links = [
 --bs-card-bg = "var(--pst-color-surface)"
 --bs-card-cap-bg = "var(--pst-color-danger-bg)"
 --bs-danger-text-emphasis = "var(--pst-color-danger-highlight)"
+--bs-secondary-color = "var(--pst-color-text-base)"
+
+[tool.sphinx.urljsf.css_variables.".list-group"]
 --bs-list-group-bg = "var(--pst-color-background)"
 --bs-list-group-color = "var(--pst-color-text-base)"
---bs-secondary-color = "var(--pst-color-text-base)"
+--bs-list-group-border-color = "var(--pst-color-border)"

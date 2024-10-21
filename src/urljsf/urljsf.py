@@ -78,7 +78,7 @@ class Urljsf:
         input_path = Path(cfg.input_)
 
         if input_path.exists():
-            cfg.definition = DefSource(input_path, log=self.log)
+            cfg.definition = DefSource(input_path, defaults=cfg.defaults, log=self.log)
         else:  # pragma: no cover
             msg = f"No form definition found in {self.config}"
             raise InvalidDefinitionError(msg)

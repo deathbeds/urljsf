@@ -43,6 +43,7 @@ class UrljsfDirective(SphinxDirective):
         """Generate a single RJSF form."""
         config = self.options_to_config()
         self._urljsf = Urljsf(config)
+
         self._urljsf.load_definition()
 
         return [urljsf("", self._urljsf.render())]
@@ -66,17 +67,22 @@ class UrljsfDirective(SphinxDirective):
         fmt = opt("format")
         definition: DefSource | None = None
         input_: str | None = None
+        app_defaults = self.env.config.__dict__.get("urljsf", {})
 
         if path:
             input_ = str(here / path)
         elif self.content and fmt:
             definition = DefSource(
-                resource_path=here, format=fmt, text="\n".join(self.content)
+                resource_path=here,
+                format=fmt,
+                text="\n".join(self.content),
+                defaults=app_defaults,
             )
 
         return Config(
             input_=input_,
             definition=definition,
+            defaults=app_defaults,
             # meta
             template="urljsf/sphinx.j2",
             url_base=f"{rel}/_static/urljsf-forms/",

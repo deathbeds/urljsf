@@ -6,7 +6,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
     from .source import DefSource
@@ -18,6 +18,7 @@ class Config:
 
     input_: str | None
     definition: DefSource | None = None
+    defaults: dict[str, Any] | None = None
 
     # meta...
     url_base: str = "./"

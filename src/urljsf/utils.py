@@ -1,7 +1,10 @@
 """Utilities for ``urljsf``."""
+
 # Copyright (C) urljsf contributors.
 # Distributed under the terms of the Modified BSD License.
+from __future__ import annotations
 
+from copy import deepcopy
 from typing import Any
 
 from .errors import BadImportError
@@ -23,3 +26,17 @@ def import_dotted_dict(dotted: str) -> dict[str, Any]:
         raise BadImportError(msg)
 
     return candidate
+
+
+def merge_deep(
+    left: dict[str, Any] | None, right: dict[str, Any] | None
+) -> dict[str, Any]:
+    """Merge dictionaries."""
+    left = deepcopy(left or {})
+    right = deepcopy(right or {})
+    for key, value in right.items():
+        if isinstance(value, dict):
+            left[key] = merge_deep(left.get(key), value)
+            continue
+        left[key] = value
+    return left
