@@ -1,13 +1,5 @@
 {
   "$schema": "../../schema/v0/form.schema.json",
-  "css_variables": {
-    "--bs-danger-rgb": "var(--bs-warning-rgb)",
-    "--bs-form-invalid-border-color": "var(--bs-warning-text-emphasis)",
-    "--bs-form-invalid-color": "var(--bs-warning-text-emphasis)",
-    ".btn-danger": {
-      "--bs-btn-bg": "var(--bs-warning-text-emphasis)"
-    }
-  },
   "forms": {
     "url": {
       "schema": "./json/url.schema.json",
@@ -18,6 +10,14 @@
       "schema": "./json/file.schema.json",
       "ui_schema": "./json/file.uischema.json",
       "form_data": "./json/file.data.json"
+    }
+  },
+  "style": {
+    "--bs-danger-rgb": "var(--bs-warning-rgb)",
+    "--bs-form-invalid-border-color": "var(--bs-warning-text-emphasis)",
+    "--bs-form-invalid-color": "var(--bs-warning-text-emphasis)",
+    ".btn-danger": {
+      "--bs-btn-bg": "var(--bs-warning-text-emphasis)"
     }
   },
   "templates": {

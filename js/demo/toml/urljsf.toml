@@ -35,10 +35,10 @@ submit_button = """
 {% endfor %}
 """
 
-[css_variables]
+[style]
 "--bs-danger-rgb" = "var(--bs-warning-rgb)"
 "--bs-form-invalid-border-color" = "var(--bs-warning-text-emphasis)"
 "--bs-form-invalid-color" = "var(--bs-warning-text-emphasis)"
 
-[css_variables.".btn-danger"]
+[style.".btn-danger"]
 "--bs-btn-bg" = "var(--bs-warning-text-emphasis)"

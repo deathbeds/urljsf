@@ -145,7 +145,6 @@ Urljsf = TypedDict(
         "$id": str,
         # | format: uri-reference
         "$schema": str,
-        "css_variables": Dict[str, "_AnyCss"],
         # | forms used to build and populate a URL
         # |
         # | Required property
@@ -159,6 +158,7 @@ Urljsf = TypedDict(
         # |
         # | default: False
         "no_bootstrap": bool,
+        "style": Dict[str, "_AnyStyle"],
         # | [`nunjucks`][nunjucks] strings (or lists of strings) that control how strings are built
         # | from forms.
         # |
@@ -178,10 +178,6 @@ Urljsf = TypedDict(
 )
 
 
-_AnyCss = Union[str, Dict[str, Any]]
-""" Aggregation type: oneOf """
-
-
 _AnySchemaLocation = str
 """
 a path to a JSON schema, serialized as JSON, TOML, or (simple) YAML.
@@ -189,6 +185,10 @@ a path to a JSON schema, serialized as JSON, TOML, or (simple) YAML.
 format: uri-reference
 minLength: 1
 """
+
+
+_AnyStyle = Union[str, Dict[str, Any]]
+""" Aggregation type: oneOf """
 
 
 _AnyTemplate = Union[str, "_AnyTemplateAnyof1"]

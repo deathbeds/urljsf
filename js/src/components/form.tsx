@@ -203,10 +203,10 @@ function UrljsfForm(props: IFormProps): JSX.Element {
     };
   }
 
-  let style = !config.css_variables ? (
+  let style = !config.style ? (
     <></>
   ) : (
-    <Style forId={idPrefix} styles={config.css_variables}></Style>
+    <Style forId={idPrefix} styles={config.style}></Style>
   );
 
   const URLJSF = () => {
@@ -261,23 +261,22 @@ function UrljsfForm(props: IFormProps): JSX.Element {
     return (
       <div className={FORM_CLASS} id={idPrefix}>
         {style}
-        {config.forms.file && (
-          <div>
-            <RJSFForm {...formProps.file}>
+        <ul className="list-group">
+          {config.forms.file && (
+            <li className="list-group-item">
+              <RJSFForm {...formProps.file}>
+                <Fragment />
+              </RJSFForm>
+            </li>
+          )}
+          <li className="list-group-item">
+            <RJSFForm {...formProps.url}>
               <Fragment />
             </RJSFForm>
-            <hr />
-          </div>
-        )}
-        <div>
-          <RJSFForm {...formProps.url}>
-            <Fragment />
-          </RJSFForm>
-        </div>
-        <li className="list-group">
+          </li>
           {...checkItems}
-          <li className=" list-group-item">{submitButton}</li>
-        </li>
+          <li className="list-group-item">{submitButton}</li>
+        </ul>
       </div>
     );
   };

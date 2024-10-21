@@ -148,18 +148,18 @@ outputs = ["js/demo/{json,yaml}/"]
 cmd = "yarn build:lib"
 depends-on = ["setup-js", "build-schema-ts"]
 inputs = ["node_modules/.yarn-state.yml", "js/src", "js/{package,tsconfig}.json"]
-outputs = ["js/lib"]
+outputs = ["js/lib", "js/lib/index.js", "js/tsconfig.tsbuildinfo"]
 
 [feature.tasks-build.tasks.build-js-app]
 cmd = "yarn build:app"
 depends-on = ["build-js-lib", "build-js-demo"]
-inputs = ["node_modules/.yarn-state.yml", "js/{lib,demo,js/webpack.config.mjs}"]
+inputs = ["node_modules/.yarn-state.yml", "js/{lib,demo}/**", "js/webpack.config.mjs"]
 outputs = ["js/dist"]
 
 [feature.tasks-build.tasks.build-py-static]
 cmd = """pixi r py-static--"""
 depends-on = ["build-js-app"]
-inputs = ["js/{dist,schema}/**"]
+inputs = ["js/{dist,schema,lib}/**"]
 outputs = ["src/urljsf/_static", "!**/demo/"]
 
 [feature.tasks-build.tasks.dist-npm]
@@ -171,7 +171,7 @@ outputs = ["dist/*.tgz"]
 [feature.tasks-build.tasks.dist-pypi]
 cmd = "pyproject-build . --no-isolation"
 depends-on = ["build-py-static", "build-schema-py"]
-inputs = ["{pyproject.toml,LICENSE,README.md}", "src"]
+inputs = ["{pyproject.toml,LICENSE,README.md}", "src", "!**/__pycache__"]
 outputs = ["dist/*.whl", "dist/*.tar.gz"]
 
 [feature.tasks-build.tasks.dist-hash]
@@ -500,7 +500,7 @@ html_theme_options.icon_links = [
 ]
 
 ## urljsf
-[tool.sphinx.urljsf.css_variables]
+[tool.sphinx.urljsf.style]
 --bs-body-bg = "var(--pst-color-background)"
 --bs-body-color = "var(--pst-color-text-base)"
 --bs-card-bg = "var(--pst-color-surface)"
@@ -508,7 +508,7 @@ html_theme_options.icon_links = [
 --bs-danger-text-emphasis = "var(--pst-color-danger-highlight)"
 --bs-secondary-color = "var(--pst-color-text-base)"
 
-[tool.sphinx.urljsf.css_variables.".list-group"]
+[tool.sphinx.urljsf.style.".list-group"]
 --bs-list-group-bg = "var(--pst-color-background)"
 --bs-list-group-color = "var(--pst-color-text-base)"
 --bs-list-group-border-color = "var(--pst-color-border)"

@@ -24,8 +24,8 @@ forms that describe how to build the URL
 templates = {"$ref" = "#/definitions/templates", description = """
 `nunjucks` templates that control URLs for machines and markdown for humans
 """}
-css_variables = {"$ref" = "#/definitions/css-variables", description = """
-CSS variables, scoped to this form or specific selectors
+style = {"$ref" = "#/definitions/styles", description = """
+simple CSS rules scoped to the current form id, or objects keyed by child selector
 """}
 
 [properties.iframe]
@@ -174,11 +174,11 @@ anyOf = [
 ]
 
 # style ########################################################################
-[definitions.css-variables]
+[definitions.styles]
 type = "object"
-patternProperties.'^.*$'."$ref" = "#/definitions/any-css"
+patternProperties.'^.*$'."$ref" = "#/definitions/any-style"
 
-[definitions.any-css]
+[definitions.any-style]
 oneOf = [
   {type = "string"},
   {type = "object"},

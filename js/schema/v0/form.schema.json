@@ -13,10 +13,6 @@
       "type": "string",
       "format": "uri-reference"
     },
-    "css_variables": {
-      "$ref": "#/definitions/css-variables",
-      "description": "CSS variables, scoped to this form or specific selectors\n"
-    },
     "forms": {
       "$ref": "#/definitions/forms",
       "description": "forms that describe how to build the URL\n"
@@ -33,6 +29,10 @@
       "type": "boolean",
       "description": "don't try to add a link to bootstrap if missing.",
       "default": false
+    },
+    "style": {
+      "$ref": "#/definitions/styles",
+      "description": "simple CSS rules scoped to the current form id, or objects keyed by child selector\n"
     },
     "templates": {
       "$ref": "#/definitions/templates",
@@ -217,16 +217,6 @@
         }
       }
     },
-    "any-css": {
-      "oneOf": [
-        {
-          "type": "string"
-        },
-        {
-          "type": "object"
-        }
-      ]
-    },
     "any-file-format": {
       "type": "string",
       "title": "File Format",
@@ -257,6 +247,16 @@
       "format": "uri-reference",
       "minLength": 1
     },
+    "any-style": {
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "object"
+        }
+      ]
+    },
     "any-template": {
       "anyOf": [
         {
@@ -276,14 +276,6 @@
       "description": "`nunjucks` templates keyed by their label: any evaluating to a non-whitespace\nstring will be considered failing.",
       "additionalProperties": {
         "$ref": "#/definitions/any-template"
-      }
-    },
-    "css-variables": {
-      "type": "object",
-      "patternProperties": {
-        "^.*$": {
-          "$ref": "#/definitions/any-css"
-        }
       }
     },
     "file-form": {
@@ -332,6 +324,14 @@
         }
       },
       "required": ["url"]
+    },
+    "styles": {
+      "type": "object",
+      "patternProperties": {
+        "^.*$": {
+          "$ref": "#/definitions/any-style"
+        }
+      }
     },
     "templates": {
       "type": "object",

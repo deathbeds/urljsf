@@ -1,14 +1,14 @@
 // Copyright (C) urljsf contributors.
 // Distributed under the terms of the Modified BSD License.
-import { CssVariables } from '../_schema.js';
+import { Styles } from '../_schema.js';
 import { DEBUG } from '../tokens.js';
 
 export function Style(props: IStyleProps): JSX.Element {
   const lines = makeRules(`#${props.forId}`, props.styles);
-  return <style id={`${props.forId}-css-variables`}>{lines}</style>;
+  return <style id={`${props.forId}-style`}>{lines}</style>;
 }
 
-function makeRules(prefix: string, styles: CssVariables | Record<string, any>): string {
+function makeRules(prefix: string, styles: Styles | Record<string, any>): string {
   let lines = [`${prefix} {`];
   for (const [key, value] of Object.entries(styles)) {
     const trimmed = key.trim();
@@ -25,5 +25,5 @@ function makeRules(prefix: string, styles: CssVariables | Record<string, any>): 
 
 export interface IStyleProps {
   forId: string;
-  styles: CssVariables;
+  styles: Styles;
 }

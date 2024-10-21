@@ -5,17 +5,6 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
-/**
- * This interface was referenced by `CssVariables`'s JSON-Schema definition
- * via the `patternProperty` "^.*$".
- *
- * This interface was referenced by `Urljsf`'s JSON-Schema
- * via the `definition` "any-css".
- *
- * This interface was referenced by `CssVariables1`'s JSON-Schema definition
- * via the `patternProperty` "^.*$".
- */
-export type AnyCss = string | {};
 export type ASchema = SchemaByURL | InlineObject;
 /**
  * a path to a JSON schema, serialized as JSON, TOML, or (simple) YAML.
@@ -33,6 +22,17 @@ export type ASchema2 = SchemaByURL | InlineObject;
 export type ASchema3 = SchemaByURL | InlineObject;
 export type ASchema4 = SchemaByURL | InlineObject;
 export type ASchema5 = SchemaByURL | InlineObject;
+/**
+ * This interface was referenced by `Styles`'s JSON-Schema definition
+ * via the `patternProperty` "^.*$".
+ *
+ * This interface was referenced by `Urljsf`'s JSON-Schema
+ * via the `definition` "any-style".
+ *
+ * This interface was referenced by `Styles1`'s JSON-Schema definition
+ * via the `patternProperty` "^.*$".
+ */
+export type AnyStyle = string | {};
 /**
  * This interface was referenced by `Urljsf`'s JSON-Schema
  * via the `definition` "any-template".
@@ -57,7 +57,6 @@ export type AnySchemaLocation = string;
 export interface Urljsf {
   $id?: string;
   $schema?: string;
-  css_variables?: CssVariables;
   forms: Forms;
   /**
    * isolate each form on the page in an `iframe`
@@ -72,14 +71,8 @@ export interface Urljsf {
    * don't try to add a link to bootstrap if missing.
    */
   no_bootstrap?: boolean;
+  style?: Styles;
   templates: Templates;
-}
-/**
- * CSS variables, scoped to this form or specific selectors
- *
- */
-export interface CssVariables {
-  [k: string]: AnyCss;
 }
 /**
  * forms that describe how to build the URL
@@ -355,6 +348,13 @@ export interface Props1 {
   uiSchema?: UISchema;
 }
 /**
+ * simple CSS rules scoped to the current form id, or objects keyed by child selector
+ *
+ */
+export interface Styles {
+  [k: string]: AnyStyle;
+}
+/**
  * `nunjucks` templates that control URLs for machines and markdown for humans
  *
  */
@@ -523,13 +523,6 @@ export interface Checks1 {
   [k: string]: AnyTemplate;
 }
 /**
- * This interface was referenced by `Urljsf`'s JSON-Schema
- * via the `definition` "css-variables".
- */
-export interface CssVariables1 {
-  [k: string]: AnyCss;
-}
-/**
  * a description of a form that builds a data file
  *
  * This interface was referenced by `Urljsf`'s JSON-Schema
@@ -555,6 +548,13 @@ export interface FileForm1 {
 export interface Forms1 {
   file?: FileForm;
   url: URLForm;
+}
+/**
+ * This interface was referenced by `Urljsf`'s JSON-Schema
+ * via the `definition` "styles".
+ */
+export interface Styles1 {
+  [k: string]: AnyStyle;
 }
 /**
  * [`nunjucks`][nunjucks] strings (or lists of strings) that control how strings are built
