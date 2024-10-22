@@ -6,7 +6,9 @@
 ```{toctree}
 :maxdepth: 2
 
+script
 cli
 sphinx
+schema
 advanced
 ```

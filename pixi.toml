@@ -388,6 +388,8 @@ rm -rf build/watch-docs
   --jobs 8
   --color
   --watch src
+  --watch pixi.toml
+  --watch js/dist
 """
 
 # envs #########################################################################
@@ -430,13 +432,14 @@ coverage = ">=7"
 pytest-console-scripts = "*"
 
 [feature.deps-docs.dependencies]
-pydata-sphinx-theme = ">=0.15.4,<0.16.0a0"
 myst-nb = "*"
+pydata-sphinx-theme = ">=0.15.4,<0.16.0a0"
+scour = "*"
+sphinx-argparse = "*"
+sphinx-autobuild = "*"
 sphinx-autodoc-typehints = "*"
 sphinx-copybutton = "*"
-sphinx-autobuild = "*"
-sphinx-argparse = "*"
-scour = "*"
+sphinx-jsonschema = "*"
 
 [feature.deps-build.dependencies]
 jsonschema-gentypes = "*"
@@ -472,6 +475,7 @@ extensions = [
   "sphinx.ext.autosectionlabel",
   "sphinx_copybutton",
   "sphinxarg.ext",
+  "sphinx-jsonschema",
   "urljsf.sphinxext",
 ]
 suppress_warnings = ["autosectionlabel.*"]
@@ -493,16 +497,25 @@ myst_heading_anchors = 3
 html_theme = "pydata_sphinx_theme"
 html_logo = "_static/logo.svg"
 html_favicon = "_static/icon.svg"
+html_static_path = ["_static", "../js/dist/"]
 
 html_theme_options.icon_links = [
   {name = "GitHub", url = "{{ ppt.project.urls.Source }}", icon = "fa-brands fa-github", type = "fontawesome"},
   {name = "PyPI", url = "{{ ppt.project.urls.PyPI }}", icon = "fa-brands fa-python", type = "fontawesome"},
 ]
 
+html_sidebars = {"**/schema*" = []}
+
+[tool.sphinx.jsonschema_options]
+lift_description = true
+auto_reference = true
+auto_target = true
+
 ## urljsf
 [tool.sphinx.urljsf.style]
 --bs-body-bg = "var(--pst-color-background)"
 --bs-body-color = "var(--pst-color-text-base)"
+--bs-border-color = "var(--pst-color-border)"
 --bs-card-bg = "var(--pst-color-surface)"
 --bs-card-cap-bg = "var(--pst-color-danger-bg)"
 --bs-danger-text-emphasis = "var(--pst-color-danger-highlight)"

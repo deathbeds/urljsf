@@ -1,16 +1,25 @@
 # Advanced Options
 
-## Remote URLs
+## URL Fields
 
-Instead of local files, the `schema`, `ui-schema`, and `data` options may be given as
-URLs starting with `http://` or `https://`. These will be passed unchanged to the
+The `schema`, `ui_schema`, and `form_data` properties for both the `url` and `file` form
+describe independently constrained documents, which doesn't work well with most JSON
+schema tools.
+
+For a complex form, it can make sense to keep documents in separate files, generate them
+on the fly, or fetch them at run-time.
+
+### Remote URLs
+
+Instead of local files, the `schema`, `ui_schema`, and `form_data` options may be given
+as URLs starting with `http://` or `https://`. These will be passed unchanged to the
 underlying form.
 
 This is useful for reusing assets hosted somewhere else, or which use complex relative
 `$refs`. However, if the linked files move, become unavailable, or otherwise cannot be
-reached due to browser limitations, a form cannot be rendered.
+reached due to browser limitations, a form will not be rendered.
 
-## Python
+### Python
 
 The `py-schema`, `py-ui-schema`, and `py-data` options may by importable python modules,
 which must be importable at run time, either by being installed python packages or with

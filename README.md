@@ -92,7 +92,8 @@ Site builders write TOML, JSON, or YAML, then can use `urljsf` as:
 
 ### JS Script
 
-A very simple usage is an `.html` file that links to resources on the internet.
+A very simple, but limited, usage is an `.html` file that links to `urljsf` and
+`bootstrap` resources on the internet.
 
 ```html
 <script type="application/vnd.deathbeds.prjsf.v0+toml">
@@ -120,6 +121,7 @@ Some ways to improve:
 - download a GitHub release and unpack it, serving the files next to it
 - ensure bootstrap is loaded _before_ the script, with a `link` tag in a `head`.
 - on the `script` element, use a `src` to point to a valid `urljsf` definition
+- use the [CLI](#command-line) or [Sphinx extension](#sphinx)
 
 ### Command Line
 
