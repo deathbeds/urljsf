@@ -440,6 +440,7 @@ sphinx-autobuild = "*"
 sphinx-autodoc-typehints = "*"
 sphinx-copybutton = "*"
 sphinx-jsonschema = "*"
+pypandoc = "*"
 
 [feature.deps-build.dependencies]
 jsonschema-gentypes = "*"
@@ -499,10 +500,14 @@ html_logo = "_static/logo.svg"
 html_favicon = "_static/icon.svg"
 html_static_path = ["_static", "../js/dist/"]
 
-html_theme_options.icon_links = [
+[tool.sphinx.html_theme_options]
+github_url = "{{ ppt.project.urls.Source }}"
+icon_links = [
   {name = "GitHub", url = "{{ ppt.project.urls.Source }}", icon = "fa-brands fa-github", type = "fontawesome"},
   {name = "PyPI", url = "{{ ppt.project.urls.PyPI }}", icon = "fa-brands fa-python", type = "fontawesome"},
 ]
+pygments_dark_style = "github-dark-colorblind"
+pygments_light_style = "github-light-colorblind"
 
 [tool.sphinx.jsonschema_options]
 lift_description = true

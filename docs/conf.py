@@ -9,14 +9,12 @@ import sys
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
+import pypandoc
 import tomllib
 from jinja2 import Template
-from myst_parser.parsers.mdit import create_md_parser
-from myst_parser.parsers.sphinx_ import SphinxRenderer
 
 if TYPE_CHECKING:
     from docutils import nodes
-    from myst_parser.parsers.sphinx_ import MdParserConfig
     from sphinx.application import Sphinx
 
 sys.path += [str(Path(__file__).parent)]
@@ -36,29 +34,20 @@ globals().update(SPX)
 
 
 def setup(app: Sphinx) -> None:
-    """Handle custom events before sphinx gets going."""
+    """Handle custom events before sphinx starts."""
 
-    def _get_description(self, schema: dict[str, Any], node: nodes.Node):
-        """Hack markdown into (some) schema descriptions."""
+    def _md_description(self, schema: dict[str, Any], node: nodes.Node):
+        """Convert a (simple) markdown description to (simple) rst."""
         description = schema.pop("description", None)
         if not description:
             return
 
-        # get the global config
-        document = self.state.document
-        config: MdParserConfig = document.settings.env.myst_config
+        rst = pypandoc.convert_text(description, "rst", format="md")
+        if isinstance(node, list):
+            node.append(self._line(self._cell(rst)))
+        else:
+            self.state.nested_parse(self._convert_content(rst), self.lineno, node)
 
-        parser = create_md_parser(config, SphinxRenderer)
-        children = [*document.children]
-        parser.options["document"] = document
-        note_substitution_def = document.note_substitution_def
-        try:
-            document.note_substitution_def = lambda *args: None
-            parser.render(description)
-        finally:
-            document.note_substitution_def = note_substitution_def
-        node.children = [*node.children, *document.children[len(children) :]]
-        document.children = children
-
-    WideFormat = __import__("sphinx-jsonschema.wide_format").wide_format.WideFormat
-    WideFormat._get_description = _get_description
+    wf_cls = __import__("sphinx-jsonschema.wide_format").wide_format.WideFormat
+    wf_cls._get_description = _md_description
+    wf_cls._check_description = _md_description
