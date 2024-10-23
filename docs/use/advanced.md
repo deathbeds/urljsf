@@ -2,9 +2,10 @@
 
 ## URL Fields
 
-The `schema`, `ui_schema`, and `form_data` properties for both the `url` and `file` form
-describe independently constrained documents, which doesn't work well with most JSON
-schema tools.
+The `schema`, `ui_schema`, and `form_data` properties for both the
+[`url`](./schema.rst#url-form) and [`file`](./schema.rst#file-form) form describe
+independently constrained documents, which doesn't work well with most JSON schema
+tools.
 
 For a complex form, it can make sense to keep documents in separate files, generate them
 on the fly, or rely on a form user's browser to fetch them at run-time.

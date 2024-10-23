@@ -478,7 +478,7 @@ extensions = [
   "sphinx-jsonschema",
   "urljsf.sphinxext",
 ]
-suppress_warnings = ["autosectionlabel.*"]
+suppress_warnings = ["autosectionlabel.*", "myst.xref_missing"]
 exclude_patterns = ["rtd.rst"]
 language = "en"
 
@@ -504,12 +504,11 @@ html_theme_options.icon_links = [
   {name = "PyPI", url = "{{ ppt.project.urls.PyPI }}", icon = "fa-brands fa-python", type = "fontawesome"},
 ]
 
-html_sidebars = {"**/schema*" = []}
-
 [tool.sphinx.jsonschema_options]
 lift_description = true
 auto_reference = true
 auto_target = true
+lift_definitions = true
 
 ## urljsf
 [tool.sphinx.urljsf]

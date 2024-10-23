@@ -6,7 +6,7 @@
 - a standalone [command line tool](./cli.md)
 - a [Sphinx extension](./sphinx.md).
 
-All make use the `urljsf` [JSON schema](./schema.md), and offer some
+All make use the `urljsf` [JSON schema](./schema.rst), and offer some
 [advanced options](./advanced.md).
 
 ```{toctree}
