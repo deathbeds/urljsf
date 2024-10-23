@@ -433,7 +433,7 @@ pytest-console-scripts = "*"
 
 [feature.deps-docs.dependencies]
 myst-nb = "*"
-pydata-sphinx-theme = ">=0.15.4,<0.16.0a0"
+pydata-sphinx-theme = ">=0.16.0,<0.17.0"
 scour = "*"
 sphinx-argparse = "*"
 sphinx-autobuild = "*"
@@ -512,6 +512,9 @@ auto_reference = true
 auto_target = true
 
 ## urljsf
+[tool.sphinx.urljsf]
+no_bootstrap = true
+
 [tool.sphinx.urljsf.style]
 --bs-body-bg = "var(--pst-color-background)"
 --bs-body-color = "var(--pst-color-text-base)"
@@ -525,3 +528,6 @@ auto_target = true
 --bs-list-group-bg = "var(--pst-color-background)"
 --bs-list-group-color = "var(--pst-color-text-base)"
 --bs-list-group-border-color = "var(--pst-color-border)"
+
+[tool.sphinx.urljsf.style."h1, h2, h3, h4, h5, h6"]
+margin = "0"

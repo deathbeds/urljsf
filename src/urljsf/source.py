@@ -9,17 +9,20 @@ import logging
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any, Callable
 
+from jsonschema import Draft7Validator
+from jsonschema.exceptions import SchemaError
+from jsonschema.validators import validator_for
+
 from ._schema import FileFormat
 from ._schema import Urljsf as UrljsfSchema
 from .constants import EXTENSION_FORMAT, UTF8
-from .errors import BadImportError
 from .schema import URLJSF_VALIDATOR
 from .utils import import_dotted_dict, merge_deep
 
 if TYPE_CHECKING:
     from pathlib import Path
 
-    from jsonschema import Draft7Validator
+    from jsonschema.protocols import Validator
 
 
 @dataclass
@@ -30,7 +33,7 @@ class DataSource:
     raw: dict[str, Any] | None = None
     text: str | None = None
     format: FileFormat | None = None
-    log: logging.Logger = field(default_factory=logging.getLogger)
+    log: logging.Logger = field(default_factory=lambda: logging.getLogger(__name__))
 
     def __post_init__(self) -> None:
         """Trigger parsing."""
@@ -126,6 +129,7 @@ class DefSource(ValidatedSource):
     def parse(self) -> None:
         """Extend parsing with path resolution."""
         super().parse()
+
         if self.raw is None:  # pragma: no cover
             msg = f"unexpected empty raw data {self}"
             raise NotImplementedError(msg)
@@ -134,15 +138,31 @@ class DefSource(ValidatedSource):
             form = self.raw["forms"].get(form_name)
             if form is None:
                 continue
-            for key in ["schema", "ui_schema", "props", "form_data"]:
-                value = form.get(key)
-                if value is None or isinstance(value, dict):
-                    continue
-                if isinstance(value, str):
-                    form[key] = self.resolve_url(value)
-                else:  # pragma: no cover
-                    msg = f"{form_name}.{form}.{key} was unexpected: {value}"
-                    raise BadImportError(msg)
+            self.parse_form(form_name, form)
+
+    def parse_form(self, form_name: str, form: dict[str, Any]) -> None:
+        """Parse common fields of a single form."""
+        schema: dict[str, Any] | None = None
+
+        for key in ["schema", "ui_schema", "props", "form_data"]:
+            value = form.get(key)
+            if value is None:
+                continue
+            if isinstance(value, str):
+                form[key] = self.resolve_url(value)
+            if key == "schema":
+                schema = form[key]
+
+        if not schema:  # pragma: no cover
+            return
+
+        validator_cls: type[Validator] = validator_for(schema, default=Draft7Validator)
+
+        try:
+            validator_cls.check_schema(schema)
+        except SchemaError as err:  # pragma: no cover
+            self.log.exception("Error in %s schema", form_name)
+            self.validation_errors += [err]
 
     def resolve_url(self, url: str) -> dict[str, Any]:
         """Maybe resolve a URL."""

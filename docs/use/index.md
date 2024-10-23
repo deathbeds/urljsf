@@ -1,7 +1,13 @@
 # Usage
 
-`urljsf` may be used as a standalone [command line tool](./cli.md) or as a
-[Sphinx extension](./sphinx.md). Both can use [advanced options](./advanced.md).
+`urljsf` may be used as:
+
+- a static [script](./script.md) in an HTML page
+- a standalone [command line tool](./cli.md)
+- a [Sphinx extension](./sphinx.md).
+
+All make use the `urljsf` [JSON schema](./schema.md), and offer some
+[advanced options](./advanced.md).
 
 ```{toctree}
 :maxdepth: 2

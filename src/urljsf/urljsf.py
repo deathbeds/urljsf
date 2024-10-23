@@ -56,6 +56,7 @@ class Urljsf:
             self.log.error(
                 "Found validation errors: %s", cfg.definition.validation_errors
             )
+            return 2
 
         rendered = self.render()
         cfg.output_dir.mkdir(parents=True, exist_ok=True)

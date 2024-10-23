@@ -7,7 +7,7 @@ describe independently constrained documents, which doesn't work well with most 
 schema tools.
 
 For a complex form, it can make sense to keep documents in separate files, generate them
-on the fly, or fetch them at run-time.
+on the fly, or rely on a form user's browser to fetch them at run-time.
 
 ### Remote URLs
 

@@ -4,23 +4,24 @@ import { Styles } from '../_schema.js';
 import { DEBUG } from '../tokens.js';
 
 export function Style(props: IStyleProps): JSX.Element {
-  const lines = makeRules(`#${props.forId}`, props.styles);
+  const lines = makeRules(`#${props.forId}`, props.styles).join('\n');
   return <style id={`${props.forId}-style`}>{lines}</style>;
 }
 
-function makeRules(prefix: string, styles: Styles | Record<string, any>): string {
+function makeRules(prefix: string, styles: Styles | Record<string, any>): string[] {
   let lines = [`${prefix} {`];
+
   for (const [key, value] of Object.entries(styles)) {
-    const trimmed = key.trim();
-    if (trimmed.startsWith('--')) {
-      lines.push(`${key}: ${value};`);
+    if (typeof value == 'string') {
+      lines.push(`${key.trim()}: ${value};`);
     } else if (typeof value == 'object') {
-      lines.push(makeRules(key, value));
+      lines.push(...makeRules(key, value));
     }
   }
+
   lines.push('}');
   DEBUG && console.warn(lines);
-  return lines.join('\n');
+  return lines;
 }
 
 export interface IStyleProps {
