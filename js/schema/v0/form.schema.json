@@ -7,10 +7,12 @@
   "properties": {
     "$id": {
       "type": "string",
+      "description": "an optional identifier for this instance of the `urljsf` schema\n",
       "format": "uri-reference"
     },
     "$schema": {
       "type": "string",
+      "description": "an optional identifier for the `urljsf` schema that constrains this: this\ncan be used by non-`urljsf` tools to validate and provide more insight while\nauthoring.\n",
       "format": "uri-reference"
     },
     "forms": {
@@ -226,10 +228,11 @@
     "any-object": {
       "type": "object",
       "title": "An Inline Object",
-      "description": "An line object"
+      "description": "A literal object"
     },
     "any-schema": {
       "title": "A Schema",
+      "description": "A schema-like object referenced by URL, or inline as an object",
       "oneOf": [
         {
           "$ref": "#/definitions/any-schema-location",
@@ -243,11 +246,12 @@
     },
     "any-schema-location": {
       "type": "string",
-      "description": "a path to a JSON schema, serialized as JSON, TOML, or (simple) YAML.",
+      "description": "a path to a JSON schema, serialized as JSON, TOML, or (simple) YAML. The URN-like\n`py:module.submodule:member` may be used to reference an importable module,\nand will be expanded into an inline object.",
       "format": "uri-reference",
       "minLength": 1
     },
     "any-style": {
+      "description": "A CSS rule, or a nested selector object containing more rules",
       "oneOf": [
         {
           "type": "string"
@@ -260,10 +264,12 @@
     "any-template": {
       "anyOf": [
         {
-          "type": "string"
+          "type": "string",
+          "description": "an template as a simple string"
         },
         {
           "type": "array",
+          "description": "    a template as a list of strings that will be concatenated before being rendered\n  ",
           "items": {
             "type": "string"
           },
@@ -273,7 +279,7 @@
     },
     "checks": {
       "type": "object",
-      "description": "`nunjucks` templates keyed by their label: any evaluating to a non-whitespace\nstring will be considered failing.",
+      "description": "`nunjucks` templates keyed by the label displayed to a form user: any evaluating\nto a non-whitespace string will be considered _failing_.",
       "additionalProperties": {
         "$ref": "#/definitions/any-template"
       }
@@ -327,8 +333,9 @@
     },
     "styles": {
       "type": "object",
+      "description": "CSS rules, or nested selector objects containing more rules",
       "patternProperties": {
-        "^.*$": {
+        "^.+$": {
           "$ref": "#/definitions/any-style"
         }
       }

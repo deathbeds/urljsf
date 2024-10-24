@@ -350,7 +350,7 @@ cmd = """
 
 # watch ########################################################################
 [feature.tasks-build.tasks.watch-js-lib]
-cmd = "yarn build:lib --watch"
+cmd = "yarn build:lib --watch --preserveWatchOutput"
 depends-on = ["setup-js"]
 
 [feature.tasks-build.tasks.watch-js-demo]
@@ -391,6 +391,9 @@ rm -rf build/watch-docs
   --watch pixi.toml
   --watch js/dist
 """
+
+[feature.tasks-dev.tasks.watch]
+cmd = "python scripts/watch.py"
 
 # envs #########################################################################
 [environments]

@@ -5,9 +5,14 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
+/**
+ * A schema-like object referenced by URL, or inline as an object
+ */
 export type ASchema = SchemaByURL | InlineObject;
 /**
- * a path to a JSON schema, serialized as JSON, TOML, or (simple) YAML.
+ * a path to a JSON schema, serialized as JSON, TOML, or (simple) YAML. The URN-like
+ * `py:module.submodule:member` may be used to reference an importable module,
+ * and will be expanded into an inline object.
  */
 export type SchemaByURL = string;
 /**
@@ -17,20 +22,37 @@ export type SchemaByURL = string;
  * via the `definition` "any-file-format".
  */
 export type FileFormat = 'json' | 'toml' | 'yaml';
+/**
+ * A schema-like object referenced by URL, or inline as an object
+ */
 export type ASchema1 = SchemaByURL | InlineObject;
+/**
+ * A schema-like object referenced by URL, or inline as an object
+ */
 export type ASchema2 = SchemaByURL | InlineObject;
+/**
+ * A schema-like object referenced by URL, or inline as an object
+ */
 export type ASchema3 = SchemaByURL | InlineObject;
+/**
+ * A schema-like object referenced by URL, or inline as an object
+ */
 export type ASchema4 = SchemaByURL | InlineObject;
+/**
+ * A schema-like object referenced by URL, or inline as an object
+ */
 export type ASchema5 = SchemaByURL | InlineObject;
 /**
+ * A CSS rule, or a nested selector object containing more rules
+ *
  * This interface was referenced by `Styles`'s JSON-Schema definition
- * via the `patternProperty` "^.*$".
+ * via the `patternProperty` "^.+$".
  *
  * This interface was referenced by `Urljsf`'s JSON-Schema
  * via the `definition` "any-style".
  *
  * This interface was referenced by `Styles1`'s JSON-Schema definition
- * via the `patternProperty` "^.*$".
+ * via the `patternProperty` "^.+$".
  */
 export type AnyStyle = string | {};
 /**
@@ -39,12 +61,16 @@ export type AnyStyle = string | {};
  */
 export type AnyTemplate = string | [string, ...string[]];
 /**
+ * A schema-like object referenced by URL, or inline as an object
+ *
  * This interface was referenced by `Urljsf`'s JSON-Schema
  * via the `definition` "any-schema".
  */
 export type ASchema6 = SchemaByURL | InlineObject;
 /**
- * a path to a JSON schema, serialized as JSON, TOML, or (simple) YAML.
+ * a path to a JSON schema, serialized as JSON, TOML, or (simple) YAML. The URN-like
+ * `py:module.submodule:member` may be used to reference an importable module,
+ * and will be expanded into an inline object.
  *
  * This interface was referenced by `Urljsf`'s JSON-Schema
  * via the `definition` "any-schema-location".
@@ -55,7 +81,17 @@ export type AnySchemaLocation = string;
  * A schema for building forms for building URLs for building...
  */
 export interface Urljsf {
+  /**
+   * an optional identifier for this instance of the `urljsf` schema
+   *
+   */
   $id?: string;
+  /**
+   * an optional identifier for the `urljsf` schema that constrains this: this
+   * can be used by non-`urljsf` tools to validate and provide more insight while
+   * authoring.
+   *
+   */
   $schema?: string;
   forms: Forms;
   /**
@@ -97,7 +133,7 @@ export interface FileForm {
   ui_schema?: ASchema2;
 }
 /**
- * An line object
+ * A literal object
  */
 export interface InlineObject {}
 /**
@@ -506,15 +542,15 @@ export interface UISchema1 {
   };
 }
 /**
- * An line object
+ * A literal object
  *
  * This interface was referenced by `Urljsf`'s JSON-Schema
  * via the `definition` "any-object".
  */
 export interface AnInlineObject {}
 /**
- * `nunjucks` templates keyed by their label: any evaluating to a non-whitespace
- * string will be considered failing.
+ * `nunjucks` templates keyed by the label displayed to a form user: any evaluating
+ * to a non-whitespace string will be considered _failing_.
  *
  * This interface was referenced by `Urljsf`'s JSON-Schema
  * via the `definition` "checks".
@@ -550,6 +586,8 @@ export interface Forms1 {
   url: URLForm;
 }
 /**
+ * CSS rules, or nested selector objects containing more rules
+ *
  * This interface was referenced by `Urljsf`'s JSON-Schema
  * via the `definition` "styles".
  */

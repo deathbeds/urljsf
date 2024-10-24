@@ -16,8 +16,14 @@ required = ["forms", "templates"]
 additionalProperties = false
 
 [properties]
-"$schema" = {type = "string", format = "uri-reference"}
-"$id" = {type = "string", format = "uri-reference"}
+"$schema" = {type = "string", format = "uri-reference", description = """
+an optional identifier for the `urljsf` schema that constrains this: this
+can be used by non-`urljsf` tools to validate and provide more insight while
+authoring.
+"""}
+"$id" = {type = "string", format = "uri-reference", description = """
+an optional identifier for this instance of the `urljsf` schema
+"""}
 forms = {"$ref" = "#/definitions/forms", description = """
 forms that describe how to build the URL
 """}
@@ -142,13 +148,14 @@ type = "boolean"
 [definitions.checks]
 type = "object"
 description = """
-`nunjucks` templates keyed by their label: any evaluating to a non-whitespace
-string will be considered failing.
+`nunjucks` templates keyed by the label displayed to a form user: any evaluating
+to a non-whitespace string will be considered _failing_.
 """
 additionalProperties = {"$ref" = "#/definitions/any-template"}
 
 [definitions.any-schema]
 title = "A Schema"
+description = "A schema-like object referenced by URL, or inline as an object"
 oneOf = [
   {title = "Schema By URL", "$ref" = "#/definitions/any-schema-location"},
   {title = "Inline Object", "$ref" = "#/definitions/any-object"},
@@ -156,29 +163,35 @@ oneOf = [
 
 [definitions.any-object]
 title = "An Inline Object"
-description = "An line object"
+description = "A literal object"
 type = "object"
 
 [definitions.any-schema-location]
 type = "string"
 format = "uri-reference"
-minLength = 1
 description = """
-a path to a JSON schema, serialized as JSON, TOML, or (simple) YAML.
+a path to a JSON schema, serialized as JSON, TOML, or (simple) YAML. The URN-like
+`py:module.submodule:member` may be used to reference an importable module,
+and will be expanded into an inline object.
 """
+minLength = 1
 
 [definitions.any-template]
 anyOf = [
-  {type = "string"},
-  {type = "array", items = {type = "string"}, minItems = 1},
+  {type = "string", description = "an template as a simple string"},
+  {type = "array", items = {type = "string"}, minItems = 1, description = """
+    a template as a list of strings that will be concatenated before being rendered
+  """},
 ]
 
 # style ########################################################################
 [definitions.styles]
 type = "object"
-patternProperties.'^.*$'."$ref" = "#/definitions/any-style"
+description = "CSS rules, or nested selector objects containing more rules"
+patternProperties.'^.+$'."$ref" = "#/definitions/any-style"
 
 [definitions.any-style]
+description = "A CSS rule, or a nested selector object containing more rules"
 oneOf = [
   {type = "string"},
   {type = "object"},

@@ -18,6 +18,8 @@ ASchema = Union["_AnySchemaLocation", "AnInlineObject"]
 """
 A Schema.
 
+A schema-like object referenced by URL, or inline as an object
+
 Aggregation type: oneOf
 Subtype: "_AnySchemaLocation", "AnInlineObject"
 """
@@ -27,7 +29,7 @@ AnInlineObject = Dict[str, Any]
 """
 An Inline Object.
 
-An line object
+A literal object
 """
 
 
@@ -40,6 +42,8 @@ class FileForm(TypedDict, total=False):
     form_data: ASchema
     """
     A Schema.
+
+    A schema-like object referenced by URL, or inline as an object
 
     Aggregation type: oneOf
     Subtype: "_AnySchemaLocation", "AnInlineObject"
@@ -68,6 +72,8 @@ class FileForm(TypedDict, total=False):
     """
     A Schema.
 
+    A schema-like object referenced by URL, or inline as an object
+
     Aggregation type: oneOf
     Subtype: "_AnySchemaLocation", "AnInlineObject"
 
@@ -77,6 +83,8 @@ class FileForm(TypedDict, total=False):
     ui_schema: ASchema
     """
     A Schema.
+
+    A schema-like object referenced by URL, or inline as an object
 
     Aggregation type: oneOf
     Subtype: "_AnySchemaLocation", "AnInlineObject"
@@ -107,6 +115,8 @@ class UrlForm(TypedDict, total=False):
     """
     A Schema.
 
+    A schema-like object referenced by URL, or inline as an object
+
     Aggregation type: oneOf
     Subtype: "_AnySchemaLocation", "AnInlineObject"
     """
@@ -122,6 +132,8 @@ class UrlForm(TypedDict, total=False):
     """
     A Schema.
 
+    A schema-like object referenced by URL, or inline as an object
+
     Aggregation type: oneOf
     Subtype: "_AnySchemaLocation", "AnInlineObject"
     """
@@ -129,6 +141,8 @@ class UrlForm(TypedDict, total=False):
     ui_schema: ASchema
     """
     A Schema.
+
+    A schema-like object referenced by URL, or inline as an object
 
     Aggregation type: oneOf
     Subtype: "_AnySchemaLocation", "AnInlineObject"
@@ -141,8 +155,16 @@ class UrlForm(TypedDict, total=False):
 Urljsf = TypedDict(
     "Urljsf",
     {
+        # | an optional identifier for this instance of the `urljsf` schema
+        # |
+        # |
         # | format: uri-reference
         "$id": str,
+        # | an optional identifier for the `urljsf` schema that constrains this: this
+        # | can be used by non-`urljsf` tools to validate and provide more insight while
+        # | authoring.
+        # |
+        # |
         # | format: uri-reference
         "$schema": str,
         # | forms used to build and populate a URL
@@ -158,7 +180,8 @@ Urljsf = TypedDict(
         # |
         # | default: False
         "no_bootstrap": bool,
-        "style": Dict[str, "_AnyStyle"],
+        # | CSS rules, or nested selector objects containing more rules
+        "style": "_Styles",
         # | [`nunjucks`][nunjucks] strings (or lists of strings) that control how strings are built
         # | from forms.
         # |
@@ -180,7 +203,9 @@ Urljsf = TypedDict(
 
 _AnySchemaLocation = str
 """
-a path to a JSON schema, serialized as JSON, TOML, or (simple) YAML.
+a path to a JSON schema, serialized as JSON, TOML, or (simple) YAML. The URN-like
+`py:module.submodule:member` may be used to reference an importable module,
+and will be expanded into an inline object.
 
 format: uri-reference
 minLength: 1
@@ -188,21 +213,34 @@ minLength: 1
 
 
 _AnyStyle = Union[str, Dict[str, Any]]
-""" Aggregation type: oneOf """
+"""
+A CSS rule, or a nested selector object containing more rules
+
+Aggregation type: oneOf
+"""
 
 
-_AnyTemplate = Union[str, "_AnyTemplateAnyof1"]
+_AnyTemplate = Union["_AnyTemplateAnyof0", "_AnyTemplateAnyof1"]
 """ Aggregation type: anyOf """
 
 
+_AnyTemplateAnyof0 = str
+""" an template as a simple string """
+
+
 _AnyTemplateAnyof1 = List[str]
-""" minItems: 1 """
+"""
+    a template as a list of strings that will be concatenated before being rendered
+
+
+minItems: 1
+"""
 
 
 _Checks = Dict[str, "_AnyTemplate"]
 """
-`nunjucks` templates keyed by their label: any evaluating to a non-whitespace
-string will be considered failing.
+`nunjucks` templates keyed by the label displayed to a form user: any evaluating
+to a non-whitespace string will be considered _failing_.
 """
 
 
@@ -322,6 +360,10 @@ _PROPSSHOWERRORLIST_BOTTOM: Literal["bottom"] = "bottom"
 """The values for the 'When this prop is set to `top` or 'bottom', a list of errors (or the custom error list defined in the `ErrorList`) will also show. When set to false, only inline input validation errors will be shown. Set to `top` by default' enum"""
 
 
+_Styles = Dict[str, "_AnyStyle"]
+""" CSS rules, or nested selector objects containing more rules """
+
+
 class _Templates(TypedDict, total=False):
     """[`nunjucks`][nunjucks] strings (or lists of strings) that control how strings are built
     from forms.
@@ -338,8 +380,8 @@ class _Templates(TypedDict, total=False):
 
     checks: _Checks
     """
-    `nunjucks` templates keyed by their label: any evaluating to a non-whitespace
-    string will be considered failing.
+    `nunjucks` templates keyed by the label displayed to a form user: any evaluating
+    to a non-whitespace string will be considered _failing_.
     """
 
     submit_button: Required[_AnyTemplate]
