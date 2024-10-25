@@ -1,4 +1,6 @@
 """Watch all the things."""
+# Copyright (C) urljsf contributors.
+# Distributed under the terms of the Modified BSD License.
 
 import atexit
 import os
@@ -27,7 +29,7 @@ def main() -> int:
     ]
     procs = [psutil.Popen(["pixi", "r", tn], env=env) for tn in watch_tasks]
 
-    def stop():
+    def stop() -> None:
         [p.terminate(recursive=True) for p in procs]
 
     atexit.register(stop)

@@ -49,19 +49,21 @@ type = "boolean"
 default = false
 description = """don't try to add a link to bootstrap if missing."""
 
+[properties.nunjucks]
+type = "object"
+description = "options for the `nunjucks` environment"
+
+[properties.nunjucks.properties.filters]
+type = "array"
+description = """filters to ensure in `nunjucks` templates"""
+items = {oneOf = [{"$ref" = "#/definitions/any-file-format"}]}
+uniqueItems = true
+
 # forms ########################################################################
 [definitions.forms]
 type = "object"
-required = ["url"]
 description = "forms used to build and populate a URL"
-
-[definitions.forms.properties.url]
-description = "control the inputs to a valid URL"
-"$ref" = "#/definitions/url-form"
-
-[definitions.forms.properties.file]
-description = "control the inputs to a JSON, TOML, or YAML file"
-"$ref" = "#/definitions/file-form"
+patternProperties = {'[a-zA-Z\d\-_]+' = {"$ref" = "#/definitions/any-form"}}
 
 # templates ####################################################################
 [definitions.templates]
@@ -95,54 +97,29 @@ an error, preventing the submit button from being shown.
 """}
 
 # url form #####################################################################
-[definitions.url-form]
-title = "URL Form"
-description = "a definition of a form to build a URL"
+[definitions.any-form]
+title = "Any Form"
+description = "a definition of a form"
 type = "object"
 additionalProperties = false
 
-[definitions.url-form.properties]
+[definitions.any-form.properties]
 schema = {"$ref" = "#/definitions/any-schema", descripton = """
-URL for a JSON schema to describe the URL fields: features not present in
+URL for a JSON schema to describe the this form: features not present in
 Draft 7 are best-effort.
 """}
 ui_schema = {"$ref" = "#/definitions/any-schema", descripton = """
-URL for an `rjsf` UI schema to describe the URL fields
+URL for an `rjsf` UI schema to describe how the `schema` will be presented
 """}
 form_data = {"$ref" = "#/definitions/any-schema", descripton = """
-JSON-compatible initial data for URL fields
+JSON-compatible initial data for this form
 """}
 props = {"$ref" = "./props.schema.json#/definitions/Props", descripton = """
-JSON-compatible subset of configuration properties for URL fields
+JSON-compatible subset of `rjsf` component properties for this form
 """}
-
-# file form ####################################################################
-[definitions.file-form]
-title = "File Form"
-description = "a description of a form that builds a data file"
-type = "object"
-required = ["schema", "format"]
-additionalProperties = false
-
-[definitions.file-form.properties]
-format = {"$ref" = "#/definitions/any-file-format"}
-schema = {"$ref" = "#/definitions/any-schema", descripton = """
-URL for a JSON schema to describe file contents: features not present in Draft 7
-are best-effort.
+rank = {type = "number", description = """
+the order in which to show a form, lowest (or omitted) first, with a tiebreaker on name
 """}
-ui_schema = {"$ref" = "#/definitions/any-schema", descripton = """
-URL for an `rjsf` UI schema to describe the file fields.
-"""}
-form_data = {"$ref" = "#/definitions/any-schema", descripton = """
-JSON-compatible initial data for file contents
-"""}
-props = {"$ref" = "./props.schema.json#/definitions/Props", descripton = """
-JSON-compatible subset of configuration properties for file contents
-"""}
-
-[definitions.file-form.properties.prune_empty]
-description = "prune empty lists, object, etc."
-type = "boolean"
 
 # templating ###################################################################
 [definitions.checks]

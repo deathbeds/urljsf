@@ -33,10 +33,10 @@ A literal object
 """
 
 
-class FileForm(TypedDict, total=False):
-    """File Form.
+class AnyForm(TypedDict, total=False):
+    """Any Form.
 
-    a description of a form that builds a data file
+    a definition of a form
     """
 
     form_data: ASchema
@@ -49,15 +49,6 @@ class FileForm(TypedDict, total=False):
     Subtype: "_AnySchemaLocation", "AnInlineObject"
     """
 
-    format: Required[FileFormat]
-    """
-    File Format.
-
-    a format that can be serialized or deserialized
-
-    Required property
-    """
-
     props: _Props
     """
     JSON-compatible default values for `rjsf` [`Form.props`][form-props].
@@ -65,10 +56,13 @@ class FileForm(TypedDict, total=False):
     [form-props]: https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/form-props
     """
 
-    prune_empty: bool
-    """ prune empty lists, object, etc. """
+    rank: int | float
+    """
+    the order in which to show a form, lowest (or omitted) first, with a tiebreaker on name
 
-    schema: Required[ASchema]
+    """
+
+    schema: ASchema
     """
     A Schema.
 
@@ -76,8 +70,6 @@ class FileForm(TypedDict, total=False):
 
     Aggregation type: oneOf
     Subtype: "_AnySchemaLocation", "AnInlineObject"
-
-    Required property
     """
 
     ui_schema: ASchema
@@ -103,50 +95,6 @@ FILEFORMAT_TOML: Literal["toml"] = "toml"
 """The values for the 'File Format' enum"""
 FILEFORMAT_YAML: Literal["yaml"] = "yaml"
 """The values for the 'File Format' enum"""
-
-
-class UrlForm(TypedDict, total=False):
-    """URL Form.
-
-    a definition of a form to build a URL
-    """
-
-    form_data: ASchema
-    """
-    A Schema.
-
-    A schema-like object referenced by URL, or inline as an object
-
-    Aggregation type: oneOf
-    Subtype: "_AnySchemaLocation", "AnInlineObject"
-    """
-
-    props: _Props
-    """
-    JSON-compatible default values for `rjsf` [`Form.props`][form-props].
-
-    [form-props]: https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/form-props
-    """
-
-    schema: ASchema
-    """
-    A Schema.
-
-    A schema-like object referenced by URL, or inline as an object
-
-    Aggregation type: oneOf
-    Subtype: "_AnySchemaLocation", "AnInlineObject"
-    """
-
-    ui_schema: ASchema
-    """
-    A Schema.
-
-    A schema-like object referenced by URL, or inline as an object
-
-    Aggregation type: oneOf
-    Subtype: "_AnySchemaLocation", "AnInlineObject"
-    """
 
 
 # | urljsf.
@@ -180,6 +128,8 @@ Urljsf = TypedDict(
         # |
         # | default: False
         "no_bootstrap": bool,
+        # | options for the `nunjucks` environment
+        "nunjucks": "_UrljsfNunjucks",
         # | CSS rules, or nested selector objects containing more rules
         "style": "_Styles",
         # | [`nunjucks`][nunjucks] strings (or lists of strings) that control how strings are built
@@ -244,24 +194,8 @@ to a non-whitespace string will be considered _failing_.
 """
 
 
-class _Forms(TypedDict, total=False):
-    """forms used to build and populate a URL"""
-
-    file: FileForm
-    """
-    File Form.
-
-    a description of a form that builds a data file
-    """
-
-    url: Required[UrlForm]
-    """
-    URL Form.
-
-    a definition of a form to build a URL
-
-    Required property
-    """
+_Forms = Dict[str, "AnyForm"]
+""" forms used to build and populate a URL """
 
 
 class _Props(TypedDict, total=False):
@@ -428,3 +362,18 @@ class _UischemaUiColonUrljsfgrid(TypedDict, total=False):
     addButton: List[str]
     children: Dict[str, List[str]]
     default: List[str]
+
+
+class _UrljsfNunjucks(TypedDict, total=False):
+    """options for the `nunjucks` environment"""
+
+    filters: List[_UrljsfNunjucksFiltersItem]
+    """
+    filters to ensure in `nunjucks` templates
+
+    uniqueItems: True
+    """
+
+
+_UrljsfNunjucksFiltersItem = Union["FileFormat"]
+""" Aggregation type: oneOf """

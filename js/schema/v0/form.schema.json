@@ -32,6 +32,24 @@
       "description": "don't try to add a link to bootstrap if missing.",
       "default": false
     },
+    "nunjucks": {
+      "type": "object",
+      "description": "options for the `nunjucks` environment",
+      "properties": {
+        "filters": {
+          "type": "array",
+          "description": "filters to ensure in `nunjucks` templates",
+          "items": {
+            "oneOf": [
+              {
+                "$ref": "#/definitions/any-file-format"
+              }
+            ]
+          },
+          "uniqueItems": true
+        }
+      }
+    },
     "style": {
       "$ref": "#/definitions/styles",
       "description": "simple CSS rules scoped to the current form id, or objects keyed by child selector\n"
@@ -225,6 +243,34 @@
       "description": "a format that can be serialized or deserialized",
       "enum": ["json", "toml", "yaml"]
     },
+    "any-form": {
+      "type": "object",
+      "title": "Any Form",
+      "description": "a definition of a form",
+      "properties": {
+        "form_data": {
+          "$ref": "#/definitions/any-schema",
+          "descripton": "JSON-compatible initial data for this form\n"
+        },
+        "props": {
+          "$ref": "#/definitions/Props",
+          "descripton": "JSON-compatible subset of `rjsf` component properties for this form\n"
+        },
+        "rank": {
+          "type": "number",
+          "description": "the order in which to show a form, lowest (or omitted) first, with a tiebreaker on name\n"
+        },
+        "schema": {
+          "$ref": "#/definitions/any-schema",
+          "descripton": "URL for a JSON schema to describe the this form: features not present in\nDraft 7 are best-effort.\n"
+        },
+        "ui_schema": {
+          "$ref": "#/definitions/any-schema",
+          "descripton": "URL for an `rjsf` UI schema to describe how the `schema` will be presented\n"
+        }
+      },
+      "additionalProperties": false
+    },
     "any-object": {
       "type": "object",
       "title": "An Inline Object",
@@ -284,52 +330,14 @@
         "$ref": "#/definitions/any-template"
       }
     },
-    "file-form": {
-      "type": "object",
-      "title": "File Form",
-      "description": "a description of a form that builds a data file",
-      "properties": {
-        "form_data": {
-          "$ref": "#/definitions/any-schema",
-          "descripton": "JSON-compatible initial data for file contents\n"
-        },
-        "format": {
-          "$ref": "#/definitions/any-file-format"
-        },
-        "props": {
-          "$ref": "#/definitions/Props",
-          "descripton": "JSON-compatible subset of configuration properties for file contents\n"
-        },
-        "prune_empty": {
-          "type": "boolean",
-          "description": "prune empty lists, object, etc."
-        },
-        "schema": {
-          "$ref": "#/definitions/any-schema",
-          "descripton": "URL for a JSON schema to describe file contents: features not present in Draft 7\nare best-effort.\n"
-        },
-        "ui_schema": {
-          "$ref": "#/definitions/any-schema",
-          "descripton": "URL for an `rjsf` UI schema to describe the file fields.\n"
-        }
-      },
-      "additionalProperties": false,
-      "required": ["schema", "format"]
-    },
     "forms": {
       "type": "object",
       "description": "forms used to build and populate a URL",
-      "properties": {
-        "file": {
-          "$ref": "#/definitions/file-form",
-          "description": "control the inputs to a JSON, TOML, or YAML file"
-        },
-        "url": {
-          "$ref": "#/definitions/url-form",
-          "description": "control the inputs to a valid URL"
+      "patternProperties": {
+        "[a-zA-Z\\d\\-_]+": {
+          "$ref": "#/definitions/any-form"
         }
-      },
-      "required": ["url"]
+      }
     },
     "styles": {
       "type": "object",
@@ -358,30 +366,6 @@
         }
       },
       "required": ["url", "submit_button"]
-    },
-    "url-form": {
-      "type": "object",
-      "title": "URL Form",
-      "description": "a definition of a form to build a URL",
-      "properties": {
-        "form_data": {
-          "$ref": "#/definitions/any-schema",
-          "descripton": "JSON-compatible initial data for URL fields\n"
-        },
-        "props": {
-          "$ref": "#/definitions/Props",
-          "descripton": "JSON-compatible subset of configuration properties for URL fields\n"
-        },
-        "schema": {
-          "$ref": "#/definitions/any-schema",
-          "descripton": "URL for a JSON schema to describe the URL fields: features not present in\nDraft 7 are best-effort.\n"
-        },
-        "ui_schema": {
-          "$ref": "#/definitions/any-schema",
-          "descripton": "URL for an `rjsf` UI schema to describe the URL fields\n"
-        }
-      },
-      "additionalProperties": false
     }
   },
   "required": ["forms", "templates"]

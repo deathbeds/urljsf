@@ -1,15 +1,15 @@
 // Copyright (C) urljsf contributors.
 // Distributed under the terms of the Modified BSD License.
 import type { FormProps } from '@rjsf/core';
-import { UIOptionsType, isObject } from '@rjsf/utils';
+import { UIOptionsType } from '@rjsf/utils';
 
-import { FileForm, InlineObject, URLForm, Urljsf } from './_schema.js';
+import { AnyForm, FileFormat, InlineObject, Urljsf } from './_schema.js';
 import { LabeledAddButton } from './components/add-button.js';
 import { ArrayFieldItemTemplate } from './components/array-item.js';
 import { ArrayFieldTemplate } from './components/array-template.js';
 import { ObjectGridTemplate } from './components/object-template.js';
 import { MIME_FRAGMENT } from './index.js';
-import { TFormat, emptyObject } from './tokens.js';
+import { emptyObject } from './tokens.js';
 
 let _NEXT_DATA_SET = 0;
 const _DATA_SETS = new WeakMap<Urljsf, number>();
@@ -27,7 +27,7 @@ const TEMPLATES = {
 
 /** get a dataset with defaults */
 export async function getConfig(el: HTMLScriptElement): Promise<Urljsf> {
-  const format = el.type.replace(MIME_FRAGMENT, '') as TFormat;
+  const format = el.type.replace(MIME_FRAGMENT, '') as FileFormat;
   const config = await (el.src
     ? fetchOne<Urljsf>(el.src, format)
     : parseOne<Urljsf>(el.innerText, format));
@@ -36,18 +36,18 @@ export async function getConfig(el: HTMLScriptElement): Promise<Urljsf> {
 }
 
 /** initialize form props with defaults */
-export async function initFormProps(
-  form: FileForm | URLForm,
-): Promise<Partial<FormProps>> {
-  let [schema, uiSchema, formData] = await Promise.all([
+export async function initFormProps(form: AnyForm): Promise<Partial<FormProps>> {
+  let [props, schema, uiSchema, formData] = await Promise.all([
+    fetchOneOrObject(form.props),
     fetchOneOrObject(form.schema),
     fetchOneOrObject(form.ui_schema),
     fetchOneOrObject(form.form_data),
   ]);
 
-  const props: Omit<FormProps, 'validator'> = {
+  return {
+    ...props,
     formData,
-    schema: schema as any,
+    schema,
     templates: TEMPLATES,
     uiSchema: {
       ...(uiSchema as any),
@@ -57,66 +57,12 @@ export async function initFormProps(
         ...TEMPLATES,
       },
     },
-  };
-
-  return props;
-}
-
-/** remove empty objects and arrays */
-function pruneObject(data: Record<string, any>) {
-  let newData: Record<string, any> = {};
-  for (let [key, value] of Object.entries(data)) {
-    if (Array.isArray(value) && !value.length) {
-      continue;
-    }
-
-    if (isObject(value)) {
-      value = pruneObject(value);
-    }
-
-    if (value == null) {
-      continue;
-    }
-    newData[key] = value;
-  }
-  return [...Object.keys(newData)].length ? newData : null;
-}
-
-/** lazily serialize some data */
-export async function getFileContent(config: Urljsf, formData: any): Promise<string> {
-  const fileForm = config.forms.file;
-  if (fileForm == null) {
-    return '';
-  }
-  const { format, prune_empty } = fileForm;
-  let value = '';
-
-  if (prune_empty !== false) {
-    formData = pruneObject(formData);
-  }
-
-  if (formData == null) {
-    return '';
-  }
-
-  switch (format) {
-    case 'json':
-      value = JSON.stringify(formData, null, 2);
-      break;
-    case 'toml':
-      let toml = await import('smol-toml');
-      value = toml.stringify(formData);
-      break;
-    case 'yaml':
-      let yaml = await import('yaml');
-      value = yaml.stringify(formData);
-  }
-  return value;
+  } as Omit<FormProps, 'validator'>;
 }
 
 export async function fetchOneOrObject<T = Record<string, any>>(
   urlOrObject: T | string | null | undefined | InlineObject,
-  format?: TFormat,
+  format?: FileFormat,
 ): Promise<T> {
   if (urlOrObject && typeof urlOrObject == 'object') {
     return urlOrObject as T;
@@ -126,7 +72,7 @@ export async function fetchOneOrObject<T = Record<string, any>>(
 
 export async function fetchOne<T = Record<string, any>>(
   url: string | null | undefined,
-  format?: TFormat,
+  format?: FileFormat,
 ): Promise<T> {
   let data = {} as T;
   if (url == null) {
@@ -135,7 +81,7 @@ export async function fetchOne<T = Record<string, any>>(
   const urlObj = new URL(url, window.location.href);
   const response = await fetch(urlObj);
   const { pathname } = urlObj;
-  format = (format || pathname.split('.').slice(-1)[0]) as TFormat;
+  format = (format || pathname.split('.').slice(-1)[0]) as FileFormat;
   format = (format as any) === 'yml' ? 'yaml' : format;
 
   format =
@@ -153,7 +99,7 @@ export async function fetchOne<T = Record<string, any>>(
 
 export async function parseOne<T = Record<string, any>>(
   text: string,
-  format: TFormat,
+  format: FileFormat,
 ): Promise<T> {
   let data = {} as T;
 

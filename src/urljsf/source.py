@@ -13,7 +13,6 @@ from jsonschema import Draft7Validator
 from jsonschema.exceptions import SchemaError
 from jsonschema.validators import validator_for
 
-from ._schema import FileFormat
 from ._schema import Urljsf as UrljsfSchema
 from .constants import EXTENSION_FORMAT, UTF8
 from .schema import URLJSF_VALIDATOR
@@ -32,7 +31,7 @@ class DataSource:
     path: Path | None = None
     raw: dict[str, Any] | None = None
     text: str | None = None
-    format: FileFormat | None = None
+    format: str | None = None
     log: logging.Logger = field(default_factory=lambda: logging.getLogger(__name__))
 
     def __post_init__(self) -> None:
@@ -52,7 +51,7 @@ class DataSource:
             assert self.path
         return self.path.read_text(**UTF8)
 
-    def guess_format(self) -> FileFormat:
+    def guess_format(self) -> str:
         """Guess the format from a suffix."""
         suffix = self.suffix()
         fmt = EXTENSION_FORMAT.get(suffix)

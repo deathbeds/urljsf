@@ -1,16 +1,21 @@
 {
   "$schema": "../../schema/v0/form.schema.json",
   "forms": {
-    "url": {
-      "schema": "./json/url.schema.json",
-      "ui_schema": "./json/url.uischema.json"
-    },
     "file": {
+      "rank": 0,
       "format": "json",
       "schema": "./json/file.schema.json",
       "ui_schema": "./json/file.uischema.json",
       "form_data": "./json/file.data.json"
+    },
+    "url": {
+      "rank": 1,
+      "schema": "./json/url.schema.json",
+      "ui_schema": "./json/url.uischema.json"
     }
+  },
+  "nunjucks": {
+    "filters": ["json"]
   },
   "style": {
     "--bs-danger-rgb": "var(--bs-warning-rgb)",
@@ -21,10 +26,10 @@
     }
   },
   "templates": {
-    "url": "https://github.com/{{ url.repo }}/new/{{ url.branch }}?\n{{\n    {\"filename\": url.filename, \"value\": text } | urlencode | safe\n}}\n",
+    "url": "https://github.com/{{ data.url.repo }}/new/{{ data.url.branch }}?\n{{\n    {\"filename\": data.url.filename, \"value\": data.file | to_json } | urlencode | safe\n}}\n",
     "submit_button": "![open PRs on {{ url.repo }}][b] Start new JSON Pull Request\n\n[b]: https://img.shields.io/github/issues-pr/{{ url.repo }}?logo=github&label={{ url.repo | urlencode }}&color=blue\n",
     "checks": {
-      "Unique Names": "{% for name, tasks in file.tasks | default([]) | groupby(\"task\") %}\n{% set dupes = tasks | length %}\n{% if dupes > 1 %}\n- [ ] {{ dupes }} tasks have the name _\"{{ name }}\"_\n{% endif %}\n{% endfor %}\n"
+      "Unique Names": "{% for name, tasks in data.file.tasks | default([]) | groupby(\"task\") %}\n{% set dupes = tasks | length %}\n{% if dupes > 1 %}\n- [ ] {{ dupes }} tasks have the name _\"{{ name }}\"_\n{% endif %}\n{% endfor %}\n"
     }
   }
 }

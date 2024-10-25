@@ -22,10 +22,11 @@ import {
   FORM_CLASS,
   IContext,
   IErrors,
-  IFormProps,
+  IFormsProps,
+  IUrljsfFormProps,
   emptyObject,
 } from '../tokens.js';
-import { getConfig, getFileContent, getIdPrefix, initFormProps } from '../utils.js';
+import { getConfig, getIdPrefix, initFormProps } from '../utils.js';
 import { CheckItem } from './check-item.js';
 import { Style } from './style.js';
 
@@ -53,6 +54,8 @@ const SUBMIT_DEFAULT: Pick<ButtonProps, 'variant' | 'target'> = {
   target: '_blank',
 };
 
+const DEFAULT_SUBMIT = 'Submit';
+
 /** process a single form
  *
  * @param script - a DOM script with a urljsf mime type
@@ -63,18 +66,21 @@ export async function makeOneForm(script: HTMLScriptElement): Promise<void> {
   const container = document.createElement('div');
   script.parentNode!.insertBefore(container, script);
 
-  const [fileFormProps, urlFormProps, _bootstrap] = await Promise.all([
-    config.forms.file == null ? null : initFormProps(config.forms.file),
-    initFormProps(config.forms.url),
+  const [_bootstrap, nunjucksEnv] = await Promise.all([
     ensureBootstrap(config),
+    ensureNunjucks(config),
   ]);
 
-  const [nunjucksEnv, initText] = await Promise.all([
-    ensureNunjucks(),
-    fileFormProps == null ? '' : getFileContent(config, fileFormProps.formData),
-  ]);
+  const forms: IFormsProps = {};
 
-  const props = { config, initText, fileFormProps, urlFormProps, nunjucksEnv };
+  await Promise.all(
+    Object.entries(config.forms).map(async ([key, form]) => {
+      const props = await initFormProps(form);
+      forms[key] = props;
+    }),
+  );
+
+  const props: IUrljsfFormProps = { config, forms, nunjucksEnv };
   const form = <UrljsfForm {...props} />;
   const isolated = !!(config.iframe || config.iframe_style);
   if (isolated) {
@@ -107,21 +113,25 @@ async function renderIframe(config: Urljsf, form: JSX.Element): Promise<JSX.Elem
   );
 }
 
+function getFormData([key, form]: [string, form: Partial<FormProps | null>]): [
+  string,
+  null | Record<string, any>,
+] {
+  return [key, form?.formData];
+}
+
 /** a component for a file and URL form */
-function UrljsfForm(props: IFormProps): JSX.Element {
-  const { config, initText, fileFormProps, urlFormProps, nunjucksEnv } = props;
+function UrljsfForm(props: IUrljsfFormProps): JSX.Element {
+  const { config, forms, nunjucksEnv } = props;
   const idPrefix = getIdPrefix(config);
+  const initFormData = Object.fromEntries(Object.entries(forms).map(getFormData));
   const initContext: IContext = {
     config,
-    url: urlFormProps.formData,
-    file: fileFormProps == null ? emptyObject : fileFormProps.formData,
-    text: initText,
+    data: initFormData,
   };
   const initErrors: IErrors = { url: [], file: [] };
-  const text = signal(initText);
   const context = signal(initContext);
   const errors = signal(initErrors);
-  const defaultSubmit = urlFormProps.schema?.title || 'Submit';
 
   const url = computed(() =>
     renderUrl({
@@ -130,13 +140,24 @@ function UrljsfForm(props: IFormProps): JSX.Element {
       env: nunjucksEnv,
     }),
   );
+
   const submitText = computed(() =>
     renderMarkdown({
-      template: config.templates.submit_button || defaultSubmit,
+      template: config.templates.submit_button || DEFAULT_SUBMIT,
       context: context.value,
       env: nunjucksEnv,
     }),
   );
+
+  const makeOnFormChange = async (key: string, evt: IChangeEvent) => {
+    batch(() => {
+      context.value = {
+        ...context.value,
+        data: { ...context.value.data, [key]: evt.formData },
+      };
+      errors.value = { ...errors.value, [key]: evt.errors };
+    });
+  };
 
   const { checks } = config.templates;
   const checkCount = !checks ? 0 : Object.keys(checks).length;
@@ -170,36 +191,17 @@ function UrljsfForm(props: IFormProps): JSX.Element {
       ].length,
   );
 
-  const onFileFormChange = async (evt: IChangeEvent) => {
-    const value = await getFileContent(config, evt.formData);
-    batch(() => {
-      text.value = value;
-      context.value = { ...context.value, file: evt.formData };
-      errors.value = { ...errors.value, file: evt.errors };
-    });
-  };
-
-  const onUrlFormChange = async (evt: IChangeEvent) => {
-    batch(() => {
-      context.value = { ...context.value, url: evt.formData };
-      errors.value = { ...errors.value, url: evt.errors };
-    });
-  };
-
-  function makeFormProps(form: 'file' | 'url'): FormProps {
-    const [onChange, initProps] =
-      form == 'file'
-        ? [onFileFormChange, fileFormProps]
-        : [onUrlFormChange, urlFormProps];
+  function makeFormProps(key: string, initProps: Partial<FormProps>): FormProps {
     return {
       ...FORM_PRE_DEFAULTS,
-      idPrefix: `${idPrefix}-${form}-`,
-      id: `${idPrefix}-${form}`,
-      ...((config.forms[form]?.props || emptyObject) as any),
+      idPrefix: `${idPrefix}-${key}-`,
+      id: `${idPrefix}-${key}`,
+      ...((config.forms[key]?.props || emptyObject) as any),
       ...initProps,
-      onChange,
-      formData: context.value[form],
+      onChange: makeOnFormChange.bind(null, key),
+      formData: context.value.data[key],
       ...FORM_POST_DEFAULTS,
+      key,
     };
   }
 
@@ -209,29 +211,39 @@ function UrljsfForm(props: IFormProps): JSX.Element {
     <Style forId={idPrefix} styles={config.style}></Style>
   );
 
+  const orderedKeys = Object.keys(forms);
+  orderedKeys.sort((a: string, b: string): number => {
+    return (
+      (config.forms[a].rank || 0) - (config.forms[b].rank || 0) || a.localeCompare(b)
+    );
+  });
+
   const URLJSF = () => {
     let submitButton: JSX.Element;
     const checkItems: JSX.Element[] = [];
+    const formItems: JSX.Element[] = [];
 
-    const formProps = {
-      file: makeFormProps('file'),
-      url: makeFormProps('url'),
-    };
-
-    for (const form of ['file', 'url']) {
-      if (form == 'file' && !fileFormProps) {
+    for (const key of orderedKeys) {
+      const form = forms[key];
+      if (!form) {
         continue;
       }
-      const label =
-        formProps[form as 'file' | 'url'].schema.title ||
-        (form == 'url' ? 'URL' : 'File');
+      const props = makeFormProps(key, form);
+      const label = props.schema.title || key;
       checkItems.push(
         CheckItem({
           label,
-          result: errors.value[form as 'file' | 'url'],
-          key: `form-${form}`,
+          result: errors.value[key],
+          key: `form-${key}`,
           markdown: true,
         }),
+      );
+      formItems.push(
+        <li className="list-group-item">
+          <RJSFForm {...props}>
+            <Fragment />
+          </RJSFForm>
+        </li>,
       );
     }
 
@@ -262,18 +274,7 @@ function UrljsfForm(props: IFormProps): JSX.Element {
       <div className={FORM_CLASS} id={idPrefix}>
         {style}
         <ul className="list-group">
-          {config.forms.file && (
-            <li className="list-group-item">
-              <RJSFForm {...formProps.file}>
-                <Fragment />
-              </RJSFForm>
-            </li>
-          )}
-          <li className="list-group-item">
-            <RJSFForm {...formProps.url}>
-              <Fragment />
-            </RJSFForm>
-          </li>
+          {...formItems}
           {...checkItems}
           <li className="list-group-item">{submitButton}</li>
         </ul>

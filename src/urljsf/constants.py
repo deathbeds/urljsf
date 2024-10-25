@@ -22,6 +22,7 @@ STATIC = HERE / "_static"
 SCHEMA_VERSION = "v0"
 MIME_PREFIX = f"application/vnd.deathbeds.prjsf.{SCHEMA_VERSION}"
 
+
 EXTENSION_FORMAT: dict[str, FileFormat] = {
     ".yaml": "yaml",
     ".toml": "toml",
