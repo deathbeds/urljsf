@@ -201,7 +201,6 @@ function UrljsfForm(props: IUrljsfFormProps): JSX.Element {
       onChange: makeOnFormChange.bind(null, key),
       formData: context.value.data[key],
       ...FORM_POST_DEFAULTS,
-      key,
     };
   }
 
@@ -234,12 +233,12 @@ function UrljsfForm(props: IUrljsfFormProps): JSX.Element {
         CheckItem({
           label,
           result: errors.value[key],
-          key: `form-${key}`,
+          key: `check-${key}`,
           markdown: true,
         }),
       );
       formItems.push(
-        <li className="list-group-item">
+        <li className="list-group-item" key={key}>
           <RJSFForm {...props}>
             <Fragment />
           </RJSFForm>
