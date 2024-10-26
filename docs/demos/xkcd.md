@@ -16,6 +16,6 @@
     widget = "range"
 
     [templates]
-    url = "https://xkcd.com/{{ url.xkcd }}"
-    submit_button = "see xkcd #{{ url.xkcd }}"
+    url = "https://xkcd.com/{{ data.url.xkcd }}"
+    submit_button = "see xkcd #{{ data.url.xkcd }}"
 ```

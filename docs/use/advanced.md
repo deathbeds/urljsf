@@ -2,10 +2,9 @@
 
 ## URL Fields
 
-The `schema`, `ui_schema`, and `form_data` properties for both the
-[`url`](./schema.rst#url-form) and [`file`](./schema.rst#file-form) form describe
-independently constrained documents, which doesn't work well with most JSON schema
-tools.
+The `schema`, `ui_schema`, and `form_data` properties for any
+[`forms`](./schema.rst#any-form) describe independently constrained documents, which
+doesn't work well with most JSON schema tools.
 
 For a complex form, it can make sense to keep documents in separate files, generate them
 on the fly, or rely on a form user's browser to fetch them at run-time.
@@ -22,11 +21,11 @@ reached due to browser limitations, a form will not be rendered.
 
 ### Python
 
-The `py-schema`, `py-ui-schema`, and `py-data` options may by importable python modules,
-which must be importable at run time, either by being installed python packages or with
-`sys.path` or the `PYTHONPATH` environment variable.
+The `py:` prefix denotes an importable python module, which must be available at
+CLI/Sphinx run time, either as an installed python package on `sys.path`, or by hacking
+the `PYTHONPATH` environment variable.
 
-These may return:
+These may return either a concrete value or callable which returns:
 
-- a python dictionary, which will be encoded as a normalized JSON file
+- a JSON-compatible python dictionary which will be encoded as a normalized JSON file
 - a [URL](#remote-urls) string

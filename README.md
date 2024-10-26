@@ -31,7 +31,7 @@ Once the data is _validated_, the user sees a button which gets a URL, which can
 
 Site builders write TOML, JSON, or YAML, then can use `urljsf` as:
 
-- a drop-in-and-pray [JavaScript script](#js-script)
+- a drop-in-and-pray [JavaScript `script`](#js-script)
 - a standalone [CLI tool](#command-line)
 - a [sphinx](#sphinx) extension
 
@@ -84,7 +84,7 @@ Site builders write TOML, JSON, or YAML, then can use `urljsf` as:
 
 ## Usage
 
-`urljsf` works has a:
+`urljsf` works as a:
 
 - (not-recommended) hot-linked [`script`](#js-script)
 - a standalone [site generator](#command-line) for simple sites
@@ -108,8 +108,8 @@ A very simple, but limited, usage is an `.html` file that links to `urljsf` and
   widget = "range"
 
   [templates]
-  url = "https://xkcd.com/{{ url.xkcd }}"
-  submit_button = "see xkcd #{{ url.xkcd }}"
+  url = "https://xkcd.com/{{ data.url.xkcd }}"
+  submit_button = "see xkcd #{{ data.url.xkcd }}"
 </script>
 <script type="module" src="https://deathbeds.github.io/prjsf/_static/index.js"></script>
 ```

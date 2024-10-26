@@ -53,8 +53,8 @@ As inline `json`, `toml`, or `yaml`:
     widget = "range"
 
     [templates]
-    url = "https://xkcd.com/{{ url.xkcd }}"
-    submit_button = "see xkcd #{{ url.xkcd }}"
+    url = "https://xkcd.com/{{ data.url.xkcd }}"
+    submit_button = "see xkcd #{{ data.url.xkcd }}"
 ```
 
 Any values provided in [`conf.py`](#configure) will be overwritten, and `schema`, etc.

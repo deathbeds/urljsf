@@ -25,9 +25,9 @@ https://github.com/{{ data.url.repo }}/new/{{ data.url.branch }}?
 """
 
 submit_button = """
-![open PRs on {{ url.repo }}][b] Start new TOML Pull Request
+![open PRs on {{ data.url.repo }}][b] Start new TOML Pull Request
 
-[b]: https://img.shields.io/github/issues-pr/{{ url.repo }}?logo=github&label={{ url.repo | urlencode }}&color=blue
+[b]: https://img.shields.io/github/issues-pr/{{ data.url.repo }}?logo=github&label={{ data.url.repo | urlencode }}&color=blue
 """
 
 [templates.checks]

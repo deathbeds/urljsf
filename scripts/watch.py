@@ -5,6 +5,7 @@
 import atexit
 import os
 import sys
+import time
 from pathlib import Path
 
 import psutil
@@ -27,15 +28,32 @@ def main() -> int:
         for tn, t in ft.get("tasks", {}).items()
         if tn.startswith("watch-")
     ]
-    procs = [psutil.Popen(["pixi", "r", tn], env=env) for tn in watch_tasks]
+    procs: dict[str, psutil.Popen] = {
+        tn: psutil.Popen(["pixi", "r", tn], env=env) for tn in watch_tasks
+    }
 
     def stop() -> None:
-        [p.terminate(recursive=True) for p in procs]
+        for proc in procs.values():
+            for p in [*proc.children(recursive=True), proc]:
+                if p.is_running():
+                    p.terminate()
 
     atexit.register(stop)
 
     try:
-        psutil.wait_procs(procs)
+        while True:
+            running = []
+            not_running = []
+            for tn, proc in procs.items():
+                if proc.is_running():
+                    running.append(tn)
+                else:
+                    not_running.append(tn)
+            if not not_running:
+                print("... all watchers running", time.time())
+            else:
+                print("!!! NOT running", *not_running)
+            time.sleep(10)
     except KeyboardInterrupt:
         stop()
     finally:

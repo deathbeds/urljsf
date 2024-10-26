@@ -148,14 +148,15 @@ type = "string"
 format = "uri-reference"
 description = """
 a path to a JSON schema, serialized as JSON, TOML, or (simple) YAML. The URN-like
-`py:module.submodule:member` may be used to reference an importable module,
-and will be expanded into an inline object.
+`py:module.submodule:member` may be used to reference an importable module
+`dict` or `str` member, or function that returns one, and will be expanded into
+a JSON object or URL.
 """
 minLength = 1
 
 [definitions.any-template]
 anyOf = [
-  {type = "string", description = "an template as a simple string"},
+  {type = "string", description = "a `nunjucks` template as a simple string"},
   {type = "array", items = {type = "string"}, minItems = 1, description = """
     a template as a list of strings that will be concatenated before being rendered
   """},

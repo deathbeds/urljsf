@@ -24,9 +24,9 @@ classifiers = [
 scripts.urljsf = "urljsf.cli:main"
 dependencies = [
   "jinja2",
+  "jsonschema[format] >=4.18",
   "tomli; python_version < '3.11'",
   "typing_extensions >=4.0.0; python_version < '3.11'",
-  "jsonschema[format]",
 ]
 
 [project.optional-dependencies]
@@ -35,9 +35,6 @@ sphinx = [
 ]
 yaml = [
   "ruamel.yaml",
-]
-validate = [
-  "jsonschema[format] >=4.18",
 ]
 
 [project.urls]

@@ -154,8 +154,9 @@ Urljsf = TypedDict(
 _AnySchemaLocation = str
 """
 a path to a JSON schema, serialized as JSON, TOML, or (simple) YAML. The URN-like
-`py:module.submodule:member` may be used to reference an importable module,
-and will be expanded into an inline object.
+`py:module.submodule:member` may be used to reference an importable module
+`dict` or `str` member, or function that returns one, and will be expanded into
+a JSON object or URL.
 
 format: uri-reference
 minLength: 1
@@ -175,7 +176,7 @@ _AnyTemplate = Union["_AnyTemplateAnyof0", "_AnyTemplateAnyof1"]
 
 
 _AnyTemplateAnyof0 = str
-""" an template as a simple string """
+""" a `nunjucks` template as a simple string """
 
 
 _AnyTemplateAnyof1 = List[str]

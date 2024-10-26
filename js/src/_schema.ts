@@ -11,8 +11,9 @@
 export type ASchema = SchemaByURL | InlineObject;
 /**
  * a path to a JSON schema, serialized as JSON, TOML, or (simple) YAML. The URN-like
- * `py:module.submodule:member` may be used to reference an importable module,
- * and will be expanded into an inline object.
+ * `py:module.submodule:member` may be used to reference an importable module
+ * `dict` or `str` member, or function that returns one, and will be expanded into
+ * a JSON object or URL.
  */
 export type SchemaByURL = string;
 /**
@@ -57,8 +58,9 @@ export type AnyTemplate = string | [string, ...string[]];
 export type ASchema3 = SchemaByURL | InlineObject;
 /**
  * a path to a JSON schema, serialized as JSON, TOML, or (simple) YAML. The URN-like
- * `py:module.submodule:member` may be used to reference an importable module,
- * and will be expanded into an inline object.
+ * `py:module.submodule:member` may be used to reference an importable module
+ * `dict` or `str` member, or function that returns one, and will be expanded into
+ * a JSON object or URL.
  *
  * This interface was referenced by `Urljsf`'s JSON-Schema
  * via the `definition` "any-schema-location".

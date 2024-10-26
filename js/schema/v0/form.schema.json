@@ -292,7 +292,7 @@
     },
     "any-schema-location": {
       "type": "string",
-      "description": "a path to a JSON schema, serialized as JSON, TOML, or (simple) YAML. The URN-like\n`py:module.submodule:member` may be used to reference an importable module,\nand will be expanded into an inline object.",
+      "description": "a path to a JSON schema, serialized as JSON, TOML, or (simple) YAML. The URN-like\n`py:module.submodule:member` may be used to reference an importable module\n`dict` or `str` member, or function that returns one, and will be expanded into\na JSON object or URL.",
       "format": "uri-reference",
       "minLength": 1
     },
@@ -311,7 +311,7 @@
       "anyOf": [
         {
           "type": "string",
-          "description": "an template as a simple string"
+          "description": "a `nunjucks` template as a simple string"
         },
         {
           "type": "array",
