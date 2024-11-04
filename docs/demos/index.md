@@ -12,4 +12,5 @@ _Create Pull Request_ button to see a `404`.
 
 xkcd
 py
+installer
 ```

@@ -25,7 +25,7 @@ export function CheckItem(props: CheckItemProps): JSX.Element {
           disabled
         ></input>
         <label className="form-check-label">
-          <em>{props.label}</em>
+          <em>{props.markdown ? <Markdown>{props.label}</Markdown> : props.label}</em>
         </label>
       </div>
       {!result ? (

@@ -7,9 +7,14 @@ import { AnyForm, FileFormat, InlineObject, Urljsf } from './_schema.js';
 import { LabeledAddButton } from './components/add-button.js';
 import { ArrayFieldItemTemplate } from './components/array-item.js';
 import { ArrayFieldTemplate } from './components/array-template.js';
+import DataList from './components/datalist.js';
 import { ObjectGridTemplate } from './components/object-template.js';
 import { MIME_FRAGMENT } from './index.js';
 import { emptyObject } from './tokens.js';
+
+const WIDGETS = {
+  'urljsf:DataList': DataList,
+};
 
 let _NEXT_DATA_SET = 0;
 const _DATA_SETS = new WeakMap<Urljsf, number>();
@@ -57,6 +62,7 @@ export async function initFormProps(form: AnyForm): Promise<Partial<FormProps>> 
         ...TEMPLATES,
       },
     },
+    widgets: WIDGETS,
   } as Omit<FormProps, 'validator'>;
 }
 

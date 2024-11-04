@@ -61,6 +61,9 @@ class DataSource:
 
     def parse(self) -> None:
         """Parse a path."""
+        if self.raw:
+            return
+
         fmt = self.format = self.format or self.guess_format()
         text = self.text = self.text or self.read_text()
 
@@ -133,8 +136,7 @@ class DefSource(ValidatedSource):
             msg = f"unexpected empty raw data {self}"
             raise NotImplementedError(msg)
 
-        for form_name in ["url", "file"]:
-            form = self.raw["forms"].get(form_name)
+        for form_name, form in self.raw.get("forms", {}).items():
             if form is None:
                 continue
             self.parse_form(form_name, form)

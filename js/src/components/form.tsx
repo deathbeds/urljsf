@@ -18,6 +18,7 @@ import { Urljsf } from '../_schema.js';
 import { ensureBootstrap, getBoostrapCss } from '../bootstrap.js';
 import { ensureNunjucks, renderMarkdown, renderUrl } from '../nunjucks.js';
 import {
+  DEBUG,
   DEFAULTS,
   FORM_CLASS,
   IContext,
@@ -218,6 +219,7 @@ function UrljsfForm(props: IUrljsfFormProps): JSX.Element {
   });
 
   const URLJSF = () => {
+    const START = performance.now();
     let submitButton: JSX.Element;
     const checkItems: JSX.Element[] = [];
     const formItems: JSX.Element[] = [];
@@ -268,6 +270,8 @@ function UrljsfForm(props: IUrljsfFormProps): JSX.Element {
         </Button>
       );
     }
+
+    DEBUG && console.warn(performance.now() - START);
 
     return (
       <div className={FORM_CLASS} id={idPrefix}>

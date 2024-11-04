@@ -15,6 +15,7 @@ from ...config import Config
 from ...constants import EXTENSION_FORMAT
 from ...source import DefSource
 from ...urljsf import Urljsf
+from ...utils import import_dotted_dict
 from ..nodes import urljsf
 
 if TYPE_CHECKING:
@@ -69,14 +70,18 @@ class UrljsfDirective(SphinxDirective):
         input_: str | None = None
         app_defaults = self.env.config.__dict__.get("urljsf", {})
 
-        if path:
+        def_kwargs = {"defaults": app_defaults, "resource_path": here}
+
+        if path and path.startswith("py:"):
+            definition = DefSource(
+                raw=import_dotted_dict(path[3:]),
+                **def_kwargs,
+            )
+        elif path:
             input_ = str(here / path)
         elif self.content and fmt:
             definition = DefSource(
-                resource_path=here,
-                format=fmt,
-                text="\n".join(self.content),
-                defaults=app_defaults,
+                format=fmt, text="\n".join(self.content), **def_kwargs
             )
 
         return Config(
