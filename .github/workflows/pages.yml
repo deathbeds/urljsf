@@ -24,7 +24,7 @@ jobs:
         with:
           pixi-version: v0.27.0
           cache: true
-          environments: build docs test test-oldest
+          environments: build docs test test-min
           cache-key: job-pages
       - run: pixi run dist
       - run: pixi run test

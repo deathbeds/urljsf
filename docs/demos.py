@@ -109,7 +109,7 @@ def kitchen_sink_ui_schema() -> dict[str, Any]:
 
 
 def installer() -> Urljsf:
-    """A definition of a pixi project that can build an installer."""
+    """Define a ``pixi`` project that can build an installer."""
     if not OUTPUTS.exists():
         OUTPUTS.write_bytes(S.get(OUTPUTS_URL).content)
 

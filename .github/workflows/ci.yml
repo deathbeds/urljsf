@@ -68,13 +68,13 @@ jobs:
       fail-fast: false
       matrix:
         vm: [ubuntu-latest, windows-latest, macos-13, macos-latest]
-        test-env: [test, test-oldest]
+        test-env: [test, test-min]
         exclude:
           - { vm: macos-13, test-env: test }
-          - { vm: macos-latest, test-env: test-oldest }
+          - { vm: macos-latest, test-env: test-min }
         include:
           - { test-env: test }
-          - { test-env: test-oldest }
+          - { test-env: test-min }
     steps:
       - uses: actions/checkout@v4
       - uses: prefix-dev/setup-pixi@v0.8.1

@@ -18,37 +18,37 @@ run ALL tasks that would lead to a release""", depends-on = [
 ], cmd = "echo 🚢"}
 fix = {description = """
 apply ALL source formatters""", depends-on = [
-  "fix-toml-taplo",
-  "fix-js-dedupe",
-  "fix-js-markdownlint",
-  "fix-js-prettier",
-  "fix-py-ruff",
+  "fix-toml",
+  "fix-dedupe",
+  "fix-mdlint",
+  "fix-prettier",
+  "fix-ruff",
 ], cmd = "echo 🧹"}
 lint = {description = """
 apply ALL static analysis tools""", depends-on = [
   "lint-actionlint",
-  "lint-py-ruff",
-  "lint-js-prettier",
-  "lint-js-markdownlint",
-  "lint-py-mypy",
+  "lint-ruff",
+  "lint-prettier",
+  "lint-mdlint",
+  "lint-mypy",
 ], cmd = "echo ⭐"}
 build = {description = """
 build ALL intermediate assets""", depends-on = [
-  "build-schema",
-  "build-js-demo",
-  "build-js-lib",
-  "build-js-app",
-  "build-py-static",
+  "schema",
+  "build-demo",
+  "build-lib",
+  "build-app",
+  "build-static",
 ], cmd = "echo 🏗️"}
-build-schema = {description = """
+schema = {description = """
 build ALL schema products""", depends-on = [
-  "build-schema-props",
-  "build-schema-json",
-  "build-schema-py",
-  "build-schema-ts",
+  "schema-props",
+  "schema-json",
+  "schema-py",
+  "schema-ts",
 ], cmd = "echo 🧩"}
 dist = {description = """
-build ALL releasable artifacts""", depends-on = [
+build ALL distributed artifacts""", depends-on = [
   "dist-npm",
   "dist-pypi",
   "dist-hash",
@@ -56,30 +56,27 @@ build ALL releasable artifacts""", depends-on = [
 test = {description = """
 run ALL tests""", depends-on = [
   "test-pytest",
-  "test-oldest-pytest",
+  "test-min-pytest",
   "test-report",
 ], cmd = "echo 🧪"}
 docs = {description = """
 build all documentation""", depends-on = ["docs-sphinx"], cmd = "echo 🖨️"}
 
 # fragments ####################################################################
-prettier-- = """yarn prettier
+prettier-- = '''yarn prettier
   --list-different
   --cache
   --cache-location build/.cache/prettier
   "*.{yml,json,md}"
-  "{docs,tests,src,js,.github}/**/*.{md,json,yml,yaml,css,ts,tsx,ts,mjs}"
-"""
-markdownlint-- = """yarn markdownlint-cli2 "*.md" "{docs,tests,src,js,.github}/**/*.md"
-"""
+  "{docs,tests,src,js,.github}/**/*.{md,json,yml,yaml,css,ts,tsx,ts,mjs}"'''
+markdownlint-- = 'yarn markdownlint-cli2 "*.md" "{docs,tests,src,js,.github}/**/*.md"'
 py-static-- = """rm -rf src/urljsf/_static/
-&& cp -r js/dist/urljsf src/urljsf/_static/urljsf
-&& cp -r js/schema src/urljsf/_static/schema
-&& rm -rf src/urljsf/_static/urljsf/demo/ src/urljsf/_static/schema/*.toml"""
+  && cp -r js/dist/urljsf src/urljsf/_static/urljsf
+  && cp -r js/schema src/urljsf/_static/schema
+  && rm -rf src/urljsf/_static/urljsf/demo/ src/urljsf/_static/schema/*.toml"""
 platform-- = '''mkdir -p build
-&& python -c '
-import platform; u = platform.uname(); print(f"{u.system}-{u.machine}".lower())
-' > build/platform.txt'''
+  && python -c 'import platform; u = platform.uname(); print(f"{u.system}-{u.machine}".lower())'
+  > build/platform.txt'''
 pip-e-- = """python -m pip install
   -vv
   -e .
@@ -102,13 +99,11 @@ schema-json-ts-- = "python scripts/schema.py $SCHEMA_JSON $SCHEMA_TS"
 schema-json-py-- = """
 python scripts/schema.py $SCHEMA_JSON $SCHEMA_PY
 """
-schema-all-- = """
-pixi r build-schema-props
-&& pixi r schema-toml-json--
-&& pixi r schema-json-ts--
-&& pixi r schema-json-py--
-&& echo "OK"
-"""
+schema-all-- = '''pixi r schema-props
+  && pixi r schema-toml-json--
+  && pixi r schema-json-ts--
+  && pixi r schema-json-py--
+  && echo "OK"'''
 
 # setup ########################################################################
 [feature.tasks-build.tasks.build-yarn]
@@ -127,9 +122,9 @@ description = "- install an the editable python package for testing"
 cmd = "pixi r -e test pip-e--"
 inputs = ["pyproject.toml"]
 
-[feature.tasks-test-oldest.tasks.test-min-pip]
+[feature.tasks-test-min.tasks.test-min-pip]
 description = "- install an the editable python package for testing (oldest)"
-cmd = "pixi r -e test-oldest pip-e--"
+cmd = "pixi r -e test-min pip-e--"
 inputs = ["pyproject.toml"]
 
 [feature.tasks-dev.tasks.dev-pip]
@@ -143,63 +138,70 @@ cmd = "pixi r -e docs pip-e--"
 inputs = ["pyproject.toml"]
 
 # build ########################################################################
-[feature.tasks-build.tasks.build-js-demo]
+[feature.tasks-build.tasks.build-demo]
+description = "- update the JSON and YAML demos"
 cmd = "python scripts/demo.py"
 inputs = ["js/demo/toml/", "scripts/demo.py"]
 outputs = ["js/demo/{json,yaml}/"]
 
-[feature.tasks-build.tasks.build-js-lib]
+[feature.tasks-build.tasks.build-lib]
+description = "- transpile TypeScript to JS"
 cmd = "yarn build:lib"
-depends-on = ["build-yarn", "build-schema-ts"]
+depends-on = ["build-yarn", "schema-ts"]
 inputs = ["node_modules/.yarn-state.yml", "js/src", "js/{package,tsconfig}.json"]
 outputs = ["js/lib", "js/lib/index.js", "js/tsconfig.tsbuildinfo"]
 
-[feature.tasks-build.tasks.build-js-app]
+[feature.tasks-build.tasks.build-app]
+description = "- build the JS demo app"
 cmd = "yarn build:app"
-depends-on = ["build-js-lib", "build-js-demo"]
+depends-on = ["build-lib", "build-demo"]
 inputs = ["node_modules/.yarn-state.yml", "js/{lib,demo}/**", "js/webpack.config.mjs"]
 outputs = ["js/dist"]
 
-[feature.tasks-build.tasks.build-py-static]
+[feature.tasks-build.tasks.build-static]
+description = "- build the static assets for python distribution"
 cmd = "pixi r py-static--"
-depends-on = ["build-js-app"]
+depends-on = ["build-app"]
 inputs = ["js/{dist,schema,lib}/**"]
 outputs = ["src/urljsf/_static", "!**/demo/"]
 
 [feature.tasks-build.tasks.dist-npm]
+description = "- build the JS distributions for npmjs.org"
 cmd = "mkdir -p dist && cd dist && npm pack ../js"
-depends-on = ["build-js-app"]
+depends-on = ["build-app"]
 inputs = ["node_modules/.yarn-state.yml", "js/{dist,LICENSE,README.md,package.json}"]
 outputs = ["dist/*.tgz"]
 
 [feature.tasks-build.tasks.dist-pypi]
+description = "- build the Python distributions for pypi.org"
 cmd = "pyproject-build . --no-isolation"
-depends-on = ["build-py-static", "build-schema-py"]
+depends-on = ["build-static", "schema-py"]
 inputs = ["{pyproject.toml,LICENSE,README.md}", "src", "!**/__pycache__"]
 outputs = ["dist/*.whl", "dist/*.tar.gz"]
 
 [feature.tasks-build.tasks.dist-hash]
+description = "- hash the built distributions"
 cmd = """
 rm -rf dist/SHA256SUMS
-&& python -c 'from hashlib import sha256; from pathlib import Path; [
-  print(f"{sha256(p.read_bytes()).hexdigest()}  {p.name}")
-  for p in sorted(Path("dist").glob("*"))
-  if p.name != "SHA256SUMS"
-]'
-> dist/SHA256SUMS
-&& cat dist/SHA256SUMS
-&& ls -hs dist
-"""
+  && python -c 'from hashlib import sha256; from pathlib import Path; [
+    print(f"{sha256(p.read_bytes()).hexdigest()}  {p.name}")
+    for p in sorted(Path("dist").glob("*"))
+    if p.name != "SHA256SUMS"
+  ]'
+  > dist/SHA256SUMS
+  && cat dist/SHA256SUMS"""
 depends-on = ["dist-pypi", "dist-npm"]
 inputs = ["dist", "!dist/SHA256SUMS"]
 outputs = ["dist/SHA256SUMS"]
 
-[feature.tasks-build.tasks.build-schema-props]
+[feature.tasks-build.tasks.schema-props]
+description = "- build JSON schema for rjsf form props"
 cmd = "export $(pixi r schema-vars--) && pixi r schema-ts-json--"
 inputs = ["js/src/_props.ts", "scripts/schema.py"]
 outputs = ["js/schema/v0/props.schema.json"]
 
-[feature.tasks-build.tasks.build-schema-json]
+[feature.tasks-build.tasks.schema-json]
+description = "- build JSON schema from TOML"
 cmd = "export $(pixi r schema-vars--) && pixi r schema-toml-json--"
 inputs = [
   "js/schema/form.schema.toml",
@@ -209,22 +211,24 @@ inputs = [
 outputs = ["js/schema/v0/form.schema.json"]
 depends-on = ["build-yarn"]
 
-[feature.tasks-build.tasks.build-schema-ts]
+[feature.tasks-build.tasks.schema-ts]
+description = "- build TypeScript types from JSON schema"
 cmd = "export $(pixi r schema-vars--) && pixi r schema-json-ts--"
 inputs = ["js/schema/v0/form.schema.json", "scripts/schema.py"]
 outputs = ["js/src/_schema.ts"]
-depends-on = ["build-schema-json"]
+depends-on = ["schema-json"]
 
-[feature.tasks-build.tasks.build-schema-py]
+[feature.tasks-build.tasks.schema-py]
+description = "- build python types from JSON schema"
 cmd = "export $(pixi r schema-vars--) && pixi r schema-json-py--"
 inputs = ["js/schema/v0", "scripts/schema.py", "scripts/jsonschema-gentypes.yaml"]
 outputs = ["src/urljsf/_schema.py"]
-depends-on = ["build-schema-json"]
+depends-on = ["schema-json"]
 
 # fix ##########################################################################
-[feature.tasks-lint.tasks.fix-toml-taplo]
-cmd = """
-  taplo fmt
+[feature.tasks-lint.tasks.fix-toml]
+description = "- format all TOML with taplo"
+cmd = """taplo fmt
     --option=array_auto_collapse=false
     --option=array_auto_expand=true
     --option=compact_inline_tables=true
@@ -233,11 +237,11 @@ cmd = """
     *.toml
     js/demo/toml/*.toml
     js/schema/*.toml
-    tests/fixtures/*/*/*/*.toml
-    """
+    tests/fixtures/*/*/*/*.toml"""
 inputs = ["*.toml", "{docs,js,src,tests}/**/*.toml"]
 
-[feature.tasks-lint.tasks.fix-js-prettier]
+[feature.tasks-lint.tasks.fix-prettier]
+description = "- format web-adjacent files with prettier"
 cmd = "pixi r prettier-- --write"
 depends-on = ["build-yarn"]
 inputs = [
@@ -245,36 +249,43 @@ inputs = [
   "{docs,tests,src,js,.github}/**/*.{md,json,yml,yaml,css,ts,tsx,ts,mjs}",
   "!src/**/_static",
 ]
-[feature.tasks-lint.tasks.fix-js-markdownlint]
+[feature.tasks-lint.tasks.fix-mdlint]
+description = "- format markdown with markdownlint"
 cmd = "pixi r markdownlint-- --fix"
 depends-on = ["build-yarn"]
 inputs = ["*.{md,json}", "{docs,tests,src,js,.github}/**/*.md", "!src/**/_static"]
 
-[feature.tasks-lint.tasks.fix-js-dedupe]
+[feature.tasks-lint.tasks.fix-dedupe]
+description = "- deduplicate JS dependencies with yarn-berry-deduplicate"
 cmd = "yarn yarn-berry-deduplicate --fail --strategy fewer"
 depends-on = ["build-yarn"]
 inputs = ["node_modules/.yarn-state.yml", "package.json"]
 outputs = ["yarn.lock"]
 
-[feature.tasks-lint.tasks.fix-py-ruff]
+[feature.tasks-lint.tasks.fix-ruff]
+description = "- fix python with ruff"
 cmd = "ruff format && ruff check --fix-only"
 inputs = ["pyproject.toml", "{src,tests,docs,scripts}/**/*.py"]
 
 # lint #########################################################################
 [feature.tasks-lint.tasks.lint-actionlint]
+description = "- check GitHub actions with actionlint"
 cmd = "actionlint -shellcheck=shellcheck -pyflakes=pyflakes"
 inputs = [".github/workflows"]
 
-[feature.tasks-lint.tasks.lint-py-ruff]
+[feature.tasks-lint.tasks.lint-ruff]
+description = "- check Python with ruff"
 cmd = "ruff format --check && ruff check"
 inputs = ["pyproject.toml", "{src,tests,docs,scripts}/**/*.py"]
 
-[feature.tasks-lint.tasks.lint-py-mypy]
+[feature.tasks-lint.tasks.lint-mypy]
+description = "- check Python types with mypy"
 cmd = "mypy -p urljsf"
 inputs = ["pyproject.toml", "{src,tests}/**/*.py"]
 depends-on = ["lint-pip"]
 
-[feature.tasks-lint.tasks.lint-js-prettier]
+[feature.tasks-lint.tasks.lint-prettier]
+description = "- check web-adjacent files with prettier"
 cmd = "pixi r prettier--"
 depends-on = ["build-yarn"]
 inputs = [
@@ -283,60 +294,62 @@ inputs = [
   "!src/**/_static",
 ]
 
-[feature.tasks-lint.tasks.lint-js-markdownlint]
+[feature.tasks-lint.tasks.lint-mdlint]
+description = "- check markdown with markdownlint"
 cmd = "pixi r markdownlint--"
 depends-on = ["build-yarn"]
 inputs = ["*.{md,json}", "{docs,tests,src,js,.github}/**/*.md", "!src/**/_static"]
 
 # test #########################################################################
 [feature.tasks-test.tasks.test-pytest]
-cmd = """
-export PIXI_PLATFORM=$(cat build/platform.txt)
-&& export COVERAGE_FILE=build/reports/test_pytest_$PIXI_PLATFORM.coverage
-&& pytest
-  -n auto
-  --html=build/reports/test_pytest_$PIXI_PLATFORM.html
-  --self-contained-html
-  --cov-report=html:build/reports/test_pytest_htmlcov-$PIXI_PLATFORM/
-  --cov-report=term-missing:skip-covered
-  --cov=urljsf
-  --cov-branch
-  --cov-context=test
-  --no-cov-on-fail
-  --cov-fail-under=99
-"""
-depends-on = ["test-pip", "build-py-static", "platform--"]
+description = "- test python with pytest"
+cmd = """export PIXI_PLATFORM=$(cat build/platform.txt)
+  && export COVERAGE_FILE=build/reports/test_pytest_$PIXI_PLATFORM.coverage
+  && pytest
+    -n auto
+    --html=build/reports/test_pytest_$PIXI_PLATFORM.html
+    --self-contained-html
+    --cov-report=html:build/reports/test_pytest_htmlcov-$PIXI_PLATFORM/
+    --cov-report=term-missing:skip-covered
+    --cov=urljsf
+    --cov-branch
+    --cov-context=test
+    --no-cov-on-fail
+    --cov-fail-under=97"""
+depends-on = ["test-pip", "build-static", "platform--"]
 inputs = ["{tests,src/urljsf}/**/*.{py,rst,json}", "src/urljsf/{_static,_templates}"]
 outputs = ["build/reports/test_*"]
 
 [feature.tasks-test.tasks.test-report]
+description = "- collect test reports"
 cmd = "python scripts/report.py build/reports"
 
-# test-oldest ##################################################################
-[feature.tasks-test-oldest.tasks.test-oldest-pytest]
-cmd = """
-export PIXI_PLATFORM=$(cat build/platform.txt)
-&& pytest
-  -n auto
-  --html=build/reports/test-oldest_pytest_$PIXI_PLATFORM.html
-  --self-contained-html
-"""
-depends-on = ["test-min-pip", "build-py-static", "platform--"]
+# test-min ##################################################################
+[feature.tasks-test-min.tasks.test-min-pytest]
+description = "- run tests against the oldest-supported dependencies"
+cmd = """export PIXI_PLATFORM=$(cat build/platform.txt)
+  && pytest
+    -n auto
+    --html=build/reports/test-min_pytest_$PIXI_PLATFORM.html
+    --self-contained-html"""
+depends-on = ["test-min-pip", "build-static", "platform--"]
 inputs = ["{tests,src/urljsf}/**/*.{py,rst,json}", "src/urljsf/{_static,_templates}"]
-outputs = ["build/reports/test-oldest_*"]
+outputs = ["build/reports/test-min_*"]
 
 # docs #########################################################################
 [feature.tasks-docs.tasks.docs-scour]
-cmd = """
-export SCOUR_ARGS="scour --enable-id-stripping --enable-comment-stripping"
-&& cd docs/_static
-&& $SCOUR_ARGS logo-inkscape.svg logo.svg
-&& $SCOUR_ARGS icon-inkscape.svg icon.svg
-"""
+description = "- optimize SVG for docs with scour"
+cmd = """export SCOUR_ARGS="scour --enable-id-stripping --enable-comment-stripping"
+  && cd docs/_static
+  && $SCOUR_ARGS logo-inkscape.svg logo.svg
+  && $SCOUR_ARGS icon-inkscape.svg icon.svg"""
 inputs = ["docs/_static/*-inkscape.svg"]
 outputs = ["docs/_static/*.svg", "!*inkscape.svg"]
 
 [feature.tasks-docs.tasks.docs-sphinx]
+description = "- build docs with sphinx"
+cmd = """export PYDEVD_DISABLE_FILE_VALIDATION=1
+  && sphinx-build -W --keep-going --color -b html docs build/docs"""
 inputs = [
   "*.md",
   "*.toml",
@@ -347,76 +360,68 @@ inputs = [
 ]
 depends-on = ["docs-pip", "docs-scour"]
 outputs = ["build/docs"]
-cmd = """
-  export PYDEVD_DISABLE_FILE_VALIDATION=1
-  && sphinx-build -W --keep-going --color -b html docs build/docs
-"""
 
 # watch ########################################################################
-[feature.tasks-build.tasks.watch-js-lib]
+[feature.tasks-build.tasks.watch-lib]
+description = "- watch TypeScript and rebuild the lib"
 cmd = "yarn build:lib --watch --preserveWatchOutput"
 depends-on = ["build-yarn"]
 
-[feature.tasks-build.tasks.watch-js-demo]
-cmd = """
-watchfiles "python scripts/demo.py" scripts/demo.py js/demo/toml
-"""
+[feature.tasks-build.tasks.watch-demo]
+description = "- watch demo TOML and rebuild the rest"
+cmd = """watchfiles "python scripts/demo.py" scripts/demo.py js/demo/toml"""
 
-[feature.tasks-build.tasks.watch-js-app]
+[feature.tasks-build.tasks.watch-app]
+description = "- watch lib, css, etc. and rebuild the app"
 cmd = "yarn build:app --watch"
 depends-on = ["build-yarn"]
 
-[feature.tasks-build.tasks.watch-py-static]
-cmd = """
-watchfiles "pixi r py-static--" js/dist
-"""
+[feature.tasks-build.tasks.watch-static]
+description = "- watch app and rebuild static"
+cmd = """watchfiles "pixi r py-static--" js/dist"""
 
 [feature.tasks-build.tasks.watch-schema]
-cmd = """
-export $(pixi r schema-vars--)
-&& watchfiles "pixi r schema-all--" $SCHEMA_TOML $PROPS_TS scripts/schema.py
-"""
+description = "- watch schema inputs and rebuild the rest"
+cmd = """export $(pixi r schema-vars--)
+  && watchfiles "pixi r schema-all--" $SCHEMA_TOML $PROPS_TS scripts/schema.py"""
 
 [feature.tasks-build.tasks.serve-demo]
-cmd = """
-cd js/dist
-&& python -m http.server -b 127.0.0.1 8100
-"""
+description = "- serve the built demo"
+cmd = "cd js/dist && python -m http.server -b 127.0.0.1 8100"
 
 [feature.tasks-docs.tasks.serve-docs]
-cmd = """
-rm -rf build/docs
-&& pixi r docs-sphinx
-&& cd build/docs
-&& python -m http.server -b 127.0.0.1 8101
-"""
+description = "- serve the docs"
+cmd = """rm -rf build/docs
+  && pixi r docs-sphinx
+  && cd build/docs
+  && python -m http.server -b 127.0.0.1 8101"""
 
 [feature.tasks-docs.tasks.watch-docs]
+description = "- watch docs source and rebuild the site"
+cmd = """rm -rf build/watch-docs
+  && sphinx-autobuild docs build/watch-docs
+    --write-all
+    --jobs 8
+    --color
+    --watch src
+    --watch pixi.toml
+    --watch js/dist"""
 depends-on = ["docs-pip"]
-cmd = """
-rm -rf build/watch-docs
-&& sphinx-autobuild docs build/watch-docs
-  --write-all
-  --jobs 8
-  --color
-  --watch src
-  --watch pixi.toml
-  --watch js/dist
-"""
 
 [feature.tasks-dev.tasks.watch]
+description = "watch ALL the things"
 cmd = "python scripts/watch.py"
 
 # envs #########################################################################
 [environments]
 build = ["deps-build", "tasks-build", "deps-pip"]
 test = ["deps-test", "deps-run", "deps-pip", "tasks-test"]
-test-oldest = [
+test-min = [
   "deps-pip",
   "deps-test",
   "deps-run",
   "deps-run-oldest",
-  "tasks-test-oldest",
+  "tasks-test-min",
 ]
 lint = ["deps-pip", "deps-build", "deps-lint", "deps-run", "tasks-lint"]
 docs = ["deps-pip", "deps-docs", "deps-run", "deps-build", "tasks-docs"]
@@ -424,13 +429,13 @@ dev = ["deps-pip", "deps-build", "deps-test", "deps-docs", "deps-lint", "tasks-d
 
 # deps #########################################################################
 [feature.deps-pip.dependencies]
-pip = "*"
 flit = ">=3.9.0,<4.0.0a0"
+pip = "*"
 
 [feature.deps-run.dependencies]
-sphinx = ">=6.1"
-python = ">=3.9"
 jsonschema = ">=4.18"
+python = ">=3.9"
+sphinx = ">=6.1"
 
 [feature.deps-run-oldest.dependencies]
 python = "3.9.*"
@@ -438,42 +443,42 @@ sphinx = "6.1.*"
 typing_extensions = "4.0.0"
 
 [feature.deps-test.dependencies]
+"ruamel.yaml" = "*"
+coverage = ">=7"
 pytest = ">=8"
+pytest-console-scripts = "*"
 pytest-cov = "*"
 pytest-html = "*"
 pytest-xdist = "*"
-coverage = ">=7"
-"ruamel.yaml" = "*"
-pytest-console-scripts = "*"
 
 [feature.deps-docs.dependencies]
 myst-nb = "*"
 pydata-sphinx-theme = ">=0.16.0,<0.17.0"
+pypandoc = "*"
+requests-cache = "*"
 scour = "*"
 sphinx-argparse = "*"
 sphinx-autobuild = "*"
 sphinx-autodoc-typehints = "*"
 sphinx-copybutton = "*"
 sphinx-jsonschema = "*"
-pypandoc = "*"
-requests-cache = "*"
 
 [feature.deps-build.dependencies]
+"ruamel.yaml" = "*"
 jsonschema-gentypes = "*"
 nodejs = "22.*"
 python-build = "*"
-"ruamel.yaml" = "*"
 ruff = "*"
 watchfiles = "*"
 yarn = "3.6.4"
 
 [feature.deps-lint.dependencies]
-ruff = "*"
-mypy = "*"
-taplo = "*"
 actionlint-with-all = "*"
-types-jinja2 = "*"
+mypy = "*"
+ruff = "*"
+taplo = "*"
 types-docutils = "*"
+types-jinja2 = "*"
 types-jsonschema = "*"
 
 # tools ########################################################################
