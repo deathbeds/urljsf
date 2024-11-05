@@ -8,7 +8,7 @@ tasks:
     copyable: true
   items:
     ui:options:
-      urljsfGrid:
+      urljsf:grid:
         children:
           complete:
             - col-md-3

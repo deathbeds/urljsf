@@ -7,7 +7,7 @@
 - a [Sphinx extension](./sphinx.md).
 
 All make use the `urljsf` [JSON schema](./schema.rst), and offer some
-[advanced options](./advanced.md).
+[advanced options](./advanced/index.md).
 
 ```{toctree}
 :maxdepth: 2
@@ -16,5 +16,5 @@ script
 cli
 sphinx
 schema
-advanced
+advanced/index
 ```

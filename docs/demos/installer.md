@@ -1,10 +1,11 @@
 # Installer Demo
 
-> describe a [`pixi`][pixi] environment which can be built into a
-> [`constructor`][constructor]
+> A form for building a [`pixi`][pixi] project which can be built into a
+> [`constructor`][constructor].
+>
+> this uses
 
 ```{urljsf} py:demos:installer
-
 
 ```
 

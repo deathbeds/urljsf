@@ -1,4 +1,4 @@
-["ui:options".urljsfGrid.children]
+["ui:options"."urljsf:grid".children]
 repo = ["col-md-4"]
 branch = ["col-md-4"]
 filename = ["col-md-4"]

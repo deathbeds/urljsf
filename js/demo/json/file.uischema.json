@@ -7,7 +7,7 @@
   "tasks": {
     "items": {
       "ui:options": {
-        "urljsfGrid": {
+        "urljsf:grid": {
           "children": {
             "complete": ["col-md-3"],
             "deadline": ["col-md-4"],

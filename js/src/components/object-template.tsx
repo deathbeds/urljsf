@@ -64,7 +64,7 @@ export function ObjectGridTemplate<
 
   const gridOptions: UrljsfGridOptions = {
     ...DEFAULT_GRID_OPTIONS,
-    ...((uiOptions['urljsfGrid'] as any) || emptyObject),
+    ...((uiOptions['urljsf:grid'] as any) || emptyObject),
   };
 
   const addButtonClasses = ['object-property-expand', ...gridOptions.addButton];

@@ -338,11 +338,16 @@ _URLJSF_NO_BOOTSTRAP_DEFAULT = False
 """ Default value of the field path 'urljsf no_bootstrap' """
 
 
-class _Uioptions(TypedDict, total=False):
-    urljsfGrid: _UioptionsUrljsfgrid
+_Uioptions = TypedDict(
+    "_Uioptions",
+    {
+        "urljsf:grid": "_UioptionsUrljsfColonGrid",
+    },
+    total=False,
+)
 
 
-class _UioptionsUrljsfgrid(TypedDict, total=False):
+class _UioptionsUrljsfColonGrid(TypedDict, total=False):
     addButton: List[str]
     children: Dict[str, List[str]]
     default: List[str]
@@ -353,13 +358,13 @@ _Uischema = TypedDict(
     "_Uischema",
     {
         "ui:options": "_Uioptions",
-        "ui:urljsfGrid": "_UischemaUiColonUrljsfgrid",
+        "ui:urljsf:grid": "_UischemaUiColonUrljsfColonGrid",
     },
     total=False,
 )
 
 
-class _UischemaUiColonUrljsfgrid(TypedDict, total=False):
+class _UischemaUiColonUrljsfColonGrid(TypedDict, total=False):
     addButton: List[str]
     children: Dict[str, List[str]]
     default: List[str]

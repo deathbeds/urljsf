@@ -254,7 +254,7 @@ export interface Props {
  */
 export interface UISchema {
   'ui:options'?: UIOptions;
-  'ui:urljsfGrid'?: {
+  'ui:urljsf:grid'?: {
     addButton?: string[];
     children?: {
       [k: string]: string[];
@@ -267,7 +267,7 @@ export interface UISchema {
  * via the `definition` "UIOptions".
  */
 export interface UIOptions {
-  urljsfGrid?: {
+  'urljsf:grid'?: {
     addButton?: string[];
     children?: {
       [k: string]: string[];
@@ -425,7 +425,7 @@ export interface Props1 {
  */
 export interface UISchema1 {
   'ui:options'?: UIOptions;
-  'ui:urljsfGrid'?: {
+  'ui:urljsf:grid'?: {
     addButton?: string[];
     children?: {
       [k: string]: string[];

@@ -13,7 +13,7 @@ import { MIME_FRAGMENT } from './index.js';
 import { emptyObject } from './tokens.js';
 
 const WIDGETS = {
-  'urljsf:DataList': DataList,
+  'urljsf:datalist': DataList,
 };
 
 let _NEXT_DATA_SET = 0;

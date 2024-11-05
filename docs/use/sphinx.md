@@ -58,7 +58,8 @@ As inline `json`, `toml`, or `yaml`:
 ```
 
 Any values provided in [`conf.py`](#configure) will be overwritten, and `schema`, etc.
-may be a [URL](./advanced.md#remote-urls) or come from [python](./advanced.md#python).
+may be a [URL](./advanced/remote.md#remote-urls) or come from
+[python](./advanced/remote.md#python).
 
 [sphinx]: https://www.sphinx-doc.org
 

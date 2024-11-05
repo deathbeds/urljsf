@@ -17,14 +17,14 @@ export interface UrljsfGridOptions {
 }
 
 export interface UIOptions {
-  urljsfGrid?: Partial<UrljsfGridOptions>;
+  'urljsf:grid'?: Partial<UrljsfGridOptions>;
   [key: string]: any;
 }
 
 /** an rjsf ui schema, with light extension
  */
 export interface UISchema {
-  'ui:urljsfGrid'?: Partial<UrljsfGridOptions>;
+  'ui:urljsf:grid'?: Partial<UrljsfGridOptions>;
   'ui:options'?: UIOptions;
   [key: string]: any;
 }

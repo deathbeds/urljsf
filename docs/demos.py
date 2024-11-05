@@ -18,13 +18,17 @@ HERE = Path(__file__).parent
 ROOT = HERE.parent
 BUILD = ROOT / "build"
 OUTPUTS = BUILD / "feedstock-outputs.json"
-
+LICENSES = BUILD / "licenses.json"
 
 OUTPUTS_URL = (
     "https://raw.githubusercontent.com/conda-forge/feedstock-outputs/single-file/"
     f"{OUTPUTS.name}"
 )
-S = requests_cache.CachedSession(BUILD / "cf-")
+LICENSES_URL = (
+    "https://raw.githubusercontent.com/spdx/license-list-data/refs/heads/main/"
+    f"json/{LICENSES.name}"
+)
+S = requests_cache.CachedSession(BUILD / "demos-")
 
 if TYPE_CHECKING:
     from urljsf._schema import Urljsf
@@ -113,8 +117,16 @@ def installer() -> Urljsf:
     if not OUTPUTS.exists():
         OUTPUTS.write_bytes(S.get(OUTPUTS_URL).content)
 
+    if not LICENSES.exists():
+        LICENSES.write_bytes(S.get(LICENSES_URL).content)
+
     feedstocks = json.loads(OUTPUTS.read_text(**UTF8))
     packages = sorted({*functools.reduce(operator.iadd, [*feedstocks.values()])})
+    licenses = [
+        lic["licenseId"]
+        for lic in json.loads(LICENSES.read_text(**UTF8))["licenses"]
+        if lic.get("isOsiApproved") and lic.get("isFsfLibre")
+    ]
 
     subdirs = [
         "emscripten-wasm32",
@@ -147,20 +159,57 @@ def installer() -> Urljsf:
             "`pixi`'s own extensive schema, but instead builds an intermediate."
         ),
         "type": "object",
-        "required": ["platforms", "dependencies", "channels"],
+        "required": [
+            "name",
+            "version",
+            "license",
+            "platforms",
+            "dependencies",
+            "channels",
+        ],
         "properties": {
+            "name": {
+                "description": "a name for the installer",
+                "type": "string",
+                "minLength": 1,
+            },
+            "version": {
+                "description": "the version of the installer",
+                "type": "string",
+                "minLength": 1,
+                "pattern": r"\d+[\d\.]+((a|b|rc)[\d]+)?",
+            },
+            "license": {
+                "description": "the license under which to relase the installer",
+                "type": "string",
+                "minLength": 1,
+            },
             "platforms": {
+                "description": (
+                    "the (operating system, architecture) pairs where the installer",
+                    " should work",
+                ),
                 "type": "array",
                 "items": {"$ref": "#/definitions/a-subdir"},
                 "uniqueItems": True,
                 "minItems": 1,
             },
+            "channels": {
+                "description": (
+                    "ordered URLs (first wins) for sources of packages: "
+                    " fragments wil have `https://conda.anaconda.org/` prepended"
+                ),
+                "type": "array",
+                "items": {"type": "string", "format": "uri-reference"},
+                "minLength": 1,
+                "default": ["conda-forge"],
+            },
             "dependencies": {
+                "description": "the packages this installer should include",
                 "type": "array",
                 "items": {"$ref": "#/definitions/a-pixi-package-def"},
                 "minLength": 1,
             },
-            "channels": {"type": "array", "items": {"type": "string"}, "minLength": 1},
         },
         "definitions": {
             "a-subdir": {"type": "string", "enum": subdirs},
@@ -182,17 +231,27 @@ def installer() -> Urljsf:
     }
 
     pixi_ui_schema = {
-        "ui:options": {"order": ["platforms", "channels", "dependencies"]},
+        "ui:options": {
+            "order": [
+                "name",
+                "version",
+                "license",
+                "platforms",
+                "channels",
+                "dependencies",
+            ]
+        },
         "channels": {"items": {"ui:options": {"label": False}}},
+        "license": {"ui:options": {"widget": "urljsf:datalist", "options": licenses}},
         "dependencies": {
             "items": {
                 "package": {
-                    "ui:options": {"widget": "urljsf:DataList", "options": packages}
+                    "ui:options": {"widget": "urljsf:datalist", "options": packages}
                 },
                 "ui:options": {
                     "label": False,
                     "order": ["package", "spec", "channel"],
-                    "urljsfGrid": {
+                    "urljsf:grid": {
                         "children": {
                             "package": ["col-md-4"],
                             "spec": ["col-md-4"],
@@ -205,7 +264,10 @@ def installer() -> Urljsf:
     }
 
     pixi_form_data = {
-        "platforms": ["linux-64"],
+        "name": "MyInstaller",
+        "version": "0.1.0",
+        "license": "BSD-3-Clause",
+        "platforms": ["linux-64", "osx-64", "osx-arm64", "win-64"],
         "channels": ["conda-forge"],
         "dependencies": [{"package": "python", "spec": "3.13.*"}],
     }
@@ -234,7 +296,8 @@ data:application/toml,
 {{
     {
         "project": {
-            "name": "my-project",
+            "name": data.pixi.name,
+            "version": data.pixi.version,
             "platforms": data.pixi.platforms,
             "channels": data.pixi.channels
         },

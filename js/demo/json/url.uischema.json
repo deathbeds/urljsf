@@ -1,6 +1,6 @@
 {
   "ui:options": {
-    "urljsfGrid": {
+    "urljsf:grid": {
       "children": {
         "branch": ["col-md-4"],
         "filename": ["col-md-4"],

@@ -172,7 +172,7 @@
     "UIOptions": {
       "type": "object",
       "properties": {
-        "urljsfGrid": {
+        "urljsf:grid": {
           "type": "object",
           "properties": {
             "addButton": {
@@ -208,7 +208,7 @@
         "ui:options": {
           "$ref": "#/definitions/UIOptions"
         },
-        "ui:urljsfGrid": {
+        "ui:urljsf:grid": {
           "type": "object",
           "properties": {
             "addButton": {

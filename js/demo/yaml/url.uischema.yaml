@@ -1,5 +1,5 @@
 ui:options:
-  urljsfGrid:
+  urljsf:grid:
     children:
       repo:
         - col-md-4
