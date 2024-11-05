@@ -57,6 +57,8 @@ available by default:
   - recursively remove `null` objects and empty arrays and objects
 - `base64`
   - encode a string as `base64`
+- `from_entries`
+  - turn a list of `[key,value]` pairs into a dictionary, as Python's `dict` constructor
 
 [nunjucks-builtins]: https://mozilla.github.io/nunjucks/templating.html#builtin-filters
 

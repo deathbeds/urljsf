@@ -9,8 +9,7 @@ import { reduceTrimmedLines } from './utils.js';
 
 export async function ensureNunjucks(config: Urljsf): Promise<nunjucks.Environment> {
   const env = await Private.ensureNunjucks();
-  ensureFilters(config, env);
-  return env;
+  return await ensureFilters(config, env);
 }
 
 export function renderUrl(options: IRenderOptions): string {
@@ -47,8 +46,8 @@ namespace Private {
       try {
         const nunjucks = await import('nunjucks');
         nunjucks.installJinjaCompat();
-        const env = new nunjucks.Environment();
-        addFilters(env, FILTERS);
+        let env = new nunjucks.Environment();
+        env = addFilters(env, FILTERS);
         _env = env;
         resolve(env);
       } catch (err) {

@@ -84,7 +84,7 @@ class DataSource:
         else:  # pragma: no cover
             msg = f"Can't parse {self.format}: {self.path}"
             raise NotImplementedError(msg)
-        self.log.error("parsed %s: %s", self.format, self.path)
+        self.log.debug("parsed %s: %s", self.format, self.path)
 
 
 @dataclass

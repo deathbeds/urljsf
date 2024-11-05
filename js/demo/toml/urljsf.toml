@@ -6,7 +6,6 @@ filters = ["toml"]
 
 [forms.file]
 rank = 0
-format = "toml"
 schema = "./toml/file.schema.toml"
 ui_schema = "./toml/file.uischema.toml"
 form_data = "./toml/file.data.toml"

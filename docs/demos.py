@@ -174,14 +174,15 @@ def installer() -> Urljsf:
                 "required": ["package"],
                 "properties": {
                     "package": {"$ref": "#/definitions/a-package-name"},
-                    "match-spec": {"type": "string", "default": "*"},
-                    "channel": {"type": "string", "format": "uri"},
+                    "spec": {"type": "string", "default": "*"},
+                    "channel": {"type": "string", "format": "uri-reference"},
                 },
             },
         },
     }
 
     pixi_ui_schema = {
+        "ui:options": {"order": ["platforms", "channels", "dependencies"]},
         "channels": {"items": {"ui:options": {"label": False}}},
         "dependencies": {
             "items": {
@@ -190,11 +191,11 @@ def installer() -> Urljsf:
                 },
                 "ui:options": {
                     "label": False,
-                    "order": ["package", "match-spec", "channel"],
+                    "order": ["package", "spec", "channel"],
                     "urljsfGrid": {
                         "children": {
                             "package": ["col-md-4"],
-                            "match-spec": ["col-md-4"],
+                            "spec": ["col-md-4"],
                             "channel": ["col-md-4"],
                         }
                     },
@@ -206,12 +207,12 @@ def installer() -> Urljsf:
     pixi_form_data = {
         "platforms": ["linux-64"],
         "channels": ["conda-forge"],
-        "dependencies": [{"package": "python", "match-spec": "3.13.*"}],
+        "dependencies": [{"package": "python", "spec": "3.13.*"}],
     }
 
     pixi_checks = {
         "Unique `package` names": """
-{% for pkg, deps in data["pixi-toml"].dependencies | default([]) | groupby("package") %}
+{% for pkg, deps in data.pixi.dependencies | default([]) | groupby("package") %}
 {% set dupes = deps | length %}
 {% if dupes > 1 %}
 - [ ] {{ dupes }} dependencies have the name `{{ pkg }}`
@@ -220,15 +221,42 @@ def installer() -> Urljsf:
 """
     }
 
+    url_template = """
+data:application/toml,
+{% set deps = [] %}
+{% for dep in data.pixi.dependencies %}
+    {% set e = dep.spec %}
+    {% if dep.channel %}
+        {% set e = {"version": dep.spec, "channel": dep.channel } %}
+    {% endif %}
+    {% set deps = (deps.push([dep.package, e]), deps) %}
+{% endfor %}
+{{
+    {
+        "project": {
+            "name": "my-project",
+            "platforms": data.pixi.platforms,
+            "channels": data.pixi.channels
+        },
+        "dependencies": (deps | from_entries)
+    } | to_toml | urlencode | safe
+}}
+    """
+
     defn: Urljsf = {
         "forms": {
-            "pixi-toml": {
+            "pixi": {
                 "schema": pixi_schema,
                 "ui_schema": pixi_ui_schema,
                 "form_data": pixi_form_data,
             }
         },
-        "templates": {"url": "#", "checks": pixi_checks},
+        "nunjucks": {"filters": ["toml"]},
+        "templates": {
+            "url": url_template,
+            "submit_button": "View `pixi.toml`",
+            "checks": pixi_checks,
+        },
     }
 
     return defn

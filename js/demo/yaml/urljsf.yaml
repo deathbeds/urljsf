@@ -5,7 +5,6 @@ nunjucks:
 forms:
   file:
     rank: 0
-    format: yaml
     schema: ./yaml/file.schema.yaml
     ui_schema: ./yaml/file.uischema.yaml
     form_data: ./yaml/file.data.yaml

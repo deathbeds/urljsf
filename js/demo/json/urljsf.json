@@ -3,7 +3,6 @@
   "forms": {
     "file": {
       "rank": 0,
-      "format": "json",
       "schema": "./json/file.schema.json",
       "ui_schema": "./json/file.uischema.json",
       "form_data": "./json/file.data.json"

@@ -7,8 +7,6 @@ import type nunjucks from 'nunjucks';
 import { Urljsf } from './_schema';
 import { IFilters } from './tokens';
 
-const ENV_FILTERS: Map<string, boolean> = new Map();
-
 /** remove empty objects and arrays */
 export function prune(data: Record<string, any>) {
   let newData: Record<string, any> = {};
@@ -28,7 +26,16 @@ export function prune(data: Record<string, any>) {
   }
   return [...Object.keys(newData)].length ? newData : null;
 }
-export async function ensureFilters(config: Urljsf, env: nunjucks.Environment) {
+
+/* build objects from entries */
+export function from_entries(data: [string, any][]): Record<string, any> {
+  return Object.fromEntries(data);
+}
+
+export async function ensureFilters(
+  config: Urljsf,
+  env: nunjucks.Environment,
+): Promise<nunjucks.Environment> {
   for (const filter of config?.nunjucks?.filters || []) {
     let filters: IFilters | null = null;
     switch (filter) {
@@ -47,19 +54,20 @@ export async function ensureFilters(config: Urljsf, env: nunjucks.Environment) {
     }
 
     if (filters != null) {
-      addFilters(env, filters);
+      env = addFilters(env, filters);
     }
   }
+  return env;
 }
 
-export function addFilters(env: nunjucks.Environment, filters: IFilters) {
+export function addFilters(
+  env: nunjucks.Environment,
+  filters: IFilters,
+): nunjucks.Environment {
   for (const [name, filter] of Object.entries(filters)) {
-    if (ENV_FILTERS.has(name)) {
-      continue;
-    }
-    env.addFilter(name, filter);
-    ENV_FILTERS.set(name, true);
+    env = env.addFilter(name, filter);
   }
+  return env;
 }
 
 function jsonFilters(): IFilters {
@@ -90,4 +98,4 @@ async function yamlFilters(): Promise<IFilters> {
   };
 }
 
-export const FILTERS = { prune, base64: btoa };
+export const FILTERS = { prune, base64: btoa, from_entries };
