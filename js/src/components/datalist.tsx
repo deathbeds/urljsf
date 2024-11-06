@@ -46,12 +46,23 @@ export default function DataList<
     </datalist>,
   ];
 
-  const checked = enumOptions.includes(value) ? { checked: true } : {};
+  const isChecked = enumOptions.includes(value);
+  const checked = isChecked ? { checked: true } : {};
+  const ariaLabel = `'${value}' is ${isChecked ? '' : 'not '}in ${enumOptions.length} choices`;
+  const checkId = `${id}__datalist-check`;
+  const describedByIds = `${ariaDescribedByIds<T>(id)} ${checkId}`;
 
   return (
-    <InputGroup>
+    <InputGroup className="urljsf-datalist">
       <InputGroup.Text>
-        <input type="checkbox" readOnly disabled {...checked} />
+        <input
+          id={checkId}
+          type="checkbox"
+          readOnly
+          disabled
+          {...checked}
+          aria-label={ariaLabel}
+        />
       </InputGroup.Text>
       <FormControl
         id={id}
@@ -65,8 +76,9 @@ export default function DataList<
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
-        aria-describedby={ariaDescribedByIds<T>(id)}
+        aria-describedby={describedByIds}
         list={listId}
+        spellcheck={false}
       />
       {...datalist}
     </InputGroup>

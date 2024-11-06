@@ -10,6 +10,7 @@ import { LicenseWebpackPlugin } from 'license-webpack-plugin';
 import TerserPlugin from 'terser-webpack-plugin';
 
 const COV = process.env.COV;
+const WATCH = process.argv.includes('--watch');
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -45,7 +46,7 @@ export class JSONLicenseWebpackPlugin extends LicenseWebpackPlugin {
 
 /** @type {import('webpack').Configuration} */
 const config = {
-  mode: COV ? 'development' : 'production',
+  mode: COV || WATCH ? 'development' : 'production',
   devtool: 'source-map',
   entry: './lib/index.js',
   experiments: { outputModule: true },
@@ -111,7 +112,7 @@ const config = {
       chunks: 'async',
       minChunks: 3,
     },
-    minimize: true,
+    minimize: !WATCH,
     minimizer: [new TerserPlugin({ extractComments: 'all' })],
   },
 };

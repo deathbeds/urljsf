@@ -18,7 +18,6 @@ import { Urljsf } from '../_schema.js';
 import { ensureBootstrap, getBoostrapCss } from '../bootstrap.js';
 import { ensureNunjucks, renderMarkdown, renderUrl } from '../nunjucks.js';
 import {
-  DEBUG,
   DEFAULTS,
   FORM_CLASS,
   IContext,
@@ -47,7 +46,7 @@ const SUBMIT_MD_OPTIONS: MarkdownToJSX.Options = {
 
 const BTN_COMMON: Pick<ButtonProps, 'size' | 'className'> = {
   size: 'lg',
-  className: 'col-12',
+  className: 'col-12 urljsf-submit',
 };
 
 const SUBMIT_DEFAULT: Pick<ButtonProps, 'variant' | 'target'> = {
@@ -134,13 +133,18 @@ function UrljsfForm(props: IUrljsfFormProps): JSX.Element {
   const context = signal(initContext);
   const errors = signal(initErrors);
 
-  const url = computed(() =>
-    renderUrl({
-      template: config.templates.url,
-      context: context.value,
-      env: nunjucksEnv,
-    }),
-  );
+  const url = computed(() => {
+    try {
+      return renderUrl({
+        template: config.templates.url,
+        context: context.value,
+        env: nunjucksEnv,
+      });
+    } catch (err) {
+      console.warn('Could not render URL', err);
+      return '';
+    }
+  });
 
   const submitText = computed(() =>
     renderMarkdown({
@@ -183,19 +187,18 @@ function UrljsfForm(props: IUrljsfFormProps): JSX.Element {
     });
   }
 
-  const errorCount = computed(
-    () =>
-      [
-        ...errors.value.file,
-        ...errors.value.url,
-        ...(checkResults?.value ? Object.keys(checkResults.value) : []),
-      ].length,
-  );
+  const errorCount = computed(() => {
+    let allErrors: any[] = checkResults?.value ? Object.keys(checkResults.value) : [];
+    for (const formErrs of Object.values(errors.value)) {
+      allErrors.push(...formErrs);
+    }
+    return allErrors.length;
+  });
 
   function makeFormProps(key: string, initProps: Partial<FormProps>): FormProps {
     return {
       ...FORM_PRE_DEFAULTS,
-      idPrefix: `${idPrefix}-${key}-`,
+      idPrefix: `${idPrefix}-${key}`,
       id: `${idPrefix}-${key}`,
       ...((config.forms[key]?.props || emptyObject) as any),
       ...initProps,
@@ -219,13 +222,13 @@ function UrljsfForm(props: IUrljsfFormProps): JSX.Element {
   });
 
   const URLJSF = () => {
-    const START = performance.now();
     let submitButton: JSX.Element;
     const checkItems: JSX.Element[] = [];
     const formItems: JSX.Element[] = [];
 
     for (const key of orderedKeys) {
       const form = forms[key];
+      /* istanbul ignore next */
       if (!form) {
         continue;
       }
@@ -270,8 +273,6 @@ function UrljsfForm(props: IUrljsfFormProps): JSX.Element {
         </Button>
       );
     }
-
-    DEBUG && console.warn(performance.now() - START);
 
     return (
       <div className={FORM_CLASS} id={idPrefix}>

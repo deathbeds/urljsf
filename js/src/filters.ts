@@ -48,6 +48,7 @@ export async function ensureFilters(
       case 'yaml':
         filters = await yamlFilters();
         break;
+      /* istanbul ignore next */
       default:
         console.warn('Unknown filter', filter);
         continue;

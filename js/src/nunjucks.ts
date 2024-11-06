@@ -37,6 +37,7 @@ namespace Private {
 
   export async function ensureNunjucks(): Promise<nunjucks.Environment> {
     if (_env) {
+      /* istanbul ignore next */
       return _env;
     }
     if (_loading) {
@@ -50,8 +51,8 @@ namespace Private {
         env = addFilters(env, FILTERS);
         _env = env;
         resolve(env);
-        /* istanbul ignore next */
       } catch (err) {
+        /* istanbul ignore next */
         reject(err);
       }
     });

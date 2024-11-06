@@ -11,5 +11,6 @@ Test Teardown       Open Blank
 
 *** Test Cases ***
 Xkcd Demo Opens
-    Wait Until Element Is Visible    ${CSS_U_FORM}
-    Capture Element Screenshot    ${CSS_U_FORM}    00-open.png
+    [Documentation]    Verify the docs `xkcd` opens.
+    Wait Until Element Is Visible    css:${CSS_U_FORM}
+    Capture Element Screenshot    css:${CSS_U_FORM}    00-open.png

@@ -15,7 +15,6 @@ Open Firefox
     Call Method    ${options}    set_preference    ui.prefersReducedMotion    ${1}
     Call Method    ${options}    set_preference    devtools.console.stdout.content    ${True}
 
-    ${service args} =    Create List    --log    info
     ${geckolog} =    Set Variable    ${OUTPUT DIR}${/}geckodriver.log
     ${geckolog} =    Set Variable    ${geckolog.replace('\\', '/')}
 

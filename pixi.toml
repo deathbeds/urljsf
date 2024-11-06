@@ -16,6 +16,7 @@ run ALL tasks that would lead to a release""", depends-on = [
   "test",
   "docs",
   "atest",
+  "report",
 ], cmd = "echo 🚢"}
 fix = {description = """
 apply ALL source formatters""", depends-on = [
@@ -33,6 +34,7 @@ apply ALL static analysis tools""", depends-on = [
   "lint-prettier",
   "lint-mypy",
   "lint-robotidy",
+  "lint-robocop",
   "lint-actionlint",
 ], cmd = "echo ⭐"}
 build = {description = """
@@ -60,7 +62,6 @@ test = {description = """
 run ALL unit tests""", depends-on = [
   "test-pytest",
   "test-min-pytest",
-  "test-report",
 ], cmd = "echo 🧪"}
 atest = {description = """
 run ALL acceptance tests""", depends-on = ["atest-robot", "atest-nyc"], cmd = "echo 🤖"}
@@ -319,6 +320,10 @@ inputs = ["*.{md,json}", "{docs,tests,src,js,.github}/**/*.md", "!src/**/_static
 cmd = "robotidy atest --check"
 inputs = ["atest/**/*.{robot,resource}"]
 
+[feature.tasks-lint.tasks.lint-robocop]
+cmd = "robocop atest"
+inputs = ["atest/**/*.{robot,resource}", "pyproject.toml"]
+
 # test #########################################################################
 [feature.tasks-test.tasks.test-pytest]
 description = "- test python with pytest"
@@ -339,7 +344,7 @@ depends-on = ["test-pip", "build-static", "platform--"]
 inputs = ["{tests,src/urljsf}/**/*.{py,rst,json}", "src/urljsf/{_static,_templates}"]
 outputs = ["build/reports/test_*"]
 
-[feature.tasks-test.tasks.test-report]
+[feature.tasks-test.tasks.report]
 description = "- collect test reports"
 cmd = "python scripts/report.py build/reports"
 
@@ -388,7 +393,12 @@ outputs = ["build/reports/atest"]
 
 [feature.tasks-build.tasks.atest-nyc]
 description = "- gather JS coverage with nyc"
-cmd = """cd js && yarn run nyc report"""
+cmd = """cd js
+  && yarn run nyc report
+    --statements 91
+    --branches 80
+    --functions 92
+    --lines 91"""
 depends-on = ["atest-robot"]
 inputs = ["js/package.json", "build/reports/atest/istanbul/*.cov.json"]
 outputs = ["build/reports/nyc"]

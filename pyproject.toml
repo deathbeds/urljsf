@@ -84,6 +84,13 @@ script_launch_mode = "subprocess"
 testpaths = ["tests"]
 addopts = ["--color=yes", "-Werror", "--tb=long", "-vv"]
 
+# robocop ######################################################################
+[tool.robocop]
+exclude = ["replace-set-variable-with-var", "replace-create-with-var"]
+configure = [
+  "too-many-calls-in-keyword:max_calls:20",
+]
+
 # ruff #########################################################################
 [tool.ruff]
 cache-dir = "build/.cache/ruff"

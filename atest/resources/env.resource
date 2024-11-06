@@ -1,3 +1,7 @@
+*** Settings ***
+Documentation       Global variables
+
+
 *** Variables ***
 #
 # from env vars
@@ -13,6 +17,7 @@ ${HTTP_SERVER}      ${None}
 ${HTTP_PORT}        ${8000}
 ${HTTP_URL}         http://127.0.0.1:${HTTP_PORT}
 ${SERVER_PY}        ${ROOT}${/}atest${/}libraries${/}server.py
+${STATIC_ASSETS}    _static/urljsf
 #
 # timeouts
 #

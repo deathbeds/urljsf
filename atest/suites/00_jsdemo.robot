@@ -1,5 +1,5 @@
 *** Settings ***
-Documentation       Acceptance tests for urlsjf
+Documentation       Verify the webpack-built demo
 
 Resource            ../resources/urljsf.resource
 Library             SeleniumLibrary
@@ -11,5 +11,6 @@ Test Teardown       Open Blank
 
 *** Test Cases ***
 JS Demo Opens
-    Wait Until Element Is Visible    ${CSS_U_FORM}
-    Capture Element Screenshot    ${CSS_U_FORM}    00-open.png
+    [Documentation]    Verify the JS demo opens.
+    Wait Until Element Is Visible    css:${CSS_U_FORM}
+    Capture Element Screenshot    css:${CSS_U_FORM}    00-open.png

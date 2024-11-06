@@ -10,15 +10,27 @@ HEAD = """<html>
     html {font-family: sans-serif;}
     body {margin: 0; padding: 0}
     iframe {position: absolute; top: 0; height: 100vh; width: 79vw; right: 0; border: 0}
-    ul {display: block; max-width: 19vw; margin: 1em 1em 0 0;}
+    table {max-width: 20vw;}
     a {text-decoration: none;}
     a:hover, a:active {text-decoration: underline;}
+    td {text-align: right;}
+    td, th { padding: 0.25em; }
+    tbody th {text-align: left;}
+    thead td, thead th {border-bottom: solid 1px #aaa;}
   </style>
   <body>
-    <ul>"""
+    <table>
+      <thead>
+        <tr>
+          <th>file</th>
+          <td>size (kb)</td>
+        </tr>
+      </thead>
+      <tbody>"""
 
 FOOT = """
-    </ul>
+      </tbody>
+    </table>
     <iframe name="main" src="{}"></iframe>
   </body>
 </html>
@@ -34,16 +46,23 @@ def main(root: Path) -> int:
         for p in sorted(root.rglob("*.html"))
         if not (p == out or ("htmlcov" in p.parent.name and p.name != out.name))
     ]
-    print("indexing", len(paths), "to", out)
+    print("indexing", len(paths), "to", out.resolve().as_uri())
     if not paths:
         return 1
     for path in paths:
         url = path.relative_to(root)
         name = url.name
         name = str(url).replace("_", " ").replace("index.html", "")
-        name = name.replace(".html", "")
+        name = name.replace(".html", "").replace("/", " / ")
         chunks += [
-            f"""<li><a href="{url}" target="main">{name}</a></li>""",
+            f"""<tr>
+                <th>
+                    <a href="{url}" target="main">{name}</a>
+                </th>
+                <td>
+                    {int(path.stat().st_size / 1024)}
+                </td>
+            </tr>""",
         ]
     chunks += [FOOT.format(paths[0].relative_to(root))]
     out.write_text("\n".join(chunks), encoding="utf-8")
