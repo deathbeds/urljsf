@@ -1,5 +1,6 @@
 *** Settings ***
 Resource    ./env.resource
+Resource    ./coverage.resource
 Library     SeleniumLibrary
 
 
@@ -15,6 +16,7 @@ Setup Urljsf Suite
 
 Open Blank
     [Documentation]    Go to the blank screen.
+    Capture Page Coverage
     Go To    about:blank
 
 Open Page

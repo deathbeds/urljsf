@@ -5,8 +5,11 @@
 from __future__ import annotations
 
 import asyncio
+import shutil
 import socket
 import sys
+import tempfile
+from pathlib import Path
 
 from tornado import httpserver, log, web
 
@@ -45,5 +48,21 @@ def get_unused_port() -> int:
     return port
 
 
+def main(argv: list[str] | None = None) -> int:
+    """Parse args and Run the server forever."""
+    port, static, patch, dist_cov = argv or sys.argv[1:]
+
+    with tempfile.TemporaryDirectory() as td:
+        tdp = Path(td)
+        root = tdp / "root"
+        assets = root / patch
+        shutil.copytree(static, root)
+        shutil.rmtree(assets)
+        shutil.copytree(dist_cov, assets)
+        asyncio.run(start_http_server(int(port), str(root)))
+
+    return 0
+
+
 if __name__ == "__main__":
-    asyncio.run(start_http_server(int(sys.argv[1]), sys.argv[2]))
+    sys.exit(main(sys.argv[1:]))

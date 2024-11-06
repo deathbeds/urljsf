@@ -15,6 +15,7 @@ run ALL tasks that would lead to a release""", depends-on = [
   "dist",
   "test",
   "docs",
+  "atest",
 ], cmd = "echo 🚢"}
 fix = {description = """
 apply ALL source formatters""", depends-on = [
@@ -62,7 +63,7 @@ run ALL unit tests""", depends-on = [
   "test-report",
 ], cmd = "echo 🧪"}
 atest = {description = """
-run ALL acceptance tests""", depends-on = ["atest-robot"], cmd = "echo 🤖"}
+run ALL acceptance tests""", depends-on = ["atest-robot", "atest-nyc"], cmd = "echo 🤖"}
 docs = {description = """
 build all documentation""", depends-on = ["docs-sphinx"], cmd = "echo 🖨️"}
 
@@ -161,6 +162,12 @@ cmd = "yarn build:app"
 depends-on = ["build-lib", "build-demo"]
 inputs = ["node_modules/.yarn-state.yml", "js/{lib,demo}/**", "js/webpack.config.mjs"]
 outputs = ["js/dist"]
+
+[feature.tasks-build.tasks.build-app-cov]
+cmd = "export COV=1 && yarn build:app"
+depends-on = ["build-lib", "build-demo"]
+inputs = ["node_modules/.yarn-state.yml", "js/{lib,demo}/**", "js/webpack.config.mjs"]
+outputs = ["build/dist-cov"]
 
 [feature.tasks-build.tasks.build-static]
 description = "- build the static assets for python distribution"
@@ -373,10 +380,22 @@ depends-on = ["docs-pip", "docs-scour"]
 outputs = ["build/docs"]
 
 [feature.tasks-atest.tasks.atest-robot]
+description = "- run acceptance test reports with robot"
 cmd = "python scripts/atest.py"
-depends-on = ["docs-sphinx"]
-inputs = ["build/docs", "atest", "scripts/atest.py"]
+depends-on = ["docs-sphinx", "build-app-cov"]
+inputs = ["build/{docs,dist-cov}", "atest", "scripts/atest.py"]
 outputs = ["build/reports/atest"]
+
+[feature.tasks-build.tasks.atest-nyc]
+description = "- gather JS coverage with nyc"
+cmd = """cd js
+  && yarn run nyc report
+    --temp-dir ../build/atest/nyc
+    --report-dir ../build/reports/nyc
+    --skip-full"""
+depends-on = ["atest-robot"]
+inputs = ["js/package.json", "build/reports/atest/nyc/*.cov.json"]
+outputs = ["build/reports/nyc"]
 
 # watch ########################################################################
 [feature.tasks-dev.tasks.watch]

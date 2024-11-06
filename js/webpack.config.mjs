@@ -9,6 +9,7 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 import { LicenseWebpackPlugin } from 'license-webpack-plugin';
 import TerserPlugin from 'terser-webpack-plugin';
 
+const COV = process.env.COV;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -49,7 +50,7 @@ const config = {
   entry: './lib/index.js',
   experiments: { outputModule: true },
   output: {
-    path: path.resolve(__dirname, './dist/urljsf'),
+    path: path.resolve(__dirname, COV ? '../build/dist-cov/urljsf' : './dist/urljsf'),
     filename: 'index.js',
     chunkFilename: ({ chunk }) => {
       return `${chunk.id}.${chunk.hash?.slice(0, 8)}.js`;
@@ -64,21 +65,20 @@ const config = {
   },
   module: {
     rules: [
-      { test: /\.js$/, loader: 'source-map-loader', enforce: 'pre' },
+      COV
+        ? {
+            test: /\.js$/,
+            use: {
+              loader: '@ephesoft/webpack.istanbul.loader',
+              options: { esModules: true },
+            },
+            enforce: 'post',
+          }
+        : { test: /\.js$/, loader: 'source-map-loader', enforce: 'pre' },
       {
         test: /bootstrap\/dist\/css\/bootstrap\.min\.css/,
         type: 'asset',
         generator: { filename: '[name][ext]?v=[hash:8]' },
-      },
-      {
-        test: /bootswatch.*\.css/,
-        type: 'asset',
-        generator: {
-          filename: ({ filename }) => {
-            const theme = filename.match('dist/([^/]+)/')[1];
-            return `themes/${theme}[ext]?v=[hash:8]`;
-          },
-        },
       },
     ],
   },

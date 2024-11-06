@@ -17,3 +17,9 @@ ${SERVER_PY}        ${ROOT}${/}atest${/}libraries${/}server.py
 # timeouts
 #
 ${TIMEOUT_LONG}     10s
+#
+# paths
+#
+${BUILD}            ${ROOT}${/}build
+${DOCS}             ${BUILD}${/}docs
+${DIST_COV}         ${BUILD}${/}dist-cov${/}urljsf
