@@ -45,7 +45,7 @@ export class JSONLicenseWebpackPlugin extends LicenseWebpackPlugin {
 
 /** @type {import('webpack').Configuration} */
 const config = {
-  mode: 'production',
+  mode: COV ? 'development' : 'production',
   devtool: 'source-map',
   entry: './lib/index.js',
   experiments: { outputModule: true },

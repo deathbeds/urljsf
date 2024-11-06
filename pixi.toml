@@ -1,4 +1,4 @@
-"$schema" = "https://pixi.sh/v0.31.0/schema/manifest/schema.json"
+"$schema" = "https://pixi.sh/v0.35.0/schema/manifest/schema.json"
 
 [project]
 name = "urljsf"
@@ -447,26 +447,36 @@ depends-on = ["docs-pip"]
 # envs #########################################################################
 [environments]
 build = ["deps-build", "tasks-build", "deps-pip"]
-test = ["deps-test", "deps-run", "deps-pip", "tasks-test"]
+test = ["deps-test", "deps-run", "deps-py-max", "deps-pip", "tasks-test"]
 test-min = [
   "deps-pip",
   "deps-test",
   "deps-run",
-  "deps-run-oldest",
+  "deps-run-min",
   "tasks-test-min",
 ]
-lint = ["deps-pip", "deps-build", "deps-lint", "deps-run", "deps-atest", "tasks-lint"]
-docs = ["deps-pip", "deps-docs", "deps-run", "deps-build", "tasks-docs"]
-dev = [
+lint = [
   "deps-pip",
   "deps-build",
-  "deps-test",
+  "deps-lint",
+  "deps-run",
+  "deps-py-max",
+  "deps-atest",
+  "tasks-lint",
+]
+docs = ["deps-pip", "deps-docs", "deps-run", "deps-py-max", "deps-build", "tasks-docs"]
+dev = [
+  "deps-atest",
+  "deps-build",
   "deps-docs",
   "deps-lint",
-  "deps-atest",
+  "deps-pip",
+  "deps-run",
+  "deps-py-max",
+  "deps-test",
   "tasks-dev",
 ]
-atest = ["deps-atest", "deps-firefox", "tasks-atest"]
+atest = ["deps-atest", "deps-firefox", "deps-py-max", "tasks-atest"]
 
 # deps #########################################################################
 [feature.deps-pip.dependencies]
@@ -478,10 +488,13 @@ jsonschema = ">=4.18"
 python = ">=3.9"
 sphinx = ">=6.1"
 
-[feature.deps-run-oldest.dependencies]
+[feature.deps-run-min.dependencies]
 python = "3.9.*"
 sphinx = "6.1.*"
 typing_extensions = "4.0.0"
+
+[feature.deps-py-max.dependencies]
+python = "3.13.*"
 
 [feature.deps-test.dependencies]
 "ruamel.yaml" = "*"
