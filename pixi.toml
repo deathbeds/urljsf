@@ -390,7 +390,7 @@ outputs = ["build/reports/atest"]
 description = "- gather JS coverage with nyc"
 cmd = """cd js && yarn run nyc report"""
 depends-on = ["atest-robot"]
-inputs = ["js/package.json", "build/reports/atest/nyc/*.cov.json"]
+inputs = ["js/package.json", "build/reports/atest/istanbul/*.cov.json"]
 outputs = ["build/reports/nyc"]
 
 # watch ########################################################################

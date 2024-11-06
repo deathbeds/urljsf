@@ -50,6 +50,7 @@ namespace Private {
         env = addFilters(env, FILTERS);
         _env = env;
         resolve(env);
+        /* istanbul ignore next */
       } catch (err) {
         reject(err);
       }

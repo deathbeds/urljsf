@@ -18,6 +18,8 @@
   },
   "nyc": {
     "all": true,
+    "branches": 73,
+    "check-coverage": true,
     "extends": "@istanbuljs/nyc-config-typescript",
     "extension": [
       ".js",
@@ -25,10 +27,12 @@
       ".ts",
       ".tsx"
     ],
+    "functions": 87,
     "include": [
       "src/**/*.*",
       "lib/**/*.*"
     ],
+    "lines": 90,
     "parser-plugins": [
       "typescript"
     ],
@@ -43,6 +47,7 @@
       "source-map-support/register"
     ],
     "skip-full": true,
+    "statements": 90,
     "temp-dir": "../build/reports/atest/istanbul"
   },
   "dependencies": {
