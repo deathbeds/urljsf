@@ -13,7 +13,7 @@ ${NEXT_COV_FILE}    ${1}
 Get Next Coverage File
     [Documentation]    Get a random filename.
     Set Suite Variable    ${NEXT_COV_FILE}    ${NEXT_COV_FILE.__add__(1)}    children=${TRUE}
-    RETURN    ${OUTPUT DIR}${/}nyc${/}${NEXT_COV_FILE}.cov.json
+    RETURN    ${OUTPUT DIR}${/}istanbul${/}${NEXT_COV_FILE}.cov.json
 
 Capture Page Coverage
     [Documentation]    Fetch coverage data from the browser.

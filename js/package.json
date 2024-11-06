@@ -32,14 +32,18 @@
     "parser-plugins": [
       "typescript"
     ],
+    "report-dir": "../build/reports/nyc",
     "reporter": [
-      "html",
-      "text-summary"
+      "text",
+      "text-summary",
+      "html"
     ],
     "require": [
       "ts-node/register",
       "source-map-support/register"
-    ]
+    ],
+    "skip-full": true,
+    "temp-dir": "../build/reports/atest/istanbul"
   },
   "dependencies": {
     "@preact/signals": "^1.3.0",

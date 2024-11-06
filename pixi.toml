@@ -388,11 +388,7 @@ outputs = ["build/reports/atest"]
 
 [feature.tasks-build.tasks.atest-nyc]
 description = "- gather JS coverage with nyc"
-cmd = """cd js
-  && yarn run nyc report
-    --temp-dir ../build/atest/nyc
-    --report-dir ../build/reports/nyc
-    --skip-full"""
+cmd = """cd js && yarn run nyc report"""
 depends-on = ["atest-robot"]
 inputs = ["js/package.json", "build/reports/atest/nyc/*.cov.json"]
 outputs = ["build/reports/nyc"]
