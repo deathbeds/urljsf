@@ -186,8 +186,8 @@ def installer() -> Urljsf:
             },
             "platforms": {
                 "description": (
-                    "the (operating system, architecture) pairs where the installer",
-                    " should work",
+                    "the (operating system, architecture) pairs where the installer"
+                    " should work"
                 ),
                 "type": "array",
                 "items": {"$ref": "#/definitions/a-subdir"},

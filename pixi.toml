@@ -23,14 +23,16 @@ apply ALL source formatters""", depends-on = [
   "fix-mdlint",
   "fix-prettier",
   "fix-ruff",
+  "fix-robotidy",
 ], cmd = "echo 🧹"}
 lint = {description = """
 apply ALL static analysis tools""", depends-on = [
-  "lint-actionlint",
   "lint-ruff",
-  "lint-prettier",
   "lint-mdlint",
+  "lint-prettier",
   "lint-mypy",
+  "lint-robotidy",
+  "lint-actionlint",
 ], cmd = "echo ⭐"}
 build = {description = """
 build ALL intermediate assets""", depends-on = [
@@ -54,11 +56,13 @@ build ALL distributed artifacts""", depends-on = [
   "dist-hash",
 ], cmd = "echo 📦"}
 test = {description = """
-run ALL tests""", depends-on = [
+run ALL unit tests""", depends-on = [
   "test-pytest",
   "test-min-pytest",
   "test-report",
 ], cmd = "echo 🧪"}
+atest = {description = """
+run ALL acceptance tests""", depends-on = ["atest-robot"], cmd = "echo 🤖"}
 docs = {description = """
 build all documentation""", depends-on = ["docs-sphinx"], cmd = "echo 🖨️"}
 
@@ -265,7 +269,11 @@ outputs = ["yarn.lock"]
 [feature.tasks-lint.tasks.fix-ruff]
 description = "- fix python with ruff"
 cmd = "ruff format && ruff check --fix-only"
-inputs = ["pyproject.toml", "{src,tests,docs,scripts}/**/*.py"]
+inputs = ["pyproject.toml", "{atest,docs,scripts,src,tests}/**/*.py"]
+
+[feature.tasks-lint.tasks.fix-robotidy]
+cmd = "robotidy atest"
+inputs = ["atest/**/*.{robot,resource}"]
 
 # lint #########################################################################
 [feature.tasks-lint.tasks.lint-actionlint]
@@ -276,7 +284,7 @@ inputs = [".github/workflows"]
 [feature.tasks-lint.tasks.lint-ruff]
 description = "- check Python with ruff"
 cmd = "ruff format --check && ruff check"
-inputs = ["pyproject.toml", "{src,tests,docs,scripts}/**/*.py"]
+inputs = ["pyproject.toml", "{atest,docs,scripts,src,tests}/**/*.py"]
 
 [feature.tasks-lint.tasks.lint-mypy]
 description = "- check Python types with mypy"
@@ -299,6 +307,10 @@ description = "- check markdown with markdownlint"
 cmd = "pixi r markdownlint--"
 depends-on = ["build-yarn"]
 inputs = ["*.{md,json}", "{docs,tests,src,js,.github}/**/*.md", "!src/**/_static"]
+
+[feature.tasks-lint.tasks.lint-robotidy]
+cmd = "robotidy atest --check"
+inputs = ["atest/**/*.{robot,resource}"]
 
 # test #########################################################################
 [feature.tasks-test.tasks.test-pytest]
@@ -356,12 +368,21 @@ inputs = [
   "src/**/*.py",
   "dist/*.whl",
   "docs/**/*.{css,ipynb,md,py}",
-  "!**/.ipynb_checkpoints",
 ]
 depends-on = ["docs-pip", "docs-scour"]
 outputs = ["build/docs"]
 
+[feature.tasks-atest.tasks.atest-robot]
+cmd = "python scripts/atest.py"
+depends-on = ["docs-sphinx"]
+inputs = ["build/docs", "atest", "scripts/atest.py"]
+outputs = ["build/reports/atest"]
+
 # watch ########################################################################
+[feature.tasks-dev.tasks.watch]
+description = "watch ALL the things"
+cmd = "python scripts/watch.py"
+
 [feature.tasks-build.tasks.watch-lib]
 description = "- watch TypeScript and rebuild the lib"
 cmd = "yarn build:lib --watch --preserveWatchOutput"
@@ -408,10 +429,6 @@ cmd = """rm -rf build/watch-docs
     --watch js/dist"""
 depends-on = ["docs-pip"]
 
-[feature.tasks-dev.tasks.watch]
-description = "watch ALL the things"
-cmd = "python scripts/watch.py"
-
 # envs #########################################################################
 [environments]
 build = ["deps-build", "tasks-build", "deps-pip"]
@@ -423,9 +440,18 @@ test-min = [
   "deps-run-oldest",
   "tasks-test-min",
 ]
-lint = ["deps-pip", "deps-build", "deps-lint", "deps-run", "tasks-lint"]
+lint = ["deps-pip", "deps-build", "deps-lint", "deps-run", "deps-atest", "tasks-lint"]
 docs = ["deps-pip", "deps-docs", "deps-run", "deps-build", "tasks-docs"]
-dev = ["deps-pip", "deps-build", "deps-test", "deps-docs", "deps-lint", "tasks-dev"]
+dev = [
+  "deps-pip",
+  "deps-build",
+  "deps-test",
+  "deps-docs",
+  "deps-lint",
+  "deps-atest",
+  "tasks-dev",
+]
+atest = ["deps-atest", "deps-firefox", "tasks-atest"]
 
 # deps #########################################################################
 [feature.deps-pip.dependencies]
@@ -480,6 +506,18 @@ taplo = "*"
 types-docutils = "*"
 types-jinja2 = "*"
 types-jsonschema = "*"
+robotframework-robocop = "*"
+robotframework-tidy = "*"
+
+[feature.deps-atest.dependencies]
+robotframework = "7.*"
+robotframework-seleniumlibrary = "*"
+robotframework-pabot = "*"
+tornado = "*"
+
+[feature.deps-firefox.dependencies]
+firefox = "128.*"
+geckodriver = "*"
 
 # tools ########################################################################
 [tool.sphinx]

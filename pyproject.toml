@@ -88,7 +88,7 @@ addopts = ["--color=yes", "-Werror", "--tb=long", "-vv"]
 [tool.ruff]
 cache-dir = "build/.cache/ruff"
 extend-exclude = [".ipynb_checkpoints"]
-include = ["{tests,docs,src,scripts}/**/*.{py,ipynb}"]
+include = ["{atest,docs,src,scripts,tests}/**/*.py"]
 line-length = 88
 preview = true
 
@@ -120,3 +120,4 @@ isort.known-first-party = ["urljsf"]
 ]
 "scripts/*.py" = ["S603", "T201", "INP001", "ANN401", "S404", "S607", "PLW0108"]
 "**/source.py" = ["PLC0415"]
+"atest/**/*.py" = ["INP001"]
