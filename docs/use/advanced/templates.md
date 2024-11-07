@@ -1,9 +1,13 @@
 # Templates
 
-The top-level `templates` option describes a few key fields, such as `url`, which are
-evaluated by [`nunjucks`][nunjucks].
+The top-level `templates` option describes a few key fields, such as [`url`](#url) and
+[`checks`](#checks), which are evaluated by [`nunjucks`][nunjucks].
+
+Additional templates can be defined and [imported][import] for reuse as blocks or
+macros.
 
 [nunjucks]: https://mozilla.github.io/nunjucks/templating.html
+[import]: https://mozilla.github.io/nunjucks/templating.html#import
 
 ## Context
 
@@ -12,55 +16,23 @@ Each `template` gets an object of this form:
 ```json
 {
   "config": { "forms": { "a-form-key": {} } },
-  "data": { "a-form-key": { "data": "from_form" } }
+  "data": { "a-form-key": { "some-data-data": "from_form" } }
 }
 ```
 
-## Filters
+### Special Templates
 
-In addition to the [built-in filters][nunjucks-builtins], some custom filters are
-available by default:
-
-- `prune`
-  - recursively remove `null` objects and empty arrays and objects
-- `base64`
-  - encode a string as `base64`
-- `from_entries`
-  - turn a list of `[key,value]` pairs into a dictionary, as per Python's `dict`
-    constructor
-
-[nunjucks-builtins]: https://mozilla.github.io/nunjucks/templating.html#builtin-filters
-
-### Format Filters
-
-As `urljsf` supports loading JSON, TOML, YAML, these may also be enabled in the
-templating layer:
-
-```json
-{
-  "nunjucks": {
-    "filters": ["toml", "json", "yaml"]
-  }
-}
-```
-
-These enable new filters:
-
-| filter      | note                | options                      |
-| ----------- | ------------------- | ---------------------------- |
-| `to_json`   | build a JSON string | `indent=2`                   |
-| `from_json` | parse JSON string   |                              |
-| `to_toml`   | build a TOML string |                              |
-| `from_toml` | parse a TOML string |                              |
-| `to_yaml`   | build a YAML string | [see `yaml` docs][yaml-docs] |
-| `from_yaml` | parse a YAML string |                              |
-
-[yaml-docs]: https://eemeli.org/yaml/v1/#options
+A few well-known templates names patterns are used globally.
 
 ## `url`
 
-The `templates.url` field has some special requirements, and should generate a valid
-URL.
+The `templates.url` field should generate a valid URL. All whitespace should be escaped
+(e.g. use `" " | urlencode` to get `%20`), as any remaining will be removed.
+
+## `submit_button`
+
+The text to show on the submit button, if all `checks` and schema validation are
+successful.
 
 ## `checks`
 
@@ -82,6 +54,47 @@ JSON schema, such as validating unique property values in arrays.
       "{% endif %}",
       "{% endfor %}"
     ]
+  }
+}
+```
+
+## Filters
+
+In addition to the [built-in filters][nunjucks-builtins] and the pythonic [`jinja2`
+compatibility layer][jinjacompat], some custom filters are available by default, while
+[format-specific](#format-filters) can be lazily loaded.
+
+| filter           | note                                                                              |
+| ---------------- | --------------------------------------------------------------------------------- |
+| `base64`         | encode a string as [`Base64`][base64], useful for encoding arbitrary data in URLs |
+| `from_entries`   | build an object from `[key,value]` pairs with [`Object.entries`][entries]         |
+| `prune`          | recursively remove `null` objects and empty arrays and objects, useful in TOML    |
+| `to_json` [ff]   | build a JSON string. options: `indent=2`                                          |
+| `from_json` [ff] | parse JSON string                                                                 |
+| `to_toml` [ff]   | build a TOML string                                                               |
+| `from_toml` [ff] | parse a TOML string                                                               |
+| `to_yaml` [ff]   | build a YAML string                                                               |
+| `from_yaml` [ff] | parse a YAML string options: [see `yaml` docs][yaml-docs]                         |
+
+[jinjacompat]: https://mozilla.github.io/nunjucks/api.html#installjinjacompat
+[nunjucks-builtins]: https://mozilla.github.io/nunjucks/templating.html#builtin-filters
+[base64]: https://developer.mozilla.org/en-US/docs/Glossary/Base64
+[entries]:
+  https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/entries
+[yaml-docs]: https://eemeli.org/yaml/v1/#options
+
+### Format Filters
+
+[ff]: #format-filters
+
+As `urljsf` already provides support for loading JSON, TOML, YAML as needed, the
+parse/serialize functions of the underlying JS libraries may also be enabled for
+templates, and lazily loaded before use. To load all of them:
+
+```json
+{
+  "nunjucks": {
+    "filters": ["toml", "json", "yaml"]
   }
 }
 ```

@@ -32,7 +32,7 @@ export function from_entries(data: [string, any][]): Record<string, any> {
   return Object.fromEntries(data);
 }
 
-export async function ensureFilters(
+export async function addFormatFilters(
   config: Urljsf,
   env: nunjucks.Environment,
 ): Promise<nunjucks.Environment> {
@@ -99,4 +99,4 @@ async function yamlFilters(): Promise<IFilters> {
   };
 }
 
-export const FILTERS = { prune, base64: btoa, from_entries };
+export const URLJSF_FILTERS = { prune, base64: btoa, from_entries };

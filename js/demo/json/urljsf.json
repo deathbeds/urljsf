@@ -26,7 +26,7 @@
   },
   "templates": {
     "url": "https://github.com/{{ data.url.repo }}/new/{{ data.url.branch }}?\n{{\n    {\"filename\": data.url.filename, \"value\": data.file | to_json } | urlencode | safe\n}}\n",
-    "submit_button": "![open PRs on {{ data.url.repo }}][b] Start new JSON Pull Request\n\n[b]: https://img.shields.io/github/issues-pr/{{ data.url.repo }}?logo=github&label={{ data.url.repo | urlencode }}&color=blue\n",
+    "submit_button": "Start new JSON Pull Request",
     "checks": {
       "Unique Names": "{% for name, tasks in data.file.tasks | default([]) | groupby(\"task\") %}\n{% set dupes = tasks | length %}\n{% if dupes > 1 %}\n- [ ] {{ dupes }} tasks have the name _\"{{ name }}\"_\n{% endif %}\n{% endfor %}\n"
     }

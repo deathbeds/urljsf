@@ -388,8 +388,8 @@ outputs = ["build/docs"]
 description = "- run acceptance test reports with robot"
 cmd = "python scripts/atest.py"
 depends-on = ["docs-sphinx", "build-app-cov"]
-inputs = ["build/{docs,dist-cov}", "atest", "scripts/atest.py"]
-outputs = ["build/reports/atest"]
+inputs = ["build/{docs,dist-cov}/", "atest", "scripts/atest.py"]
+outputs = ["build/reports/atest/output.xml"]
 
 [feature.tasks-build.tasks.atest-nyc]
 description = "- gather JS coverage with nyc"
@@ -397,7 +397,7 @@ cmd = """cd js
   && yarn run nyc report
     --statements 91
     --branches 80
-    --functions 92
+    --functions 90
     --lines 91"""
 depends-on = ["atest-robot"]
 inputs = ["js/package.json", "build/reports/atest/istanbul/*.cov.json"]

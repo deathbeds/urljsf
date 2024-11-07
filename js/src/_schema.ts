@@ -66,6 +66,18 @@ export type ASchema3 = SchemaByURL | InlineObject;
  * via the `definition` "any-schema-location".
  */
 export type AnySchemaLocation = string;
+/**
+ * [`nunjucks`][nunjucks] strings (or lists of strings) that control how strings
+ * are built from forms. See documentation for further customizations.
+ *
+ * [nunjucks]: https://mozilla.github.io/nunjucks/templating.html
+ *
+ * This interface was referenced by `Urljsf`'s JSON-Schema
+ * via the `definition` "templates".
+ */
+export type Templates = KnownTemplates & {
+  [k: string]: AnyTemplate;
+};
 
 /**
  * A schema for building forms for building URLs for building...
@@ -107,7 +119,13 @@ export interface Urljsf {
     filters?: FileFormat[];
   };
   style?: Styles;
-  templates: Templates;
+  /**
+   * `nunjucks` templates that control URLs for machines and markdown for humans
+   *
+   */
+  templates: KnownTemplates & {
+    [k: string]: AnyTemplate;
+  };
 }
 /**
  * forms that describe how to build the URL
@@ -276,29 +294,30 @@ export interface UIOptions {
   };
 }
 /**
- * simple CSS rules scoped to the current form id, or objects keyed by child selector
+ * simple CSS rules scoped to the current form id, or objects keyed by child
+ * selector
  *
  */
 export interface Styles {
   [k: string]: AnyStyle;
 }
 /**
- * `nunjucks` templates that control URLs for machines and markdown for humans
- *
+ * This interface was referenced by `Urljsf`'s JSON-Schema
+ * via the `definition` "known-templates".
  */
-export interface Templates {
+export interface KnownTemplates {
   checks?: Checks;
   /**
    * text to show on the button when a form is valid. multiple lines will be joined
    * with `\n`, then leading and trailing whitespace will be trimmed.
    *
    */
-  submit_button: string | [string, ...string[]];
+  submit_button?: string | [string, ...string[]];
   /**
-   * the URL to build. all whitespace will be trimmed, then joined with no delimiter.
+   * a URL to build. all whitespace will be trimmed, then joined with no delimiter.
    *
    */
-  url: string | [string, ...string[]];
+  url?: string | [string, ...string[]];
 }
 /**
  * markdown templates, which if rendered to _any_ non-whitespace, will be treated as
@@ -467,34 +486,4 @@ export interface Forms1 {
  */
 export interface Styles1 {
   [k: string]: AnyStyle;
-}
-/**
- * [`nunjucks`][nunjucks] strings (or lists of strings) that control how strings are built
- * from forms.
- *
- * The [jinja compatibility layer][jinjacompat] is enabled, allowing for more expressive,
- * python-like syntax. Some addition filters are included:
- *
- * - `base64` turns a string into its [Base64]-encoded alternative
- *
- * [nunjucks]: https://mozilla.github.io/nunjucks/templating.html
- * [jinjacompat]: https://mozilla.github.io/nunjucks/api.html#installjinjacompat
- * [Base64]: https://developer.mozilla.org/en-US/docs/Glossary/Base64
- *
- * This interface was referenced by `Urljsf`'s JSON-Schema
- * via the `definition` "templates".
- */
-export interface Templates1 {
-  checks?: Checks;
-  /**
-   * text to show on the button when a form is valid. multiple lines will be joined
-   * with `\n`, then leading and trailing whitespace will be trimmed.
-   *
-   */
-  submit_button: string | [string, ...string[]];
-  /**
-   * the URL to build. all whitespace will be trimmed, then joined with no delimiter.
-   *
-   */
-  url: string | [string, ...string[]];
 }

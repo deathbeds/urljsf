@@ -52,7 +52,7 @@
     },
     "style": {
       "$ref": "#/definitions/styles",
-      "description": "simple CSS rules scoped to the current form id, or objects keyed by child selector\n"
+      "description": "simple CSS rules scoped to the current form id, or objects keyed by child\nselector\n"
     },
     "templates": {
       "$ref": "#/definitions/templates",
@@ -339,18 +339,8 @@
         }
       }
     },
-    "styles": {
+    "known-templates": {
       "type": "object",
-      "description": "CSS rules, or nested selector objects containing more rules",
-      "patternProperties": {
-        "^.+$": {
-          "$ref": "#/definitions/any-style"
-        }
-      }
-    },
-    "templates": {
-      "type": "object",
-      "description": "[`nunjucks`][nunjucks] strings (or lists of strings) that control how strings are built\nfrom forms.\n\nThe [jinja compatibility layer][jinjacompat] is enabled, allowing for more expressive,\npython-like syntax. Some addition filters are included:\n\n- `base64` turns a string into its [Base64]-encoded alternative\n\n[nunjucks]: https://mozilla.github.io/nunjucks/templating.html\n[jinjacompat]: https://mozilla.github.io/nunjucks/api.html#installjinjacompat\n[Base64]: https://developer.mozilla.org/en-US/docs/Glossary/Base64",
       "properties": {
         "checks": {
           "$ref": "#/definitions/checks",
@@ -362,10 +352,32 @@
         },
         "url": {
           "$ref": "#/definitions/any-template",
-          "description": "the URL to build. all whitespace will be trimmed, then joined with no delimiter.\n"
+          "description": "a URL to build. all whitespace will be trimmed, then joined with no delimiter.\n"
         }
-      },
-      "required": ["url", "submit_button"]
+      }
+    },
+    "styles": {
+      "type": "object",
+      "description": "CSS rules, or nested selector objects containing more rules",
+      "patternProperties": {
+        "^.+$": {
+          "$ref": "#/definitions/any-style"
+        }
+      }
+    },
+    "templates": {
+      "description": "[`nunjucks`][nunjucks] strings (or lists of strings) that control how strings\nare built from forms. See documentation for further customizations.\n\n[nunjucks]: https://mozilla.github.io/nunjucks/templating.html",
+      "allOf": [
+        {
+          "$ref": "#/definitions/known-templates"
+        },
+        {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/any-template"
+          }
+        }
+      ]
     }
   },
   "required": ["forms", "templates"]

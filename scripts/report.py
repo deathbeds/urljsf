@@ -5,19 +5,26 @@
 import sys
 from pathlib import Path
 
+STYLE = """
+html {font-family: sans-serif;}
+body {margin: 0; padding: 0}
+iframe {
+  position: absolute; top: 0; height: 100vh; width: 79vw; right: 0; border: 0
+}
+table {max-width: 20vw;}
+a {text-decoration: none;}
+a:hover, a:active {text-decoration: underline;}
+td {text-align: right;}
+td, th { padding: 0.25em; }
+tbody th {text-align: left;}
+thead td, thead th {border-bottom: solid 1px #aaa;}
+"""
+
 HEAD = """<html>
-  <style>
-    html {font-family: sans-serif;}
-    body {margin: 0; padding: 0}
-    iframe {position: absolute; top: 0; height: 100vh; width: 79vw; right: 0; border: 0}
-    table {max-width: 20vw;}
-    a {text-decoration: none;}
-    a:hover, a:active {text-decoration: underline;}
-    td {text-align: right;}
-    td, th { padding: 0.25em; }
-    tbody th {text-align: left;}
-    thead td, thead th {border-bottom: solid 1px #aaa;}
-  </style>
+  <head>
+    <title>urlsjf test reports</title>
+    <style>{}</style>
+  </head>
   <body>
     <table>
       <thead>
@@ -40,7 +47,7 @@ FOOT = """
 def main(root: Path) -> int:
     """Generate a report viewer."""
     out = root / "index.html"
-    chunks = [HEAD]
+    chunks = [HEAD.format(STYLE)]
     paths = [
         p
         for p in sorted(root.rglob("*.html"))

@@ -31,7 +31,8 @@ templates = {"$ref" = "#/definitions/templates", description = """
 `nunjucks` templates that control URLs for machines and markdown for humans
 """}
 style = {"$ref" = "#/definitions/styles", description = """
-simple CSS rules scoped to the current form id, or objects keyed by child selector
+simple CSS rules scoped to the current form id, or objects keyed by child
+selector
 """}
 
 [properties.iframe]
@@ -67,25 +68,25 @@ patternProperties = {'[a-zA-Z\d\-_]+' = {"$ref" = "#/definitions/any-form"}}
 
 # templates ####################################################################
 [definitions.templates]
-type = "object"
-required = ["url", "submit_button"]
 description = """
-[`nunjucks`][nunjucks] strings (or lists of strings) that control how strings are built
-from forms.
-
-The [jinja compatibility layer][jinjacompat] is enabled, allowing for more expressive,
-python-like syntax. Some addition filters are included:
-
-- `base64` turns a string into its [Base64]-encoded alternative
+[`nunjucks`][nunjucks] strings (or lists of strings) that control how strings
+are built from forms. See documentation for further customizations.
 
 [nunjucks]: https://mozilla.github.io/nunjucks/templating.html
-[jinjacompat]: https://mozilla.github.io/nunjucks/api.html#installjinjacompat
-[Base64]: https://developer.mozilla.org/en-US/docs/Glossary/Base64
 """
+[[definitions.templates.allOf]]
+"$ref" = "#/definitions/known-templates"
 
-[definitions.templates.properties]
+[[definitions.templates.allOf]]
+type = "object"
+additionalProperties = {"$ref" = "#/definitions/any-template"}
+
+[definitions.known-templates]
+type = "object"
+
+[definitions.known-templates.properties]
 url = {"$ref" = "#/definitions/any-template", description = """
-the URL to build. all whitespace will be trimmed, then joined with no delimiter.
+a URL to build. all whitespace will be trimmed, then joined with no delimiter.
 """}
 submit_button = {"$ref" = "#/definitions/any-template", description = """
 text to show on the button when a form is valid. multiple lines will be joined
@@ -95,6 +96,14 @@ checks = {"$ref" = "#/definitions/checks", description = """
 markdown templates, which if rendered to _any_ non-whitespace, will be treated as
 an error, preventing the submit button from being shown.
 """}
+
+[definitions.checks]
+type = "object"
+description = """
+`nunjucks` templates keyed by the label displayed to a form user: any evaluating
+to a non-whitespace string will be considered _failing_.
+"""
+additionalProperties = {"$ref" = "#/definitions/any-template"}
 
 # url form #####################################################################
 [definitions.any-form]
@@ -122,14 +131,6 @@ the order in which to show a form, lowest (or omitted) first, with a tiebreaker 
 """}
 
 # templating ###################################################################
-[definitions.checks]
-type = "object"
-description = """
-`nunjucks` templates keyed by the label displayed to a form user: any evaluating
-to a non-whitespace string will be considered _failing_.
-"""
-additionalProperties = {"$ref" = "#/definitions/any-template"}
-
 [definitions.any-schema]
 title = "A Schema"
 description = "A schema-like object referenced by URL, or inline as an object"

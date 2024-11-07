@@ -132,17 +132,14 @@ Urljsf = TypedDict(
         "nunjucks": "_UrljsfNunjucks",
         # | CSS rules, or nested selector objects containing more rules
         "style": "_Styles",
-        # | [`nunjucks`][nunjucks] strings (or lists of strings) that control how strings are built
-        # | from forms.
-        # |
-        # | The [jinja compatibility layer][jinjacompat] is enabled, allowing for more expressive,
-        # | python-like syntax. Some addition filters are included:
-        # |
-        # | - `base64` turns a string into its [Base64]-encoded alternative
+        # | [`nunjucks`][nunjucks] strings (or lists of strings) that control how strings
+        # | are built from forms. See documentation for further customizations.
         # |
         # | [nunjucks]: https://mozilla.github.io/nunjucks/templating.html
-        # | [jinjacompat]: https://mozilla.github.io/nunjucks/api.html#installjinjacompat
-        # | [Base64]: https://developer.mozilla.org/en-US/docs/Glossary/Base64
+        # |
+        # |
+        # | WARNING: Normally the types should be a mix of each other instead of Union.
+        # | See: https://github.com/camptocamp/jsonschema-gentypes/issues/7
         # |
         # | Required property
         "templates": Required["_Templates"],
@@ -299,39 +296,31 @@ _Styles = Dict[str, "_AnyStyle"]
 """ CSS rules, or nested selector objects containing more rules """
 
 
-class _Templates(TypedDict, total=False):
-    """[`nunjucks`][nunjucks] strings (or lists of strings) that control how strings are built
-    from forms.
+_Templates = Union[Dict[str, "_AnyTemplate"], "_TemplatesTyped"]
+"""
+[`nunjucks`][nunjucks] strings (or lists of strings) that control how strings
+are built from forms. See documentation for further customizations.
 
-    The [jinja compatibility layer][jinjacompat] is enabled, allowing for more expressive,
-    python-like syntax. Some addition filters are included:
+[nunjucks]: https://mozilla.github.io/nunjucks/templating.html
 
-    - `base64` turns a string into its [Base64]-encoded alternative
 
-    [nunjucks]: https://mozilla.github.io/nunjucks/templating.html
-    [jinjacompat]: https://mozilla.github.io/nunjucks/api.html#installjinjacompat
-    [Base64]: https://developer.mozilla.org/en-US/docs/Glossary/Base64
-    """
+WARNING: Normally the types should be a mix of each other instead of Union.
+See: https://github.com/camptocamp/jsonschema-gentypes/issues/7
+"""
 
+
+class _TemplatesTyped(TypedDict, total=False):
     checks: _Checks
     """
     `nunjucks` templates keyed by the label displayed to a form user: any evaluating
     to a non-whitespace string will be considered _failing_.
     """
 
-    submit_button: Required[_AnyTemplate]
-    """
-    Aggregation type: anyOf
+    submit_button: _AnyTemplate
+    """ Aggregation type: anyOf """
 
-    Required property
-    """
-
-    url: Required[_AnyTemplate]
-    """
-    Aggregation type: anyOf
-
-    Required property
-    """
+    url: _AnyTemplate
+    """ Aggregation type: anyOf """
 
 
 _URLJSF_NO_BOOTSTRAP_DEFAULT = False

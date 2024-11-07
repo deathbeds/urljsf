@@ -18,10 +18,7 @@ templates:
     {{
         {"filename": data.url.filename, "value": data.file | to_yaml } | urlencode | safe
     }}
-  submit_button: |
-    ![open PRs on {{ data.url.repo }}][b] Start new YAML Pull Request
-
-    [b]: https://img.shields.io/github/issues-pr/{{ data.url.repo }}?logo=github&label={{ data.url.repo | urlencode }}&color=blue
+  submit_button: Start new YAML Pull Request
   checks:
     Unique Names: |
       {% for name, tasks in data.file.tasks | default([]) | groupby("task") %}

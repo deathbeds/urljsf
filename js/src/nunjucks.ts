@@ -3,59 +3,66 @@
 import type nunjucks from 'nunjucks';
 
 import { Urljsf } from './_schema.js';
-import { FILTERS, addFilters, ensureFilters } from './filters.js';
-import { IRenderOptions } from './tokens.js';
-import { reduceTrimmedLines } from './utils.js';
+import { URLJSF_FILTERS, addFilters, addFormatFilters } from './filters.js';
+import { CHECKS_PATH_PREFIX, IRenderOptions } from './tokens.js';
 
-export async function ensureNunjucks(config: Urljsf): Promise<nunjucks.Environment> {
-  const env = await Private.ensureNunjucks();
-  return await ensureFilters(config, env);
+class UrljsfLoader implements nunjucks.ILoader {
+  private _config: Urljsf;
+  constructor(config: Urljsf) {
+    this._config = config;
+  }
+
+  getSource(name: string): nunjucks.LoaderSource {
+    const { templates } = this._config;
+    const { checks } = templates;
+    const isCheck = checks && name.startsWith(CHECKS_PATH_PREFIX);
+    name = isCheck ? name.slice(8) : name;
+    const template = isCheck ? checks[name] : this._config.templates[`${name}`];
+    let src = typeof template == 'string' ? template : template.join('\n');
+    return { path: name, src, noCache: false };
+  }
 }
 
-export function renderUrl(options: IRenderOptions): string {
-  const template = Array.isArray(options.template)
-    ? options.template.join('\n')
-    : options.template;
-
-  return options.env
-    .renderString(template, options.context)
-    .split('\n')
-    .reduce(reduceTrimmedLines)
-    .trim();
+export async function ensureNunjucks(config: Urljsf): Promise<nunjucks.Environment> {
+  const nunjucks = await Private.ensureNunjucks();
+  let env = new nunjucks.Environment(new UrljsfLoader(config));
+  env = addFilters(env, URLJSF_FILTERS);
+  env = await addFormatFilters(config, env);
+  return env;
 }
 
 export function renderMarkdown(options: IRenderOptions): string {
-  const template = Array.isArray(options.template)
-    ? options.template.join('\n')
-    : options.template;
-  return options.env.renderString(template, options.context).trim();
+  const { env, path, context, fallback } = options;
+  let md = fallback == null ? '' : fallback;
+  try {
+    md = env.render(path, context).trim();
+  } catch (err) {
+    console.warn('failed to render template', path, err);
+  }
+  return md;
 }
 
 namespace Private {
-  let _env: nunjucks.Environment | null = null;
-  let _loading: Promise<nunjucks.Environment> | null = null;
+  let _nunjucks: typeof nunjucks | null = null;
+  let _loading: Promise<typeof nunjucks> | null = null;
 
-  export async function ensureNunjucks(): Promise<nunjucks.Environment> {
-    if (_env) {
-      /* istanbul ignore next */
-      return _env;
+  export async function ensureNunjucks(): Promise<typeof nunjucks> {
+    if (_nunjucks) {
+      return _nunjucks;
     }
-    if (_loading) {
-      return await _loading;
+    if (!_loading) {
+      _loading = new Promise(async (resolve, reject) => {
+        try {
+          const nunjucks = await import('nunjucks');
+          nunjucks.installJinjaCompat();
+          _nunjucks = nunjucks;
+          resolve(nunjucks);
+        } catch (err) {
+          /* istanbul ignore next */
+          reject(err);
+        }
+      });
     }
-    _loading = new Promise(async (resolve, reject) => {
-      try {
-        const nunjucks = await import('nunjucks');
-        nunjucks.installJinjaCompat();
-        let env = new nunjucks.Environment();
-        env = addFilters(env, FILTERS);
-        _env = env;
-        resolve(env);
-      } catch (err) {
-        /* istanbul ignore next */
-        reject(err);
-      }
-    });
-    return _loading;
+    return await _loading;
   }
 }

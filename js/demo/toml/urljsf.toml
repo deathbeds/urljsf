@@ -22,12 +22,7 @@ https://github.com/{{ data.url.repo }}/new/{{ data.url.branch }}?
     {"filename": data.url.filename, "value": data.file | to_toml } | urlencode | safe
 }}
 """
-
-submit_button = """
-![open PRs on {{ data.url.repo }}][b] Start new TOML Pull Request
-
-[b]: https://img.shields.io/github/issues-pr/{{ data.url.repo }}?logo=github&label={{ data.url.repo | urlencode }}&color=blue
-"""
+submit_button = """Start new TOML Pull Request"""
 
 [templates.checks]
 "Unique Names" = """

@@ -16,8 +16,9 @@ import type { MarkdownToJSX } from 'markdown-to-jsx';
 
 import { Urljsf } from '../_schema.js';
 import { ensureBootstrap, getBoostrapCss } from '../bootstrap.js';
-import { ensureNunjucks, renderMarkdown, renderUrl } from '../nunjucks.js';
+import { ensureNunjucks, renderMarkdown } from '../nunjucks.js';
 import {
+  CHECKS_PATH_PREFIX,
   DEFAULTS,
   FORM_CLASS,
   IContext,
@@ -135,11 +136,7 @@ function UrljsfForm(props: IUrljsfFormProps): JSX.Element {
 
   const url = computed(() => {
     try {
-      return renderUrl({
-        template: config.templates.url,
-        context: context.value,
-        env: nunjucksEnv,
-      });
+      return nunjucksEnv.render('url', context.value).replace(/\s\n/, '');
     } catch (err) {
       console.warn('Could not render URL', err);
       return '';
@@ -148,9 +145,10 @@ function UrljsfForm(props: IUrljsfFormProps): JSX.Element {
 
   const submitText = computed(() =>
     renderMarkdown({
-      template: config.templates.submit_button || DEFAULT_SUBMIT,
+      path: 'submit_button',
       context: context.value,
       env: nunjucksEnv,
+      fallback: DEFAULT_SUBMIT,
     }),
   );
 
@@ -172,12 +170,18 @@ function UrljsfForm(props: IUrljsfFormProps): JSX.Element {
   if (checks && checkCount) {
     checkResults = computed(() => {
       const errors: Record<string, string> = {};
-      for (const [label, template] of Object.entries(checks)) {
-        const rendered = renderMarkdown({
-          template: template,
-          context: context.value,
-          env: nunjucksEnv,
-        }).trim();
+      for (const label of Object.keys(checks)) {
+        let rendered = '';
+        try {
+          rendered = renderMarkdown({
+            path: `${CHECKS_PATH_PREFIX}/${label}`,
+            context: context.value,
+            env: nunjucksEnv,
+          }).trim();
+        } catch (err) {
+          console.warn('Failed to check', label, err);
+          rendered = 'X';
+        }
 
         if (rendered) {
           errors[label] = rendered;

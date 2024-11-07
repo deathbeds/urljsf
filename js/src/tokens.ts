@@ -19,6 +19,8 @@ export const emptyObject = Object.freeze({});
 
 export const FORM_CLASS = 'urljsf-form';
 
+export const CHECKS_PATH_PREFIX = 'checks/';
+
 export interface IErrors {
   [key: string]: RJSFValidationError[];
 }
@@ -39,9 +41,11 @@ export interface IUrljsfFormProps {
 }
 
 export interface IRenderOptions {
-  template: string | string[];
+  /** the name of the template to render */
+  path: string;
   context: IContext;
   env: nunjucks.Environment;
+  fallback?: string;
 }
 
 export interface IFilter {
