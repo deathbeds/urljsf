@@ -5,6 +5,7 @@
 from __future__ import annotations
 
 import asyncio
+import atexit
 import shutil
 import socket
 import sys
@@ -53,6 +54,11 @@ def main(argv: list[str] | None = None) -> int:
     port, static, patch, dist_cov = argv or sys.argv[1:]
 
     with tempfile.TemporaryDirectory() as td:
+
+        def _cleanup() -> None:
+            shutil.rmtree(td)
+
+        atexit.register(_cleanup)
         tdp = Path(td)
         root = tdp / "root"
         assets = root / patch

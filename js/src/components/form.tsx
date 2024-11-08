@@ -84,11 +84,7 @@ export async function makeOneForm(script: HTMLScriptElement): Promise<void> {
   const props: IUrljsfFormProps = { config, forms, nunjucksEnv };
   const form = <UrljsfForm {...props} />;
   const isolated = !!(config.iframe || config.iframe_style);
-  if (isolated) {
-    render(await renderIframe(config, form), container);
-  } else {
-    render(isolated ? await renderIframe(config, form) : form, container);
-  }
+  render(isolated ? await renderIframe(config, form) : form, container);
 }
 
 /** a component for a form in a (themed) iframe */
@@ -135,12 +131,14 @@ function UrljsfForm(props: IUrljsfFormProps): JSX.Element {
   const errors = signal(initErrors);
 
   const url = computed(() => {
+    let _url = '#';
     try {
-      return nunjucksEnv.render('url', context.value).replace(/\s\n/, '');
+      _url = nunjucksEnv.render('url', context.value).replace(/\s\n/, '');
     } catch (err) {
+      /* istanbul ignore next */
       console.warn('Could not render URL', err);
-      return '';
     }
+    return _url;
   });
 
   const submitText = computed(() =>
@@ -171,7 +169,7 @@ function UrljsfForm(props: IUrljsfFormProps): JSX.Element {
     checkResults = computed(() => {
       const errors: Record<string, string> = {};
       for (const label of Object.keys(checks)) {
-        let rendered = '';
+        let rendered = 'X';
         try {
           rendered = renderMarkdown({
             path: `${CHECKS_PATH_PREFIX}/${label}`,
@@ -179,8 +177,8 @@ function UrljsfForm(props: IUrljsfFormProps): JSX.Element {
             env: nunjucksEnv,
           }).trim();
         } catch (err) {
+          /* istanbul ignore next */
           console.warn('Failed to check', label, err);
-          rendered = 'X';
         }
 
         if (rendered) {

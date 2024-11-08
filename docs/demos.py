@@ -302,7 +302,7 @@ data:application/toml,
             "channels": data.pixi.channels
         },
         "dependencies": (deps | from_entries)
-    } | to_toml | urlencode | safe
+    } | prune | to_toml | urlencode | safe
 }}
     """
 

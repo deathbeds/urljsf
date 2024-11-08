@@ -43,7 +43,9 @@ Make And Fix An Error
     Click Element    css:${add}
     ${p2} =    Set Variable    input#urljsf-0-pixi_dependencies_1_package
     Wait Until Page Contains    must have required property 'package'
+    Scroll To    ${CSS_U_SUBMIT}
     Element Should Contain    css:${CSS_U_SUBMIT}    1 Error
+    Click Element    css:${CSS_U_SUBMIT}
     Input Text    css:${p2}    python
     Wait Until Page Contains    2 dependencies have the name
     Element Should Contain    css:${CSS_U_SUBMIT}    1 Error
