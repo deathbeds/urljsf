@@ -160,7 +160,7 @@ function UrljsfForm(props: IUrljsfFormProps): JSX.Element {
     });
   };
 
-  const { checks } = config.templates;
+  const { checks } = config;
   const checkCount = !checks ? 0 : Object.keys(checks).length;
 
   let checkResults: ReadonlySignal<Record<string, string>> | null = null;
@@ -219,7 +219,7 @@ function UrljsfForm(props: IUrljsfFormProps): JSX.Element {
   const orderedKeys = Object.keys(forms);
   orderedKeys.sort((a: string, b: string): number => {
     return (
-      (config.forms[a].rank || 0) - (config.forms[b].rank || 0) || a.localeCompare(b)
+      (config.forms[a].order || 0) - (config.forms[b].order || 0) || a.localeCompare(b)
     );
   });
 

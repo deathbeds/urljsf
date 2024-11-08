@@ -1,14 +1,17 @@
 {
   "$schema": "../../schema/v0/form.schema.json",
+  "checks": {
+    "Unique Names": "{% for name, tasks in data.file.tasks | default([]) | groupby(\"task\") %}\n{% set dupes = tasks | length %}\n{% if dupes > 1 %}\n- [ ] {{ dupes }} tasks have the name _\"{{ name }}\"_\n{% endif %}\n{% endfor %}\n"
+  },
   "forms": {
     "file": {
-      "rank": 0,
+      "order": 0,
       "schema": "./json/file.schema.json",
       "ui_schema": "./json/file.uischema.json",
       "form_data": "./json/file.data.json"
     },
     "url": {
-      "rank": 1,
+      "order": 1,
       "schema": "./json/url.schema.json",
       "ui_schema": "./json/url.uischema.json"
     }
@@ -26,9 +29,6 @@
   },
   "templates": {
     "url": "https://github.com/{{ data.url.repo }}/new/{{ data.url.branch }}?\n{{\n    {\"filename\": data.url.filename, \"value\": data.file | to_json } | urlencode | safe\n}}\n",
-    "submit_button": "Start new JSON Pull Request",
-    "checks": {
-      "Unique Names": "{% for name, tasks in data.file.tasks | default([]) | groupby(\"task\") %}\n{% set dupes = tasks | length %}\n{% if dupes > 1 %}\n- [ ] {{ dupes }} tasks have the name _\"{{ name }}\"_\n{% endif %}\n{% endfor %}\n"
-    }
+    "submit_button": "Start new JSON Pull Request"
   }
 }

@@ -5,13 +5,13 @@
 filters = ["toml"]
 
 [forms.file]
-rank = 0
+order = 0
 schema = "./toml/file.schema.toml"
 ui_schema = "./toml/file.uischema.toml"
 form_data = "./toml/file.data.toml"
 
 [forms.url]
-rank = 1
+order = 1
 schema = "./toml/url.schema.toml"
 ui_schema = "./toml/url.uischema.toml"
 
@@ -24,7 +24,7 @@ https://github.com/{{ data.url.repo }}/new/{{ data.url.branch }}?
 """
 submit_button = """Start new TOML Pull Request"""
 
-[templates.checks]
+[checks]
 "Unique Names" = """
 {% for name, tasks in data.file.tasks | default([]) | groupby("task") %}
 {% set dupes = tasks | length %}

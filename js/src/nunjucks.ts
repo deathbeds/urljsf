@@ -13,11 +13,10 @@ class UrljsfLoader implements nunjucks.ILoader {
   }
 
   getSource(name: string): nunjucks.LoaderSource {
-    const { templates } = this._config;
-    const { checks } = templates;
+    const { templates, checks } = this._config;
     const isCheck = checks && name.startsWith(CHECKS_PATH_PREFIX);
     name = isCheck ? name.slice(8) : name;
-    const template = isCheck ? checks[name] : this._config.templates[`${name}`];
+    const template = isCheck ? checks[name] : templates[`${name}`];
     let src = typeof template == 'string' ? template : template.join('\n');
     return { path: name, src, noCache: false };
   }

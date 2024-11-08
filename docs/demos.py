@@ -318,8 +318,8 @@ data:application/toml,
         "templates": {
             "url": url_template,
             "submit_button": "View `pixi.toml`",
-            "checks": pixi_checks,
         },
+        "checks": pixi_checks,
     }
 
     return defn

@@ -49,17 +49,17 @@ class AnyForm(TypedDict, total=False):
     Subtype: "_AnySchemaLocation", "AnInlineObject"
     """
 
+    order: int | float
+    """
+    the order in which to show a form, lowest (or omitted) first, with a tiebreaker on name
+
+    """
+
     props: _Props
     """
     JSON-compatible default values for `rjsf` [`Form.props`][form-props].
 
     [form-props]: https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/form-props
-    """
-
-    rank: int | float
-    """
-    the order in which to show a form, lowest (or omitted) first, with a tiebreaker on name
-
     """
 
     schema: ASchema
@@ -115,6 +115,9 @@ Urljsf = TypedDict(
         # |
         # | format: uri-reference
         "$schema": str,
+        # | `nunjucks` templates keyed by the label displayed to a form user: any evaluating
+        # | to a non-whitespace string will be considered _failing_.
+        "checks": "_Checks",
         # | forms used to build and populate a URL
         # |
         # | Required property
@@ -310,12 +313,6 @@ See: https://github.com/camptocamp/jsonschema-gentypes/issues/7
 
 
 class _TemplatesTyped(TypedDict, total=False):
-    checks: _Checks
-    """
-    `nunjucks` templates keyed by the label displayed to a form user: any evaluating
-    to a non-whitespace string will be considered _failing_.
-    """
-
     submit_button: _AnyTemplate
     """ Aggregation type: anyOf """
 

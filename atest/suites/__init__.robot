@@ -16,5 +16,5 @@ Start Suites
 
 Stop Suites
     [Documentation]    Stop the server.
-    Terminate All Processes
+    Stop Server
     Close All Browsers

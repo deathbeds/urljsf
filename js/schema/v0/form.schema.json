@@ -15,6 +15,10 @@
       "description": "an optional identifier for the `urljsf` schema that constrains this: this\ncan be used by non-`urljsf` tools to validate and provide more insight while\nauthoring.\n",
       "format": "uri-reference"
     },
+    "checks": {
+      "$ref": "#/definitions/checks",
+      "description": "markdown templates, which if rendered to _any_ non-whitespace, will be treated as\nan error, preventing the submit button from being shown.\n"
+    },
     "forms": {
       "$ref": "#/definitions/forms",
       "description": "forms that describe how to build the URL\n"
@@ -252,13 +256,13 @@
           "$ref": "#/definitions/any-schema",
           "descripton": "JSON-compatible initial data for this form\n"
         },
+        "order": {
+          "type": "number",
+          "description": "the order in which to show a form, lowest (or omitted) first, with a tiebreaker on name\n"
+        },
         "props": {
           "$ref": "#/definitions/Props",
           "descripton": "JSON-compatible subset of `rjsf` component properties for this form\n"
-        },
-        "rank": {
-          "type": "number",
-          "description": "the order in which to show a form, lowest (or omitted) first, with a tiebreaker on name\n"
         },
         "schema": {
           "$ref": "#/definitions/any-schema",
@@ -342,10 +346,6 @@
     "known-templates": {
       "type": "object",
       "properties": {
-        "checks": {
-          "$ref": "#/definitions/checks",
-          "description": "markdown templates, which if rendered to _any_ non-whitespace, will be treated as\nan error, preventing the submit button from being shown.\n"
-        },
         "submit_button": {
           "$ref": "#/definitions/any-template",
           "description": "text to show on the button when a form is valid. multiple lines will be joined\nwith `\\n`, then leading and trailing whitespace will be trimmed.\n"

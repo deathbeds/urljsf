@@ -5,7 +5,7 @@
 from __future__ import annotations
 
 import asyncio
-import atexit
+import logging
 import shutil
 import socket
 import sys
@@ -20,20 +20,31 @@ async def start_http_server(port: int, path: str) -> None:
 
     class StaticHandler(web.StaticFileHandler):
         def parse_url_path(self, url_path: str) -> str:
-            """Handle ``index.html``."""
             url_path = super().parse_url_path(url_path=url_path)
             if not url_path or url_path.endswith("/"):
                 url_path = f"{url_path}/index.html"
             return url_path
 
+    class ShutdownHandler(web.RequestHandler):
+        def get(self) -> None:
+            stopped.set()
+
     app = web.Application(
-        [("^/(.*)", StaticHandler, {"path": path})],
+        [
+            ("^/shutdown$", ShutdownHandler),
+            ("^/(.*)", StaticHandler, {"path": path}),
+        ],
         debug=True,
+        settings={"compress_response": True},
     )
     http_server = httpserver.HTTPServer(app)
     http_server.listen(port)
+    log.access_log.setLevel(logging.DEBUG)
     log.app_log.warning("[%s] serving %s", port, path)
-    await asyncio.Event().wait()
+    stopped = asyncio.Event()
+    await stopped.wait()
+    http_server.stop()
+    await http_server.close_all_connections()
 
 
 def get_unused_port() -> int:
@@ -50,22 +61,22 @@ def get_unused_port() -> int:
 
 
 def main(argv: list[str] | None = None) -> int:
-    """Parse args and Run the server forever."""
+    """Parse args and run the server until shutdown."""
     port, static, patch, dist_cov = argv or sys.argv[1:]
 
     with tempfile.TemporaryDirectory() as td:
-
-        def _cleanup() -> None:
-            shutil.rmtree(td)
-
-        atexit.register(_cleanup)
         tdp = Path(td)
-        root = tdp / "root"
-        assets = root / patch
-        shutil.copytree(static, root)
+        www = tdp / "www"
+        assets = www / patch
+        shutil.copytree(static, www)
         shutil.rmtree(assets)
         shutil.copytree(dist_cov, assets)
-        asyncio.run(start_http_server(int(port), str(root)))
+
+        asyncio.new_event_loop().run_until_complete(
+            start_http_server(int(port), str(www))
+        )
+
+        shutil.rmtree(td, ignore_errors=True)
 
     return 0
 

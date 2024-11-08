@@ -24,24 +24,36 @@ Each `template` gets an object of this form:
 
 A few well-known templates names patterns are used globally.
 
-## `url`
+#### `url`
 
 The `templates.url` field should generate a valid URL. All whitespace should be escaped
 (e.g. use `" " | urlencode` to get `%20`), as any remaining will be removed.
 
-## `submit_button`
+#### `submit_button`
 
 The text to show on the submit button, if all `checks` and schema validation are
 successful.
 
+#### `above_{form}`
+
+A markdown message to show above a `form`, where `form` is a key from the root `forms`
+object.
+
+#### `below_{form}`
+
+A markdown message to show below a `form`, where `form` is a key from the root `forms`
+object.
+
 ## `checks`
 
-Each member of `checks` is evaluated, then has leading and trailing whitespace removed.
-If the remaining string is non-empty, the check is considered _failed_, and the result
-rendered as markdown and show in the checks section.
+On each change of any form, each member of `checks` is evaluated, then has leading and
+trailing whitespace removed. If the remaining string is non-empty, the check is
+considered _failed_, and the result rendered as markdown and show in the checks section
+at the end of the form.
 
 This is useful for implementing cross-cutting constraints that cannot be captured in
-JSON schema, such as validating unique property values in arrays.
+JSON schema, such as validating unique property values in arrays, or values matching
+between two, unrelated schema.
 
 ```yaml+jinja
 {

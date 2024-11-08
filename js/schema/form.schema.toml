@@ -30,6 +30,10 @@ forms that describe how to build the URL
 templates = {"$ref" = "#/definitions/templates", description = """
 `nunjucks` templates that control URLs for machines and markdown for humans
 """}
+checks = {"$ref" = "#/definitions/checks", description = """
+markdown templates, which if rendered to _any_ non-whitespace, will be treated as
+an error, preventing the submit button from being shown.
+"""}
 style = {"$ref" = "#/definitions/styles", description = """
 simple CSS rules scoped to the current form id, or objects keyed by child
 selector
@@ -59,6 +63,7 @@ type = "array"
 description = """filters to ensure in `nunjucks` templates"""
 items = {oneOf = [{"$ref" = "#/definitions/any-file-format"}]}
 uniqueItems = true
+
 
 # forms ########################################################################
 [definitions.forms]
@@ -92,10 +97,6 @@ submit_button = {"$ref" = "#/definitions/any-template", description = """
 text to show on the button when a form is valid. multiple lines will be joined
 with `\\n`, then leading and trailing whitespace will be trimmed.
 """}
-checks = {"$ref" = "#/definitions/checks", description = """
-markdown templates, which if rendered to _any_ non-whitespace, will be treated as
-an error, preventing the submit button from being shown.
-"""}
 
 [definitions.checks]
 type = "object"
@@ -126,7 +127,7 @@ JSON-compatible initial data for this form
 props = {"$ref" = "./props.schema.json#/definitions/Props", descripton = """
 JSON-compatible subset of `rjsf` component properties for this form
 """}
-rank = {type = "number", description = """
+order = {type = "number", description = """
 the order in which to show a form, lowest (or omitted) first, with a tiebreaker on name
 """}
 

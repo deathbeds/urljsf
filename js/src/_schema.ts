@@ -6,6 +6,11 @@
  */
 
 /**
+ * This interface was referenced by `Urljsf`'s JSON-Schema
+ * via the `definition` "any-template".
+ */
+export type AnyTemplate = string | [string, ...string[]];
+/**
  * A schema-like object referenced by URL, or inline as an object
  */
 export type ASchema = SchemaByURL | InlineObject;
@@ -44,11 +49,6 @@ export type FileFormat = 'json' | 'toml' | 'yaml';
  * via the `patternProperty` "^.+$".
  */
 export type AnyStyle = string | {};
-/**
- * This interface was referenced by `Urljsf`'s JSON-Schema
- * via the `definition` "any-template".
- */
-export type AnyTemplate = string | [string, ...string[]];
 /**
  * A schema-like object referenced by URL, or inline as an object
  *
@@ -95,6 +95,7 @@ export interface Urljsf {
    *
    */
   $schema?: string;
+  checks?: Checks;
   forms: Forms;
   /**
    * isolate each form on the page in an `iframe`
@@ -128,6 +129,14 @@ export interface Urljsf {
   };
 }
 /**
+ * markdown templates, which if rendered to _any_ non-whitespace, will be treated as
+ * an error, preventing the submit button from being shown.
+ *
+ */
+export interface Checks {
+  [k: string]: AnyTemplate;
+}
+/**
  * forms that describe how to build the URL
  *
  */
@@ -148,12 +157,12 @@ export interface Forms {
  */
 export interface AnyForm {
   form_data?: ASchema;
-  props?: Props;
   /**
    * the order in which to show a form, lowest (or omitted) first, with a tiebreaker on name
    *
    */
-  rank?: number;
+  order?: number;
+  props?: Props;
   schema?: ASchema1;
   ui_schema?: ASchema2;
 }
@@ -306,7 +315,6 @@ export interface Styles {
  * via the `definition` "known-templates".
  */
 export interface KnownTemplates {
-  checks?: Checks;
   /**
    * text to show on the button when a form is valid. multiple lines will be joined
    * with `\n`, then leading and trailing whitespace will be trimmed.
@@ -318,14 +326,6 @@ export interface KnownTemplates {
    *
    */
   url?: string | [string, ...string[]];
-}
-/**
- * markdown templates, which if rendered to _any_ non-whitespace, will be treated as
- * an error, preventing the submit button from being shown.
- *
- */
-export interface Checks {
-  [k: string]: AnyTemplate;
 }
 /**
  * JSON-compatible default values for `rjsf` [`Form.props`][form-props].
