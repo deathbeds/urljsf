@@ -12,30 +12,31 @@
 [ui-schema]:
   https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/uiSchema/
 
-When visiting a `urljsf`-built form, users see:
+**Visitors** to a `urljsf`-built page see:
 
-- an interative HTML form...
+- one or more interative HTML forms...
   - defined by and validated against a JSON [Schema][json-schema], optionally with...
-    - with a customizble [user interface][ui-schema]
-    - pre-filled data
-    - custom validation checks
+  - deep customizble [user interface][ui-schema]
+  - pre-filled data
+  - custom validation checks
 
 Once the data is _validated_, the user sees a button which gets a URL, which can be:
 
-- opened a new browser window
+- downloaded as a file
+- opened in a new browser window
 - copy and pasted
-- submitted an HTTP endpoint, either by opening a new window, or directly.
+- submitted to an HTTP endpoint, either by opening a new window, or directly.
 - open native applications like email
 
 `urljsf` **doesn't** ship a server, so that part is up to you!
 
-Site builders write TOML, JSON, or YAML, then can use `urljsf` as:
+**Site builders** write TOML, JSON, YAML or python, then can use `urljsf` as:
 
-- a drop-in-and-pray [JavaScript `script`](#js-script)
+- a drop-in-and-pray [`script`](#js-script)
 - a standalone [CLI tool](#command-line)
 - a [sphinx](#sphinx) extension
 
-... to create JavaScript/HTML forms that helps users provide good data for:
+... to create JavaScript/HTML forms that helps **visitors** provide good data for:
 
 - pull requests
 - issues
@@ -150,9 +151,9 @@ extensions = [
 Then use the `urljsf` directive in source files:
 
 ```rst
-.. urljsf:
-
-  # a form definition in YAML, JSON or TOML
+.. urljsf:  # a relative path to a description as a TOML, YAML, or JSON file or python
+  :toml:
+  # a form definition in TOML
 ```
 
 See the documentation for more about configuring `urljsf.sphinxext`, the `urljsf`
@@ -172,4 +173,4 @@ directive, and more advanced use cases.
 want with it, but if you change it a lot, it's not the maintainers' problem.
 
 `urljsf` distributes third-party JavaScript and CSS in various forms, licensed under the
-`MIT`, `BSD-3-Clause` and `ISC` licenses.
+`MIT`, `BSD-3-Clause`, and `ISC` licenses.

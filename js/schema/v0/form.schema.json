@@ -346,6 +346,10 @@
     "known-templates": {
       "type": "object",
       "properties": {
+        "download_filename": {
+          "$ref": "#/definitions/any-template",
+          "description": "If given, a template for the submit button's `download` attribute, to\nsuggest an appropriate filename, with leading and trailing whitespace trimmed.\n"
+        },
         "submit_button": {
           "$ref": "#/definitions/any-template",
           "description": "text to show on the button when a form is valid. multiple lines will be joined\nwith `\\n`, then leading and trailing whitespace will be trimmed.\n"

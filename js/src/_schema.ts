@@ -316,6 +316,12 @@ export interface Styles {
  */
 export interface KnownTemplates {
   /**
+   * If given, a template for the submit button's `download` attribute, to
+   * suggest an appropriate filename, with leading and trailing whitespace trimmed.
+   *
+   */
+  download_filename?: string | [string, ...string[]];
+  /**
    * text to show on the button when a form is valid. multiple lines will be joined
    * with `\n`, then leading and trailing whitespace will be trimmed.
    *

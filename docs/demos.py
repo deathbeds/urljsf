@@ -340,6 +340,7 @@ data:application/toml,{{ t | trim | urlencode | safe }}
                 "data:application/toml,",
                 "{{ p.pixi_toml(data.pixi) | trim | urlencode | safe }}",
             ],
+            "download_filename": "pixi.toml",
             "submit_button": "Download `pixi.toml`",
             # extra
             "below_pixi": below_template,

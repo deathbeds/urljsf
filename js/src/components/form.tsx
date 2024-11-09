@@ -145,6 +145,17 @@ function UrljsfForm(props: IUrljsfFormProps): JSX.Element {
     return _url;
   });
 
+  const downloadFilename = computed(() => {
+    let name = '';
+    try {
+      name = nunjucksEnv.render('download_filename', context.value).trim();
+    } catch (err) {
+      /* istanbul ignore next */
+      console.warn('Could not render download filename', err);
+    }
+    return name;
+  });
+
   const submitText = computed(() =>
     renderMarkdown({
       path: 'submit_button',
@@ -314,8 +325,18 @@ function UrljsfForm(props: IUrljsfFormProps): JSX.Element {
         </Button>
       );
     } else {
+      const download = downloadFilename.value
+        ? { download: downloadFilename.value }
+        : emptyObject;
       submitButton = (
-        <Button as="a" href={url.value} {...SUBMIT_DEFAULT} {...BTN_COMMON}>
+        <Button
+          as="a"
+          href={url.value}
+          target="_blank"
+          {...SUBMIT_DEFAULT}
+          {...BTN_COMMON}
+          {...download}
+        >
           <Markdown options={SUBMIT_MD_OPTIONS}>{submitText.value}</Markdown>
         </Button>
       );

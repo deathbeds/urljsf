@@ -1,7 +1,7 @@
 # Templates
 
-The top-level `templates` option describes a few key fields, such as [`url`](#url) and
-[`checks`](#checks), which are evaluated by [`nunjucks`][nunjucks].
+The top-level `templates` option describes a few key fields, such as [`url`](#url) which
+are evaluated by [`nunjucks`][nunjucks].
 
 Additional templates can be defined and [imported][import] for reuse as blocks or
 macros.
@@ -35,6 +35,10 @@ The `templates.url` field should generate a valid URL. All whitespace should be 
 
 The text to show on the submit button, if all `checks` and schema validation are
 successful.
+
+#### `download_filename`
+
+A filename to suggest for `data:` URLs.
 
 #### `above_{form}`
 

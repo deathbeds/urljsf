@@ -313,6 +313,9 @@ See: https://github.com/camptocamp/jsonschema-gentypes/issues/7
 
 
 class _TemplatesTyped(TypedDict, total=False):
+    download_filename: _AnyTemplate
+    """ Aggregation type: anyOf """
+
     submit_button: _AnyTemplate
     """ Aggregation type: anyOf """
 
