@@ -2,6 +2,7 @@
 import type { FormProps } from '@rjsf/core';
 import type { RJSFValidationError } from '@rjsf/utils';
 
+import type { ReadonlySignal } from '@preact/signals';
 import type nunjucks from 'nunjucks';
 
 import { Urljsf } from './_schema';
@@ -38,6 +39,15 @@ export interface IUrljsfFormProps {
   config: Urljsf;
   forms: IFormsProps;
   nunjucksEnv: nunjucks.Environment;
+}
+
+export interface IAboveBelowForms {
+  [key: string]: IFormAboveBelow;
+}
+
+export interface IFormAboveBelow {
+  above?: ReadonlySignal<string>;
+  below?: ReadonlySignal<string>;
 }
 
 export interface IRenderOptions {

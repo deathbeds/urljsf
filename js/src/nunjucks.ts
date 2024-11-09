@@ -24,7 +24,7 @@ class UrljsfLoader implements nunjucks.ILoader {
 
 export async function ensureNunjucks(config: Urljsf): Promise<nunjucks.Environment> {
   const nunjucks = await Private.ensureNunjucks();
-  let env = new nunjucks.Environment(new UrljsfLoader(config));
+  let env = new nunjucks.Environment(new UrljsfLoader(config), { autoescape: false });
   env = addFilters(env, URLJSF_FILTERS);
   env = await addFormatFilters(config, env);
   return env;

@@ -283,28 +283,45 @@ def installer() -> Urljsf:
 """
     }
 
-    url_template = """
-data:application/toml,
+    toml_template = """
+{% macro pixi_toml(p) %}
 {% set deps = [] %}
-{% for dep in data.pixi.dependencies %}
-    {% set e = dep.spec %}
-    {% if dep.channel %}
-        {% set e = {"version": dep.spec, "channel": dep.channel } %}
-    {% endif %}
-    {% set deps = (deps.push([dep.package, e]), deps) %}
+{% for dep in p.dependencies %}
+  {% set e = dep.spec %}
+  {% if dep.channel %}
+    {% set e = {"version": dep.spec, "channel": dep.channel } %}
+  {% endif %}
+  {% set deps = (deps.push([dep.package, e]), deps) %}
 {% endfor %}
-{{
-    {
-        "project": {
-            "name": data.pixi.name,
-            "version": data.pixi.version,
-            "platforms": data.pixi.platforms,
-            "channels": data.pixi.channels
-        },
-        "dependencies": (deps | from_entries)
-    } | prune | to_toml | urlencode | safe
-}}
+{{ {
+  "project": {
+    "name": p.name,
+    "version": p.version,
+    "platforms": p.platforms,
+    "channels": p.channels
+  },
+  "dependencies": (deps | from_entries)
+} | prune | to_toml }}
+{% endmacro %}
     """
+
+    below_template = """
+{% import "_pixi_toml" as p %}
+{% set t = p.pixi_toml(data.pixi) | trim | safe %}
+
+_As TOML:_
+
+```toml
+{{ t | trim | safe }}
+```
+
+_As URL:_
+
+```
+data:application/toml,{{ t | trim | urlencode | safe }}
+```
+"""
+    macro_import = "{% import '_pixi_toml' as p %}"
 
     defn: Urljsf = {
         "forms": {
@@ -316,8 +333,16 @@ data:application/toml,
         },
         "nunjucks": {"filters": ["toml"]},
         "templates": {
-            "url": url_template,
-            "submit_button": "View `pixi.toml`",
+            "_pixi_toml": toml_template,
+            # known
+            "url": [
+                macro_import,
+                "data:application/toml,",
+                "{{ p.pixi_toml(data.pixi) | trim | urlencode | safe }}",
+            ],
+            "submit_button": "Download `pixi.toml`",
+            # extra
+            "below_pixi": below_template,
         },
         "checks": pixi_checks,
     }

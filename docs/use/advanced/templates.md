@@ -6,6 +6,8 @@ The top-level `templates` option describes a few key fields, such as [`url`](#ur
 Additional templates can be defined and [imported][import] for reuse as blocks or
 macros.
 
+[`checks`](#checks) are _also_ evaluated at `nunjucks` templates.
+
 [nunjucks]: https://mozilla.github.io/nunjucks/templating.html
 [import]: https://mozilla.github.io/nunjucks/templating.html#import
 
@@ -65,6 +67,26 @@ between two, unrelated schema.
       "- [ ] {{ dupes }} things have the name _'{{ name }}'_",
       "{% endif %}",
       "{% endfor %}"
+    ]
+  }
+}
+```
+
+For import purposes, `checks` are nested under the `checks/` path, so must use `../` to
+access other `templates`.
+
+```yaml+jinja
+{
+  "templates": {
+    "common": [
+      "{% macro foo %}",
+      "{% endmacro %}"
+    ]
+  },
+  "checks": {
+    "ok": [
+      "{% import '../common' %}",
+      "{{ foo() }}"
     ]
   }
 }

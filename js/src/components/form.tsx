@@ -21,8 +21,10 @@ import {
   CHECKS_PATH_PREFIX,
   DEFAULTS,
   FORM_CLASS,
+  IAboveBelowForms,
   IContext,
   IErrors,
+  IFormAboveBelow,
   IFormsProps,
   IUrljsfFormProps,
   emptyObject,
@@ -127,6 +129,8 @@ function UrljsfForm(props: IUrljsfFormProps): JSX.Element {
     data: initFormData,
   };
   const initErrors: IErrors = { url: [], file: [] };
+
+  // build all signals
   const context = signal(initContext);
   const errors = signal(initErrors);
 
@@ -150,7 +154,31 @@ function UrljsfForm(props: IUrljsfFormProps): JSX.Element {
     }),
   );
 
-  const makeOnFormChange = async (key: string, evt: IChangeEvent) => {
+  const aboveBelow: IAboveBelowForms = {};
+
+  const makeAboveBelow = (path: string): ReadonlySignal<string> => {
+    return computed(() =>
+      renderMarkdown({ path, context: context.value, env: nunjucksEnv }),
+    );
+  };
+
+  for (const key of Object.keys(forms)) {
+    const formAb: IFormAboveBelow = {};
+    let hasAb = false;
+    for (const ab of ['above', 'below'] as (keyof IFormAboveBelow)[]) {
+      const abName = `${ab}_${key}`;
+      const tmpl = config.templates[abName];
+      if (tmpl) {
+        formAb[ab] = makeAboveBelow(abName);
+        hasAb = true;
+      }
+    }
+    if (hasAb) {
+      aboveBelow[key] = formAb;
+    }
+  }
+
+  const makeOnFormChange = (key: string, evt: IChangeEvent) => {
     batch(() => {
       context.value = {
         ...context.value,
@@ -167,7 +195,7 @@ function UrljsfForm(props: IUrljsfFormProps): JSX.Element {
 
   if (checks && checkCount) {
     checkResults = computed(() => {
-      const errors: Record<string, string> = {};
+      const errs: Record<string, string> = {};
       for (const label of Object.keys(checks)) {
         let rendered = 'X';
         try {
@@ -182,10 +210,10 @@ function UrljsfForm(props: IUrljsfFormProps): JSX.Element {
         }
 
         if (rendered) {
-          errors[label] = rendered;
+          errs[label] = rendered;
         }
       }
-      return errors;
+      return errs;
     });
   }
 
@@ -217,11 +245,26 @@ function UrljsfForm(props: IUrljsfFormProps): JSX.Element {
   );
 
   const orderedKeys = Object.keys(forms);
+
   orderedKeys.sort((a: string, b: string): number => {
     return (
       (config.forms[a].order || 0) - (config.forms[b].order || 0) || a.localeCompare(b)
     );
   });
+
+  const makeAboveBelowElements = (
+    key: string,
+    where: keyof IFormAboveBelow,
+  ): JSX.Element[] => {
+    const tmpl = aboveBelow[key] && aboveBelow[key][where];
+    return tmpl == null
+      ? []
+      : [
+          <li className="list-group-item" key={`${key}-where`}>
+            <Markdown>{tmpl.value}</Markdown>
+          </li>,
+        ];
+  };
 
   const URLJSF = () => {
     let submitButton: JSX.Element;
@@ -244,6 +287,7 @@ function UrljsfForm(props: IUrljsfFormProps): JSX.Element {
           markdown: true,
         }),
       );
+      formItems.push(...makeAboveBelowElements(key, 'above'));
       formItems.push(
         <li className="list-group-item" key={key}>
           <RJSFForm {...props}>
@@ -251,6 +295,7 @@ function UrljsfForm(props: IUrljsfFormProps): JSX.Element {
           </RJSFForm>
         </li>,
       );
+      formItems.push(...makeAboveBelowElements(key, 'below'));
     }
 
     if (checks && checkResults?.value) {
