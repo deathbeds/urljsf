@@ -16,6 +16,7 @@ run ALL tasks that would lead to a release""", depends-on = [
   "test",
   "docs",
   "atest",
+  "check",
   "report",
 ], cmd = "echo 🚢"}
 fix = {description = """
@@ -68,6 +69,13 @@ atest = {description = """
 run ALL acceptance tests""", depends-on = ["atest-robot", "atest-nyc"], cmd = "echo 🤖"}
 docs = {description = """
 build all documentation""", depends-on = ["docs-sphinx"], cmd = "echo 🖨️"}
+check = {description = """
+perform ALL pre-release checks""", depends-on = [
+  "check-links",
+  "check-vale",
+  "check-wheel",
+  "check-twine",
+], cmd = "echo 🤓"}
 
 # fragments ####################################################################
 prettier-- = '''yarn prettier
@@ -408,6 +416,44 @@ depends-on = ["atest-robot"]
 inputs = ["js/package.json", "build/reports/atest/istanbul/*.cov.json"]
 outputs = ["build/reports/nyc"]
 
+# check ########################################################################
+[feature.tasks-check.tasks.check-links]
+description = "... check github hyperlinks in documentation"
+cmd = """rm -rf build/reports/check-links
+  && mkdir -p build/reports/check-links
+  && cd build/reports/check-links
+  && touch pytest.ini
+  && pytest
+    -vv
+    -c pytest.ini
+    -p no:warnings
+    --rootdir=.
+    --check-links
+    --check-anchors
+    --check-links-ignore '^https?://'
+    -k "not (404 or coverage or lite or mypy or Untitled)"
+    ../../../build/docs/**/*.html"""
+depends-on = ["docs-sphinx"]
+inputs = ["docs/**/*.html"]
+
+[feature.tasks-check.tasks.check-vale]
+description = "... check spelling in documentation"
+cmd = "python scripts/vale/check.py"
+depends-on = ["docs-sphinx"]
+inputs = ["build/docs", "scripts/vale"]
+
+[feature.tasks-check.tasks.check-wheel]
+description = "... check the built wheel"
+cmd = "check-wheel-contents dist/*.whl"
+depends-on = ["dist-pypi"]
+inputs = ["dist/*.whl"]
+
+[feature.tasks-check.tasks.check-twine]
+description = "... check the built distributions for PyPI"
+cmd = "twine check --strict dist/*.whl dist/*.tar.gz"
+depends-on = ["dist-pypi"]
+inputs = ["dist/"]
+
 # watch ########################################################################
 [feature.tasks-dev.tasks.watch]
 description = "watch ALL the things"
@@ -480,9 +526,11 @@ lint = [
   "tasks-lint",
 ]
 docs = ["deps-pip", "deps-docs", "deps-run", "deps-py-max", "deps-build", "tasks-docs"]
+check = ["deps-check", "tasks-check"]
 dev = [
   "deps-atest",
   "deps-build",
+  "deps-check",
   "deps-docs",
   "deps-lint",
   "deps-pip",
@@ -562,6 +610,14 @@ tornado = "*"
 firefox = "128.*"
 geckodriver = "*"
 
+[feature.deps-check.dependencies]
+check-wheel-contents = "*"
+pytest-check-links = "*"
+pytest-html = "*"
+twine = "*"
+vale = "*"
+vale-spelling-aoo-mozilla-en-dict-us = "*"
+
 # tools ########################################################################
 [tool.sphinx]
 author = "{{ ppt.project.authors[0].name }}"
@@ -614,7 +670,6 @@ pygments_light_style = "github-light-colorblind"
 [tool.sphinx.jsonschema_options]
 lift_description = true
 auto_reference = true
-auto_target = true
 lift_definitions = true
 
 ## urljsf

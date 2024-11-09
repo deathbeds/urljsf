@@ -14,9 +14,9 @@
 
 **Visitors** to a `urljsf`-built page see:
 
-- one or more interative HTML forms...
+- one or more interactive HTML forms...
   - defined by and validated against a JSON [Schema][json-schema], optionally with...
-  - deep customizble [user interface][ui-schema]
+  - deep customizable [user interface][ui-schema]
   - pre-filled data
   - custom validation checks
 

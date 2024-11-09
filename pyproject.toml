@@ -47,6 +47,10 @@ Source = "https://github.com/deathbeds/urljsf"
 [tool.flit.sdist]
 include = ["LICENSE"]
 
+# check-wheel-contents #########################################################
+[tool.check-wheel-contents]
+ignore = ["W002"]
+
 # coverage #####################################################################
 [tool.coverage.run]
 disable_warnings = [
@@ -125,6 +129,15 @@ isort.known-first-party = ["urljsf"]
   "UP006",
   "UP035",
 ]
-"scripts/*.py" = ["S603", "T201", "INP001", "ANN401", "S404", "S607", "PLW0108"]
+"scripts/*.py" = [
+  "S603",
+  "T201",
+  "INP001",
+  "ANN401",
+  "S404",
+  "S607",
+  "PLW0108",
+  "RUF017",
+]
 "**/source.py" = ["PLC0415"]
 "atest/**/*.py" = ["INP001", "PLR6301", "T201"]
