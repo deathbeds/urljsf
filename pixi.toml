@@ -30,6 +30,7 @@ apply ALL source formatters""", depends-on = [
 lint = {description = """
 apply ALL static analysis tools""", depends-on = [
   "lint-ruff",
+  "lint-yarn-audit",
   "lint-mdlint",
   "lint-prettier",
   "lint-mypy",
@@ -102,9 +103,7 @@ schema-toml-json-- = "python scripts/schema.py $SCHEMA_TOML $SCHEMA_JSON $PROPS_
 
 [feature.tasks-build.tasks]
 schema-json-ts-- = "python scripts/schema.py $SCHEMA_JSON $SCHEMA_TS"
-schema-json-py-- = """
-python scripts/schema.py $SCHEMA_JSON $SCHEMA_PY
-"""
+schema-json-py-- = "python scripts/schema.py $SCHEMA_JSON $SCHEMA_PY"
 schema-all-- = '''pixi r schema-props
   && pixi r schema-toml-json--
   && pixi r schema-json-ts--
@@ -119,27 +118,27 @@ inputs = ["{yarn.lock,package.json,.yarnrc.yml}", "js/package.json"]
 outputs = ["node_modules/.yarn-state.yml"]
 
 [feature.tasks-lint.tasks.lint-pip]
-description = "- install an the editable python package for linting"
+description = "- install the editable python package for linting"
 cmd = "pixi r -e lint pip-e--"
 inputs = ["pyproject.toml"]
 
 [feature.tasks-test.tasks.test-pip]
-description = "- install an the editable python package for testing"
+description = "- install the editable python package for testing"
 cmd = "pixi r -e test pip-e--"
 inputs = ["pyproject.toml"]
 
 [feature.tasks-test-min.tasks.test-min-pip]
-description = "- install an the editable python package for testing (oldest)"
+description = "- install the editable python package for testing (oldest)"
 cmd = "pixi r -e test-min pip-e--"
 inputs = ["pyproject.toml"]
 
 [feature.tasks-dev.tasks.dev-pip]
-description = "- install an the editable python package for development"
+description = "- install the editable python package for development"
 cmd = "pixi r -e dev pip-e--"
 inputs = ["pyproject.toml"]
 
 [feature.tasks-docs.tasks.docs-pip]
-description = "- install an the editable python package for docs"
+description = "- install the editable python package for docs"
 cmd = "pixi r -e docs pip-e--"
 inputs = ["pyproject.toml"]
 
@@ -316,6 +315,12 @@ cmd = "pixi r markdownlint--"
 depends-on = ["build-yarn"]
 inputs = ["*.{md,json}", "{docs,tests,src,js,.github}/**/*.md", "!src/**/_static"]
 
+[feature.tasks-lint.tasks.lint-yarn-audit]
+description = "- check npm dependencies with yarn audit"
+cmd = "yarn npm audit"
+depends-on = ["build-yarn"]
+inputs = ["yarn.lock"]
+
 [feature.tasks-lint.tasks.lint-robotidy]
 cmd = "robotidy atest --check"
 inputs = ["atest/**/*.{robot,resource}"]
@@ -415,7 +420,7 @@ depends-on = ["build-yarn"]
 
 [feature.tasks-build.tasks.watch-demo]
 description = "- watch demo TOML and rebuild the rest"
-cmd = """watchfiles "python scripts/demo.py" scripts/demo.py js/demo/toml"""
+cmd = "watchfiles 'python scripts/demo.py' scripts/demo.py js/demo/toml"
 
 [feature.tasks-build.tasks.watch-app]
 description = "- watch lib, css, etc. and rebuild the app"
@@ -424,7 +429,7 @@ depends-on = ["build-yarn"]
 
 [feature.tasks-build.tasks.watch-static]
 description = "- watch app and rebuild static"
-cmd = """watchfiles "pixi r py-static--" js/dist"""
+cmd = "watchfiles 'pixi r py-static--' js/dist"
 
 [feature.tasks-build.tasks.watch-schema]
 description = "- watch schema inputs and rebuild the rest"
