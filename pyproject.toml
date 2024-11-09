@@ -5,7 +5,7 @@ requires = ["flit_core >=3.9.0,<4.0.0"]
 [project]
 name = "urljsf"
 version = "0.1.0"
-description = "Build structured data files for pull requests with JSON schema"
+description = "Build declarative, interactive HTML forms with JSON Schema"
 readme = "README.md"
 authors = [{name = "urljsf contributors"}]
 requires-python = ">=3.9"

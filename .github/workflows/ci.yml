@@ -104,15 +104,22 @@ jobs:
         with:
           pixi-version: v${{ env.URLJSF_PIXI_VERSION }}
           cache: true
-          environments: build docs
+          environments: build docs check atest
           cache-key: job-docs
       - uses: actions/download-artifact@v4
         with:
           name: urljsf-${{ github.run_number }}-dist
           path: ./dist
-      - run: pixi run -e docs ci-preflight-test
       - run: pixi run docs-sphinx
       - uses: actions/upload-artifact@v4
         with:
           name: urljsf-${{ github.run_number }}-docs
           path: ./build/docs
+      - run: pixi run atest
+      - run: pixi run check
+      - run: pixi run report
+        if: always()
+      - uses: actions/upload-artifact@v4
+        with:
+          name: urljsf-${{ github.run_number }}-docs-reports
+          path: ./build/reports
