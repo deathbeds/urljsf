@@ -218,6 +218,7 @@ description = "- build JSON schema for rjsf form props"
 cmd = "export $(pixi r schema-vars--) && pixi r schema-ts-json--"
 inputs = ["js/src/_props.ts", "scripts/schema.py"]
 outputs = ["js/schema/v0/props.schema.json"]
+depends-on = ["build-yarn"]
 
 [feature.tasks-build.tasks.schema-json]
 description = "- build JSON schema from TOML"
