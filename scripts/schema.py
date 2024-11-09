@@ -5,6 +5,7 @@
 from __future__ import annotations
 
 import json
+import shutil
 import sys
 from pathlib import Path
 from subprocess import call as _call
@@ -20,6 +21,7 @@ PY_HEADER = '''"""JSON Schema for ``urljsf``."""
 # Distributed under the terms of the Modified BSD License.
 '''
 ROOT = Path(__file__).parent.parent
+YARN = f"""{shutil.which("yarn") or shutil.which("yarn.cmd")}"""
 
 
 def call(args: list[str | Path], **kwargs: Any) -> int:
@@ -36,7 +38,7 @@ def call(args: list[str | Path], **kwargs: Any) -> int:
 def ts_to_json(in_path: Path, out_path: Path) -> int:
     """Get JSON schema from TypeScript."""
     args = [
-        "yarn",
+        YARN,
         "ts-json-schema-generator",
         "--tsconfig=js/tsconfig.json",
         f"--path={in_path}",
@@ -44,7 +46,7 @@ def ts_to_json(in_path: Path, out_path: Path) -> int:
     ]
     if in_path.name == "_props.ts":
         args += ["--type=Props"]
-    return call(args) or call(["yarn", "prettier", "--write", out_path])
+    return call(args) or call([YARN, "prettier", "--write", out_path])
 
 
 def toml_to_json(in_path: Path, out_path: Path, *def_paths: Path) -> int:
@@ -60,7 +62,7 @@ def toml_to_json(in_path: Path, out_path: Path, *def_paths: Path) -> int:
             def_schema["description"] = desc.strip()
     text = json.dumps(raw, indent=2)
     out_path.write_text(text, **UTF8)
-    return call(["yarn", "prettier", "--write", out_path])
+    return call([YARN, "prettier", "--write", out_path])
 
 
 def json_to_ts(in_path: Path, out_path: Path) -> int:
@@ -77,7 +79,7 @@ def json_to_ts(in_path: Path, out_path: Path) -> int:
     ]
 
     return call(args) or call([
-        "yarn",
+        YARN,
         "prettier",
         "--write",
         str(out_path),

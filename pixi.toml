@@ -394,9 +394,23 @@ inputs = [
   "dist/*.whl",
   "docs/**/*.{css,ipynb,md,py}",
 ]
-depends-on = ["docs-pip", "docs-scour"]
+depends-on = ["docs-pip", "docs-scour", "schema"]
 outputs = ["build/docs"]
 
+[feature.tasks-docs.tasks.docs-rtd]
+description = "... copy the documentation site to where ReadTheDocs wants it"
+cmd = """
+python -c "
+import os;
+assert all(map(os.getenv, ['READTHEDOCS', 'READTHEDOCS_OUTPUT'])), 'not on ReadTheDocs'
+"
+&& mkdir -p "$READTHEDOCS_OUTPUT"
+&& cp -r docs/build "$READTHEDOCS_OUTPUT/html"
+&& ls "$READTHEDOCS_OUTPUT/html"
+"""
+depends-on = ["docs-sphinx"]
+
+# atest ########################################################################
 [feature.tasks-atest.tasks.atest-robot]
 description = "- run acceptance test reports with robot"
 cmd = "python scripts/atest.py"
