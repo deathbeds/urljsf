@@ -20,7 +20,7 @@ TEMPLATES = HERE / "_templates"
 STATIC = HERE / "_static"
 
 SCHEMA_VERSION = "v0"
-MIME_PREFIX = f"application/vnd.deathbeds.prjsf.{SCHEMA_VERSION}"
+MIME_PREFIX = f"application/vnd.deathbeds.urljsf.{SCHEMA_VERSION}"
 
 
 EXTENSION_FORMAT: dict[str, FileFormat] = {

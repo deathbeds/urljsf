@@ -97,7 +97,7 @@ A very simple, but limited, usage is an `.html` file that links to `urljsf` and
 `bootstrap` resources on the internet.
 
 ```html
-<script type="application/vnd.deathbeds.prjsf.v0+toml">
+<script type="application/vnd.deathbeds.urljsf.v0+toml">
   [forms.url.schema]
   title = "pick an xkcd"
   description = "this will redirect to `xkcd.com`"
@@ -112,7 +112,10 @@ A very simple, but limited, usage is an `.html` file that links to `urljsf` and
   url = "https://xkcd.com/{{ data.url.xkcd }}"
   submit_button = "see xkcd #{{ data.url.xkcd }}"
 </script>
-<script type="module" src="https://deathbeds.github.io/prjsf/_static/index.js"></script>
+<script
+  type="module"
+  src="https://deathbeds.github.io/urljsf/_static/index.js"
+></script>
 ```
 
 This technique has _many_ limitations, and is **not recommended**.
