@@ -22,12 +22,7 @@ jobs:
         with:
           pixi-version: v${{ env.URLJSF_PIXI_VERSION }}
           cache: false
-          environments: |
-            atest
-            build
-            docs
-            test
-            test-min
+          environments: atest build docs test test-min
       - run: pixi run build-yarn
       - run: pixi run build
       - run: pixi run dist
