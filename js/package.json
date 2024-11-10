@@ -7,7 +7,7 @@
   "browser": "lib/index.js",
   "types": "lib/index.d.ts",
   "files": [
-    "{lib,dist}/**/*.{js,ts,json,html,toml,yaml}"
+    "{lib,dist}/**/*.{js,ts,json,html,toml,yaml,map}"
   ],
   "scripts": {
     "build": "yarn build:lib && yarn build:app",
