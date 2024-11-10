@@ -14,7 +14,7 @@ concurrency:
 env:
   PYTHONUNBUFFERED: '1'
   PIP_DISABLE_PIP_VERSION_CHECK: '1'
-  CACHE_EPOCH: '0'
+  CACHE_EPOCH: '3'
   URLJSF_PIXI_VERSION: 0.35.0
 
 jobs:
@@ -30,16 +30,27 @@ jobs:
           cache-key: job-build
       - name: cache (node)
         uses: actions/cache@v4
-        id: cache-node-modules
         with:
           path: node_modules
           key: |
             ${{ env.CACHE_EPOCH }}-${{ runner.os }}-node_modules-${{ hashFiles('yarn.lock') }}
+      - run: pixi run build-yarn
+      - run: ls node_modules/.skip-yarn || mkdir -p build && echo '1' > node_modules/.skip-yarn
       - run: pixi run dist
       - uses: actions/upload-artifact@v4
         with:
           name: urljsf-${{ github.run_number }}-dist
-          path: ./dist
+          path: |
+            ./dist
+      - uses: actions/upload-artifact@v4
+        with:
+          name: urljsf-${{ github.run_number }}-build
+          path: |
+            build/task-cache-v0
+            js/lib
+            js/dist
+            js/tsconfig.tsbuildinfo
+            src/urljs/_static
 
   lint:
     runs-on: ubuntu-latest
@@ -52,13 +63,16 @@ jobs:
           cache: true
           environments: build lint
           cache-key: job-lint
+      - uses: actions/download-artifact@v4
+        with:
+          name: urljsf-${{ github.run_number }}-build
       - name: cache (node)
         uses: actions/cache@v4
-        id: cache-node-modules
         with:
           path: node_modules
           key: |
             ${{ env.CACHE_EPOCH }}-${{ runner.os }}-node_modules-${{ hashFiles('yarn.lock') }}
+      - run: pixi run fix
       - run: pixi run lint
 
   test:
@@ -87,8 +101,12 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: urljsf-${{ github.run_number }}-dist
-          path: ./dist
-      - run: pixi run ${{ matrix.test-env }}-pytest
+          path: |
+            ./dist
+      - uses: actions/download-artifact@v4
+        with:
+          name: urljsf-${{ github.run_number }}-build
+      - run: pixi run -v ${{ matrix.test-env }}-pytest
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -106,20 +124,34 @@ jobs:
           cache: true
           environments: build docs check atest
           cache-key: job-docs
+      - name: cache (node)
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: |
+            ${{ env.CACHE_EPOCH }}-${{ runner.os }}-node_modules-${{ hashFiles('yarn.lock') }}
       - uses: actions/download-artifact@v4
         with:
           name: urljsf-${{ github.run_number }}-dist
-          path: ./dist
-      - run: pixi run docs-sphinx
+          path: |
+            ./dist
+      - uses: actions/download-artifact@v4
+        with:
+          name: urljsf-${{ github.run_number }}-build
+      - run: pixi run build-yarn
+      - run: pixi run docs
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: urljsf-${{ github.run_number }}-docs
           path: ./build/docs
+      - run: pixi run build-app-cov
       - run: pixi run atest
       - run: pixi run check
       - run: pixi run report
         if: always()
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: urljsf-${{ github.run_number }}-docs-reports
           path: ./build/reports
