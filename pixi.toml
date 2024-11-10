@@ -87,20 +87,23 @@ prettier-- = '''yarn prettier
   "{docs,tests,src,js,.github}/**/*.{md,json,yml,yaml,css,ts,tsx,ts,mjs}"'''
 markdownlint-- = 'yarn markdownlint-cli2 "*.md" "{docs,tests,src,js,.github}/**/*.md"'
 py-static-- = """rm -rf src/urljsf/_static/
-  && cp -r js/dist/urljsf src/urljsf/_static/urljsf
-  && cp -r js/schema src/urljsf/_static/schema
-  && rm -rf src/urljsf/_static/urljsf/demo/ src/urljsf/_static/schema/*.toml"""
+  && cp -r js/dist/urljsf src/urljsf/_static/urljsf"""
 platform-- = '''mkdir -p build
   && python -c 'import platform; u = platform.uname(); print(f"{u.system}-{u.machine}".lower())'
   > build/platform.txt'''
-pip-- = """python -m pip install
-  -vv
-  --no-deps
-  --no-build-isolation
-  --disable-pip-version-check
-  --ignore-installed"""
-pip-e-- = """pixi r pip-- -e ."""
-pip-whl-- = """pixi r pip-- urljsf --find-links=dist --no-index"""
+pip-- = """rm -rf build/pip-freeze/$PIXI_ENVIORNMENT_NAME.txt
+  && python -m pip install
+    -vv
+    --no-deps
+    --no-build-isolation
+    --disable-pip-version-check
+    --ignore-installed"""
+pip-check-- = """python -m pip check
+  && mkdir -p build/pip-freeze
+  && python -m pip list --format=freeze
+  > build/pip-freeze/$PIXI_ENVIRONMENT_NAME"""
+pip-e-- = """pixi r pip-- -e . && pixi r pip-check--"""
+pip-whl-- = """pixi r pip-- urljsf --find-links=dist --no-index && pixi r pip-check--"""
 schema-vars-- = '''echo
   PROPS_TS=$PIXI_PROJECT_ROOT/js/src/_props.ts
   PROPS_JSON=$PIXI_PROJECT_ROOT/js/schema/v0/props.schema.json
@@ -131,27 +134,32 @@ outputs = ["node_modules/.yarn-state.yml"]
 description = "- install the editable python package for development"
 cmd = "pixi r -e dev pip-e--"
 inputs = ["pyproject.toml"]
+outputs = ["build/pip-freeze/dev.txt"]
 
 [feature.tasks-lint.tasks.lint-pip]
 description = "- install the editable python package for linting"
 cmd = "pixi r -e lint pip-e--"
 inputs = ["pyproject.toml"]
+outputs = ["build/pip-freeze/lint.txt"]
 
 [feature.tasks-test.tasks.test-pip]
 description = "- install the built python package for testing"
 cmd = "pixi r -e test pip-whl--"
 inputs = ["dist/*.whl"]
+outputs = ["build/pip-freeze/test.txt"]
 
 [feature.tasks-test-min.tasks.test-min-pip]
 description = "- install the built python package for testing (oldest)"
 cmd = "pixi r -e test-min pip-whl--"
 inputs = ["dist/*.whl"]
+outputs = ["build/pip-freeze/test-min.txt"]
 
 [feature.tasks-docs.tasks.docs-pip]
 description = "- install the built python package for docs"
 cmd = "pixi r -e docs pip-whl--"
 inputs = ["dist/*.whl"]
 depends-on = ["dist-pypi"]
+outputs = ["build/pip-freeze/docs.txt"]
 
 # build ########################################################################
 [feature.tasks-build.tasks.build-demo]

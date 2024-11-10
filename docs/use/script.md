@@ -3,13 +3,16 @@
 Include `urljsf` as a `script` tag:
 
 ```html
-<script type="module" src="https://deathbeds.github.io/prjsf/_static/index.js"></script>
+<script
+  type="module"
+  src="https://deathbeds.github.io/urljsf/_static/index.js"
+></script>
 ```
 
 ... and one or more additional `script` tags that define forms:
 
 ```html
-<script type="application/vnd.deathbeds.prjsf.v0+toml">
+<script type="application/vnd.deathbeds.urljsf.v0+toml">
   [forms.url.schema]
   title = "pick an xkcd"
   description = "this will redirect to `xkcd.com`"

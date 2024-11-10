@@ -13,7 +13,7 @@ from .constants import SCHEMA_VERSION, UTF8
 
 HERE = Path(__file__).parent
 STATIC = HERE / "_static"
-SCHEMA = STATIC / "schema"
+SCHEMA = STATIC / "urljsf/schema"
 CURRENT_SCHEMA = SCHEMA / SCHEMA_VERSION
 
 FORM_SCHEMA = CURRENT_SCHEMA / "form.schema.json"
