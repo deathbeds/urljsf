@@ -20,8 +20,17 @@ DOCS_BUILD = BUILD / "docs"
 REPORTS = BUILD / "reports"
 VALE_REPORT = REPORTS / "vale.html"
 SRC = ROOT / "src"
+SCRIPTS = ROOT / "scripts"
+TESTS = ROOT / "tests"
+ATEST = ROOT / "atest"
 
-ALL_PY = [*SRC.rglob("*.py"), *DOCS.rglob("*.py")]
+ALL_PY = [
+    *ATEST.rglob("*.py"),
+    *DOCS.rglob("*.py"),
+    *SCRIPTS.rglob("*.py"),
+    *SRC.rglob("*.py"),
+    *TESTS.rglob("*.py"),
+]
 ALL_HTML = [*DOCS_BUILD.rglob("*.html")]
 
 CHECK_PATHS = {

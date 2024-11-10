@@ -123,7 +123,7 @@ schema-all-- = '''pixi r schema-props
 # setup ########################################################################
 [feature.tasks-build.tasks.build-yarn]
 description = "- install nodejs-based dependencies"
-cmd = "(cat build/.skip-yarn && echo 'skip yarn install') || yarn"
+cmd = "(cat node_modules/.skip-yarn && echo 'skipping yarn install') || yarn"
 inputs = ["{yarn.lock,package.json,.yarnrc.yml}", "js/package.json"]
 outputs = ["node_modules/.yarn-state.yml"]
 
@@ -392,11 +392,10 @@ description = "- build docs with sphinx"
 cmd = """export PYDEVD_DISABLE_FILE_VALIDATION=1
   && sphinx-build -W --keep-going --color -b html docs build/docs"""
 inputs = [
-  "*.md",
-  "*.toml",
+  "*.{md,toml}",
   "src/**/*.py",
   "dist/*.whl",
-  "docs/**/*.{css,ipynb,md,py}",
+  "docs/**/*.{css,rst,md,py}",
 ]
 depends-on = ["docs-pip", "docs-scour"]
 outputs = ["build/docs"]
@@ -454,13 +453,13 @@ cmd = """rm -rf build/reports/check-links
     -k "not (404 or coverage or lite or mypy or Untitled)"
     ../../../build/docs/**/*.html"""
 depends-on = ["docs-sphinx"]
-inputs = ["docs/**/*.html"]
+inputs = ["build/docs/**/*.html"]
 
 [feature.tasks-check.tasks.check-vale]
 description = "... check spelling in documentation"
 cmd = "python scripts/vale/check.py"
 depends-on = ["docs-sphinx"]
-inputs = ["build/docs", "scripts/vale"]
+inputs = ["build/docs/**/*.html", "scripts/vale", "{src,tests,scripts,atest}/**/*.py"]
 
 [feature.tasks-check.tasks.check-wheel]
 description = "... check the built wheel"
