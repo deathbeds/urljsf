@@ -408,7 +408,7 @@ import os;
 assert all(map(os.getenv, ['READTHEDOCS', 'READTHEDOCS_OUTPUT'])), 'not on ReadTheDocs'
 "
 && mkdir -p "$READTHEDOCS_OUTPUT"
-&& cp -r docs/build "$READTHEDOCS_OUTPUT/html"
+&& cp -r build/docs "$READTHEDOCS_OUTPUT/html"
 && ls "$READTHEDOCS_OUTPUT/html"
 """
 depends-on = ["docs-sphinx"]
