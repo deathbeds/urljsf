@@ -358,8 +358,8 @@ cmd = """export PIXI_PLATFORM=$(cat build/platform.txt)
     --cov-context=test
     --no-cov-on-fail
     --cov-fail-under=97"""
-depends-on = ["test-pip", "build-static", "platform--"]
-inputs = ["{tests,src/urljsf}/**/*.{py,rst,json}", "src/urljsf/{_static,_templates}"]
+depends-on = ["test-pip", "platform--"]
+inputs = ["tests/**/*.{py,rst,json}", "dist/*.whl"]
 outputs = ["build/reports/test_*"]
 
 [feature.tasks-test.tasks.report]
@@ -374,8 +374,8 @@ cmd = """export PIXI_PLATFORM=$(cat build/platform.txt)
     -n auto
     --html=build/reports/test-min_pytest_$PIXI_PLATFORM.html
     --self-contained-html"""
-depends-on = ["test-min-pip", "build-static", "platform--"]
-inputs = ["{tests,src/urljsf}/**/*.{py,rst,json}", "src/urljsf/{_static,_templates}"]
+depends-on = ["test-min-pip", "platform--"]
+inputs = ["tests/**/*.{py,rst,json}", "dist/*.whl"]
 outputs = ["build/reports/test-min_*"]
 
 # docs #########################################################################

@@ -34,14 +34,25 @@ jobs:
           path: node_modules
           key: |
             ${{ env.CACHE_EPOCH }}-${{ runner.os }}-node_modules-${{ hashFiles('yarn.lock') }}
-      - run: pixi run dist
       - run: pixi run build-yarn && mkdir -p build && echo '1' > node_modules/.skip-yarn
+      - run: pixi run dist
       - uses: actions/upload-artifact@v4
         with:
           name: urljsf-${{ github.run_number }}-dist
           path: |
             ./dist
-            .pixi/task-cache-v0
+      - uses: actions/upload-artifact@v4
+        with:
+          name: urljsf-${{ github.run_number }}-build
+          path: |
+            ./build/task-cache-v0
+      - uses: actions/upload-artifact@v4
+        with:
+          name: urljsf-${{ github.run_number }}-dist
+          path: |
+            js/lib
+            js/dist
+            js/tsconfig.tsbuildinfo
 
   lint:
     runs-on: ubuntu-latest
@@ -54,6 +65,11 @@ jobs:
           cache: true
           environments: build lint
           cache-key: job-lint
+      - uses: actions/download-artifact@v4
+        with:
+          name: urljsf-${{ github.run_number }}-build
+          path: |
+            ./build/task-cache-v0
       - name: cache (node)
         uses: actions/cache@v4
         with:
@@ -89,6 +105,11 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: urljsf-${{ github.run_number }}-dist
+      - uses: actions/download-artifact@v4
+        with:
+          name: urljsf-${{ github.run_number }}-build
+          path: |
+            ./build/task-cache-v0
       - run: pixi run ${{ matrix.test-env }}-pytest
       - uses: actions/upload-artifact@v4
         if: always()
@@ -116,6 +137,11 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: urljsf-${{ github.run_number }}-dist
+      - uses: actions/download-artifact@v4
+        with:
+          name: urljsf-${{ github.run_number }}-build
+          path: |
+            ./build/task-cache-v0
       - run: pixi run build-yarn
       - run: pixi run docs
       - uses: actions/upload-artifact@v4
