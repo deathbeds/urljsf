@@ -3,7 +3,10 @@ Documentation       Verify the `installer` demo.
 
 Resource            ../../resources/rjsf.resource
 Resource            ../../resources/urljsf.resource
+Library             Collections
+Library             OperatingSystem
 Library             SeleniumLibrary
+Library             urllib.parse
 
 Suite Setup         Setup Urljsf Suite    01_docs/002_installer
 Test Setup          Open Demo    installer
@@ -23,6 +26,8 @@ Create An Installer Pixi Project
     Capture Page Screenshot    00-open.png
     Try Licenses
     Make And Fix An Error
+    Verify Installer URL
+    Verify Installer Download
 
 
 *** Keywords ***
@@ -49,5 +54,26 @@ Make And Fix An Error
     Input Text    css:${p2}    python
     Wait Until Page Contains    2 dependencies have the name
     Element Should Contain    css:${CSS_U_SUBMIT}    1 Error
-    Input Text    css:${p2}    urlsjf
+    Input Text    css:${p2}    urljsf
     Element Should Not Contain    css:${CSS_U_SUBMIT}    Error
+
+Verify Installer URL
+    [Documentation]    Verify the URL against an expected value.
+    ${url} =    Get Element Attribute    css:${CSS_U_SUBMIT}    href
+    ${raw} =    Unquote    ${url.split(",", 1)[1]}
+    ${from_toml} =    TOML.Loads    ${raw}
+    ${expected} =    Get TOML Fixture    002_installer.toml
+    Should Be JSON Equivalent    ${from_toml}    ${expected}
+
+Verify Installer Download
+    [Documentation]    Verify downloaded file
+    ${pt} =    Set Variable    ${DOWNLOADS}${/}pixi.toml
+    File Should Not Exist    ${pt}
+    Click Element    css:${CSS_U_SUBMIT}
+    Wait Until Created    ${pt}
+    Sleep    0.1s
+    ${raw} =    Get File    ${pt}
+    ${from_toml} =    TOML.Loads    ${raw}
+    ${expected} =    Get TOML Fixture    002_installer.toml
+    Should Be JSON Equivalent    ${from_toml}    ${expected}    Downloaded TOML not as expected
+    [Teardown]    Remove File    ${pt}

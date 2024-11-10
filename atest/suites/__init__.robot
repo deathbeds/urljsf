@@ -1,5 +1,5 @@
 *** Settings ***
-Documentation       Acceptance tests for `urlsjf`
+Documentation       Acceptance tests for `urljsf`
 
 Resource            ../resources/browser.resource
 Resource            ../resources/server.resource

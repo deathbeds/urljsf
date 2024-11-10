@@ -20,7 +20,7 @@ ATEST_OUT = REPORTS / "atest"
 def main() -> int:
     """Run acceptance tests."""
     args: list[str | Path | int] = ["pabot"]
-    args += ["--artifacts", "png,log,json", "--artifactsinsubfolders"]
+    args += ["--artifacts", "png,log,json,toml,yaml,yml", "--artifactsinsubfolders"]
     env = dict(os.environ)
     env.update(
         ROOT=f"{ROOT}",
