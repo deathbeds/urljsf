@@ -691,7 +691,6 @@ html_static_path = ["_static", "../js/dist/", "../dist"]
 [tool.sphinx.html_theme_options]
 github_url = "{{ ppt.project.urls.Source }}"
 icon_links = [
-  {name = "GitHub", url = "{{ ppt.project.urls.Source }}", icon = "fa-brands fa-github", type = "fontawesome"},
   {name = "PyPI", url = "{{ ppt.project.urls.PyPI }}", icon = "fa-brands fa-python", type = "fontawesome"},
 ]
 pygments_dark_style = "github-dark-colorblind"

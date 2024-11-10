@@ -40,7 +40,7 @@ yaml = [
 [project.urls]
 "Bug Tracker" = "https://github.com/deathbeds/urljsf/issues"
 Changelog = "https://github.com/deathbeds/urljsf/blob/main/CHANGELOG.md"
-Documentation = "https://urljsf.rtfd.io"
+Documentation = "https://urljsf.rtfd.org"
 PyPI = "https://pypi.org/project/urljsf"
 Source = "https://github.com/deathbeds/urljsf"
 
