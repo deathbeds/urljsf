@@ -14,7 +14,7 @@ concurrency:
 env:
   PYTHONUNBUFFERED: '1'
   PIP_DISABLE_PIP_VERSION_CHECK: '1'
-  CACHE_EPOCH: '1'
+  CACHE_EPOCH: '2'
   URLJSF_PIXI_VERSION: 0.35.0
 
 jobs:
@@ -34,7 +34,8 @@ jobs:
           path: node_modules
           key: |
             ${{ env.CACHE_EPOCH }}-${{ runner.os }}-node_modules-${{ hashFiles('yarn.lock') }}
-      - run: pixi run build-yarn && mkdir -p build && echo '1' > node_modules/.skip-yarn
+      - run: pixi run build-yarn
+      - run: ls node_modules/.skip-yarn || mkdir -p build && echo '1' > node_modules/.skip-yarn
       - run: pixi run dist
       - uses: actions/upload-artifact@v4
         with:
@@ -45,14 +46,11 @@ jobs:
         with:
           name: urljsf-${{ github.run_number }}-build
           path: |
-            ./build/task-cache-v0
-      - uses: actions/upload-artifact@v4
-        with:
-          name: urljsf-${{ github.run_number }}-dist
-          path: |
+            build/task-cache-v0
             js/lib
             js/dist
             js/tsconfig.tsbuildinfo
+            src/urljs/_static
 
   lint:
     runs-on: ubuntu-latest
@@ -68,8 +66,6 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: urljsf-${{ github.run_number }}-build
-          path: |
-            ./build/task-cache-v0
       - name: cache (node)
         uses: actions/cache@v4
         with:
@@ -105,11 +101,11 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: urljsf-${{ github.run_number }}-dist
+          path: |
+            ./dist
       - uses: actions/download-artifact@v4
         with:
           name: urljsf-${{ github.run_number }}-build
-          path: |
-            ./build/task-cache-v0
       - run: pixi run ${{ matrix.test-env }}-pytest
       - uses: actions/upload-artifact@v4
         if: always()
@@ -137,11 +133,11 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: urljsf-${{ github.run_number }}-dist
+          path: |
+            ./dist
       - uses: actions/download-artifact@v4
         with:
           name: urljsf-${{ github.run_number }}-build
-          path: |
-            ./build/task-cache-v0
       - run: pixi run build-yarn
       - run: pixi run docs
       - uses: actions/upload-artifact@v4
