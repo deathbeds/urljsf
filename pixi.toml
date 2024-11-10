@@ -199,7 +199,7 @@ description = "- build the Python distributions for pypi.org"
 cmd = "pyproject-build . --no-isolation"
 depends-on = ["build-static", "schema-py"]
 inputs = ["{pyproject.toml,LICENSE,README.md}", "src", "!**/__pycache__"]
-outputs = ["dist/*.whl", "dist/*.tar.gz"]
+outputs = ["dist/*.{whl,tar.gz}"]
 
 [feature.tasks-build.tasks.dist-hash]
 description = "- hash the built distributions"
@@ -397,7 +397,7 @@ inputs = [
   "dist/*.whl",
   "docs/**/*.{css,rst,md,py}",
 ]
-depends-on = ["docs-pip", "docs-scour"]
+depends-on = ["docs-pip", "docs-scour", "dist-hash"]
 outputs = ["build/docs"]
 
 [feature.tasks-docs.tasks.docs-rtd]
@@ -675,7 +675,7 @@ myst_heading_anchors = 3
 html_theme = "pydata_sphinx_theme"
 html_logo = "_static/logo.svg"
 html_favicon = "_static/icon.svg"
-html_static_path = ["_static", "../js/dist/"]
+html_static_path = ["_static", "../js/dist/", "../dist"]
 
 [tool.sphinx.html_theme_options]
 github_url = "{{ ppt.project.urls.Source }}"
