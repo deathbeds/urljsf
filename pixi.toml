@@ -87,9 +87,7 @@ prettier-- = '''yarn prettier
   "{docs,tests,src,js,.github}/**/*.{md,json,yml,yaml,css,ts,tsx,ts,mjs}"'''
 markdownlint-- = 'yarn markdownlint-cli2 "*.md" "{docs,tests,src,js,.github}/**/*.md"'
 py-static-- = """rm -rf src/urljsf/_static/
-  && cp -r js/dist/urljsf src/urljsf/_static/urljsf
-  && cp -r js/schema src/urljsf/_static/schema
-  && rm -rf src/urljsf/_static/urljsf/demo/ src/urljsf/_static/schema/*.toml"""
+  && cp -r js/dist/urljsf src/urljsf/_static/urljsf"""
 platform-- = '''mkdir -p build
   && python -c 'import platform; u = platform.uname(); print(f"{u.system}-{u.machine}".lower())'
   > build/platform.txt'''

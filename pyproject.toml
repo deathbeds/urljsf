@@ -47,10 +47,6 @@ Source = "https://github.com/deathbeds/urljsf"
 [tool.flit.sdist]
 include = ["LICENSE"]
 
-# check-wheel-contents #########################################################
-[tool.check-wheel-contents]
-ignore = ["W002"]
-
 # coverage #####################################################################
 [tool.coverage.run]
 disable_warnings = [
