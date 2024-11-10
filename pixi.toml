@@ -62,6 +62,7 @@ build ALL distributed artifacts""", depends-on = [
 ], cmd = "echo 📦"}
 test = {description = """
 run ALL unit tests""", depends-on = [
+  "dist-pypi",
   "test-pytest",
   "test-min-pytest",
 ], cmd = "echo 🧪"}
@@ -140,13 +141,11 @@ inputs = ["pyproject.toml"]
 description = "- install the built python package for testing"
 cmd = "pixi r -e test pip-whl--"
 inputs = ["dist/*.whl"]
-depends-on = ["dist-pypi"]
 
 [feature.tasks-test-min.tasks.test-min-pip]
 description = "- install the built python package for testing (oldest)"
 cmd = "pixi r -e test-min pip-whl--"
 inputs = ["dist/*.whl"]
-depends-on = ["dist-pypi"]
 
 [feature.tasks-docs.tasks.docs-pip]
 description = "- install the built python package for docs"

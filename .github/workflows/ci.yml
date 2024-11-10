@@ -106,7 +106,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: urljsf-${{ github.run_number }}-build
-      - run: pixi run ${{ matrix.test-env }}-pytest
+      - run: pixi run -v -e ${{ matrix.test-env }}-pytest
       - uses: actions/upload-artifact@v4
         if: always()
         with:
