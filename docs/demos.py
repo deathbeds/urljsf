@@ -269,7 +269,7 @@ def installer() -> Urljsf:
         "license": "BSD-3-Clause",
         "platforms": ["linux-64", "osx-64", "osx-arm64", "win-64"],
         "channels": ["conda-forge"],
-        "dependencies": [{"package": "python", "spec": "3.13.*"}],
+        "dependencies": [{"package": "python", "spec": "*"}],
     }
 
     pixi_checks = {
@@ -307,18 +307,18 @@ def installer() -> Urljsf:
 
     below_template = """
 {% import "_pixi_toml" as p %}
-{% set t = p.pixi_toml(data.pixi) | trim | safe %}
+{% set t = (p.pixi_toml(data.pixi) | trim).val %}
 
 _As TOML:_
 
 ```toml
-{{ t | trim | safe }}
+{{ t }}
 ```
 
 _As URL:_
 
 ```
-data:application/toml,{{ t | trim | urlencode | safe }}
+data:application/toml,{{ t | urlencode  }}
 ```
 """
     macro_import = "{% import '_pixi_toml' as p %}"
@@ -338,7 +338,7 @@ data:application/toml,{{ t | trim | urlencode | safe }}
             "url": [
                 macro_import,
                 "data:application/toml,",
-                "{{ p.pixi_toml(data.pixi) | trim | urlencode | safe }}",
+                "{{ (p.pixi_toml(data.pixi) | trim).val | urlencode }}",
             ],
             "download_filename": "pixi.toml",
             "submit_button": "Download `pixi.toml`",

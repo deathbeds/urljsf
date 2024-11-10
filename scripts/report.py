@@ -22,7 +22,7 @@ thead td, thead th {border-bottom: solid 1px #aaa;}
 
 HEAD = """<html>
   <head>
-    <title>urlsjf test reports</title>
+    <title>urljsf test reports</title>
     <style>{}</style>
   </head>
   <body>

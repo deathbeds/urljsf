@@ -101,9 +101,11 @@ pip-- = """rm -rf build/pip-freeze/$PIXI_ENVIORNMENT_NAME.txt
 pip-check-- = """python -m pip check
   && mkdir -p build/pip-freeze
   && python -m pip list --format=freeze
-  > build/pip-freeze/$PIXI_ENVIRONMENT_NAME"""
-pip-e-- = """pixi r pip-- -e . && pixi r pip-check--"""
-pip-whl-- = """pixi r pip-- urljsf --find-links=dist --no-index && pixi r pip-check--"""
+  > build/pip-freeze/$PIXI_ENVIRONMENT_NAME.txt"""
+pip-e-- = """pixi r pip-- -e .
+  && pixi r pip-check--"""
+pip-whl-- = """pixi r pip-- urljsf --find-links=dist --no-index
+  && pixi r pip-check--"""
 schema-vars-- = '''echo
   PROPS_TS=$PIXI_PROJECT_ROOT/js/src/_props.ts
   PROPS_JSON=$PIXI_PROJECT_ROOT/js/schema/v0/props.schema.json
@@ -268,8 +270,9 @@ cmd = """taplo fmt
     *.toml
     js/demo/toml/*.toml
     js/schema/*.toml
-    tests/fixtures/*/*/*/*.toml"""
-inputs = ["*.toml", "{docs,js,src,tests}/**/*.toml"]
+    tests/fixtures/*/*/*/*.toml
+    atest/fixtures/*.toml"""
+inputs = ["*.toml", "{atest,docs,js,src,tests}/**/*.toml"]
 
 [feature.tasks-lint.tasks.fix-prettier]
 description = "- format web-adjacent files with prettier"

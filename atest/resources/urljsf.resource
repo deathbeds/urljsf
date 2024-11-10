@@ -4,6 +4,8 @@ Documentation       Keywords and variables for urljsf.
 Resource            ./env.resource
 Resource            ./coverage.resource
 Library             SeleniumLibrary
+Library             tomllib    AS    TOML
+Library             json    AS    JSON
 
 
 *** Variables ***
@@ -11,6 +13,7 @@ ${CSS_U_FORM}               .urljsf-form
 ${CSS_U_DATALIST}           .urljsf-datalist
 ${CSS_U_DATALIST_CHECK}     .urljsf-datalist input[type="checkbox"]
 ${CSS_U_SUBMIT}             .urljsf-submit
+&{JSON_NORM}                indent=${2}    sort_keys=${TRUE}
 
 
 *** Keywords ***
@@ -40,3 +43,17 @@ Scroll To
     [Arguments]    ${css_selector}
     Execute Javascript
     ...    document.querySelector(`${css_selector.replace('css:', '')}`).scrollIntoView()
+
+Get TOML Fixture
+    [Documentation]    Get some TOML data.
+    [Arguments]    ${path}
+    ${raw} =    Get File    ${ROOT}${/}atest${/}fixtures${/}${path}
+    ${data} =    TOML.Loads    ${raw}
+    RETURN    ${data}
+
+Should Be JSON Equivalent
+    [Documentation]    Compare two object for normalized JSON equivalence.
+    [Arguments]    ${left}    ${right}    ${message}=${EMPTY}
+    ${left_raw} =    JSON.Dumps    ${left}    &{JSON_NORM}
+    ${right_raw} =    JSON.Dumps    ${right}    &{JSON_NORM}
+    Should Be Equal    ${left_raw}    ${right_raw}    ${message}

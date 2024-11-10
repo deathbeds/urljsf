@@ -1,0 +1,11 @@
+# this fixture is used in `002_installer.robot` after adding `urljsf` as a dependency
+
+[project]
+name = "MyInstaller"
+version = "0.1.0"
+platforms = ["linux-64", "osx-64", "osx-arm64", "win-64"]
+channels = ["conda-forge"]
+
+[dependencies]
+python = "*"
+urljsf = "*"

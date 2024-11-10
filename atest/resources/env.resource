@@ -28,3 +28,4 @@ ${TIMEOUT_LONG}     10s
 ${BUILD}            ${ROOT}${/}build
 ${DOCS}             ${BUILD}${/}docs
 ${DIST_COV}         ${BUILD}${/}dist-cov${/}urljsf
+${DOWNLOADS}        ${OUTPUT_DIR}${/}Downloads
