@@ -10,7 +10,7 @@ title = "urljsf"
 description = "A schema for building forms for building URLs for building..."
 
 "$schema" = "http://json-schema.org/draft-07/schema#"
-"$id" = "https://deathbeds.github.io/urljsf/_static/schema/v0/form.schema.json"
+"$id" = "https://urljsf.rtfd.org/en/latest/_static/urljsf/schema/v0/form.schema.json"
 type = "object"
 required = ["forms", "templates"]
 additionalProperties = false

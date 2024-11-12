@@ -1,4 +1,4 @@
-"""Convert various files."""
+"""Convert various JSON Schema-related files."""
 # Copyright (C) urljsf contributors.
 # Distributed under the terms of the Modified BSD License.
 
@@ -9,7 +9,7 @@ import shutil
 import sys
 from pathlib import Path
 from subprocess import call as _call
-from typing import Any
+from typing import Any, Callable
 
 import tomllib
 
@@ -24,11 +24,11 @@ ROOT = Path(__file__).parent.parent
 YARN = f"""{shutil.which("yarn") or shutil.which("yarn.cmd")}"""
 
 
-def call(args: list[str | Path], **kwargs: Any) -> int:
+def call(args: list[Any], **kwargs: Any) -> int:
     """Echo and then call a command."""
-    args = list(map(str, args))
+    str_args = list(map(str, args))
     print("In:", kwargs.get("cwd", ROOT))
-    print(">>>", CMD_DELIM.join(args), "\n")
+    print(">>>", CMD_DELIM.join(str_args), "\n")
     rc = _call(args, **kwargs)
     if rc:
         print("FAIL", rc)
@@ -44,9 +44,21 @@ def ts_to_json(in_path: Path, out_path: Path) -> int:
         f"--path={in_path}",
         f"--out={out_path}",
     ]
-    if in_path.name == "_props.ts":
+    if out_path.name == "props.schema.json":
         args += ["--type=Props"]
-    return call(args) or call([YARN, "prettier", "--write", out_path])
+    elif out_path.name == "ui.schema.json":
+        args += ["--type=UISchema"]
+    rc = call(args)
+
+    if in_path.name == "_props.ts":
+        raw = json.loads(out_path.read_text(**UTF8))
+        for defn in []:  # KnownUISchema
+            raw["definitions"][defn].pop("additionalProperties")
+        out_path.write_text(json.dumps(raw, indent=2))
+
+    if rc:
+        return rc
+    return call([YARN, "prettier", "--write", out_path])
 
 
 def toml_to_json(in_path: Path, out_path: Path, *def_paths: Path) -> int:
@@ -86,9 +98,9 @@ def json_to_ts(in_path: Path, out_path: Path) -> int:
     ])
 
 
-TYPING_HEADER = """
-from typing import Any, Dict, List, Literal, Required, TypedDict, Union
-""".strip()
+TYPING_HEADER = (
+    "from typing import Any, Dict, List, Literal, Required, TypeAlias, TypedDict, Union"
+)
 SCHEMA_PY_PREAMBLE = f'''
 """Generated schema for ``urljsf``"""
 # Copyright (C) urljsf contributors.
@@ -100,8 +112,8 @@ import sys
 if sys.version_info >= (3, 11):  # pragma: no cover
     {TYPING_HEADER}
 else:  # pragma: no cover
-    {TYPING_HEADER.replace(", Required,", ",")}
-    from typing_extensions import Required
+    {TYPING_HEADER.replace(", Required,", ",").replace(", TypeAlias,", ",")}
+    from typing_extensions import Required, TypeAlias
 '''
 
 
@@ -132,20 +144,24 @@ def json_to_py(in_path: Path, out_path: Path) -> int:
     )
 
 
+CONVERTERS: dict[tuple[str, str], Callable[..., int]] = {
+    (".ts", ".json"): ts_to_json,
+    (".toml", ".json"): toml_to_json,
+    (".json", ".ts"): json_to_ts,
+    (".json", ".py"): json_to_py,
+}
+
+
 def main(in_path: Path, out_path: Path, *extra_paths: Path) -> int:
     """Convert some files."""
     key = in_path.suffix, out_path.suffix
-    converter = {
-        (".ts", ".json"): ts_to_json,
-        (".toml", ".json"): toml_to_json,
-        (".json", ".ts"): json_to_ts,
-        (".json", ".py"): json_to_py,
-    }[key]
+    converter = CONVERTERS[key]
     rc = converter(in_path, out_path, *extra_paths)
     print(
         f"""... converted: {in_path.relative_to(ROOT)}
         to: {out_path.relative_to(ROOT)}"""
     )
+    print("... lines:", len(out_path.read_text(**UTF8).splitlines()))
     return rc
 
 

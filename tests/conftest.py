@@ -31,10 +31,14 @@ if TYPE_CHECKING:
 
     from pytest_html.report_data import ReportData
 
+pytest_plugins = ("sphinx.testing.fixtures",)
+
 WIN = os.name == "win32"
 SEP = ";" if WIN else ":"
 UTF8 = {"encoding": "utf-8"}
 HERE = Path(__file__).parent
+ROOT = HERE.parent
+JS_EXAMPLES = ROOT / "js/demo"
 FIXTURES = HERE / "fixtures"
 
 SPHINX_PROJECTS = FIXTURES / "sphinx"
@@ -44,7 +48,8 @@ CLI_PROJECTS = FIXTURES / "cli"
 VALID_CLI_PROJECTS = CLI_PROJECTS / "valid"
 ALL_VALID_CLI_PROJECTS = {p.name: p for p in VALID_CLI_PROJECTS.glob("*") if p.is_dir()}
 
-pytest_plugins = ("sphinx.testing.fixtures",)
+ALL_DEMO_URLJSF_EXAMPLES = {p.name: p for p in JS_EXAMPLES.rglob("urljsf.*")}
+ALL_DEMO_UI_EXAMPLES = {p.name: p for p in JS_EXAMPLES.rglob("*.uischema.*")}
 
 #: names of fixture projects that won't deploy `schema.json`
 NO_SCHEMA_JSON = ["remote"]
@@ -191,6 +196,20 @@ def a_valid_py_cli_project(
 
     monkeypatch.setenv("PYTHONPATH", str(dest))
     return f"{a_valid_cli_project}-as-py"
+
+
+@pytest.fixture(params=sorted(ALL_DEMO_URLJSF_EXAMPLES.keys()))
+def an_example_urljsf(request: pytest.FixtureRequest) -> dict[str, Any]:
+    """Provide an example."""
+    src = ALL_DEMO_URLJSF_EXAMPLES[request.param]
+    return _parse(src)
+
+
+@pytest.fixture(params=sorted(ALL_DEMO_UI_EXAMPLES.keys()))
+def an_example_ui_schema(request: pytest.FixtureRequest) -> dict[str, Any]:
+    """Provide an example."""
+    src = ALL_DEMO_UI_EXAMPLES[request.param]
+    return _parse(src)
 
 
 def _load_any(stem: str, path: Path) -> tuple[Path, dict[str, Any]]:

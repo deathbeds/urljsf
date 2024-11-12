@@ -40,7 +40,7 @@ yaml = [
 [project.urls]
 "Bug Tracker" = "https://github.com/deathbeds/urljsf/issues"
 Changelog = "https://github.com/deathbeds/urljsf/blob/main/CHANGELOG.md"
-Documentation = "https://urljsf.rtfd.io"
+Documentation = "https://urljsf.rtfd.org"
 PyPI = "https://pypi.org/project/urljsf"
 Source = "https://github.com/deathbeds/urljsf"
 
@@ -120,6 +120,7 @@ isort.known-first-party = ["urljsf"]
   "D415",
   "E501",
   "N815",
+  "PYI016",
   "TCH001",
   "TID252",
   "UP006",

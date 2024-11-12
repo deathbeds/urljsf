@@ -280,27 +280,302 @@ export interface Props {
  * The uiSchema for the form
  */
 export interface UISchema {
-  'ui:options'?: UIOptions;
-  'ui:urljsf:grid'?: {
-    addButton?: string[];
-    children?: {
-      [k: string]: string[];
+  items?: UISchema1;
+  /**
+   * Allows RJSF to override the default field implementation by specifying either the name of a field that is used to look up an implementation from the `fields` list or an actual one-off `Field` component implementation itself
+   */
+  'ui:field'?: string;
+  'ui:fieldReplacesAnyOrOneOf'?: boolean;
+  /**
+   * An object that contains all the potential UI options in a single object
+   */
+  'ui:options'?: {
+    /**
+     * We know that for title, it will be a string, if it is provided
+     */
+    title?: string;
+    /**
+     * We know that for description, it will be a string, if it is provided
+     */
+    description?: string;
+    /**
+     * Any classnames that the user wants to be applied to a field in the ui
+     */
+    classNames?: string;
+    /**
+     * Flag, if set to `true`, will mark all child widgets from a given field as disabled
+     */
+    disabled?: boolean;
+    /**
+     * The default value to use when an input for a field is empty
+     */
+    emptyValue?: boolean | number | string | {} | (unknown[] & {}) | null;
+    /**
+     * Will disable any of the enum options specified in the array (by value)
+     */
+    enumDisabled?: (string | number | boolean)[];
+    /**
+     * Allows a user to provide a list of labels for enum values in the schema
+     */
+    enumNames?:
+      | boolean
+      | number
+      | string
+      | (string[] & {})
+      | (string[] & unknown[])
+      | null;
+    /**
+     * Flag, if set to `true`, will cause the `FileWidget` to show a preview (with download for non-image files)
+     */
+    filePreview?: boolean;
+    /**
+     * Used to add text next to a field to guide the end user in filling it in
+     */
+    help?: string;
+    /**
+     * Flag, if set to `true`, will hide the default error display for the given field AND all of its child fields in the hierarchy
+     */
+    hideError?: boolean;
+    /**
+     * Flag, if set to `true`, will mark a list of checkboxes as displayed all on one line instead of one per row
+     */
+    inline?: boolean;
+    /**
+     * Used to change the input type (for example, `tel` or `email`) for an <input>
+     */
+    inputType?: string;
+    /**
+     * This property allows you to reorder the properties that are shown for a particular object
+     */
+    order?: boolean | number | string | (string[] & {}) | (string[] & unknown[]) | null;
+    /**
+     * We know that for placeholder, it will be a string, if it is provided
+     */
+    placeholder?: string;
+    /**
+     * Flag, if set to `true`, will mark all child widgets from a given field as read-only
+     */
+    readonly?: boolean;
+    /**
+     * Provides a means to set the initial height of a textarea widget
+     */
+    rows?: number;
+    style?: {};
+    /**
+     * custom overrides for urlsjf grid
+     */
+    'urljsf:grid'?: {
+      addButton?: string[];
+      children?: {
+        [k: string]: string[];
+      };
+      default?: string[];
     };
-    default?: string[];
+    widget?: string;
   };
+  'ui:rootFieldId'?: string;
+  [k: string]: UISchema2 | unknown;
+}
+/**
+ * An array of objects representing the items in the array
+ */
+export interface UISchema1 {
+  items?: UISchema1;
+  /**
+   * Allows RJSF to override the default field implementation by specifying either the name of a field that is used to look up an implementation from the `fields` list or an actual one-off `Field` component implementation itself
+   */
+  'ui:field'?: string;
+  'ui:fieldReplacesAnyOrOneOf'?: boolean;
+  /**
+   * An object that contains all the potential UI options in a single object
+   */
+  'ui:options'?: {
+    /**
+     * We know that for title, it will be a string, if it is provided
+     */
+    title?: string;
+    /**
+     * We know that for description, it will be a string, if it is provided
+     */
+    description?: string;
+    /**
+     * Any classnames that the user wants to be applied to a field in the ui
+     */
+    classNames?: string;
+    /**
+     * Flag, if set to `true`, will mark all child widgets from a given field as disabled
+     */
+    disabled?: boolean;
+    /**
+     * The default value to use when an input for a field is empty
+     */
+    emptyValue?: boolean | number | string | {} | (unknown[] & {}) | null;
+    /**
+     * Will disable any of the enum options specified in the array (by value)
+     */
+    enumDisabled?: (string | number | boolean)[];
+    /**
+     * Allows a user to provide a list of labels for enum values in the schema
+     */
+    enumNames?:
+      | boolean
+      | number
+      | string
+      | (string[] & {})
+      | (string[] & unknown[])
+      | null;
+    /**
+     * Flag, if set to `true`, will cause the `FileWidget` to show a preview (with download for non-image files)
+     */
+    filePreview?: boolean;
+    /**
+     * Used to add text next to a field to guide the end user in filling it in
+     */
+    help?: string;
+    /**
+     * Flag, if set to `true`, will hide the default error display for the given field AND all of its child fields in the hierarchy
+     */
+    hideError?: boolean;
+    /**
+     * Flag, if set to `true`, will mark a list of checkboxes as displayed all on one line instead of one per row
+     */
+    inline?: boolean;
+    /**
+     * Used to change the input type (for example, `tel` or `email`) for an <input>
+     */
+    inputType?: string;
+    /**
+     * This property allows you to reorder the properties that are shown for a particular object
+     */
+    order?: boolean | number | string | (string[] & {}) | (string[] & unknown[]) | null;
+    /**
+     * We know that for placeholder, it will be a string, if it is provided
+     */
+    placeholder?: string;
+    /**
+     * Flag, if set to `true`, will mark all child widgets from a given field as read-only
+     */
+    readonly?: boolean;
+    /**
+     * Provides a means to set the initial height of a textarea widget
+     */
+    rows?: number;
+    style?: {};
+    /**
+     * custom overrides for urlsjf grid
+     */
+    'urljsf:grid'?: {
+      addButton?: string[];
+      children?: {
+        [k: string]: string[];
+      };
+      default?: string[];
+    };
+    widget?: string;
+  };
+  'ui:rootFieldId'?: string;
+  [k: string]: unknown;
 }
 /**
  * This interface was referenced by `Urljsf`'s JSON-Schema
- * via the `definition` "UIOptions".
+ * via the `definition` "UISchema".
  */
-export interface UIOptions {
-  'urljsf:grid'?: {
-    addButton?: string[];
-    children?: {
-      [k: string]: string[];
+export interface UISchema2 {
+  items?: UISchema1;
+  /**
+   * Allows RJSF to override the default field implementation by specifying either the name of a field that is used to look up an implementation from the `fields` list or an actual one-off `Field` component implementation itself
+   */
+  'ui:field'?: string;
+  'ui:fieldReplacesAnyOrOneOf'?: boolean;
+  /**
+   * An object that contains all the potential UI options in a single object
+   */
+  'ui:options'?: {
+    /**
+     * We know that for title, it will be a string, if it is provided
+     */
+    title?: string;
+    /**
+     * We know that for description, it will be a string, if it is provided
+     */
+    description?: string;
+    /**
+     * Any classnames that the user wants to be applied to a field in the ui
+     */
+    classNames?: string;
+    /**
+     * Flag, if set to `true`, will mark all child widgets from a given field as disabled
+     */
+    disabled?: boolean;
+    /**
+     * The default value to use when an input for a field is empty
+     */
+    emptyValue?: boolean | number | string | {} | (unknown[] & {}) | null;
+    /**
+     * Will disable any of the enum options specified in the array (by value)
+     */
+    enumDisabled?: (string | number | boolean)[];
+    /**
+     * Allows a user to provide a list of labels for enum values in the schema
+     */
+    enumNames?:
+      | boolean
+      | number
+      | string
+      | (string[] & {})
+      | (string[] & unknown[])
+      | null;
+    /**
+     * Flag, if set to `true`, will cause the `FileWidget` to show a preview (with download for non-image files)
+     */
+    filePreview?: boolean;
+    /**
+     * Used to add text next to a field to guide the end user in filling it in
+     */
+    help?: string;
+    /**
+     * Flag, if set to `true`, will hide the default error display for the given field AND all of its child fields in the hierarchy
+     */
+    hideError?: boolean;
+    /**
+     * Flag, if set to `true`, will mark a list of checkboxes as displayed all on one line instead of one per row
+     */
+    inline?: boolean;
+    /**
+     * Used to change the input type (for example, `tel` or `email`) for an <input>
+     */
+    inputType?: string;
+    /**
+     * This property allows you to reorder the properties that are shown for a particular object
+     */
+    order?: boolean | number | string | (string[] & {}) | (string[] & unknown[]) | null;
+    /**
+     * We know that for placeholder, it will be a string, if it is provided
+     */
+    placeholder?: string;
+    /**
+     * Flag, if set to `true`, will mark all child widgets from a given field as read-only
+     */
+    readonly?: boolean;
+    /**
+     * Provides a means to set the initial height of a textarea widget
+     */
+    rows?: number;
+    style?: {};
+    /**
+     * custom overrides for urlsjf grid
+     */
+    'urljsf:grid'?: {
+      addButton?: string[];
+      children?: {
+        [k: string]: string[];
+      };
+      default?: string[];
     };
-    default?: string[];
+    widget?: string;
   };
+  'ui:rootFieldId'?: string;
+  [k: string]: UISchema2 | unknown;
 }
 /**
  * simple CSS rules scoped to the current form id, or objects keyed by child
@@ -441,22 +716,6 @@ export interface Props1 {
    */
   target?: string;
   uiSchema?: UISchema;
-}
-/**
- * an rjsf ui schema, with light extension
- *
- * This interface was referenced by `Urljsf`'s JSON-Schema
- * via the `definition` "UISchema".
- */
-export interface UISchema1 {
-  'ui:options'?: UIOptions;
-  'ui:urljsf:grid'?: {
-    addButton?: string[];
-    children?: {
-      [k: string]: string[];
-    };
-    default?: string[];
-  };
 }
 /**
  * A literal object

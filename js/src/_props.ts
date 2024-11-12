@@ -1,6 +1,7 @@
 // Copyright (C) urljsf contributors.
 // Distributed under the terms of the Modified BSD License.
 import { FormProps } from '@rjsf/core';
+import { UIOptionsType, UiSchema } from '@rjsf/utils';
 
 /** JSON-compatible default values for `rjsf` [`Form.props`][form-props].
  *
@@ -16,18 +17,52 @@ export interface UrljsfGridOptions {
   addButton: string[];
 }
 
-export interface UIOptions {
-  'urljsf:grid'?: Partial<UrljsfGridOptions>;
-  [key: string]: any;
+export interface SimpleRjsfUIOptions
+  extends Pick<
+    UIOptionsType<any, any, any>,
+    | 'classNames'
+    | 'description'
+    | 'disabled'
+    | 'emptyValue'
+    | 'enumDisabled'
+    | 'enumNames'
+    | 'filePreview'
+    | 'help'
+    | 'hideError'
+    | 'inline'
+    | 'inputType'
+    | 'order'
+    | 'placeholder'
+    | 'readonly'
+    | 'rows'
+    | 'title'
+  > {
+  style: Record<string, any>;
+  widget: string;
+  enumDisabled: Array<string | number | boolean>;
+  /** custom overrides for urlsjf grid */
+  'urljsf:grid': Partial<UrljsfGridOptions>;
 }
 
-/** an rjsf ui schema, with light extension
- */
-export interface UISchema {
-  'ui:urljsf:grid'?: Partial<UrljsfGridOptions>;
-  'ui:options'?: UIOptions;
-  [key: string]: any;
+export interface KnownUISchema
+  extends Omit<
+    UiSchema<any, any, any>,
+    'ui:options' | 'ui:globalOptions' | 'ui:field'
+  > {
+  /** Allows RJSF to override the default field implementation by specifying either the name of a field that is used
+   * to look up an implementation from the `fields` list or an actual one-off `Field` component implementation itself
+   */
+
+  'ui:field'?: string;
+  /** An object that contains all the potential UI options in a single object */
+  'ui:options'?: Partial<SimpleRjsfUIOptions> & { [key: string]: unknown };
+  /** An array of objects representing the items in the array */
+  items?: UISchema;
 }
+
+export type UISchema = KnownUISchema & {
+  [key: string]: UISchema | unknown;
+};
 
 /**
  * simplifications of important fields which are out of scope to fully support inline.

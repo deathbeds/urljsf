@@ -9,7 +9,7 @@ import sys
 from io import StringIO
 from pathlib import Path
 from subprocess import call
-from typing import Any
+from typing import Any, Callable
 
 import ruamel.yaml.representer
 import tomllib
@@ -21,13 +21,14 @@ ROOT = HERE.parent
 DEMO = ROOT / "js/demo"
 INDEX = DEMO / "index.html"
 TOML = sorted(DEMO.glob("toml/*.toml"))
-JSON_FMT = {"sort_keys": True, "indent": 2}
+JSON_FMT: Any = {"sort_keys": True, "indent": 2}
+YLS_COMMENT = "# yaml-language-server: $schema="
 
-DECODERS = {
+DECODERS: dict[str, Callable[[str], dict[str, Any]]] = {
     "yaml": lambda t: yaml.load(t),
     "json": lambda t: json.loads(t),
 }
-ENCODERS = {
+ENCODERS: dict[str, Callable[[dict[str, Any]], str]] = {
     "yaml": lambda d: _safe_dump(d),
     "json": lambda d: json.dumps(d, indent=2),
 }
@@ -50,7 +51,7 @@ yaml.default_flow_style = False
 yaml.Representer = YamlRepresenter
 
 
-def _preserve_order(obj: any) -> any:
+def _preserve_order(obj: Any) -> Any:
     """Replace with order-preserving yaml."""
     if isinstance(obj, dict):
         return ruamel.yaml.CommentedMap(obj)
@@ -83,6 +84,7 @@ def main() -> int:
     for toml in TOML:
         raw = toml.read_text(**UTF8)
         stem = toml.stem
+        kind = "ui" if "uischema" in stem else None
         for fmt, encode in ENCODERS.items():
             print(".", end="")
             data = tomllib.loads(raw.replace("toml", fmt).replace("TOML", fmt.upper()))
@@ -96,8 +98,14 @@ def main() -> int:
                     continue
             print("\n... writing", out)
             out.parent.mkdir(exist_ok=True)
-            text = encode(data).strip()
-            out.write_text(text + "\n", **UTF8)
+            chunks = [encode(data).strip(), ""]
+            if kind and fmt == "yaml":
+                chunks = [
+                    f"{YLS_COMMENT}../../schema/v0/{kind}.schema.json#",
+                    "",
+                    *chunks,
+                ]
+            out.write_text("\n".join(chunks), **UTF8)
             wrote += [out]
 
     rc = 0
