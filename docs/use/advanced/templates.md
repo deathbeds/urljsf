@@ -3,10 +3,10 @@
 The top-level `templates` option describes a few key fields, such as [`url`](#url) which
 are evaluated by [`nunjucks`][nunjucks].
 
-Additional templates can be defined and [imported][import] for reuse as blocks or
-macros.
+[`checks`](#checks) are _also_ evaluated as `nunjucks` templates.
 
-[`checks`](#checks) are _also_ evaluated at `nunjucks` templates.
+Additional `templates` can be defined and [imported][import] for reuse as blocks or
+macros in other `templates` or `checks`.
 
 [nunjucks]: https://mozilla.github.io/nunjucks/templating.html
 [import]: https://mozilla.github.io/nunjucks/templating.html#import
@@ -24,7 +24,7 @@ Each `template` gets an object of this form:
 
 ### Special Templates
 
-A few well-known templates names patterns are used globally.
+A few well-known template names and patterns are used globally.
 
 #### `url`
 

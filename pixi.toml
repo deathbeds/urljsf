@@ -521,10 +521,9 @@ cmd = "cd js/dist && python -m http.server -b 127.0.0.1 8100"
 
 [feature.tasks-docs.tasks.serve-docs]
 description = "- serve the docs"
-cmd = """rm -rf build/docs
-  && pixi r docs-sphinx
-  && cd build/docs
+cmd = """cd build/docs
   && python -m http.server -b 127.0.0.1 8101"""
+depends-on = ["docs-sphinx"]
 
 [feature.tasks-docs.tasks.watch-docs]
 description = "- watch docs source and rebuild the site"

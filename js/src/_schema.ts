@@ -67,10 +67,9 @@ export type ASchema3 = SchemaByURL | InlineObject;
  */
 export type AnySchemaLocation = string;
 /**
- * [`nunjucks`][nunjucks] strings (or lists of strings) that control how strings
- * are built from forms. See documentation for further customizations.
- *
- * [nunjucks]: https://mozilla.github.io/nunjucks/templating.html
+ * [nunjucks](https://mozilla.github.io/nunjucks/templating.html) strings
+ * (or lists of strings) that control how strings are built from forms.
+ * See documentation for further customizations.
  *
  * This interface was referenced by `Urljsf`'s JSON-Schema
  * via the `definition` "templates".
@@ -171,9 +170,9 @@ export interface AnyForm {
  */
 export interface InlineObject {}
 /**
- * JSON-compatible default values for `rjsf` [`Form.props`][form-props].
+ * JSON-compatible default values for `rjsf` [Form.props][props].
  *
- * [form-props]: https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/form-props
+ * [props]: https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/form-props
  */
 export interface Props {
   /**
@@ -609,9 +608,9 @@ export interface KnownTemplates {
   url?: string | [string, ...string[]];
 }
 /**
- * JSON-compatible default values for `rjsf` [`Form.props`][form-props].
+ * JSON-compatible default values for `rjsf` [Form.props][props].
  *
- * [form-props]: https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/form-props
+ * [props]: https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/form-props
  *
  * This interface was referenced by `Urljsf`'s JSON-Schema
  * via the `definition` "Props".

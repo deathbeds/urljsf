@@ -1,4 +1,3 @@
-__.+__
 _.+_
 --?.+
 .+…
@@ -40,6 +39,7 @@ fixtured
 focusOnFirstError
 form_data
 form(Context|Data)
+Form\.props.*
 Git(Lab|Hub)
 globals
 hideError
@@ -97,6 +97,7 @@ uniqueItems
 url
 urljsf
 whitespace
+wordmark
 xkcd
 XKCD
 YAML

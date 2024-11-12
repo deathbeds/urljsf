@@ -67,7 +67,7 @@
   "definitions": {
     "Props": {
       "type": "object",
-      "description": "JSON-compatible default values for `rjsf` [`Form.props`][form-props].\n\n[form-props]: https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/form-props",
+      "description": "JSON-compatible default values for `rjsf` [Form.props][props].\n\n[props]: https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/form-props",
       "properties": {
         "acceptCharset": {
           "type": "string",
@@ -547,7 +547,7 @@
       }
     },
     "templates": {
-      "description": "[`nunjucks`][nunjucks] strings (or lists of strings) that control how strings\nare built from forms. See documentation for further customizations.\n\n[nunjucks]: https://mozilla.github.io/nunjucks/templating.html",
+      "description": "[nunjucks](https://mozilla.github.io/nunjucks/templating.html) strings\n(or lists of strings) that control how strings are built from forms.\nSee documentation for further customizations.",
       "allOf": [
         {
           "$ref": "#/definitions/known-templates"

@@ -3,9 +3,9 @@
 import { FormProps } from '@rjsf/core';
 import { UIOptionsType, UiSchema } from '@rjsf/utils';
 
-/** JSON-compatible default values for `rjsf` [`Form.props`][form-props].
+/** JSON-compatible default values for `rjsf` [Form.props][props].
  *
- * [form-props]: https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/form-props
+ * [props]: https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/form-props
  */
 export default interface Props
   extends Omit<FormProps, keyof Overloads | IgnoredProps | DesiredProps>,

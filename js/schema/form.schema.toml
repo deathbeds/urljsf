@@ -74,11 +74,9 @@ patternProperties = {'[a-zA-Z\d\-_]+' = {"$ref" = "#/definitions/any-form"}}
 # templates ####################################################################
 [definitions.templates]
 description = """
-[`nunjucks`][nunjucks] strings (or lists of strings) that control how strings
-are built from forms. See documentation for further customizations.
-
-[nunjucks]: https://mozilla.github.io/nunjucks/templating.html
-"""
+[nunjucks](https://mozilla.github.io/nunjucks/templating.html) strings
+(or lists of strings) that control how strings are built from forms.
+See documentation for further customizations."""
 [[definitions.templates.allOf]]
 "$ref" = "#/definitions/known-templates"
 

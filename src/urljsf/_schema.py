@@ -57,9 +57,9 @@ class AnyForm(TypedDict, total=False):
 
     props: _Props
     """
-    JSON-compatible default values for `rjsf` [`Form.props`][form-props].
+    JSON-compatible default values for `rjsf` [Form.props][props].
 
-    [form-props]: https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/form-props
+    [props]: https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/form-props
     """
 
     schema: ASchema
@@ -135,10 +135,9 @@ Urljsf = TypedDict(
         "nunjucks": "_UrljsfNunjucks",
         # | CSS rules, or nested selector objects containing more rules
         "style": "_Styles",
-        # | [`nunjucks`][nunjucks] strings (or lists of strings) that control how strings
-        # | are built from forms. See documentation for further customizations.
-        # |
-        # | [nunjucks]: https://mozilla.github.io/nunjucks/templating.html
+        # | [nunjucks](https://mozilla.github.io/nunjucks/templating.html) strings
+        # | (or lists of strings) that control how strings are built from forms.
+        # | See documentation for further customizations.
         # |
         # |
         # | WARNING: Normally the types should be a mix of each other instead of Union.
@@ -200,9 +199,9 @@ _Forms = Dict[str, "AnyForm"]
 
 
 class _Props(TypedDict, total=False):
-    """JSON-compatible default values for `rjsf` [`Form.props`][form-props].
+    """JSON-compatible default values for `rjsf` [Form.props][props].
 
-    [form-props]: https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/form-props
+    [props]: https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/form-props
     """
 
     acceptCharset: str
@@ -305,10 +304,9 @@ _Styles = Dict[str, "_AnyStyle"]
 
 _Templates = Union[Dict[str, "_AnyTemplate"], "_TemplatesTyped"]
 """
-[`nunjucks`][nunjucks] strings (or lists of strings) that control how strings
-are built from forms. See documentation for further customizations.
-
-[nunjucks]: https://mozilla.github.io/nunjucks/templating.html
+[nunjucks](https://mozilla.github.io/nunjucks/templating.html) strings
+(or lists of strings) that control how strings are built from forms.
+See documentation for further customizations.
 
 
 WARNING: Normally the types should be a mix of each other instead of Union.
