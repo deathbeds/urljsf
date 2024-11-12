@@ -25,7 +25,11 @@ export type SchemaByURL = string;
  * This interface was referenced by `Urljsf`'s JSON-Schema
  * via the `definition` "UISchema".
  */
-export type UISchema = KnownUISchema | ItemSchema | SimpleUISchema;
+export type UISchema =
+  | KnownUISchema
+  | {
+      [k: string]: UISchema;
+    };
 /**
  * A schema-like object referenced by URL, or inline as an object
  */
@@ -282,15 +286,20 @@ export interface Props {
   /**
    * The uiSchema for the form
    */
-  uiSchema?: KnownUISchema | ItemSchema | SimpleUISchema;
+  uiSchema?:
+    | KnownUISchema
+    | {
+        [k: string]: UISchema;
+      };
 }
 /**
- * an rjsf ui schema, with light extension
- *
  * This interface was referenced by `Urljsf`'s JSON-Schema
  * via the `definition` "KnownUISchema".
  */
 export interface KnownUISchema {
+  items?: UISchema;
+  'ui:field'?: string;
+  'ui:fieldReplacesAnyOrOneOf'?: boolean;
   'ui:options'?: {
     /**
      * We know that for title, it will be a string, if it is provided
@@ -368,28 +377,6 @@ export interface KnownUISchema {
     };
     widget?: string;
   };
-  'ui:urljsf:grid'?: {
-    addButton?: string[];
-    children?: {
-      [k: string]: string[];
-    };
-    default?: string[];
-  };
-}
-/**
- * This interface was referenced by `Urljsf`'s JSON-Schema
- * via the `definition` "ItemSchema".
- */
-export interface ItemSchema {
-  items: UISchema;
-}
-/**
- * This interface was referenced by `Urljsf`'s JSON-Schema
- * via the `definition` "SimpleUISchema".
- */
-export interface SimpleUISchema {
-  'ui:field'?: string;
-  'ui:fieldReplacesAnyOrOneOf'?: boolean;
   'ui:rootFieldId'?: string;
 }
 /**
@@ -533,7 +520,11 @@ export interface Props1 {
   /**
    * The uiSchema for the form
    */
-  uiSchema?: KnownUISchema | ItemSchema | SimpleUISchema;
+  uiSchema?:
+    | KnownUISchema
+    | {
+        [k: string]: UISchema;
+      };
 }
 /**
  * A literal object

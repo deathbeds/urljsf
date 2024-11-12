@@ -44,14 +44,16 @@ def ts_to_json(in_path: Path, out_path: Path) -> int:
         f"--path={in_path}",
         f"--out={out_path}",
     ]
-    if in_path.name == "_props.ts":
+    if out_path.name == "props.schema.json":
         args += ["--type=Props"]
+    elif out_path.name == "ui.schema.json":
+        args += ["--type=UISchema"]
     rc = call(args)
+
     if in_path.name == "_props.ts":
         raw = json.loads(out_path.read_text(**UTF8))
-        raw["definitions"]["UISchema"]["additionalProperties"] = {
-            "$ref": "#/definitions/UISchema"
-        }
+        for defn in ["KnownUISchema"]:
+            raw["definitions"][defn].pop("additionalProperties")
         out_path.write_text(json.dumps(raw, indent=2))
 
     if rc:

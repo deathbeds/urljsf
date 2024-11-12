@@ -1,3 +1,5 @@
+#:schema ../../schema/v0/ui.schema.json
+
 ["ui:options"]
 title = "A Task List (from TOML-based UI schema)"
 

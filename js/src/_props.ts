@@ -17,10 +17,6 @@ export interface UrljsfGridOptions {
   addButton: string[];
 }
 
-export interface UrljsfUIOptions {
-  'urljsf:grid': Partial<UrljsfGridOptions>;
-}
-
 export interface SimpleRjsfUIOptions
   extends Pick<
     UIOptionsType<any, any, any>,
@@ -48,28 +44,24 @@ export interface SimpleRjsfUIOptions
   enumDisabled: Array<string | number | boolean>;
   enumNames: string[];
   order: string[];
+  'urljsf:grid': Partial<UrljsfGridOptions>;
 }
 
-/** an rjsf ui schema, with light extension
- */
-export interface KnownUISchema {
-  'ui:urljsf:grid'?: Partial<UrljsfGridOptions>;
-  'ui:options'?: Partial<UrljsfUIOptions> & Partial<SimpleRjsfUIOptions>;
-}
-
-export interface ItemSchema {
-  items: UISchema;
-}
-
-export interface SimpleUISchema
+export interface KnownUISchema
   extends Omit<
     UiSchema<any, any, any>,
     'ui:options' | 'ui:globalOptions' | 'ui:field'
   > {
   'ui:field'?: string;
+  'ui:options'?: Partial<SimpleRjsfUIOptions>;
+  items?: UISchema;
 }
 
-export type UISchema = KnownUISchema | ItemSchema | SimpleUISchema;
+export type UISchema =
+  | KnownUISchema
+  | {
+      [key: string]: UISchema;
+    };
 
 /**
  * simplifications of important fields which are out of scope to fully support inline.

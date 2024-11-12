@@ -120,6 +120,7 @@ isort.known-first-party = ["urljsf"]
   "D415",
   "E501",
   "N815",
+  "PYI016",
   "TCH001",
   "TID252",
   "UP006",

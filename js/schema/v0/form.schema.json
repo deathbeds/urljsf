@@ -65,20 +65,18 @@
   },
   "additionalProperties": false,
   "definitions": {
-    "ItemSchema": {
+    "KnownUISchema": {
       "type": "object",
       "properties": {
         "items": {
           "$ref": "#/definitions/UISchema"
-        }
-      },
-      "additionalProperties": false,
-      "required": ["items"]
-    },
-    "KnownUISchema": {
-      "type": "object",
-      "description": "an rjsf ui schema, with light extension",
-      "properties": {
+        },
+        "ui:field": {
+          "type": "string"
+        },
+        "ui:fieldReplacesAnyOrOneOf": {
+          "type": "boolean"
+        },
         "ui:options": {
           "type": "object",
           "properties": {
@@ -226,35 +224,10 @@
           },
           "additionalProperties": false
         },
-        "ui:urljsf:grid": {
-          "type": "object",
-          "properties": {
-            "addButton": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            "children": {
-              "type": "object",
-              "additionalProperties": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
-            },
-            "default": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          "additionalProperties": false
+        "ui:rootFieldId": {
+          "type": "string"
         }
-      },
-      "additionalProperties": false
+      }
     },
     "Props": {
       "type": "object",
@@ -364,34 +337,16 @@
       },
       "additionalProperties": false
     },
-    "SimpleUISchema": {
-      "type": "object",
-      "properties": {
-        "ui:field": {
-          "type": "string"
-        },
-        "ui:fieldReplacesAnyOrOneOf": {
-          "type": "boolean"
-        },
-        "ui:rootFieldId": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": false
-    },
     "UISchema": {
-      "additionalProperties": {
-        "$ref": "#/definitions/UISchema"
-      },
       "anyOf": [
         {
           "$ref": "#/definitions/KnownUISchema"
         },
         {
-          "$ref": "#/definitions/ItemSchema"
-        },
-        {
-          "$ref": "#/definitions/SimpleUISchema"
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/UISchema"
+          }
         }
       ]
     },

@@ -199,17 +199,15 @@ _Forms = Dict[str, "AnyForm"]
 """ forms used to build and populate a URL """
 
 
-class _ItemSchema(TypedDict, total=False):
-    items: Required[_Uischema]
-    """ Required property """
-
-
-# | an rjsf ui schema, with light extension
 _KnownUischema = TypedDict(
     "_KnownUischema",
     {
+        # | Aggregation type: anyOf
+        "items": "_Uischema",
+        "ui:field": str,
+        "ui:fieldReplacesAnyOrOneOf": bool,
         "ui:options": "_KnownUischemaUiColonOptions",
-        "ui:urljsf:grid": "_KnownUischemaUiColonUrljsfColonGrid",
+        "ui:rootFieldId": str,
     },
     total=False,
 )
@@ -285,12 +283,6 @@ items:
 
 
 class _KnownUischemaUiColonOptionsUrljsfColonGrid(TypedDict, total=False):
-    addButton: List[str]
-    children: Dict[str, List[str]]
-    default: List[str]
-
-
-class _KnownUischemaUiColonUrljsfColonGrid(TypedDict, total=False):
     addButton: List[str]
     children: Dict[str, List[str]]
     default: List[str]
@@ -379,12 +371,7 @@ class _Props(TypedDict, total=False):
     """ The value of this prop will be passed to the `target` HTML attribute on the form """
 
     uiSchema: _Uischema
-    """
-    additionalProperties:
-      $ref: '#/definitions/UISchema'
-
-    Aggregation type: anyOf
-    """
+    """ Aggregation type: anyOf """
 
 
 _PropsShowerrorlist = Literal[False, "top", "bottom"]
@@ -395,17 +382,6 @@ _PROPSSHOWERRORLIST_TOP: Literal["top"] = "top"
 """The values for the 'When this prop is set to `top` or 'bottom', a list of errors (or the custom error list defined in the `ErrorList`) will also show. When set to false, only inline input validation errors will be shown. Set to `top` by default' enum"""
 _PROPSSHOWERRORLIST_BOTTOM: Literal["bottom"] = "bottom"
 """The values for the 'When this prop is set to `top` or 'bottom', a list of errors (or the custom error list defined in the `ErrorList`) will also show. When set to false, only inline input validation errors will be shown. Set to `top` by default' enum"""
-
-
-_SimpleUischema = TypedDict(
-    "_SimpleUischema",
-    {
-        "ui:field": str,
-        "ui:fieldReplacesAnyOrOneOf": bool,
-        "ui:rootFieldId": str,
-    },
-    total=False,
-)
 
 
 _Styles = Dict[str, "_AnyStyle"]
@@ -440,13 +416,8 @@ _URLJSF_NO_BOOTSTRAP_DEFAULT = False
 """ Default value of the field path 'urljsf no_bootstrap' """
 
 
-_Uischema = Union["_KnownUischema", "_ItemSchema", "_SimpleUischema"]
-"""
-additionalProperties:
-  $ref: '#/definitions/UISchema'
-
-Aggregation type: anyOf
-"""
+_Uischema = Union["_KnownUischema", Dict[str, "_Uischema"]]
+""" Aggregation type: anyOf """
 
 
 class _UrljsfNunjucks(TypedDict, total=False):

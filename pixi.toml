@@ -109,11 +109,14 @@ pip-whl-- = """pixi r pip-- urljsf --find-links=dist --no-index
 schema-vars-- = '''echo
   PROPS_TS=$PIXI_PROJECT_ROOT/js/src/_props.ts
   PROPS_JSON=$PIXI_PROJECT_ROOT/js/schema/v0/props.schema.json
+  UI_JSON=$PIXI_PROJECT_ROOT/js/schema/v0/ui.schema.json
   SCHEMA_TOML=$PIXI_PROJECT_ROOT/js/schema/form.schema.toml
   SCHEMA_JSON=$PIXI_PROJECT_ROOT/js/schema/v0/form.schema.json
   SCHEMA_TS=$PIXI_PROJECT_ROOT/js/src/_schema.ts
   SCHEMA_PY=$PIXI_PROJECT_ROOT/src/urljsf/_schema.py'''
-schema-ts-json-- = "python scripts/schema.py $PROPS_TS $PROPS_JSON"
+schema-ts-json-- = """python scripts/schema.py $PROPS_TS $PROPS_JSON
+&& python scripts/schema.py $PROPS_TS $UI_JSON
+"""
 schema-toml-json-- = "python scripts/schema.py $SCHEMA_TOML $SCHEMA_JSON $PROPS_JSON"
 
 [feature.tasks-build.tasks]
