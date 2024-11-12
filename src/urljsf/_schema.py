@@ -7,11 +7,11 @@ from __future__ import annotations
 import sys
 
 if sys.version_info >= (3, 11):  # pragma: no cover
-    from typing import Any, Dict, List, Literal, Required, TypedDict, Union
+    from typing import Any, Dict, List, Literal, Required, TypeAlias, TypedDict, Union
 else:  # pragma: no cover
     from typing import Any, Dict, List, Literal, TypedDict, Union
 
-    from typing_extensions import Required
+    from typing_extensions import Required, TypeAlias
 
 
 ASchema = Union["_AnySchemaLocation", "AnInlineObject"]
@@ -199,6 +199,103 @@ _Forms = Dict[str, "AnyForm"]
 """ forms used to build and populate a URL """
 
 
+class _ItemSchema(TypedDict, total=False):
+    items: Required[_Uischema]
+    """ Required property """
+
+
+# | an rjsf ui schema, with light extension
+_KnownUischema = TypedDict(
+    "_KnownUischema",
+    {
+        "ui:options": "_KnownUischemaUiColonOptions",
+        "ui:urljsf:grid": "_KnownUischemaUiColonUrljsfColonGrid",
+    },
+    total=False,
+)
+
+
+_KnownUischemaUiColonOptions = TypedDict(
+    "_KnownUischemaUiColonOptions",
+    {
+        # | We know that for title, it will be a string, if it is provided
+        "title": str,
+        # | We know that for description, it will be a string, if it is provided
+        "description": str,
+        "autoComplete": bool,
+        "autoFocus": bool,
+        # | Any classnames that the user wants to be applied to a field in the ui
+        "classNames": str,
+        # | Flag, if set to `true`, will mark all child widgets from a given field as disabled
+        "disabled": bool,
+        # | The default value to use when an input for a field is empty
+        # |
+        # | Aggregation type: anyOf
+        "emptyValue": "_KnownUischemaUiColonOptionsEmptyvalue",
+        # | Will disable any of the enum options specified in the array (by value)
+        "enumDisabled": List[Union[str, Union[int, float], bool]],
+        # | Allows a user to provide a list of labels for enum values in the schema
+        "enumNames": List[str],
+        # | Flag, if set to `true`, will cause the `FileWidget` to show a preview (with download for non-image files)
+        "filePreview": bool,
+        # | Used to add text next to a field to guide the end user in filling it in
+        "help": str,
+        # | Flag, if set to `true`, will hide the default error display for the given field AND all of its child fields in the hierarchy
+        "hideError": bool,
+        # | Flag, if set to `true`, will mark a list of checkboxes as displayed all on one line instead of one per row
+        "inline": bool,
+        # | Used to change the input type (for example, `tel` or `email`) for an <input>
+        "inputType": str,
+        # | This property allows you to reorder the properties that are shown for a particular object
+        "order": List[str],
+        # | We know that for placeholder, it will be a string, if it is provided
+        "placeholder": str,
+        # | Flag, if set to `true`, will mark all child widgets from a given field as read-only
+        "readonly": bool,
+        # | Provides a means to set the initial height of a textarea widget
+        "rows": Union[int, float],
+        "style": Dict[str, Any],
+        "urljsf:grid": "_KnownUischemaUiColonOptionsUrljsfColonGrid",
+        "widget": str,
+    },
+    total=False,
+)
+
+
+_KnownUischemaUiColonOptionsEmptyvalue = Union[
+    bool,
+    Union[int, float],
+    str,
+    Dict[str, Any],
+    "_KnownUischemaUiColonOptionsEmptyvalueAnyof",
+    None,
+]
+"""
+The default value to use when an input for a field is empty
+
+Aggregation type: anyOf
+"""
+
+
+_KnownUischemaUiColonOptionsEmptyvalueAnyof: TypeAlias = None
+"""
+items:
+  {}
+"""
+
+
+class _KnownUischemaUiColonOptionsUrljsfColonGrid(TypedDict, total=False):
+    addButton: List[str]
+    children: Dict[str, List[str]]
+    default: List[str]
+
+
+class _KnownUischemaUiColonUrljsfColonGrid(TypedDict, total=False):
+    addButton: List[str]
+    children: Dict[str, List[str]]
+    default: List[str]
+
+
 class _Props(TypedDict, total=False):
     """JSON-compatible default values for `rjsf` [`Form.props`][form-props].
 
@@ -282,7 +379,12 @@ class _Props(TypedDict, total=False):
     """ The value of this prop will be passed to the `target` HTML attribute on the form """
 
     uiSchema: _Uischema
-    """ an rjsf ui schema, with light extension """
+    """
+    additionalProperties:
+      $ref: '#/definitions/UISchema'
+
+    Aggregation type: anyOf
+    """
 
 
 _PropsShowerrorlist = Literal[False, "top", "bottom"]
@@ -293,6 +395,17 @@ _PROPSSHOWERRORLIST_TOP: Literal["top"] = "top"
 """The values for the 'When this prop is set to `top` or 'bottom', a list of errors (or the custom error list defined in the `ErrorList`) will also show. When set to false, only inline input validation errors will be shown. Set to `top` by default' enum"""
 _PROPSSHOWERRORLIST_BOTTOM: Literal["bottom"] = "bottom"
 """The values for the 'When this prop is set to `top` or 'bottom', a list of errors (or the custom error list defined in the `ErrorList`) will also show. When set to false, only inline input validation errors will be shown. Set to `top` by default' enum"""
+
+
+_SimpleUischema = TypedDict(
+    "_SimpleUischema",
+    {
+        "ui:field": str,
+        "ui:fieldReplacesAnyOrOneOf": bool,
+        "ui:rootFieldId": str,
+    },
+    total=False,
+)
 
 
 _Styles = Dict[str, "_AnyStyle"]
@@ -327,36 +440,13 @@ _URLJSF_NO_BOOTSTRAP_DEFAULT = False
 """ Default value of the field path 'urljsf no_bootstrap' """
 
 
-_Uioptions = TypedDict(
-    "_Uioptions",
-    {
-        "urljsf:grid": "_UioptionsUrljsfColonGrid",
-    },
-    total=False,
-)
+_Uischema = Union["_KnownUischema", "_ItemSchema", "_SimpleUischema"]
+"""
+additionalProperties:
+  $ref: '#/definitions/UISchema'
 
-
-class _UioptionsUrljsfColonGrid(TypedDict, total=False):
-    addButton: List[str]
-    children: Dict[str, List[str]]
-    default: List[str]
-
-
-# | an rjsf ui schema, with light extension
-_Uischema = TypedDict(
-    "_Uischema",
-    {
-        "ui:options": "_Uioptions",
-        "ui:urljsf:grid": "_UischemaUiColonUrljsfColonGrid",
-    },
-    total=False,
-)
-
-
-class _UischemaUiColonUrljsfColonGrid(TypedDict, total=False):
-    addButton: List[str]
-    children: Dict[str, List[str]]
-    default: List[str]
+Aggregation type: anyOf
+"""
 
 
 class _UrljsfNunjucks(TypedDict, total=False):

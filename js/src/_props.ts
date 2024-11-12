@@ -1,6 +1,7 @@
 // Copyright (C) urljsf contributors.
 // Distributed under the terms of the Modified BSD License.
 import { FormProps } from '@rjsf/core';
+import { UIOptionsType, UiSchema } from '@rjsf/utils';
 
 /** JSON-compatible default values for `rjsf` [`Form.props`][form-props].
  *
@@ -16,18 +17,59 @@ export interface UrljsfGridOptions {
   addButton: string[];
 }
 
-export interface UIOptions {
-  'urljsf:grid'?: Partial<UrljsfGridOptions>;
-  [key: string]: any;
+export interface UrljsfUIOptions {
+  'urljsf:grid': Partial<UrljsfGridOptions>;
+}
+
+export interface SimpleRjsfUIOptions
+  extends Pick<
+    UIOptionsType<any, any, any>,
+    | 'classNames'
+    | 'description'
+    | 'disabled'
+    | 'emptyValue'
+    | 'enumDisabled'
+    | 'enumNames'
+    | 'filePreview'
+    | 'help'
+    | 'hideError'
+    | 'inline'
+    | 'inputType'
+    | 'order'
+    | 'placeholder'
+    | 'readonly'
+    | 'rows'
+    | 'title'
+  > {
+  style: Record<string, any>;
+  widget: string;
+  autoComplete: boolean;
+  autoFocus: boolean;
+  enumDisabled: Array<string | number | boolean>;
+  enumNames: string[];
+  order: string[];
 }
 
 /** an rjsf ui schema, with light extension
  */
-export interface UISchema {
+export interface KnownUISchema {
   'ui:urljsf:grid'?: Partial<UrljsfGridOptions>;
-  'ui:options'?: UIOptions;
-  [key: string]: any;
+  'ui:options'?: Partial<UrljsfUIOptions> & Partial<SimpleRjsfUIOptions>;
 }
+
+export interface ItemSchema {
+  items: UISchema;
+}
+
+export interface SimpleUISchema
+  extends Omit<
+    UiSchema<any, any, any>,
+    'ui:options' | 'ui:globalOptions' | 'ui:field'
+  > {
+  'ui:field'?: string;
+}
+
+export type UISchema = KnownUISchema | ItemSchema | SimpleUISchema;
 
 /**
  * simplifications of important fields which are out of scope to fully support inline.
