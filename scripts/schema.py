@@ -1,4 +1,4 @@
-"""Convert various files."""
+"""Convert various JSON Schema-related files."""
 # Copyright (C) urljsf contributors.
 # Distributed under the terms of the Modified BSD License.
 
@@ -52,7 +52,7 @@ def ts_to_json(in_path: Path, out_path: Path) -> int:
 
     if in_path.name == "_props.ts":
         raw = json.loads(out_path.read_text(**UTF8))
-        for defn in ["KnownUISchema"]:
+        for defn in []:  # KnownUISchema
             raw["definitions"][defn].pop("additionalProperties")
         out_path.write_text(json.dumps(raw, indent=2))
 

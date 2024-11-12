@@ -2,20 +2,23 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$ref": "#/definitions/UISchema",
   "definitions": {
-    "KnownUISchema": {
+    "UISchema": {
       "type": "object",
       "properties": {
         "items": {
-          "$ref": "#/definitions/UISchema"
+          "$ref": "#/definitions/UISchema",
+          "description": "An array of objects representing the items in the array"
         },
         "ui:field": {
-          "type": "string"
+          "type": "string",
+          "description": "Allows RJSF to override the default field implementation by specifying either the name of a field that is used to look up an implementation from the `fields` list or an actual one-off `Field` component implementation itself"
         },
         "ui:fieldReplacesAnyOrOneOf": {
           "type": "boolean"
         },
         "ui:options": {
           "type": "object",
+          "description": "An object that contains all the potential UI options in a single object",
           "properties": {
             "title": {
               "type": "string",
@@ -24,12 +27,6 @@
             "description": {
               "type": "string",
               "description": "We know that for description, it will be a string, if it is provided"
-            },
-            "autoComplete": {
-              "type": "boolean"
-            },
-            "autoFocus": {
-              "type": "boolean"
             },
             "classNames": {
               "type": "string",
@@ -80,11 +77,49 @@
               }
             },
             "enumNames": {
-              "type": "array",
               "description": "Allows a user to provide a list of labels for enum values in the schema",
-              "items": {
-                "type": "string"
-              }
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "string"
+                },
+                {
+                  "allOf": [
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "properties": {}
+                    }
+                  ]
+                },
+                {
+                  "allOf": [
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "array",
+                      "items": {}
+                    }
+                  ]
+                },
+                {
+                  "type": "null"
+                }
+              ]
             },
             "filePreview": {
               "type": "boolean",
@@ -107,11 +142,49 @@
               "description": "Used to change the input type (for example, `tel` or `email`) for an <input>"
             },
             "order": {
-              "type": "array",
               "description": "This property allows you to reorder the properties that are shown for a particular object",
-              "items": {
-                "type": "string"
-              }
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "string"
+                },
+                {
+                  "allOf": [
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "properties": {}
+                    }
+                  ]
+                },
+                {
+                  "allOf": [
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "array",
+                      "items": {}
+                    }
+                  ]
+                },
+                {
+                  "type": "null"
+                }
+              ]
             },
             "placeholder": {
               "type": "string",
@@ -130,6 +203,7 @@
             },
             "urljsf:grid": {
               "type": "object",
+              "description": "custom overrides for urlsjf grid",
               "properties": {
                 "addButton": {
                   "type": "array",
@@ -158,26 +232,20 @@
             "widget": {
               "type": "string"
             }
-          },
-          "additionalProperties": false
+          }
         },
         "ui:rootFieldId": {
           "type": "string"
         }
-      }
-    },
-    "UISchema": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/KnownUISchema"
-        },
-        {
-          "type": "object",
-          "additionalProperties": {
+      },
+      "additionalProperties": {
+        "anyOf": [
+          {
             "$ref": "#/definitions/UISchema"
-          }
-        }
-      ]
+          },
+          {}
+        ]
+      }
     }
   }
 }

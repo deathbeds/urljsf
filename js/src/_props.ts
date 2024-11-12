@@ -39,11 +39,8 @@ export interface SimpleRjsfUIOptions
   > {
   style: Record<string, any>;
   widget: string;
-  autoComplete: boolean;
-  autoFocus: boolean;
   enumDisabled: Array<string | number | boolean>;
-  enumNames: string[];
-  order: string[];
+  /** custom overrides for urlsjf grid */
   'urljsf:grid': Partial<UrljsfGridOptions>;
 }
 
@@ -52,16 +49,20 @@ export interface KnownUISchema
     UiSchema<any, any, any>,
     'ui:options' | 'ui:globalOptions' | 'ui:field'
   > {
+  /** Allows RJSF to override the default field implementation by specifying either the name of a field that is used
+   * to look up an implementation from the `fields` list or an actual one-off `Field` component implementation itself
+   */
+
   'ui:field'?: string;
-  'ui:options'?: Partial<SimpleRjsfUIOptions>;
+  /** An object that contains all the potential UI options in a single object */
+  'ui:options'?: Partial<SimpleRjsfUIOptions> & { [key: string]: unknown };
+  /** An array of objects representing the items in the array */
   items?: UISchema;
 }
 
-export type UISchema =
-  | KnownUISchema
-  | {
-      [key: string]: UISchema;
-    };
+export type UISchema = KnownUISchema & {
+  [key: string]: UISchema | unknown;
+};
 
 /**
  * simplifications of important fields which are out of scope to fully support inline.
