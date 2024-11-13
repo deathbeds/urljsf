@@ -31,6 +31,72 @@ URLS = {
     ),
 }
 
+FALLBACKS: dict[Path, dict[str, Any]] = {
+    OUTPUTS: {
+        "_": ["__the-feedstocks-did-not-load__"],
+        "7zip": ["7zip"],
+        "aab": ["aab"],
+        "python": ["pypy-meta", "python", "graalpy"],
+        "zziplib": ["zziplib"],
+    },
+    LICENSES: {
+        "licenses": [
+            {
+                "reference": "https://spdx.org/licenses/0BSD.html",
+                "isDeprecatedLicenseId": False,
+                "detailsUrl": "https://spdx.org/licenses/0BSD.json",
+                "referenceNumber": 27,
+                "name": "BSD Zero Clause License",
+                "licenseId": "0BSD",
+                "seeAlso": [
+                    "http://landley.net/toybox/license.html",
+                    "https://opensource.org/licenses/0BSD",
+                ],
+                "isOsiApproved": True,
+            },
+            {
+                "reference": "https://spdx.org/licenses/AFL-1.1.html",
+                "isDeprecatedLicenseId": False,
+                "detailsUrl": "https://spdx.org/licenses/AFL-1.1.json",
+                "referenceNumber": 572,
+                "name": "Academic Free License v1.1",
+                "licenseId": "AFL-1.1",
+                "seeAlso": [
+                    "http://opensource.linux-mirror.org/licenses/afl-1.1.txt",
+                    "http://wayback.archive.org/web/20021004124254/http://www.opensource.org/licenses/academic.php",
+                ],
+                "isOsiApproved": True,
+                "isFsfLibre": True,
+            },
+            {
+                "reference": "https://spdx.org/licenses/BSD-3-Clause.html",
+                "isDeprecatedLicenseId": False,
+                "detailsUrl": "https://spdx.org/licenses/BSD-3-Clause.json",
+                "referenceNumber": 394,
+                "name": 'BSD 3-Clause "New" or "Revised" License',
+                "licenseId": "BSD-3-Clause",
+                "seeAlso": [
+                    "https://opensource.org/licenses/BSD-3-Clause",
+                    "https://www.eclipse.org/org/documents/edl-v10.php",
+                ],
+                "isOsiApproved": True,
+                "isFsfLibre": True,
+            },
+            {
+                "reference": "https://spdx.org/licenses/ZPL-2.1.html",
+                "isDeprecatedLicenseId": False,
+                "detailsUrl": "https://spdx.org/licenses/ZPL-2.1.json",
+                "referenceNumber": 652,
+                "name": "Zope Public License 2.1",
+                "licenseId": "ZPL-2.1",
+                "seeAlso": ["http://old.zope.org/Resources/ZPL/"],
+                "isOsiApproved": True,
+                "isFsfLibre": True,
+            },
+        ],
+    },
+}
+
 if TYPE_CHECKING:
     from urljsf._schema import Urljsf
 
@@ -114,17 +180,18 @@ def kitchen_sink_ui_schema() -> dict[str, Any]:
 
 
 def fetch_json(path: Path) -> dict[str, Any]:
-    """Fetch some JSON."""
-    if not path.exists():
-        url = URLS[path]
-        path.write_bytes(requests.get(url, timeout=10).content)
-        sys.stderr.write(f"Fetched {int(path.stat().st_size / 1024)} kb from {url}")
-    raw = path.read_text(**UTF8)
+    """Fetch some (cached) JSON, or provide a fallback value on any error."""
     try:
-        return dict(json.loads(raw))
-    except json.decoder.JSONDecodeError:
-        sys.stderr.write(raw[:100])
-        raise
+        url = URLS[path]
+        if not path.exists():
+            r = requests.get(url, timeout=10)
+            r.raise_for_status()
+            path.write_text(json.dumps(r.json(), indent=2, sort_keys=True), **UTF8)
+            sys.stderr.write(f"Fetched {int(path.stat().st_size / 1024)} kb from {url}")
+        return dict(json.loads(path.read_text(**UTF8)))
+    except Exception as err:
+        sys.stderr.write(f"ERROR {url}: {err}")
+        return dict(FALLBACKS[path])
 
 
 def installer() -> Urljsf:

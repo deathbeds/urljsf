@@ -111,7 +111,7 @@ isort.known-first-party = ["urljsf"]
 [tool.ruff.lint.per-file-ignores]
 "tests/**/*.py" = ["S101", "PLC0415", "T201", "DOC402", "ARG001", "INP001"]
 "**/sphinxext/*.py" = ["TID252", "ANN401", "ARG001"]
-"docs/**/*.py" = ["INP001"]
+"docs/**/*.py" = ["INP001", "BLE001"]
 "docs/conf.py" = ["SLF001", "ARG005", "ANN001", "N806", "ARG001", "ANN202", "ANN401"]
 "nodes.py" = ["N801"]
 "**/_schema.py" = [
