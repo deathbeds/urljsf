@@ -11,7 +11,7 @@ import sys
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
-import requests_cache
+import requests
 
 UTF8 = {"encoding": "utf-8"}
 HERE = Path(__file__).parent
@@ -20,15 +20,16 @@ BUILD = ROOT / "build"
 OUTPUTS = BUILD / "feedstock-outputs.json"
 LICENSES = BUILD / "licenses.json"
 
-OUTPUTS_URL = (
-    "https://raw.githubusercontent.com/conda-forge/feedstock-outputs/single-file/"
-    f"{OUTPUTS.name}"
-)
-LICENSES_URL = (
-    "https://raw.githubusercontent.com/spdx/license-list-data/refs/heads/main/"
-    f"json/{LICENSES.name}"
-)
-S = requests_cache.CachedSession(BUILD / "demos-")
+URLS = {
+    OUTPUTS: (
+        "https://raw.githubusercontent.com/conda-forge/feedstock-outputs/single-file/"
+        f"{OUTPUTS.name}"
+    ),
+    LICENSES: (
+        "https://raw.githubusercontent.com/spdx/license-list-data/refs/heads/main/"
+        f"json/{LICENSES.name}"
+    ),
+}
 
 if TYPE_CHECKING:
     from urljsf._schema import Urljsf
@@ -112,19 +113,27 @@ def kitchen_sink_ui_schema() -> dict[str, Any]:
     return fields
 
 
+def fetch_json(path: Path) -> dict[str, Any]:
+    """Fetch some JSON."""
+    if not path.exists():
+        url = URLS[path]
+        path.write_bytes(requests.get(url, timeout=10).content)
+        sys.stderr.write(f"Fetched {int(path.stat().st_size / 1024)} kb from {url}")
+    raw = path.read_text(**UTF8)
+    try:
+        return dict(json.loads(raw))
+    except json.decoder.JSONDecodeError:
+        sys.stderr.write(raw[:100])
+        raise
+
+
 def installer() -> Urljsf:
     """Define a ``pixi`` project that can build an installer."""
-    if not OUTPUTS.exists():
-        OUTPUTS.write_bytes(S.get(OUTPUTS_URL).content)
-
-    if not LICENSES.exists():
-        LICENSES.write_bytes(S.get(LICENSES_URL).content)
-
-    feedstocks = json.loads(OUTPUTS.read_text(**UTF8))
+    feedstocks = fetch_json(OUTPUTS)
     packages = sorted({*functools.reduce(operator.iadd, [*feedstocks.values()])})
     licenses = [
         lic["licenseId"]
-        for lic in json.loads(LICENSES.read_text(**UTF8))["licenses"]
+        for lic in fetch_json(LICENSES)["licenses"]
         if lic.get("isOsiApproved") and lic.get("isFsfLibre")
     ]
 
