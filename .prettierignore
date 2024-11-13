@@ -1,5 +1,7 @@
-node_modules/
+**/.pixi/
+**/build/
+**/dist/
 **/lib/
 **/node_modules/
-**/dist/
+node_modules/
 src/urljsf/_static/

@@ -7,8 +7,10 @@ build:
     python: mambaforge-23.11
   commands:
     - mamba install -c conda-forge -c nodefaults pixi==0.35.0
-    - pixi run build-yarn
-    - pixi run build
-    - pixi run dist
-    - pixi run docs-sphinx
-    - pixi run docs-rtd
+    - pixi r build-yarn
+    - pixi r build
+    - pixi r dist
+    - pixi r docs-fetch
+    - pixi r docs-pip
+    - pixi r docs-sphinx
+    - pixi r docs-rtd

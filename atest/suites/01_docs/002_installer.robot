@@ -16,7 +16,7 @@ Test Teardown       Open Blank
 *** Variables ***
 ${CSS_LICENSE}          ${CSS_U_DATALIST} input[id$="_license"]
 ${CSS_LICENSE_CHECK}    ${CSS_U_DATALIST} input[id$="_license__datalist-check"]
-${GOOD_LICENSE}         MIT
+${GOOD_LICENSE}         BSD-3-Clause
 ${BAD_LICENSE}          WTPL
 
 

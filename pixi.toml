@@ -401,6 +401,21 @@ cmd = """export SCOUR_ARGS="scour --enable-id-stripping --enable-comment-strippi
 inputs = ["docs/_static/*-inkscape.svg"]
 outputs = ["docs/_static/*.svg", "!*inkscape.svg"]
 
+[feature.tasks-docs.tasks.docs-fetch]
+cmd = """(
+  mkdir -p build
+  && cd build
+  && wget
+    --no-clobber
+    https://raw.githubusercontent.com/conda-forge/feedstock-outputs/single-file/feedstock-outputs.json
+  && sleep 3
+  && wget
+    --no-clobber
+    https://raw.githubusercontent.com/spdx/license-list-data/refs/heads/main/json/licenses.json
+  ) || echo "well we tried" && exit 0
+  """
+outputs = ["build/{licenses,feedstock-outputs}.json"]
+
 [feature.tasks-docs.tasks.docs-sphinx]
 description = "- build docs with sphinx"
 cmd = """export PYDEVD_DISABLE_FILE_VALIDATION=1
@@ -421,7 +436,7 @@ inputs = [
   "dist/*.whl",
   "docs/**/*.{css,rst,md,py}",
 ]
-depends-on = ["docs-pip", "docs-scour", "dist-hash"]
+depends-on = ["docs-pip", "docs-scour", "docs-fetch", "dist-hash"]
 outputs = ["build/docs"]
 
 [feature.tasks-docs.tasks.docs-rtd]
@@ -620,6 +635,11 @@ sphinx-autobuild = "*"
 sphinx-autodoc-typehints = "*"
 sphinx-copybutton = "*"
 sphinx-jsonschema = "*"
+
+[feature.deps-docs.target.unix.dependencies]
+wget = "*"
+[feature.deps-docs.target.win.dependencies]
+m2-wget = "*"
 
 [feature.deps-build.dependencies]
 "ruamel.yaml" = "*"
