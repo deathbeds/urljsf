@@ -404,7 +404,17 @@ outputs = ["docs/_static/*.svg", "!*inkscape.svg"]
 [feature.tasks-docs.tasks.docs-sphinx]
 description = "- build docs with sphinx"
 cmd = """export PYDEVD_DISABLE_FILE_VALIDATION=1
-  && sphinx-build -W --keep-going --color -b html docs build/docs"""
+  && sphinx-build
+      --builder html
+      --color
+      --fail-on-warning
+      --fresh-env
+      --keep-going
+      --nitpicky
+      --show-traceback
+      --write-all
+      docs
+      build/docs"""
 inputs = [
   "*.{md,toml}",
   "src/**/*.py",
