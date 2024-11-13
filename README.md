@@ -62,8 +62,6 @@ Once the data is _validated_, the user sees a button which gets a URL, which can
 
 ## Install
 
-> See the [contributing guide][contrib] for a development install.
-
 [contrib]: https://github.com/deathbeds/urljsf/blob/main/CONTRIBUTING.md
 
 ### From PyPI
@@ -95,6 +93,10 @@ mamba install -c conda-forge urljsf
 # or...
 conda install -c conda-forge urljsf
 ```
+
+### Development
+
+See the [contributing guide][contrib] for a development install.
 
 ## Usage
 

@@ -33,12 +33,22 @@ The `templates.url` field should generate a valid URL. All whitespace should be 
 
 #### `submit_button`
 
-The text to show on the submit button, if all `checks` and schema validation are
-successful.
+Markdown to show on the submit button, if all `checks` and schema validation are
+successful. If this evaluates to the empty string, no submit button will be shown.
+
+#### `submit_target`
+
+The [`target`][target] for the `submit_button`. If an empty string, the default behavior
+of replacing the current page will be used.
+
+- use `_blank` to open a new browser tab
+- use the name of an `<iframe name="some-iframe">` to replace that `iframe`'s content
+
+[target]: https://developer.mozilla.org/en-US/docs/Web/API/HTMLAnchorElement/target
 
 #### `download_filename`
 
-A filename to suggest for `data:` URLs.
+A filename to suggest for `data:` URLs when the `submit_button` is shown.
 
 #### `above_{form}`
 

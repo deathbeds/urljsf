@@ -271,6 +271,7 @@ cmd = """taplo fmt
     --option=column_width=88
     --option=indent_string="  "
     *.toml
+    docs/**/*.toml
     js/demo/toml/*.toml
     js/schema/*.toml
     tests/fixtures/*/*/*/*.toml

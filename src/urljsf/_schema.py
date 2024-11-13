@@ -321,6 +321,9 @@ class _TemplatesTyped(TypedDict, total=False):
     submit_button: _AnyTemplate
     """ Aggregation type: anyOf """
 
+    submit_target: _AnyTemplate
+    """ Aggregation type: anyOf """
+
     url: _AnyTemplate
     """ Aggregation type: anyOf """
 

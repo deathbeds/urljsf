@@ -84,6 +84,7 @@ showErrorList
 src
 stylesheet
 submit_button
+submit_target
 tagName
 textarea
 theming

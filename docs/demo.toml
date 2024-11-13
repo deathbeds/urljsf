@@ -1,0 +1,61 @@
+[forms.demo.schema]
+type = "object"
+
+[forms.demo.schema.properties.learn_more]
+title = "Learn more?"
+type = "string"
+enum = ["Nah.", "A little..."]
+
+[forms.demo.schema.dependencies.learn_more]
+oneOf = [
+  {"$ref" = "#/definitions/nah"},
+  {"$ref" = "#/definitions/more"},
+]
+
+[forms.demo.schema.definitions.nah.properties]
+learn_more = {type = "string", enum = ["Nah."]}
+
+[forms.demo.schema.definitions.more.properties]
+learn_more = {type = "string", enum = ["A little..."]}
+topic = {title = "Still more?", type = "string", description = """
+
+`urljsf` is a tool for building forms (like this one) out of JSON (or TOML or YAML).
+
+> Pick something to learn more about
+""", enum = [
+  "Install",
+  "Usage",
+  "Limitations",
+  "Open Source",
+  "Documentation Contents",
+]}
+
+[forms.demo.schema.definitions]
+[forms.demo.ui_schema.learn_more."ui:options"]
+widget = "radio"
+inline = true
+
+[style."& > .list-group > .list-group-item:first-child"]
+background = "url(./_static/logo.svg)"
+background-size = "6em"
+background-position = "98% 0.5em"
+background-repeat = "no-repeat"
+
+
+[templates]
+url = """#{{ data.demo.topic | default("urljsf") | replace(" ", "-") | lower }}"""
+submit_button = """
+{% if data.demo.learn_more %}
+Skip to {{ data.demo.topic | default('Main Content') }}
+{% endif %}
+"""
+above_demo = """
+What is this?
+
+> Find out with this demo (or one of the other [demos](demos/index.html)), or
+> scroll down to learn more.
+"""
+
+
+[nunjucks]
+filters = ["toml", "yaml", "json"]
