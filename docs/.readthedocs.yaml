@@ -10,5 +10,5 @@ build:
     - pixi run build-yarn
     - pixi run build
     - pixi run dist
-    - pixi run docs-sphinx
+    - pixi run docs-sphinx || cat /tmp/sphinx-err-*.log && exit
     - pixi run docs-rtd
