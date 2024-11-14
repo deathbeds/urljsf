@@ -1920,9 +1920,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.5.41":
-  version: 1.5.56
-  resolution: "electron-to-chromium@npm:1.5.56"
-  checksum: ef8213e3531715d48ca7c61e4b70532d57616271b56642d212297c72ba984bf57621c32d04eb56c19bfb90cf17d421875e6f334deddd191edf28515bebfb9061
+  version: 1.5.57
+  resolution: "electron-to-chromium@npm:1.5.57"
+  checksum: fffd6dc9aeca39f94ef083a5a68c7c330994a4a5c31960758af81d743db6ea79d142d0b97fc852700955726c3cb6296de1183051a94118c0978c072e86ac74b7
   languageName: node
   linkType: hard
 
@@ -2885,17 +2885,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"json5@npm:^1.0.1":
-  version: 1.0.2
-  resolution: "json5@npm:1.0.2"
-  dependencies:
-    minimist: ^1.2.0
-  bin:
-    json5: lib/cli.js
-  checksum: 866458a8c58a95a49bef3adba929c625e82532bcff1fe93f01d29cb02cac7c3fe1f4b79951b7792c2da9de0b32871a8401a6e3c5b36778ad852bf5b8a61165d7
-  languageName: node
-  linkType: hard
-
 "json5@npm:^2.1.2, json5@npm:^2.2.3":
   version: 2.2.3
   resolution: "json5@npm:2.2.3"
@@ -2965,18 +2954,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"loader-utils@npm:1.4.0":
-  version: 1.4.0
-  resolution: "loader-utils@npm:1.4.0"
-  dependencies:
-    big.js: ^5.2.2
-    emojis-list: ^3.0.0
-    json5: ^1.0.1
-  checksum: d150b15e7a42ac47d935c8b484b79e44ff6ab4c75df7cc4cb9093350cf014ec0b17bdb60c5d6f91a37b8b218bd63b973e263c65944f58ca2573e402b9a27e717
-  languageName: node
-  linkType: hard
-
-"loader-utils@npm:^2.0.0":
+"loader-utils@npm:^2.0.4":
   version: 2.0.4
   resolution: "loader-utils@npm:2.0.4"
   dependencies:
@@ -3102,11 +3080,11 @@ __metadata:
   linkType: hard
 
 "markdown-to-jsx@npm:^7.4.1":
-  version: 7.6.0
-  resolution: "markdown-to-jsx@npm:7.6.0"
+  version: 7.6.1
+  resolution: "markdown-to-jsx@npm:7.6.1"
   peerDependencies:
     react: ">= 0.14.0"
-  checksum: 7501919a17d68ee202e2bf7b4fb59d81cb7e0b9bf422d81a0a3765a99fb8eb448dc874376af1f5e4aca9304963bc55bf4d5d317bbb9f5c0ee46bd2f7c499f8b6
+  checksum: 9ab398fa79a8f00736fffc4caeac13ade1d33f82efd398e98dd61935fb5248d334a33390a2a4cc7c3890840686d58959792f0f5b969044e4cc9971be27bfa399
   languageName: node
   linkType: hard
 
@@ -3231,7 +3209,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"minimist@npm:^1.2.0, minimist@npm:^1.2.8":
+"minimist@npm:^1.2.8":
   version: 1.2.8
   resolution: "minimist@npm:1.2.8"
   checksum: 75a6d645fb122dad29c06a7597bddea977258957ed88d7a6df59b5cd3fe4a527e253e9bbf2e783e4b73657f9098b96a5fe96ab8a113655d4109108577ecf85b0
@@ -3636,11 +3614,11 @@ __metadata:
   linkType: hard
 
 "process-on-spawn@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "process-on-spawn@npm:1.0.0"
+  version: 1.1.0
+  resolution: "process-on-spawn@npm:1.1.0"
   dependencies:
     fromentries: ^1.2.0
-  checksum: 597769e3db6a8e2cb1cd64a952bbc150220588debac31c7cf1a9f620ce981e25583d8d70848d8a14953577608512984a8808c3be77e09af8ebdcdc14ec23a295
+  checksum: 3621c774784f561879ff0ae52b1ad06465278e8fcaa7144fe4daab7f481edfa81c51894356d497c29c4026c5efe04540932400209fe53180f32c4743cd572069
   languageName: node
   linkType: hard
 
