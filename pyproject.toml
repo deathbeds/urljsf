@@ -4,7 +4,7 @@ requires = ["flit_core >=3.9.0,<4.0.0"]
 
 [project]
 name = "urljsf"
-version = "0.1.0"
+version = "0.1.1"
 description = "Build declarative, interactive HTML forms with JSON Schema"
 readme = "README.md"
 authors = [{name = "urljsf contributors"}]
@@ -35,6 +35,11 @@ sphinx = [
 ]
 yaml = [
   "ruamel.yaml",
+]
+test = [
+  "pytest",
+  "pytest-console-scripts",
+  "tomli-w",
 ]
 
 [project.urls]
@@ -79,7 +84,6 @@ warn_unused_ignores = true
 # pytest #######################################################################
 [tool.pytest.ini_options]
 cache_dir = "build/.cache/pytest"
-generate_report_on_test = true
 script_launch_mode = "subprocess"
 testpaths = ["tests"]
 addopts = ["--color=yes", "-Werror", "--tb=long", "-vv"]
