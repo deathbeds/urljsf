@@ -50,7 +50,7 @@ PyPI = "https://pypi.org/project/urljsf"
 Source = "https://github.com/deathbeds/urljsf"
 
 [tool.flit.sdist]
-include = ["LICENSE"]
+include = ["LICENSE", "tests"]
 
 # coverage #####################################################################
 [tool.coverage.run]
