@@ -211,7 +211,7 @@ outputs = ["dist/*.tgz"]
 description = "- build the Python distributions for pypi.org"
 cmd = "pyproject-build . --no-isolation"
 depends-on = ["build-static", "schema-py"]
-inputs = ["{pyproject.toml,LICENSE,README.md}", "src", "!**/__pycache__"]
+inputs = ["{pyproject.toml,LICENSE,README.md}", "{src,tests}/", "!**/__pycache__"]
 outputs = ["dist/*.{whl,tar.gz}"]
 
 [feature.tasks-build.tasks.dist-hash]

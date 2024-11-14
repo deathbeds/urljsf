@@ -1,7 +1,12 @@
 {
   "name": "@deathbeds/urljsf",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Build structured data files for pull requests with JSON schema",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/deathbeds/urljsf.git",
+    "directory": "js"
+  },
   "license": "LICENSE",
   "type": "module",
   "browser": "lib/index.js",
@@ -12,9 +17,7 @@
   "scripts": {
     "build": "yarn build:lib && yarn build:app",
     "build:app": "webpack -c webpack.config.mjs",
-    "build:lib": "tsc -b",
-    "watch:app": "jlpm build:app --watch --progress",
-    "watch:lib": "jlpm build:lib --watch --verbose --preserveWatchOutput"
+    "build:lib": "tsc -b"
   },
   "nyc": {
     "all": true,
