@@ -67,10 +67,9 @@ export type ASchema3 = SchemaByURL | InlineObject;
  */
 export type AnySchemaLocation = string;
 /**
- * [`nunjucks`][nunjucks] strings (or lists of strings) that control how strings
- * are built from forms. See documentation for further customizations.
- *
- * [nunjucks]: https://mozilla.github.io/nunjucks/templating.html
+ * [nunjucks](https://mozilla.github.io/nunjucks/templating.html) strings
+ * (or lists of strings) that control how strings are built from forms.
+ * See documentation for further customizations.
  *
  * This interface was referenced by `Urljsf`'s JSON-Schema
  * via the `definition` "templates".
@@ -171,9 +170,9 @@ export interface AnyForm {
  */
 export interface InlineObject {}
 /**
- * JSON-compatible default values for `rjsf` [`Form.props`][form-props].
+ * JSON-compatible default values for `rjsf` [Form.props][props].
  *
- * [form-props]: https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/form-props
+ * [props]: https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/form-props
  */
 export interface Props {
   /**
@@ -592,26 +591,33 @@ export interface Styles {
 export interface KnownTemplates {
   /**
    * If given, a template for the submit button's `download` attribute, to
-   * suggest an appropriate filename, with leading and trailing whitespace trimmed.
+   * suggest an appropriate filename. Leading and trailing whitespace will be trimmed.
    *
    */
   download_filename?: string | [string, ...string[]];
   /**
-   * text to show on the button when a form is valid. multiple lines will be joined
-   * with `\n`, then leading and trailing whitespace will be trimmed.
+   * Markdown to show on the button when a form is valid. Multiple lines will be joined
+   * with `\n`. Leading and trailing whitespace will be trimmed. If empty,
+   * no submit button will be shown.
    *
    */
   submit_button?: string | [string, ...string[]];
   /**
-   * a URL to build. all whitespace will be trimmed, then joined with no delimiter.
+   * If given, the value of the `target` attribute on the `submit_button`. Use `_blank`
+   * to open a new tab.
+   *
+   */
+  submit_target?: string | [string, ...string[]];
+  /**
+   * a URL to apply to the submit button. All whitespace will be removed.
    *
    */
   url?: string | [string, ...string[]];
 }
 /**
- * JSON-compatible default values for `rjsf` [`Form.props`][form-props].
+ * JSON-compatible default values for `rjsf` [Form.props][props].
  *
- * [form-props]: https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/form-props
+ * [props]: https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/form-props
  *
  * This interface was referenced by `Urljsf`'s JSON-Schema
  * via the `definition` "Props".

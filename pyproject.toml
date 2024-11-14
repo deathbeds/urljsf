@@ -16,10 +16,10 @@ classifiers = [
   "License :: OSI Approved :: BSD License",
   "Programming Language :: Python :: 3 :: Only",
   "Programming Language :: Python :: 3",
-  "Typing :: Typed",
-  "Topic :: File Formats",
-  "Topic :: File Formats :: JSON",
   "Topic :: File Formats :: JSON :: JSON Schema",
+  "Topic :: File Formats :: JSON",
+  "Topic :: File Formats",
+  "Typing :: Typed",
 ]
 scripts.urljsf = "urljsf.cli:main"
 dependencies = [
@@ -111,8 +111,8 @@ isort.known-first-party = ["urljsf"]
 [tool.ruff.lint.per-file-ignores]
 "tests/**/*.py" = ["S101", "PLC0415", "T201", "DOC402", "ARG001", "INP001"]
 "**/sphinxext/*.py" = ["TID252", "ANN401", "ARG001"]
-"docs/**/*.py" = ["INP001"]
-"docs/conf.py" = ["SLF001", "ARG005", "ANN001", "N806", "ARG001", "ANN202"]
+"docs/**/*.py" = ["INP001", "BLE001"]
+"docs/conf.py" = ["SLF001", "ARG005", "ANN001", "N806", "ARG001", "ANN202", "ANN401"]
 "nodes.py" = ["N801"]
 "**/_schema.py" = [
   "D205",

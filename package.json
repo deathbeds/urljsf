@@ -76,7 +76,8 @@
   "markdownlint-cli2": {
     "config": {
       "line-length": false,
-      "first-line-h1": false
+      "first-line-h1": false,
+      "no-inline-html": false
     }
   }
 }

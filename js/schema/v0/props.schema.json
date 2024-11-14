@@ -4,7 +4,7 @@
   "definitions": {
     "Props": {
       "type": "object",
-      "description": "JSON-compatible default values for `rjsf` [`Form.props`][form-props].\n\n[form-props]: https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/form-props",
+      "description": "JSON-compatible default values for `rjsf` [Form.props][props].\n\n[props]: https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/form-props",
       "properties": {
         "acceptCharset": {
           "type": "string",

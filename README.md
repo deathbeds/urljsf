@@ -1,5 +1,9 @@
 # `urljsf`
 
+|            docs             |                                          install                                           |                build                 |
+| :-------------------------: | :----------------------------------------------------------------------------------------: | :----------------------------------: |
+| [![docs][docs-badge]][docs] | [![install from pypi][pypi-badge]][pypi] [![install from conda-forge][conda-badge]][conda] | [![build][workflow-badge]][workflow] |
+
 > Build statically-hostable, interactive HTML forms for making web requests
 >
 > _Powered by [`react-json-schema-form`][rjsf] and
@@ -11,6 +15,16 @@
 [react-bootstrap]: https://github.com/react-bootstrap/react-bootstrap
 [ui-schema]:
   https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/uiSchema/
+[docs]: https://urljsf.rtfd.org
+[docs-badge]: https://readthedocs.org/projects/urljsf/badge/?version=latest
+[conda-badge]: https://img.shields.io/conda/vn/conda-forge/urljsf
+[conda]: https://anaconda.org/conda-forge/urljsf
+[pypi-badge]: https://img.shields.io/pypi/v/urljsf
+[pypi]: https://pypi.org/project/urljsf
+[workflow-badge]:
+  https://github.com/deathbeds/urljsf/actions/workflows/ci.yml/badge.svg?branch=main
+[workflow]:
+  https://github.com/deathbeds/urljsf/actions/workflows/ci.yml?query=branch%3Amain
 
 **Visitors** to a `urljsf`-built page see:
 
@@ -48,48 +62,57 @@ Once the data is _validated_, the user sees a button which gets a URL, which can
 
 ## Install
 
-> ### This package is not yet released
->
-> _We're still working on it, so the instructions below are aspirational. See the
-> contributing guide for more._
->
-> ### From PyPI
->
-> `urljsf` is distributed on PyPI:
->
-> ```bash
-> pip install urljsf
->
-> # or...
-> uv install urljsf
->
-> # etc.
-> ```
->
-> ### From conda-forge
->
-> `urljsf` is also distributed on `conda-forge`:
->
-> ```bash
-> pixi add urljsf
->
-> # or...
-> micromamba install -c conda-forge urljsf
->
-> # or...
-> mamba install -c conda-forge urljsf
->
-> # or...
-> conda install -c conda-forge urljsf
-> ```
+[contrib]: https://github.com/deathbeds/urljsf/blob/main/CONTRIBUTING.md
+
+### From PyPI
+
+`urljsf` is distributed on [PyPI][pypi]:
+
+```bash
+pip install urljsf
+
+# or...
+uv install urljsf
+
+# etc.
+```
+
+### From conda-forge
+
+`urljsf` is also distributed on [`conda-forge`][conda]:
+
+```bash
+pixi add urljsf
+
+# or...
+micromamba install -c conda-forge urljsf
+
+# or...
+mamba install -c conda-forge urljsf
+
+# or...
+conda install -c conda-forge urljsf
+```
+
+### Development
+
+See the [contributing guide][contrib] for a development install.
 
 ## Usage
 
-`urljsf` works as a:
+`urljsf` work with some [JSON schema](#json-schema) constrained files as a:
 
 - (not-recommended) hot-linked [`script`](#js-script)
 - a standalone [site generator](#command-line) for simple sites
 - a [plugin](#sphinx) for the `sphinx` documentation system
+
+### JSON Schema
+
+A `urljsf` is built from a number of JSON schema-constrained files. Writing these in
+plain JSON is tedious, so TOML and YAML are also supported inputs for any of the methods
+below. Learn more on the [schema documentation][schema-docs].
+
+[schema-docs]: https://urljsf.rtfd.org/en/latest/use/schema.html
 
 ### JS Script
 
@@ -137,7 +160,10 @@ the python ecosystem, such as `msgspec` or `pydantic`.
 prsf --help
 ```
 
-`urljsf` requires at least a definition file, but offers many command line options.
+`urljsf` requires at least a definition file, but offers many command line options: see
+the [documentation][cli-docs] for more.
+
+[cli-docs]: https://urljsf.rtfd.org/en/latest/use/cli.html
 
 ### Sphinx
 
@@ -159,8 +185,10 @@ Then use the `urljsf` directive in source files:
   # a form definition in TOML
 ```
 
-See the documentation for more about configuring `urljsf.sphinxext`, the `urljsf`
-directive, and more advanced use cases.
+See the [documentation][sphinx-docs] for more about configuring `urljsf.sphinxext`, the
+`urljsf` directive, and more advanced use cases.
+
+[sphinx-docs]: https://urljsf.rtfd.org/en/latest/use/sphinx.html
 
 ## Limitations
 

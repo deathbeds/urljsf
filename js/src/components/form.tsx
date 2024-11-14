@@ -19,6 +19,7 @@ import { ensureBootstrap, getBoostrapCss } from '../bootstrap.js';
 import { ensureNunjucks, renderMarkdown } from '../nunjucks.js';
 import {
   CHECKS_PATH_PREFIX,
+  DEBUG,
   DEFAULTS,
   FORM_CLASS,
   IAboveBelowForms,
@@ -54,10 +55,7 @@ const BTN_COMMON: Pick<ButtonProps, 'size' | 'className'> = {
 
 const SUBMIT_DEFAULT: Pick<ButtonProps, 'variant' | 'target'> = {
   variant: 'success',
-  target: '_blank',
 };
-
-const DEFAULT_SUBMIT = 'Submit';
 
 /** process a single form
  *
@@ -140,7 +138,7 @@ function UrljsfForm(props: IUrljsfFormProps): JSX.Element {
       _url = nunjucksEnv.render('url', context.value).replace(/\s\n/, '');
     } catch (err) {
       /* istanbul ignore next */
-      console.warn('Could not render URL', err);
+      DEBUG && console.warn('Could not render URL', err);
     }
     return _url;
   });
@@ -151,7 +149,18 @@ function UrljsfForm(props: IUrljsfFormProps): JSX.Element {
       name = nunjucksEnv.render('download_filename', context.value).trim();
     } catch (err) {
       /* istanbul ignore next */
-      console.warn('Could not render download filename', err);
+      DEBUG && console.warn('Could not render download filename', err);
+    }
+    return name;
+  });
+
+  const linkTarget = computed(() => {
+    let name = '';
+    try {
+      name = nunjucksEnv.render('submit_target', context.value).trim();
+    } catch (err) {
+      /* istanbul ignore next */
+      DEBUG && console.warn('Could not render link target', err);
     }
     return name;
   });
@@ -161,7 +170,6 @@ function UrljsfForm(props: IUrljsfFormProps): JSX.Element {
       path: 'submit_button',
       context: context.value,
       env: nunjucksEnv,
-      fallback: DEFAULT_SUBMIT,
     }),
   );
 
@@ -178,7 +186,7 @@ function UrljsfForm(props: IUrljsfFormProps): JSX.Element {
     let hasAb = false;
     for (const ab of ['above', 'below'] as (keyof IFormAboveBelow)[]) {
       const abName = `${ab}_${key}`;
-      const tmpl = config.templates[abName];
+      const tmpl = (config.templates && config.templates[abName]) || null;
       if (tmpl) {
         formAb[ab] = makeAboveBelow(abName);
         hasAb = true;
@@ -217,7 +225,7 @@ function UrljsfForm(props: IUrljsfFormProps): JSX.Element {
           }).trim();
         } catch (err) {
           /* istanbul ignore next */
-          console.warn('Failed to check', label, err);
+          DEBUG && console.warn('Failed to check', label, err);
         }
 
         if (rendered) {
@@ -278,7 +286,7 @@ function UrljsfForm(props: IUrljsfFormProps): JSX.Element {
   };
 
   const URLJSF = () => {
-    let submitButton: JSX.Element;
+    let submitButton: JSX.Element[] = [];
     const checkItems: JSX.Element[] = [];
     const formItems: JSX.Element[] = [];
 
@@ -319,27 +327,32 @@ function UrljsfForm(props: IUrljsfFormProps): JSX.Element {
     }
 
     if (errorCount.value) {
-      submitButton = (
-        <Button onClick={onErrorClick} variant="danger" {...BTN_COMMON}>
-          {errorCount} Error{errorCount.value > 1 ? 's' : ''}
-        </Button>
-      );
-    } else {
+      submitButton = [
+        <li className="list-group-item">
+          <Button onClick={onErrorClick} variant="danger" {...BTN_COMMON}>
+            {errorCount} Error{errorCount.value > 1 ? 's' : ''}
+          </Button>
+        </li>,
+      ];
+    } else if (submitText.value) {
       const download = downloadFilename.value
         ? { download: downloadFilename.value }
         : emptyObject;
-      submitButton = (
-        <Button
-          as="a"
-          href={url.value}
-          target="_blank"
-          {...SUBMIT_DEFAULT}
-          {...BTN_COMMON}
-          {...download}
-        >
-          <Markdown options={SUBMIT_MD_OPTIONS}>{submitText.value}</Markdown>
-        </Button>
-      );
+      const target = linkTarget.value ? { target: linkTarget.value } : emptyObject;
+      submitButton = [
+        <li className="list-group-item">
+          <Button
+            as="a"
+            href={url.value}
+            {...SUBMIT_DEFAULT}
+            {...BTN_COMMON}
+            {...download}
+            {...target}
+          >
+            <Markdown options={SUBMIT_MD_OPTIONS}>{submitText.value}</Markdown>
+          </Button>
+        </li>,
+      ];
     }
 
     return (
@@ -348,7 +361,7 @@ function UrljsfForm(props: IUrljsfFormProps): JSX.Element {
         <ul className="list-group">
           {...formItems}
           {...checkItems}
-          <li className="list-group-item">{submitButton}</li>
+          {...submitButton}
         </ul>
       </div>
     );

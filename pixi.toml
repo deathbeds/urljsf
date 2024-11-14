@@ -1,4 +1,4 @@
-"$schema" = "https://pixi.sh/v0.35.0/schema/manifest/schema.json"
+"$schema" = "https://pixi.sh/v0.36.0/schema/manifest/schema.json"
 
 [project]
 name = "urljsf"
@@ -271,6 +271,7 @@ cmd = """taplo fmt
     --option=column_width=88
     --option=indent_string="  "
     *.toml
+    docs/**/*.toml
     js/demo/toml/*.toml
     js/schema/*.toml
     tests/fixtures/*/*/*/*.toml
@@ -401,17 +402,42 @@ cmd = """export SCOUR_ARGS="scour --enable-id-stripping --enable-comment-strippi
 inputs = ["docs/_static/*-inkscape.svg"]
 outputs = ["docs/_static/*.svg", "!*inkscape.svg"]
 
+[feature.tasks-docs.tasks.docs-fetch]
+cmd = """(
+  mkdir -p build
+  && cd build
+  && wget
+    --no-clobber
+    https://raw.githubusercontent.com/conda-forge/feedstock-outputs/single-file/feedstock-outputs.json
+  && sleep 3
+  && wget
+    --no-clobber
+    https://raw.githubusercontent.com/spdx/license-list-data/refs/heads/main/json/licenses.json
+  ) || echo "well we tried" && exit 0
+  """
+outputs = ["build/{licenses,feedstock-outputs}.json"]
+
 [feature.tasks-docs.tasks.docs-sphinx]
 description = "- build docs with sphinx"
 cmd = """export PYDEVD_DISABLE_FILE_VALIDATION=1
-  && sphinx-build -W --keep-going --color -b html docs build/docs"""
+  && sphinx-build
+      --builder html
+      --color
+      --fail-on-warning
+      --fresh-env
+      --keep-going
+      --nitpicky
+      --show-traceback
+      --write-all
+      docs
+      build/docs"""
 inputs = [
   "*.{md,toml}",
   "src/**/*.py",
   "dist/*.whl",
   "docs/**/*.{css,rst,md,py}",
 ]
-depends-on = ["docs-pip", "docs-scour", "dist-hash"]
+depends-on = ["docs-pip", "docs-scour", "docs-fetch", "dist-hash"]
 outputs = ["build/docs"]
 
 [feature.tasks-docs.tasks.docs-rtd]
@@ -521,10 +547,9 @@ cmd = "cd js/dist && python -m http.server -b 127.0.0.1 8100"
 
 [feature.tasks-docs.tasks.serve-docs]
 description = "- serve the docs"
-cmd = """rm -rf build/docs
-  && pixi r docs-sphinx
-  && cd build/docs
+cmd = """cd build/docs
   && python -m http.server -b 127.0.0.1 8101"""
+depends-on = ["docs-sphinx"]
 
 [feature.tasks-docs.tasks.watch-docs]
 description = "- watch docs source and rebuild the site"
@@ -605,13 +630,17 @@ pytest-xdist = "*"
 myst-nb = "*"
 pydata-sphinx-theme = ">=0.16.0,<0.17.0"
 pypandoc = "*"
-requests-cache = "*"
 scour = "*"
 sphinx-argparse = "*"
 sphinx-autobuild = "*"
 sphinx-autodoc-typehints = "*"
 sphinx-copybutton = "*"
 sphinx-jsonschema = "*"
+
+[feature.deps-docs.target.unix.dependencies]
+wget = "*"
+[feature.deps-docs.target.win.dependencies]
+m2-wget = "*"
 
 [feature.deps-build.dependencies]
 "ruamel.yaml" = "*"

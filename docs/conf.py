@@ -35,8 +35,9 @@ globals().update(SPX)
 
 def setup(app: Sphinx) -> None:
     """Handle custom events before sphinx starts."""
+    wf_cls = __import__("sphinx-jsonschema.wide_format").wide_format.WideFormat
 
-    def _md_description(self, schema: dict[str, Any], node: nodes.Node):
+    def _md_description(self: Any, schema: dict[str, Any], node: nodes.Node) -> None:
         """Convert a (simple) markdown description to (simple) rst."""
         description = schema.pop("description", None)
         if not description:
@@ -48,6 +49,5 @@ def setup(app: Sphinx) -> None:
         else:
             self.state.nested_parse(self._convert_content(rst), self.lineno, node)
 
-    wf_cls = __import__("sphinx-jsonschema.wide_format").wide_format.WideFormat
     wf_cls._get_description = _md_description
     wf_cls._check_description = _md_description

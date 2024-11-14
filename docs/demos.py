@@ -11,7 +11,7 @@ import sys
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
-import requests_cache
+import requests
 
 UTF8 = {"encoding": "utf-8"}
 HERE = Path(__file__).parent
@@ -20,15 +20,82 @@ BUILD = ROOT / "build"
 OUTPUTS = BUILD / "feedstock-outputs.json"
 LICENSES = BUILD / "licenses.json"
 
-OUTPUTS_URL = (
-    "https://raw.githubusercontent.com/conda-forge/feedstock-outputs/single-file/"
-    f"{OUTPUTS.name}"
-)
-LICENSES_URL = (
-    "https://raw.githubusercontent.com/spdx/license-list-data/refs/heads/main/"
-    f"json/{LICENSES.name}"
-)
-S = requests_cache.CachedSession(BUILD / "demos-")
+URLS = {
+    OUTPUTS: (
+        "https://raw.githubusercontent.com/conda-forge/feedstock-outputs/single-file/"
+        f"{OUTPUTS.name}"
+    ),
+    LICENSES: (
+        "https://raw.githubusercontent.com/spdx/license-list-data/refs/heads/main/"
+        f"json/{LICENSES.name}"
+    ),
+}
+
+FALLBACKS: dict[Path, dict[str, Any]] = {
+    OUTPUTS: {
+        "_": ["__the-feedstocks-did-not-load__"],
+        "7zip": ["7zip"],
+        "aab": ["aab"],
+        "python": ["pypy-meta", "python", "graalpy"],
+        "zziplib": ["zziplib"],
+    },
+    LICENSES: {
+        "licenses": [
+            {
+                "reference": "https://spdx.org/licenses/0BSD.html",
+                "isDeprecatedLicenseId": False,
+                "detailsUrl": "https://spdx.org/licenses/0BSD.json",
+                "referenceNumber": 27,
+                "name": "BSD Zero Clause License",
+                "licenseId": "0BSD",
+                "seeAlso": [
+                    "http://landley.net/toybox/license.html",
+                    "https://opensource.org/licenses/0BSD",
+                ],
+                "isOsiApproved": True,
+            },
+            {
+                "reference": "https://spdx.org/licenses/AFL-1.1.html",
+                "isDeprecatedLicenseId": False,
+                "detailsUrl": "https://spdx.org/licenses/AFL-1.1.json",
+                "referenceNumber": 572,
+                "name": "Academic Free License v1.1",
+                "licenseId": "AFL-1.1",
+                "seeAlso": [
+                    "http://opensource.linux-mirror.org/licenses/afl-1.1.txt",
+                    "http://wayback.archive.org/web/20021004124254/http://www.opensource.org/licenses/academic.php",
+                ],
+                "isOsiApproved": True,
+                "isFsfLibre": True,
+            },
+            {
+                "reference": "https://spdx.org/licenses/BSD-3-Clause.html",
+                "isDeprecatedLicenseId": False,
+                "detailsUrl": "https://spdx.org/licenses/BSD-3-Clause.json",
+                "referenceNumber": 394,
+                "name": 'BSD 3-Clause "New" or "Revised" License',
+                "licenseId": "BSD-3-Clause",
+                "seeAlso": [
+                    "https://opensource.org/licenses/BSD-3-Clause",
+                    "https://www.eclipse.org/org/documents/edl-v10.php",
+                ],
+                "isOsiApproved": True,
+                "isFsfLibre": True,
+            },
+            {
+                "reference": "https://spdx.org/licenses/ZPL-2.1.html",
+                "isDeprecatedLicenseId": False,
+                "detailsUrl": "https://spdx.org/licenses/ZPL-2.1.json",
+                "referenceNumber": 652,
+                "name": "Zope Public License 2.1",
+                "licenseId": "ZPL-2.1",
+                "seeAlso": ["http://old.zope.org/Resources/ZPL/"],
+                "isOsiApproved": True,
+                "isFsfLibre": True,
+            },
+        ],
+    },
+}
 
 if TYPE_CHECKING:
     from urljsf._schema import Urljsf
@@ -112,19 +179,28 @@ def kitchen_sink_ui_schema() -> dict[str, Any]:
     return fields
 
 
+def fetch_json(path: Path) -> dict[str, Any]:
+    """Fetch some (cached) JSON, or provide a fallback value on any error."""
+    try:
+        url = URLS[path]
+        if not path.exists():
+            r = requests.get(url, timeout=10)
+            r.raise_for_status()
+            path.write_text(json.dumps(r.json(), indent=2, sort_keys=True), **UTF8)
+            sys.stderr.write(f"Fetched {int(path.stat().st_size / 1024)} kb from {url}")
+        return dict(json.loads(path.read_text(**UTF8)))
+    except Exception as err:
+        sys.stderr.write(f"ERROR {url}: {err}")
+        return dict(FALLBACKS[path])
+
+
 def installer() -> Urljsf:
     """Define a ``pixi`` project that can build an installer."""
-    if not OUTPUTS.exists():
-        OUTPUTS.write_bytes(S.get(OUTPUTS_URL).content)
-
-    if not LICENSES.exists():
-        LICENSES.write_bytes(S.get(LICENSES_URL).content)
-
-    feedstocks = json.loads(OUTPUTS.read_text(**UTF8))
+    feedstocks = fetch_json(OUTPUTS)
     packages = sorted({*functools.reduce(operator.iadd, [*feedstocks.values()])})
     licenses = [
         lic["licenseId"]
-        for lic in json.loads(LICENSES.read_text(**UTF8))["licenses"]
+        for lic in fetch_json(LICENSES)["licenses"]
         if lic.get("isOsiApproved") and lic.get("isFsfLibre")
     ]
 
