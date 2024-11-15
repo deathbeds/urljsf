@@ -87,19 +87,19 @@ def py_tmp_path(tmp_path: Path) -> Generator[Path, None, None]:
 
 
 @pytest.fixture(params=sorted(ALL_SPHINX_PROJECTS.keys()))
-def a_sphinx_project(request: pytest.FixtureRequest, tmp_path: Path) -> Path:
+def a_sphinx_project(request: pytest.FixtureRequest, tmp_path: Path) -> str:
     """Provide a sphinx project."""
     dest = tmp_path / "src"
     shutil.copytree(SPHINX_PROJECTS / request.param, dest)
-    return Path(request.param)
+    return f"{request.param}"
 
 
 @pytest.fixture(params=sorted(ALL_MKDOCS_PROJECTS.keys()))
-def an_mkdocs_project(request: pytest.FixtureRequest, tmp_path: Path) -> Path:
+def an_mkdocs_project(request: pytest.FixtureRequest, tmp_path: Path) -> str:
     """Provide an mkdocs project."""
     dest = tmp_path / "project"
     shutil.copytree(MKDOCS_PROJECTS / request.param, dest)
-    return Path(request.param)
+    return f"{request.param}"
 
 
 @pytest.fixture(params=sorted(ALL_VALID_CLI_PROJECTS.keys()))

@@ -33,6 +33,8 @@ def test_sphinx_build(
     static = site / "_static"
     assert (static / "urljsf/index.js").exists()
     index_ = site / "index.html"
+    if an_mkdocs_project == "nested-file":
+        index_ = site / "deeply/nested/index.html"
     index_text = index_.read_text(**UTF8)
     print(index_text)
     assert "urljsf/index.js" in index_text

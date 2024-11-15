@@ -9,8 +9,10 @@ Library             SeleniumLibrary
 Library             urllib.parse
 
 Suite Setup         Setup Urljsf Suite    01_docs/002_installer
-Test Setup          Open Demo    installer
+Test Setup          Open Sphinx Demo    installer
 Test Teardown       Open Blank
+
+Test Tags           demo:installer
 
 
 *** Variables ***
