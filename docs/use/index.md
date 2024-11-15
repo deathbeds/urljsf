@@ -4,7 +4,7 @@
 
 - a static [script](./script.md) in an HTML page
 - a standalone [command line tool](./cli.md)
-- a [Sphinx extension](./sphinx.md).
+- a plugin for [`sphinx`](./sphinx.md) or [`mkdocs`](./mkdocs.md).
 
 All make use the `urljsf` [JSON schema](./schema.rst), and offer some
 [advanced options](./advanced/index.md).
@@ -15,6 +15,7 @@ All make use the `urljsf` [JSON schema](./schema.rst), and offer some
 script
 cli
 sphinx
+mkdocs
 schema
 advanced/index
 ```

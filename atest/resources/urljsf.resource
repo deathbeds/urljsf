@@ -33,10 +33,15 @@ Open Page
     Go To    ${HTTP_URL}/${page}
     Wait Until Element Is Visible    css:${CSS_U_FORM}    timeout=${TIMEOUT_LONG}
 
-Open Demo
+Open Sphinx Demo
     [Documentation]    Open a named demo.
     [Arguments]    ${demo}
     Open Page    demos/${demo}.html
+
+Open Mkdocs Page
+    [Documentation]    Open a page in mkdocs demo.
+    [Arguments]    ${page}
+    Open Page    mkdocs/${page}/index.html
 
 Scroll To
     [Documentation]    Scroll the first element matching a CSS selector into view.

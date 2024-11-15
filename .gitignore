@@ -8,3 +8,4 @@ dist/
 lib/
 node_modules/
 src/urljsf/_static
+tests/fixtures/mkdocs/*/site

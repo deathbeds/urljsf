@@ -4,6 +4,7 @@
 
 from __future__ import annotations
 
+import argparse
 import asyncio
 import logging
 import shutil
@@ -60,20 +61,32 @@ def get_unused_port() -> int:
     return port
 
 
+def get_parser() -> argparse.ArgumentParser:
+    """Parse command line options."""
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--port", type=int)
+    parser.add_argument("--docs")
+    parser.add_argument("--patch")
+    parser.add_argument("--dist-cov")
+    parser.add_argument("--mkdocs")
+    return parser
+
+
 def main(argv: list[str] | None = None) -> int:
     """Parse args and run the server until shutdown."""
-    port, static, patch, dist_cov = argv or sys.argv[1:]
+    args = get_parser().parse_args(argv)
 
     with tempfile.TemporaryDirectory() as td:
         tdp = Path(td)
         www = tdp / "www"
-        assets = www / patch
-        shutil.copytree(static, www)
+        assets = www / args.patch
+        shutil.copytree(args.docs, www)
         shutil.rmtree(assets)
-        shutil.copytree(dist_cov, assets)
+        shutil.copytree(args.dist_cov, assets)
+        shutil.copytree(args.mkdocs, www / "mkdocs")
 
         asyncio.new_event_loop().run_until_complete(
-            start_http_server(int(port), str(www))
+            start_http_server(args.port, str(www))
         )
 
         shutil.rmtree(td, ignore_errors=True)

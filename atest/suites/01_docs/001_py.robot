@@ -5,8 +5,10 @@ Resource            ../../resources/urljsf.resource
 Library             SeleniumLibrary
 
 Suite Setup         Setup Urljsf Suite    01_docs/001_py
-Test Setup          Open Demo    py
+Test Setup          Open Sphinx Demo    py
 Test Teardown       Open Blank
+
+Test Tags           demo:py
 
 
 *** Test Cases ***

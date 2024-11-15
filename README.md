@@ -48,7 +48,7 @@ Once the data is _validated_, the user sees a button which gets a URL, which can
 
 - a drop-in-and-pray [`script`](#js-script)
 - a standalone [CLI tool](#command-line)
-- a [sphinx](#sphinx) extension
+- a [`sphinx`](#sphinx) or [`mkdocs`](#mkdocs) extension
 
 ... to create JavaScript/HTML forms that helps **visitors** provide good data for:
 
@@ -66,32 +66,37 @@ Once the data is _validated_, the user sees a button which gets a URL, which can
 
 ### From PyPI
 
-`urljsf` is distributed on [PyPI][pypi]:
+`urljsf` is distributed on [PyPI][pypi], with several optional extras to help ensure
+tested versions are available:
 
 ```bash
 pip install urljsf
+# ... or    urljsf[sphinx]   for sphinx
+# ... or    urljsf[mkdocs]   for mkdocs and pymdown-extensions
+# ... or    urljsf[yaml]     for build time YAML parsing
 
 # or...
 uv install urljsf
-
 # etc.
 ```
 
 ### From conda-forge
 
-`urljsf` is also distributed on [`conda-forge`][conda]:
+`urljsf` is also distributed on [`conda-forge`][conda], with similar extras:
 
 ```bash
 pixi add urljsf
+# ... or urljsf-with-sphinx
+# ... or urljsf-with-mkdocs
+# ... or urljsf-with-yaml
 
 # or...
 micromamba install -c conda-forge urljsf
-
 # or...
 mamba install -c conda-forge urljsf
-
 # or...
 conda install -c conda-forge urljsf
+# etc.
 ```
 
 ### Development
@@ -104,7 +109,7 @@ See the [contributing guide][contrib] for a development install.
 
 - (not-recommended) hot-linked [`script`](#js-script)
 - a standalone [site generator](#command-line) for simple sites
-- a [plugin](#sphinx) for the `sphinx` documentation system
+- a plugin for the [`sphinx`](#sphinx) and [`mkdocs`](#mkdocs) documentation systems
 
 ### JSON Schema
 
@@ -148,7 +153,8 @@ Some ways to improve:
 - download a GitHub release and unpack it, serving the files next to it
 - ensure bootstrap is loaded _before_ the script, with a `link` tag in a `head`.
 - on the `script` element, use a `src` to point to a valid `urljsf` definition
-- use the [CLI](#command-line) or [Sphinx extension](#sphinx)
+- use the [CLI](#command-line) or a documentation extension for [`sphinx`](#sphinx) or
+  [`mkdocs`](#mkdocs)
 
 ### Command Line
 
@@ -167,7 +173,8 @@ the [documentation][cli-docs] for more.
 
 ### Sphinx
 
-After [installing](#install), add `urljsf.sphinxext` to `conf.py`:
+After [installing](#install) with the `[sphinx]` extra, add `urljsf.sphinxext` to
+`conf.py`:
 
 ```py
 # conf.py
@@ -190,13 +197,41 @@ See the [documentation][sphinx-docs] for more about configuring `urljsf.sphinxex
 
 [sphinx-docs]: https://urljsf.rtfd.org/en/latest/use/sphinx.html
 
+### Mkdocs
+
+After [installing](#install) with the `[mkdocs]` extra, add `urljsf` to `mkdocs.yml`:
+
+```yaml
+# mkdocs.yml
+plugins:
+  - urljsf
+```
+
+Then use the `urljsf` fenced code block in source files:
+
+````markdown
+```urljsf {path=path/to/defnition.toml}
+
+```
+````
+
+See the [documentation][mkdocs-docs] for more about configuring `urljsf`, the `urljsf`
+fence, and more advanced use cases.
+
+[mkdocs-docs]: https://urljsf.rtfd.org/en/latest/use/mkdocs.html
+
 ## Limitations
 
 - `react-json-schema-form` cannot represent all possible data structures, such as
   writing a _new_ JSON schema _in_ JSON schema, or many features added after Draft 7
 - the generated scripts _won't_ work when served from `file://` due to browser CORS
   headers requirements for `type="module"` scripts
-- the [`sphinx`](#sphinx) integration is only tested with the `html` builder
+- the [`sphinx`](#sphinx) integration is only tested with the `html` builder, the basic
+  `alabaster` theme, and [`pydata-sphinx-theme`][pdst] (by way of `urljsf`'s own
+  [documentation][sphinx-docs])
+- the [`mkdocs`](#mkdocs) integration is only tested with the default theme
+
+[pdst]: https://github.com/pydata/pydata-sphinx-theme
 
 ## Open Source
 

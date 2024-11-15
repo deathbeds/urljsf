@@ -440,6 +440,20 @@ inputs = [
 depends-on = ["docs-pip", "docs-scour", "docs-fetch", "dist-hash"]
 outputs = ["build/docs"]
 
+[feature.tasks-test.tasks.docs-mkdocs]
+description = "- build a demo site with mkdocs"
+cmd = """rm -rf build/mkdocs
+  && cd tests/fixtures/mkdocs/nested-file
+  && mkdocs build --site-dir $PIXI_PROJECT_ROOT/build/mkdocs
+"""
+depends-on = ["test-pip"]
+inputs = [
+  "src/**/*.py",
+  "tests/fixtures/mkdocs",
+  "!!**/site",
+]
+outputs = ["build/mkdocs"]
+
 [feature.tasks-docs.tasks.docs-rtd]
 description = "... copy the documentation site to where ReadTheDocs wants it"
 cmd = """
@@ -457,8 +471,8 @@ depends-on = ["docs-sphinx"]
 [feature.tasks-atest.tasks.atest-robot]
 description = "- run acceptance test reports with robot"
 cmd = "python scripts/atest.py"
-depends-on = ["docs-sphinx", "build-app-cov"]
-inputs = ["build/{docs,dist-cov}/", "atest", "scripts/atest.py"]
+depends-on = ["docs-sphinx", "build-app-cov", "docs-mkdocs"]
+inputs = ["build/{docs,dist-cov,mkdocs}/", "atest", "scripts/atest.py"]
 outputs = ["build/reports/atest/output.xml"]
 
 [feature.tasks-build.tasks.atest-nyc]
@@ -606,10 +620,14 @@ pip = "*"
 
 [feature.deps-run.dependencies]
 jsonschema = ">=4.18"
+mkdocs = ">=1.5"
+pymdown-extensions = ">=10.11"
 python = ">=3.9"
 sphinx = ">=6.1"
 
 [feature.deps-run-min.dependencies]
+mkdocs = "1.5.*"
+pymdown-extensions = "10.11.*"
 python = "3.9.*"
 sphinx = "6.1.*"
 typing_extensions = "4.0.0"
@@ -657,6 +675,7 @@ mypy = "*"
 ruff = "*"
 taplo = "*"
 types-docutils = "*"
+types-markdown = "*"
 types-jinja2 = "*"
 types-jsonschema = "*"
 robotframework-robocop = "*"
