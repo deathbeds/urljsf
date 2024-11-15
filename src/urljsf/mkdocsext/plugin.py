@@ -14,6 +14,7 @@ from ..config import Config
 from ..source import DefSource
 from ..urljsf import Urljsf
 from ..utils import import_dotted_dict
+from .config import UrljsfMkdocsConfig
 
 if TYPE_CHECKING:
     from markdown.core import Markdown
@@ -27,7 +28,7 @@ ATTR_LIST = "attr_list"
 ENSURE_CONFIG = [PMDX_SF, ATTR_LIST]
 
 
-class UrljsfMkdocs(BasePlugin):  # type: ignore[no-untyped-call,type-arg]
+class UrljsfMkdocs(BasePlugin[UrljsfMkdocsConfig]):  # type: ignore[no-untyped-call]
     """An ``mkdocs`` plugin for ``urljsf``."""
 
     _current_page: Page | None = None
@@ -95,7 +96,7 @@ class UrljsfMkdocs(BasePlugin):  # type: ignore[no-untyped-call,type-arg]
         fmt = attr("format")
         definition: DefSource | None = None
         input_: str | None = None
-        app_defaults: dict[str, Any] = {}
+        app_defaults: dict[str, Any] = self.config.defaults
         def_kwargs: Any = {"defaults": app_defaults, "resource_path": here}
 
         if path and path.startswith("py:"):

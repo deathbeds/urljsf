@@ -1,4 +1,4 @@
-"""Verify behavior when run under ``mkdocs-build``."""
+"""Verify behavior when run under ``mkdocs build``."""
 # Copyright (C) urljsf contributors.
 # Distributed under the terms of the Modified BSD License.
 
