@@ -446,6 +446,7 @@ cmd = """rm -rf build/mkdocs
   && cd tests/fixtures/mkdocs/nested-file
   && mkdocs build --site-dir $PIXI_PROJECT_ROOT/build/mkdocs
 """
+depends-on = ["test-pip"]
 inputs = [
   "src/**/*.py",
   "tests/fixtures/mkdocs",
