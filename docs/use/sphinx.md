@@ -8,7 +8,7 @@ sites built by [jupyak](https://github.com/deathbeds/jupyak).
 `urljsf.sphinxext` formalizes some of these hacks into a mostly-usable pattern.
 
 This extension requires [`sphinx`][sphinx] to be installed. Adding the `[sphinx]` extra
-will help ensure tested lower versions e.g.:
+will help ensure _at least_ minimum tested lower versions are installed e.g.:
 
 - `pip install urljsf[sphinx]`
 - `conda install urljsf-with-sphinx`

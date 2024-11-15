@@ -5,7 +5,8 @@
 The `mkdocs` extension is mostly derived from the [`sphinx`](./sphinx.md) extension.
 
 This extension requires [`mkdocs`][mkdocs] and [`pymdown-extensions`][pmdx] to be
-installed. Adding the `[mkdocs]` extra, will help ensure tested lower versions e.g.:
+installed. Adding the `[mkdocs]` extra will help ensure _at least_ minimum tested
+versions are installed e.g.:
 
 - `pip install urljsf[mkdocs]`
 - `conda install urljsf-with-mkdocs`
