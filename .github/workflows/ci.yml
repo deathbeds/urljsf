@@ -122,7 +122,7 @@ jobs:
         with:
           pixi-version: v${{ env.URLJSF_PIXI_VERSION }}
           cache: true
-          environments: build docs check atest
+          environments: atest build check docs test
           cache-key: job-docs
       - name: cache (node)
         uses: actions/cache@v4
