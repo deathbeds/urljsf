@@ -607,12 +607,13 @@ pip = "*"
 [feature.deps-run.dependencies]
 jsonschema = ">=4.18"
 mkdocs = ">=1.5"
-pymdown-extensions = ">=10"
+pymdown-extensions = ">=10.11"
 python = ">=3.9"
 sphinx = ">=6.1"
 
 [feature.deps-run-min.dependencies]
 mkdocs = "1.5.*"
+pymdown-extensions = "10.11.*"
 python = "3.9.*"
 sphinx = "6.1.*"
 typing_extensions = "4.0.0"

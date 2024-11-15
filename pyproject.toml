@@ -37,8 +37,8 @@ yaml = [
   "ruamel.yaml",
 ]
 mkdocs = [
-  "mkdocs",
-  "pymdown-extensions",
+  "mkdocs >=1.5",
+  "pymdown-extensions >=10.11.0",
 ]
 test = [
   "pytest",
