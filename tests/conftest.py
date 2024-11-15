@@ -44,6 +44,9 @@ FIXTURES = HERE / "fixtures"
 SPHINX_PROJECTS = FIXTURES / "sphinx"
 ALL_SPHINX_PROJECTS = {p.name: p for p in SPHINX_PROJECTS.glob("*") if p.is_dir()}
 
+MKDOCS_PROJECTS = FIXTURES / "mkdocs"
+ALL_MKDOCS_PROJECTS = {p.name: p for p in MKDOCS_PROJECTS.glob("*") if p.is_dir()}
+
 CLI_PROJECTS = FIXTURES / "cli"
 VALID_CLI_PROJECTS = CLI_PROJECTS / "valid"
 ALL_VALID_CLI_PROJECTS = {p.name: p for p in VALID_CLI_PROJECTS.glob("*") if p.is_dir()}
@@ -88,7 +91,15 @@ def a_sphinx_project(request: pytest.FixtureRequest, tmp_path: Path) -> Path:
     """Provide a sphinx project."""
     dest = tmp_path / "src"
     shutil.copytree(SPHINX_PROJECTS / request.param, dest)
-    return request.param
+    return Path(request.param)
+
+
+@pytest.fixture(params=sorted(ALL_MKDOCS_PROJECTS.keys()))
+def an_mkdocs_project(request: pytest.FixtureRequest, tmp_path: Path) -> Path:
+    """Provide an mkdocs project."""
+    dest = tmp_path / "project"
+    shutil.copytree(MKDOCS_PROJECTS / request.param, dest)
+    return Path(request.param)
 
 
 @pytest.fixture(params=sorted(ALL_VALID_CLI_PROJECTS.keys()))
@@ -96,13 +107,13 @@ def a_valid_cli_project(request: pytest.FixtureRequest, tmp_path: Path) -> str:
     """Provide a CLI project."""
     dest = tmp_path / "src"
     shutil.copytree(VALID_CLI_PROJECTS / request.param, dest)
-    return request.param
+    return f"{request.param}"
 
 
 @pytest.fixture(params=FORMATS)
 def a_format(request: pytest.FixtureRequest) -> str:
     """Provide a format."""
-    return request.param
+    return f"{request.param}"
 
 
 @pytest.fixture(params=sorted(ALL_VALID_CLI_PROJECTS.keys()))
@@ -110,7 +121,7 @@ def a_valid_formatted_cli_project(
     request: pytest.FixtureRequest,
     tmp_path: Path,
     a_format: str,
-) -> Path:
+) -> str:
     """Provide a project fixture in different formats."""
     a_valid_cli_project = request.param
     dest = tmp_path / "src"
@@ -135,7 +146,7 @@ def a_valid_extracted_cli_project(
     request: pytest.FixtureRequest,
     a_format: str,
     tmp_path: Path,
-) -> Path:
+) -> str:
     """Provide a project fixture with data extracted to files."""
     a_valid_cli_project = request.param
     dest = tmp_path / "src"
@@ -215,7 +226,7 @@ def an_example_ui_schema(request: pytest.FixtureRequest) -> dict[str, Any]:
 def _load_any(stem: str, path: Path) -> tuple[Path, dict[str, Any]]:
     """Load a fixtured file as data."""
     src: Path | None = None
-    data: dict[str, Any] = None
+    data: dict[str, Any] = {}
     for fmt in FORMATS:
         src = path / f"{stem}.{fmt}"
         if not src.exists():
@@ -223,7 +234,7 @@ def _load_any(stem: str, path: Path) -> tuple[Path, dict[str, Any]]:
         data = _parse(src)
         break
 
-    assert src is not None
+    assert src is not None, "no source found"
     return src, data
 
 
@@ -234,9 +245,9 @@ def _parse(path: Path) -> dict[str, Any]:
     if suffix == ".toml":
         return tomllib.loads(text)
     if suffix in {".yaml", ".yml"}:
-        return YAML.load(text)
+        return YAML.load(text)  # type: ignore[no-any-return]
     if suffix == ".json":
-        return json.loads(text)
+        return json.loads(text)  # type: ignore[no-any-return]
     msg = f"Can't parse {path}"
     raise NotImplementedError(msg)
 

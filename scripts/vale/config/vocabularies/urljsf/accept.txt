@@ -60,6 +60,7 @@ light/dark
 linter
 live(Omit|Validate)
 min(Items|Length)
+mkdocs
 natively
 no_bootstrap
 non-
