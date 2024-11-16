@@ -7,9 +7,7 @@ from __future__ import annotations
 import io
 import json
 import os
-import platform
 import shutil
-import sys
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
@@ -29,7 +27,6 @@ YAML = YAML_(typ="safe")
 if TYPE_CHECKING:
     from collections.abc import Generator
 
-    from pytest_html.report_data import ReportData
 
 pytest_plugins = ("sphinx.testing.fixtures",)
 
@@ -58,15 +55,6 @@ ALL_DEMO_UI_EXAMPLES = {p.name: p for p in JS_EXAMPLES.rglob("*.uischema.*")}
 NO_SCHEMA_JSON = ["remote"]
 
 FORMATS = ["json", "toml", "yaml"]
-
-
-def pytest_html_report_title(report: ReportData) -> None:
-    """Provide a ``pytest-html`` page title."""
-    from urljsf import __version__
-
-    u = platform.uname()
-    py = ".".join(map(str, sys.version_info[:3]))
-    report.title = f"urljsf {__version__} (Python {py}) ({u.system} {u.machine})"
 
 
 @pytest.fixture

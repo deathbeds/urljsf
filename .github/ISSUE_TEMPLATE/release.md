@@ -27,7 +27,8 @@ labels: maintenance
 
 - [ ] postmortem
   - [ ] handle `conda-forge` feedstock tasks
-  - [ ] bump to next development version
-  - [ ] bump the `CACHE_EPOCH`
-  - [ ] rebuild `pixi.lock` and `yarn.lock`
-  - [ ] update release procedures with lessons learned
+  - [ ] start a postmortem PR
+    - [ ] bump to next development version
+    - [ ] bump the `CACHE_EPOCH`
+    - [ ] rebuild `pixi.lock` and `yarn.lock`
+    - [ ] update release procedures with lessons learned
