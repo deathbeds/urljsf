@@ -4,6 +4,8 @@ about: Prepare for a release
 labels: maintenance
 ---
 
+## Release Checklist
+
 - [ ] merge all outstanding PRs
 - [ ] ensure the versions have been bumped (check with `pixi lint`)
 - [ ] ensure the CHANGELOG is up-to-date
@@ -25,8 +27,8 @@ labels: maintenance
 
 - [ ] postmortem
   - [ ] handle `conda-forge` feedstock tasks
-  - [ ] validate on binder via simplest-possible gists
-  - [ ] bump to next development version
-  - [ ] bump the `CACHE_EPOCH`
-  - [ ] rebuild `pixi.lock` and `yarn.lock`
-  - [ ] update release procedures with lessons learned
+  - [ ] start a postmortem PR
+    - [ ] bump to next development version
+    - [ ] bump the `CACHE_EPOCH`
+    - [ ] rebuild `pixi.lock` and `yarn.lock`
+    - [ ] update release procedures with lessons learned
