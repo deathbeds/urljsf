@@ -63,6 +63,7 @@
     ]
   },
   "resolutions": {
+    "cross-spawn": ">=7.0.5",
     "loader-utils": "^2.0.4"
   },
   "devDependencies": {
