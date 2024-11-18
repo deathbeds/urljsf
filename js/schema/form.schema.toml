@@ -64,7 +64,6 @@ description = """filters to ensure in `nunjucks` templates"""
 items = {oneOf = [{"$ref" = "#/definitions/any-file-format"}]}
 uniqueItems = true
 
-
 # forms ########################################################################
 [definitions.forms]
 type = "object"
@@ -121,17 +120,17 @@ type = "object"
 additionalProperties = false
 
 [definitions.any-form.properties]
-schema = {"$ref" = "#/definitions/any-schema", descripton = """
+schema = {"$ref" = "#/definitions/any-schema", description = """
 URL for a JSON schema to describe the this form: features not present in
 Draft 7 are best-effort.
 """}
-ui_schema = {"$ref" = "#/definitions/any-schema", descripton = """
+ui_schema = {"$ref" = "#/definitions/any-schema", description = """
 URL for an `rjsf` UI schema to describe how the `schema` will be presented
 """}
-form_data = {"$ref" = "#/definitions/any-schema", descripton = """
+form_data = {"$ref" = "#/definitions/any-schema", description = """
 JSON-compatible initial data for this form
 """}
-props = {"$ref" = "./props.schema.json#/definitions/Props", descripton = """
+props = {"$ref" = "./props.schema.json#/definitions/Props", description = """
 JSON-compatible subset of `rjsf` component properties for this form
 """}
 order = {type = "number", description = """

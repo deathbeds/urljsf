@@ -11,7 +11,8 @@
  */
 export type AnyTemplate = string | [string, ...string[]];
 /**
- * A schema-like object referenced by URL, or inline as an object
+ * JSON-compatible initial data for this form
+ *
  */
 export type ASchema = SchemaByURL | InlineObject;
 /**
@@ -22,11 +23,14 @@ export type ASchema = SchemaByURL | InlineObject;
  */
 export type SchemaByURL = string;
 /**
- * A schema-like object referenced by URL, or inline as an object
+ * URL for a JSON schema to describe the this form: features not present in
+ * Draft 7 are best-effort.
+ *
  */
 export type ASchema1 = SchemaByURL | InlineObject;
 /**
- * A schema-like object referenced by URL, or inline as an object
+ * URL for an `rjsf` UI schema to describe how the `schema` will be presented
+ *
  */
 export type ASchema2 = SchemaByURL | InlineObject;
 /**
@@ -170,9 +174,8 @@ export interface AnyForm {
  */
 export interface InlineObject {}
 /**
- * JSON-compatible default values for `rjsf` [Form.props][props].
+ * JSON-compatible subset of `rjsf` component properties for this form
  *
- * [props]: https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/form-props
  */
 export interface Props {
   /**

@@ -7,7 +7,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from jsonschema import Draft7Validator
+from jsonschema import Draft7Validator, validators
 
 from .constants import SCHEMA_VERSION, UTF8
 
@@ -20,18 +20,20 @@ FORM_SCHEMA = CURRENT_SCHEMA / "form.schema.json"
 PROPS_SCHEMA = CURRENT_SCHEMA / "props.schema.json"
 UI_SCHEMA = CURRENT_SCHEMA / "ui.schema.json"
 
-URLJSF_VALIDATOR = Draft7Validator(
-    json.loads(FORM_SCHEMA.read_text(**UTF8)),
-    format_checker=Draft7Validator.FORMAT_CHECKER,
-)
-
-PROPS_VALIDATOR = Draft7Validator(
-    json.loads(PROPS_SCHEMA.read_text(**UTF8)),
-    format_checker=Draft7Validator.FORMAT_CHECKER,
+_StrictDraft7Validator = validators.create(
+    dict(Draft7Validator.META_SCHEMA, additionalProperties=False),
+    Draft7Validator.VALIDATORS,
+    "StrictDraft7",
 )
 
 
-UI_VALIDATOR = Draft7Validator(
-    json.loads(UI_SCHEMA.read_text(**UTF8)),
-    format_checker=Draft7Validator.FORMAT_CHECKER,
-)
+def _make_strict_validator(path: Path) -> Draft7Validator:
+    """Validate the schema."""
+    raw = json.loads(path.read_text(**UTF8))
+    _StrictDraft7Validator.check_schema(raw)
+    return Draft7Validator(raw, format_checker=Draft7Validator.FORMAT_CHECKER)
+
+
+URLJSF_VALIDATOR = _make_strict_validator(FORM_SCHEMA)
+PROPS_VALIDATOR = _make_strict_validator(PROPS_SCHEMA)
+UI_VALIDATOR = _make_strict_validator(UI_SCHEMA)
