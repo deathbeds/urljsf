@@ -431,7 +431,7 @@
       "properties": {
         "form_data": {
           "$ref": "#/definitions/any-schema",
-          "descripton": "JSON-compatible initial data for this form\n"
+          "description": "JSON-compatible initial data for this form\n"
         },
         "order": {
           "type": "number",
@@ -439,15 +439,15 @@
         },
         "props": {
           "$ref": "#/definitions/Props",
-          "descripton": "JSON-compatible subset of `rjsf` component properties for this form\n"
+          "description": "JSON-compatible subset of `rjsf` component properties for this form\n"
         },
         "schema": {
           "$ref": "#/definitions/any-schema",
-          "descripton": "URL for a JSON schema to describe the this form: features not present in\nDraft 7 are best-effort.\n"
+          "description": "URL for a JSON schema to describe the this form: features not present in\nDraft 7 are best-effort.\n"
         },
         "ui_schema": {
           "$ref": "#/definitions/any-schema",
-          "descripton": "URL for an `rjsf` UI schema to describe how the `schema` will be presented\n"
+          "description": "URL for an `rjsf` UI schema to describe how the `schema` will be presented\n"
         }
       },
       "additionalProperties": false

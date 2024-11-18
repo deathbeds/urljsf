@@ -2,7 +2,9 @@
 
 > ## 0.1.2 (Unreleased)
 >
-> TBD
+> - [#xx] fixes some schema descriptions
+>
+> [#xx]: https://github.com/deathbeds/urljsf/pull/xx
 
 ## [0.1.1](https://github.com/deathbeds/urljsf/releases/tag/v0.1.1)
 
