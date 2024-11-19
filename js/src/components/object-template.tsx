@@ -21,6 +21,7 @@ import Markdown from 'markdown-to-jsx';
 import { UrljsfGridOptions } from '../_props.js';
 import { emptyObject } from '../tokens.js';
 import { useMarkdown } from '../utils.js';
+import { MD_OPTIONS } from './markdown.js';
 
 const DEFAULT_GRID_OPTIONS: UrljsfGridOptions = {
   default: ['col-12'],
@@ -71,7 +72,7 @@ export function ObjectGridTemplate<
 
   let richDescription =
     description && useMarkdown(uiOptions) ? (
-      <Markdown>{description}</Markdown>
+      <Markdown options={MD_OPTIONS}>{description}</Markdown>
     ) : (
       description
     );

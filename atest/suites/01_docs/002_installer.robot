@@ -20,6 +20,7 @@ ${CSS_LICENSE}          ${CSS_U_DATALIST} input[id$="_license"]
 ${CSS_LICENSE_CHECK}    ${CSS_U_DATALIST} input[id$="_license__datalist-check"]
 ${GOOD_LICENSE}         BSD-3-Clause
 ${BAD_LICENSE}          WTPL
+${CSS_COPY_BUTTON}      .urljsf-copybutton
 
 
 *** Test Cases ***
@@ -66,6 +67,10 @@ Verify Installer URL
     ${from_toml} =    TOML.Loads    ${raw}
     ${expected} =    Get TOML Fixture    002_installer.toml
     Should Be JSON Equivalent    ${from_toml}    ${expected}
+    ${copy} =    Set Variable    css:${CSS_COPY_BUTTON}
+    Click Element    ${copy}
+    Wait Until Element Contains    ${copy}    ok
+    Wait Until Element Contains    ${copy}    copy
 
 Verify Installer Download
     [Documentation]    Verify downloaded file

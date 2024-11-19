@@ -17,6 +17,7 @@ import {
 import Markdown from 'markdown-to-jsx';
 
 import { useMarkdown } from '../utils.js';
+import { MD_OPTIONS } from './markdown.js';
 
 export function ArrayFieldTemplate<
   T = any,
@@ -62,7 +63,7 @@ export function ArrayFieldTemplate<
 
   let richDescription =
     description && useMarkdown(uiOptions) ? (
-      <Markdown>{description}</Markdown>
+      <Markdown options={MD_OPTIONS}>{description}</Markdown>
     ) : (
       description
     );
