@@ -1,10 +1,17 @@
 # Changelog
 
-> ## 0.1.2 (Unreleased)
->
-> - [#19] fixes some schema descriptions
->
-> [#19]: https://github.com/deathbeds/urljsf/pull/19
+<details>
+<summary>Unreleased</summary>
+
+## 0.1.2
+
+- [#19] fixes some schema descriptions
+- [#20] adds a copy-to-clipboard button to all markdown-rendered `pre` tags
+
+[#19]: https://github.com/deathbeds/urljsf/pull/19
+[#20]: https://github.com/deathbeds/urljsf/pull/20
+
+</details>
 
 ## [0.1.1](https://github.com/deathbeds/urljsf/releases/tag/v0.1.1)
 

@@ -32,6 +32,7 @@ import {
 } from '../tokens.js';
 import { getConfig, getIdPrefix, initFormProps } from '../utils.js';
 import { CheckItem } from './check-item.js';
+import { MD_OPTIONS } from './markdown.js';
 import { Style } from './style.js';
 
 const FORM_PRE_DEFAULTS: Partial<FormProps> = {
@@ -46,6 +47,7 @@ const SUBMIT_MD_OPTIONS: MarkdownToJSX.Options = {
   forceInline: true,
   forceBlock: false,
   forceWrapper: false,
+  ...MD_OPTIONS,
 };
 
 const BTN_COMMON: Pick<ButtonProps, 'size' | 'className'> = {
@@ -280,7 +282,7 @@ function UrljsfForm(props: IUrljsfFormProps): JSX.Element {
       ? []
       : [
           <li className="list-group-item" key={`${key}-where`}>
-            <Markdown>{tmpl.value}</Markdown>
+            <Markdown options={MD_OPTIONS}>{tmpl.value}</Markdown>
           </li>,
         ];
   };

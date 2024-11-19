@@ -81,7 +81,8 @@
     "config": {
       "line-length": false,
       "first-line-h1": false,
-      "no-inline-html": false
+      "no-inline-html": false,
+      "link-fragments": false
     }
   }
 }

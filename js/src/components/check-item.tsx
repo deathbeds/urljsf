@@ -4,6 +4,8 @@ import type { RJSFValidationError } from '@rjsf/utils';
 
 import Markdown from 'markdown-to-jsx';
 
+import { MD_OPTIONS } from './markdown.js';
+
 export function CheckItem(props: CheckItemProps): JSX.Element {
   let result: string;
   if (Array.isArray(props.result)) {
@@ -25,14 +27,20 @@ export function CheckItem(props: CheckItemProps): JSX.Element {
           disabled
         ></input>
         <label className="form-check-label">
-          <em>{props.markdown ? <Markdown>{props.label}</Markdown> : props.label}</em>
+          <em>
+            {props.markdown ? (
+              <Markdown options={MD_OPTIONS}>{props.label}</Markdown>
+            ) : (
+              props.label
+            )}
+          </em>
         </label>
       </div>
       {!result ? (
         <></>
       ) : props.markdown ? (
         <div>
-          <Markdown>{result}</Markdown>
+          <Markdown options={MD_OPTIONS}>{result}</Markdown>
         </div>
       ) : (
         result

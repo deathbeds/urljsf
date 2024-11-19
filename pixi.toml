@@ -565,7 +565,7 @@ cmd = """cd build/docs
   && python -m http.server -b 127.0.0.1 8101"""
 depends-on = ["docs-sphinx"]
 
-[feature.tasks-docs.tasks.watch-docs]
+[feature.tasks-dev.tasks.watch-docs]
 description = "- watch docs source and rebuild the site"
 cmd = """rm -rf build/watch-docs
   && sphinx-autobuild docs build/watch-docs
@@ -573,9 +573,8 @@ cmd = """rm -rf build/watch-docs
     --jobs 8
     --color
     --watch src
-    --watch pixi.toml
-    --watch js/dist"""
-depends-on = ["docs-pip"]
+    --watch pixi.toml"""
+depends-on = ["dev-pip"]
 
 # envs #########################################################################
 [environments]
@@ -603,11 +602,12 @@ dev = [
   "deps-atest",
   "deps-build",
   "deps-check",
+  "deps-dev",
   "deps-docs",
   "deps-lint",
   "deps-pip",
-  "deps-run",
   "deps-py-max",
+  "deps-run",
   "deps-test",
   "tasks-dev",
 ]
@@ -650,7 +650,6 @@ pydata-sphinx-theme = ">=0.16.0,<0.17.0"
 pypandoc = "*"
 scour = "*"
 sphinx-argparse = "*"
-sphinx-autobuild = "*"
 sphinx-autodoc-typehints = "*"
 sphinx-copybutton = "*"
 sphinx-jsonschema = "*"
@@ -698,6 +697,9 @@ pytest-html = "*"
 twine = "*"
 vale = "*"
 vale-spelling-aoo-mozilla-en-dict-us = "*"
+
+[feature.deps-dev.dependencies]
+sphinx-autobuild = "*"
 
 # tools ########################################################################
 [tool.sphinx]

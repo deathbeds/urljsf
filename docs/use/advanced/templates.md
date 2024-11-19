@@ -22,6 +22,29 @@ Each `template` gets an object of this form:
 }
 ```
 
+## Markdown
+
+Most non-`url` templates are rendered as [Markdown][md].
+
+Much of [GitHub flavored Markdown][gfm] is supported, but not platform-specific features
+like magic `#{issue}` transforms and `mermaid` fenced code blocks. Indeed, no syntax
+highlighting is supported, so generally any fence info will be discarded.
+
+[gfm]: https://github.github.com/gfm
+[md]: https://daringfireball.net/projects/markdown
+
+### Copy Code
+
+All `pre` tags (generated with triple ticks, tildes, etc) will be rendered with a `copy`
+button.
+
+This helps for URL-based workflows that don't allow for populating key parameters such
+as GitLab's `/new/` URL, or otherwise complex ones (GitHub's `/edit/`).
+
+In this case, it is recommended to provide a [`below_{form}`](#below-form) template
+which shows the file content, with narrative describing how to copy the code and what to
+do with it.
+
 ### Special Templates
 
 A few well-known template names and patterns are used globally.
