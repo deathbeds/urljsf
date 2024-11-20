@@ -1,5 +1,14 @@
 # Changelog
 
+<details>
+<summary>Unreleased</summary>
+
+## 0.1.3
+
+> TBD
+
+</details>
+
 ## 0.1.2
 
 - [#19] fixes some schema descriptions
