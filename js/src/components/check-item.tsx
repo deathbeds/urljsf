@@ -1,5 +1,7 @@
 // Copyright (C) urljsf contributors.
 // Distributed under the terms of the Modified BSD License.
+import type { JSX } from 'react';
+
 import type { RJSFValidationError } from '@rjsf/utils';
 
 import Markdown from 'markdown-to-jsx';

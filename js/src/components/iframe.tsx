@@ -1,6 +1,7 @@
 // Copyright (C) urljsf contributors.
 // Distributed under the terms of the Modified BSD License.
 import { createPortal, useState } from 'react';
+import type { JSX } from 'react';
 
 /** an interface for iframe props */
 interface IFrameProps {

@@ -1,6 +1,7 @@
 // Copyright (C) urljsf contributors.
 // Distributed under the terms of the Modified BSD License.
 import { Fragment } from 'react';
+import type { JSX } from 'react';
 import { render } from 'react-dom';
 
 import Button from 'react-bootstrap/esm/Button.js';
