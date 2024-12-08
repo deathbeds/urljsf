@@ -9,7 +9,10 @@ build:
     - mamba install -c conda-forge -c nodefaults pixi==0.39.0
     - pixi r build-yarn
     - pixi r build
-    - pixi r dist
+    - pixi r dist-npm
+    - pixi r dist-pypi
+    - pixi r dist-conda
+    - pixi r dist-hash
     - pixi r docs-fetch
     - pixi r docs-pip
     - pixi r docs-sphinx
