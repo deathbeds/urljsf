@@ -36,6 +36,8 @@ jobs:
             ${{ env.CACHE_EPOCH }}-${{ runner.os }}-node_modules-${{ hashFiles('yarn.lock') }}
       - run: pixi run build-yarn
       - run: ls node_modules/.skip-yarn || mkdir -p build && echo '1' > node_modules/.skip-yarn
+      - run: pixi run dist-npm
+      - run: pixi run dist-pypi
       - run: pixi run dist
       - name: upload dist
         uses: actions/upload-artifact@v4
@@ -112,14 +114,14 @@ jobs:
         with:
           name: urljsf-${{ github.run_number }}-build
       - run: pixi run -v ${{ matrix.test-env }}-pytest
-      - uses: actions/upload-artifact@v4
+      - name: upload ${{ matrix.test-env }} reports
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: urljsf-${{ github.run_number }}-${{ matrix.test-env }}-${{ matrix.vm }}
           path: ./build/reports
 
   docs:
-    needs: [build]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -135,20 +137,15 @@ jobs:
           path: node_modules
           key: |
             ${{ env.CACHE_EPOCH }}-${{ runner.os }}-node_modules-${{ hashFiles('yarn.lock') }}
-      - name: download dist
-        uses: actions/download-artifact@v4
-        with:
-          name: urljsf-${{ github.run_number }}-dist
-          path: |
-            ./dist
-      - name: download build
-        uses: actions/download-artifact@v4
-        with:
-          name: urljsf-${{ github.run_number }}-build
       - run: pixi run build-yarn
-      - run: pixi run -v build-app
+      - run: pixi run build-app
+      - run: pixi run dist-npm
+      - run: pixi run dist-pypi
+      - run: pixi run dist-conda
+      - run: pixi run dist-hash
       - run: pixi run docs
-      - uses: actions/upload-artifact@v4
+      - name: upload docs
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: urljsf-${{ github.run_number }}-docs
@@ -158,7 +155,8 @@ jobs:
       - run: pixi run check
       - run: pixi run report
         if: always()
-      - uses: actions/upload-artifact@v4
+      - name: upload reports
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: urljsf-${{ github.run_number }}-docs-reports

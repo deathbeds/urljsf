@@ -60,7 +60,6 @@ build ALL distributed artifacts""", depends-on = [
   "dist-pypi",
   "dist-check-wheel",
   "dist-check-twine",
-  "dist-conda",
   "dist-hash",
 ], cmd = "echo 📦"}
 test = {description = """
