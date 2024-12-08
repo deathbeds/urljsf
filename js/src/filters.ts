@@ -3,12 +3,13 @@
 import { isObject } from '@rjsf/utils';
 
 import { Ajv, ErrorObject } from 'ajv';
+import addFormats from 'ajv-formats';
 import type nunjucks from 'nunjucks';
 
 import { Urljsf } from './_schema';
 import { IFilters } from './tokens';
 
-const AJV = new Ajv();
+let AJV: Ajv;
 
 /** remove empty objects and arrays */
 export function prune(data: Record<string, any>) {
@@ -37,6 +38,7 @@ export function from_entries(data: [string, any][]): Record<string, any> {
 
 /* get schema errors */
 export function schema_errors(data: any, schema: Record<string, any>): ErrorObject[] {
+  AJV = AJV || addFormats(new Ajv());
   AJV.validate(schema, data);
   return [...(AJV.errors || [])];
 }
