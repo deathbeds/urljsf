@@ -14,8 +14,8 @@ concurrency:
 env:
   PYTHONUNBUFFERED: 1
   PIP_DISABLE_PIP_VERSION_CHECK: 1
-  CACHE_EPOCH: 4
-  URLJSF_PIXI_VERSION: 0.36.0
+  CACHE_EPOCH: 5
+  URLJSF_PIXI_VERSION: 0.39.0
 
 jobs:
   build:
@@ -46,7 +46,7 @@ jobs:
         with:
           name: urljsf-${{ github.run_number }}-build
           path: |
-            build/task-cache-v0
+            ./pixi/task-cache-v0
             js/lib
             js/dist
             js/tsconfig.tsbuildinfo
