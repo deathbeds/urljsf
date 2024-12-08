@@ -6,8 +6,9 @@
 ## 0.1.3
 
 - [#27] fixes errant `idPrefix` relying on a hard-coded form key
-- [#27] update fom schema to accept a local file for `forms.*.props`
+- [#27] update form schema to accept a local file for `forms.*.props`
 - [#27] adds in-development builds with `rattler-build`, published on ReadTheDocs
+- [#27] adds `schema_errors` nunjucks filter
 
 [#27]: https://github.com/deathbeds/urljsf/pull/27
 
