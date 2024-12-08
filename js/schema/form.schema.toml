@@ -130,7 +130,10 @@ URL for an `rjsf` UI schema to describe how the `schema` will be presented
 form_data = {"$ref" = "#/definitions/any-schema", description = """
 JSON-compatible initial data for this form
 """}
-props = {"$ref" = "./props.schema.json#/definitions/Props", description = """
+props = {oneOf = [
+  {"$ref" = "./props.schema.json#/definitions/Props"},
+  {type = "string", format = "#/definitions/any-schema-location"},
+], description = """
 JSON-compatible subset of `rjsf` component properties for this form
 """}
 order = {type = "number", description = """

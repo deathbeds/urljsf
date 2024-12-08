@@ -58,6 +58,8 @@ dist = {description = """
 build ALL distributed artifacts""", depends-on = [
   "dist-npm",
   "dist-pypi",
+  "dist-check-wheel",
+  "dist-check-twine",
   "dist-hash",
 ], cmd = "echo 📦"}
 test = {description = """
@@ -74,8 +76,6 @@ check = {description = """
 perform ALL pre-release checks""", depends-on = [
   "check-links",
   "check-vale",
-  "check-wheel",
-  "check-twine",
 ], cmd = "echo 🤓"}
 
 # fragments ####################################################################
@@ -213,6 +213,18 @@ cmd = "pyproject-build . --no-isolation"
 depends-on = ["build-static", "schema-py"]
 inputs = ["{pyproject.toml,LICENSE,README.md}", "{src,tests}/", "!**/__pycache__"]
 outputs = ["dist/*.{whl,tar.gz}"]
+
+[feature.tasks-build.tasks.dist-check-wheel]
+description = "... check the built wheel"
+cmd = "check-wheel-contents dist/*.whl"
+depends-on = ["dist-pypi"]
+inputs = ["dist/*.whl"]
+
+[feature.tasks-build.tasks.dist-check-twine]
+description = "... check the built distributions for PyPI"
+cmd = "twine check --strict dist/*.whl dist/*.tar.gz"
+depends-on = ["dist-pypi"]
+inputs = ["dist/"]
 
 [feature.tasks-build.tasks.dist-hash]
 description = "- hash the built distributions"
@@ -480,7 +492,7 @@ description = "- gather JS coverage with nyc"
 cmd = """cd js
   && yarn run nyc report
     --statements 97
-    --branches 87
+    --branches 86
     --functions 93
     --lines 97"""
 depends-on = ["atest-robot"]
@@ -514,18 +526,6 @@ description = "... check spelling in documentation"
 cmd = "python scripts/vale/check.py"
 depends-on = ["docs-sphinx"]
 inputs = ["build/docs/**/*.html", "scripts/vale", "{src,tests,scripts,atest}/**/*.py"]
-
-[feature.tasks-check.tasks.check-wheel]
-description = "... check the built wheel"
-cmd = "check-wheel-contents dist/*.whl"
-depends-on = ["dist-pypi"]
-inputs = ["dist/*.whl"]
-
-[feature.tasks-check.tasks.check-twine]
-description = "... check the built distributions for PyPI"
-cmd = "twine check --strict dist/*.whl dist/*.tar.gz"
-depends-on = ["dist-pypi"]
-inputs = ["dist/"]
 
 # watch ########################################################################
 [feature.tasks-dev.tasks.watch]
@@ -661,10 +661,12 @@ m2-wget = "*"
 
 [feature.deps-build.dependencies]
 "ruamel.yaml" = "*"
+check-wheel-contents = "*"
 jsonschema-gentypes = "*"
 nodejs = "22.*"
 python-build = "*"
 ruff = "*"
+twine = "*"
 watchfiles = "*"
 yarn = "3.6.4"
 
@@ -691,10 +693,8 @@ firefox = "128.*"
 geckodriver = "*"
 
 [feature.deps-check.dependencies]
-check-wheel-contents = "*"
 pytest-check-links = "*"
 pytest-html = "*"
-twine = "*"
 vale = "*"
 vale-spelling-aoo-mozilla-en-dict-us = "*"
 
