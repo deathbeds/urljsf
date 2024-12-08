@@ -228,7 +228,7 @@ cmd = """rm -rf dist/noarch
 && cp -r build/rattler-build/noarch dist/noarch
 """
 depends-on = ["dist-pypi"]
-inputs = ["pyproject.toml", "dist/*.tar.gz"]
+inputs = ["{pyproject,pixi}.toml", "dist/*.tar.gz", "recipe"]
 outputs = ["dist/noarch"]
 
 [feature.tasks-build.tasks.dist-check-wheel]

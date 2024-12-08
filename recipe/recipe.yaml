@@ -1,14 +1,21 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/prefix-dev/recipe-format/main/schema.json
 
 context:
+  # from pyproject.toml
   name: ${{ load_from_file("pyproject.toml").project.name }}
+  module: ${{ load_from_file("pyproject.toml").project.name }}
+  cli: ${{ load_from_file("pyproject.toml").project.name }}
   version: ${{ load_from_file("pyproject.toml").project.version }}
   summary: ${{ load_from_file("pyproject.toml").project.description }}
   homepage: ${{ load_from_file("pyproject.toml").project.urls.Source }}
   documentation: ${{ load_from_file("pyproject.toml").project.urls.Documentation }}
   license: ${{ load_from_file("pyproject.toml").project.license.text }}
   build_requires: ${{ load_from_file("pyproject.toml")["build-system"].requires[0] }}
-  python_requires: ${{ load_from_file("pyproject.toml")["requires-python"] }}
+  requires_python: ${{ load_from_file("pyproject.toml")["requires-python"] }}
+  # from pixi
+  requires_sphinx: ${{ load_from_file("pixi.toml").feature["deps-run"].dependencies.sphinx }}
+  requires_mkdocs: ${{ load_from_file("pixi.toml").feature["deps-run"].dependencies.mkdocs }}
+  requires_pymdownx: ${{ load_from_file("pixi.toml").feature["deps-run"].dependencies["pymdown-extensions"] }}
 
 recipe:
   name: urljsf-split
@@ -29,28 +36,114 @@ outputs:
         - ${{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation --disable-pip-version-check
       python:
         entry_points:
-          - ${{ name }} = ${{ name }}.cli:main
+          - ${{ cli }} = ${{ module }}.cli:main
     requirements:
       host:
         - ${{ build_requires }}
         - pip
-        - python ${{ python_requires }}
+        - python ${{ requires_python }}
       run:
         - jinja2
         - jsonschema >=4.18
-        - python ${{ python_requires }}
+        - python ${{ requires_python }}
         - tomli
         - typing_extensions >=4.0.0
     tests:
       - python:
           imports:
-            - ${{ name }}
+            - ${{ module }}
       - script:
-          - ${{ name }} --version
-          - ${{ name }} --help
+          - ${{ cli }} --version
+          - ${{ cli }} --help
       - requirements:
           run: [pip]
         script: [pip check]
+
+  - package:
+      name: ${{ name }}-with-mkdocs
+      version: ${{ version }}
+    build:
+      noarch: generic
+    requirements:
+      run:
+        - ${{ pin_subpackage(name, upper_bound="x.x.x") }}
+        - mkdocs ${{ requires_mkdocs }}
+        - pymdown-extensions ${{ requires_pymdownx }}
+    tests:
+      - python:
+          imports:
+            - ${{ module }}.mkdocsext.plugin
+      - requirements:
+          run: [pip]
+        script: [pip check]
+
+  - package:
+      name: ${{ name }}-with-sphinx
+      version: ${{ version }}
+    build:
+      noarch: generic
+    requirements:
+      run:
+        - ${{ pin_subpackage(name, upper_bound="x.x.x") }}
+        - sphinx ${{ requires_sphinx }}
+    tests:
+      - python:
+          imports:
+            - ${{ module }}.sphinxext.extension
+            - ${{ module }}.sphinxext.directives.${{ module }}
+      - requirements:
+          run: [pip]
+        script: [pip check]
+
+  - package:
+      name: ${{ name }}-with-yaml
+      version: ${{ version }}
+    build:
+      noarch: generic
+    requirements:
+      run:
+        - ${{ pin_subpackage(name, upper_bound="x.x.x") }}
+        - ruamel.yaml
+    tests:
+      - python:
+          imports:
+            - ${{ module }}
+      - requirements:
+          run: [pip]
+        script: [pip check]
+
+  - package:
+      name: ${{ name }}-with-all
+      version: ${{ version }}
+    build:
+      noarch: generic
+    requirements:
+      run:
+        - ${{ pin_subpackage(name, upper_bound="x.x.x") }}
+        - ${{ pin_subpackage(name ~ "-with-sphinx", upper_bound="x.x.x") }}
+        - ${{ pin_subpackage(name ~ "-with-mkdocs", upper_bound="x.x.x") }}
+        - ${{ pin_subpackage(name ~ "-with-yaml", upper_bound="x.x.x") }}
+    tests:
+      - python:
+          imports:
+            - ${{ module }}
+      - requirements:
+          run: [pip]
+        script: [pip check]
+      - files:
+          source:
+            - pyproject.toml
+            - tests/**/*
+        requirements:
+          run:
+            - pip
+            - pytest-console-scripts
+            - pytest-cov
+            - pytest-html
+            - tomli-w
+        script:
+          - |-
+            pytest -vv --color=yes --tb=long --cov=${{ name }} --cov-branch --cov-report=term-missing:skip-covered --no-cov-on-fail --cov-fail-under=97
 
 about:
   homepage: ${{ homepage }}
