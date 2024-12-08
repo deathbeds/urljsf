@@ -60,6 +60,7 @@ build ALL distributed artifacts""", depends-on = [
   "dist-pypi",
   "dist-check-wheel",
   "dist-check-twine",
+  "dist-conda",
   "dist-hash",
 ], cmd = "echo 📦"}
 test = {description = """
@@ -84,7 +85,7 @@ prettier-- = '''yarn prettier
   --cache
   --cache-location build/.cache/prettier
   "*.{yml,json,md}"
-  "{docs,tests,src,js,.github}/**/*.{md,json,yml,yaml,css,ts,tsx,ts,mjs}"'''
+  "{.github,docs,js,recipe,src,tests}/**/*.{md,json,yml,yaml,css,ts,tsx,ts,mjs}"'''
 markdownlint-- = 'yarn markdownlint-cli2 "*.md" "{docs,tests,src,js,.github}/**/*.md"'
 py-static-- = """rm -rf src/urljsf/_static/
   && cp -r js/dist/urljsf src/urljsf/_static/urljsf"""
@@ -214,6 +215,22 @@ depends-on = ["build-static", "schema-py"]
 inputs = ["{pyproject.toml,LICENSE,README.md}", "{src,tests}/", "!**/__pycache__"]
 outputs = ["dist/*.{whl,tar.gz}"]
 
+[feature.tasks-build.tasks.dist-conda]
+description = "- build the conda distributions"
+cmd = """rm -rf dist/noarch
+&& mkdir -p build/rattler-build
+&& rattler-build build
+  --experimental
+  --verbose
+  --channel conda-forge
+  --recipe recipe
+  --output-dir build/rattler-build
+&& cp -r build/rattler-build/noarch dist/noarch
+"""
+depends-on = ["dist-pypi"]
+inputs = ["pyproject.toml", "dist/*.tar.gz"]
+outputs = ["dist/noarch"]
+
 [feature.tasks-build.tasks.dist-check-wheel]
 description = "... check the built wheel"
 cmd = "check-wheel-contents dist/*.whl"
@@ -230,10 +247,10 @@ inputs = ["dist/"]
 description = "- hash the built distributions"
 cmd = """
 rm -rf dist/SHA256SUMS
-  && python -c 'from hashlib import sha256; from pathlib import Path; [
-    print(f"{sha256(p.read_bytes()).hexdigest()}  {p.name}")
-    for p in sorted(Path("dist").glob("*"))
-    if p.name != "SHA256SUMS"
+  && python -c 'from hashlib import sha256; from pathlib import Path; d = Path("dist"); [
+    print(f"{sha256(p.read_bytes()).hexdigest()}  {p.relative_to(d).as_posix()}")
+    for p in sorted(d.rglob("*"))
+    if p.is_file() and p.name != "SHA256SUMS"
   ]'
   > dist/SHA256SUMS
   && cat dist/SHA256SUMS"""
@@ -296,7 +313,7 @@ cmd = "pixi r prettier-- --write"
 depends-on = ["build-yarn"]
 inputs = [
   "*.{yml,json,md}",
-  "{docs,tests,src,js,.github}/**/*.{md,json,yml,yaml,css,ts,tsx,ts,mjs}",
+  "{.github,docs,js,recipe,src,tests}/**/*.{md,json,yml,yaml,css,ts,tsx,ts,mjs}",
   "!src/**/_static",
 ]
 [feature.tasks-lint.tasks.fix-mdlint]
@@ -344,7 +361,7 @@ cmd = "pixi r prettier--"
 depends-on = ["build-yarn"]
 inputs = [
   "*.{yml,json,md}",
-  "{docs,tests,src,js,.github}/**/*.{md,json,yml,yaml,css,ts,tsx,ts,mjs}",
+  "{.github,docs,js,recipe,src,tests}/**/*.{md,json,yml,yaml,css,ts,tsx,ts,mjs}",
   "!src/**/_static",
 ]
 
@@ -665,6 +682,7 @@ check-wheel-contents = "*"
 jsonschema-gentypes = "*"
 nodejs = "22.*"
 python-build = "*"
+rattler-build = "*"
 ruff = "*"
 twine = "*"
 watchfiles = "*"
