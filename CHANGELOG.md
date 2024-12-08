@@ -5,7 +5,11 @@
 
 ## 0.1.3
 
-> TBD
+- [#27] fixes errant `idPrefix` relying on a hard-coded form key
+- [#27] accepts a file for `props`
+- [#27] adds dev builds with `rattler-build`, published on ReadTheDocs
+
+[#27]: https://github.com/deathbeds/urljsf/pull/27
 
 </details>
 
