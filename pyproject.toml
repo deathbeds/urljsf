@@ -1,6 +1,6 @@
 [build-system]
 build-backend = "flit_core.buildapi"
-requires = ["flit_core >=3.9.0,<4.0.0"]
+requires = ["flit-core >=3.9.0,<4.0.0"]
 
 [project]
 name = "urljsf"

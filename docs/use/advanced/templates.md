@@ -135,17 +135,18 @@ In addition to the [built-in filters][nunjucks-builtins] and the pythonic [`jinj
 compatibility layer][jinjacompat], some custom filters are available by default, while
 [format-specific](#format-filters) can be lazily loaded.
 
-| filter           | note                                                                              |
-| ---------------- | --------------------------------------------------------------------------------- |
-| `base64`         | encode a string as [`Base64`][base64], useful for encoding arbitrary data in URLs |
-| `from_entries`   | build an object from `[key,value]` pairs with [`Object.entries`][entries]         |
-| `prune`          | recursively remove `null` objects and empty arrays and objects, useful in TOML    |
-| `to_json` [ff]   | build a JSON string. options: `indent=2`                                          |
-| `from_json` [ff] | parse JSON string                                                                 |
-| `to_toml` [ff]   | build a TOML string                                                               |
-| `from_toml` [ff] | parse a TOML string                                                               |
-| `to_yaml` [ff]   | build a YAML string                                                               |
-| `from_yaml` [ff] | parse a YAML string options: [see `yaml` docs][yaml-docs]                         |
+| filter                  | note                                                                              |
+| ----------------------- | --------------------------------------------------------------------------------- |
+| `base64`                | encode a string as [`Base64`][base64], useful for encoding arbitrary data in URLs |
+| `from_entries`          | build an object from `[key,value]` pairs with [`Object.entries`][entries]         |
+| `prune`                 | recursively remove `null` objects and empty arrays and objects, useful in TOML    |
+| `schema_errors(schema)` | get schema validation errors                                                      |
+| `to_json` [ff]          | build a JSON string. options: `indent=2`                                          |
+| `from_json` [ff]        | parse JSON string                                                                 |
+| `to_toml` [ff]          | build a TOML string                                                               |
+| `from_toml` [ff]        | parse a TOML string                                                               |
+| `to_yaml` [ff]          | build a YAML string                                                               |
+| `from_yaml` [ff]        | parse a YAML string options: [see `yaml` docs][yaml-docs]                         |
 
 [jinjacompat]: https://mozilla.github.io/nunjucks/api.html#installjinjacompat
 [nunjucks-builtins]: https://mozilla.github.io/nunjucks/templating.html#builtin-filters

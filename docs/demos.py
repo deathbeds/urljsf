@@ -19,6 +19,7 @@ ROOT = HERE.parent
 BUILD = ROOT / "build"
 OUTPUTS = BUILD / "feedstock-outputs.json"
 LICENSES = BUILD / "licenses.json"
+REAL_PIXI_SCHEMA = BUILD / "schema.json"
 
 URLS = {
     OUTPUTS: (
@@ -29,9 +30,13 @@ URLS = {
         "https://raw.githubusercontent.com/spdx/license-list-data/refs/heads/main/"
         f"json/{LICENSES.name}"
     ),
+    REAL_PIXI_SCHEMA: ("https://pixi.sh/v0.39.0/schema/manifest/schema.json",),
 }
 
 FALLBACKS: dict[Path, dict[str, Any]] = {
+    REAL_PIXI_SCHEMA: {
+        "type": "object",
+    },
     OUTPUTS: {
         "_": ["__the-feedstocks-did-not-load__"],
         "7zip": ["7zip"],
@@ -203,6 +208,7 @@ def installer() -> Urljsf:
         for lic in fetch_json(LICENSES)["licenses"]
         if lic.get("isOsiApproved") and lic.get("isFsfLibre")
     ]
+    real_pixi_schema = fetch_json(REAL_PIXI_SCHEMA)
 
     subdirs = [
         "emscripten-wasm32",
@@ -348,6 +354,8 @@ def installer() -> Urljsf:
         "dependencies": [{"package": "python", "spec": "*"}],
     }
 
+    macro_import = "{% import '_pixi_toml' as p %}"
+
     pixi_checks = {
         "Unique `package` names": """
 {% for pkg, deps in data.pixi.dependencies | default([]) | groupby("package") %}
@@ -356,11 +364,15 @@ def installer() -> Urljsf:
 - [ ] {{ dupes }} dependencies have the name `{{ pkg }}`
 {% endif %}
 {% endfor %}
-"""
+""",
+        "`pixi.toml` is valid": macro_import
+        + """
+{{ p.pixi_toml(data.pixi, schema=config.forms.pixi.props.formContext.pixi_schema) }}
+""",
     }
 
     toml_template = """
-{% macro pixi_toml(p) %}
+{% macro pixi_toml(p, schema=None) %}
 {% set deps = [] %}
 {% for dep in p.dependencies %}
   {% set e = dep.spec %}
@@ -369,7 +381,7 @@ def installer() -> Urljsf:
   {% endif %}
   {% set deps = (deps.push([dep.package, e]), deps) %}
 {% endfor %}
-{{ {
+{% set PT = {
   "project": {
     "name": p.name,
     "version": p.version,
@@ -377,12 +389,20 @@ def installer() -> Urljsf:
     "channels": p.channels
   },
   "dependencies": (deps | from_entries)
-} | prune | to_toml }}
+} | prune %}
+{% if schema %}
+{% for err in PT | schema_errors(schema) %}
+- [ ] {{ err.message }}
+{% endfor %}
+{% else %}
+{{ PT | to_toml }}
+{% endif %}
 {% endmacro %}
     """
 
-    below_template = """
-{% import "_pixi_toml" as p %}
+    below_template = (
+        macro_import
+        + """
 {% set t = (p.pixi_toml(data.pixi) | trim).val %}
 
 _As TOML:_
@@ -397,7 +417,7 @@ _As URL:_
 data:application/toml,{{ t | urlencode  }}
 ```
 """
-    macro_import = "{% import '_pixi_toml' as p %}"
+    )
 
     defn: Urljsf = {
         "forms": {
@@ -405,6 +425,7 @@ data:application/toml,{{ t | urlencode  }}
                 "schema": pixi_schema,
                 "ui_schema": pixi_ui_schema,
                 "form_data": pixi_form_data,
+                "props": {"formContext": {"pixi_schema": real_pixi_schema}},
             }
         },
         "nunjucks": {"filters": ["toml"]},

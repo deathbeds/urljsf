@@ -2,10 +2,14 @@
 // Distributed under the terms of the Modified BSD License.
 import { isObject } from '@rjsf/utils';
 
+import { Ajv, ErrorObject } from 'ajv';
+import addFormats from 'ajv-formats';
 import type nunjucks from 'nunjucks';
 
 import { Urljsf } from './_schema';
 import { IFilters } from './tokens';
+
+let AJV: Ajv;
 
 /** remove empty objects and arrays */
 export function prune(data: Record<string, any>) {
@@ -30,6 +34,13 @@ export function prune(data: Record<string, any>) {
 /* build objects from entries */
 export function from_entries(data: [string, any][]): Record<string, any> {
   return Object.fromEntries(data);
+}
+
+/* get schema errors */
+export function schema_errors(data: any, schema: Record<string, any>): ErrorObject[] {
+  AJV = AJV || addFormats(new Ajv());
+  AJV.validate(schema, data);
+  return [...(AJV.errors || [])];
 }
 
 export async function addFormatFilters(
@@ -99,4 +110,9 @@ async function yamlFilters(): Promise<IFilters> {
   };
 }
 
-export const URLJSF_FILTERS = { prune, base64: btoa, from_entries };
+export const URLJSF_FILTERS = {
+  prune,
+  base64: btoa,
+  from_entries,
+  schema_errors,
+};
