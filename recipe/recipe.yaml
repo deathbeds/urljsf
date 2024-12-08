@@ -1,6 +1,7 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/prefix-dev/recipe-format/main/schema.json
 
 context:
+  number: ${{ (env.get("URLJSF_GIT_DESCRIBE") | split("-") | list)[1]  }}
   # from pyproject.toml
   name: ${{ load_from_file("pyproject.toml").project.name }}
   module: ${{ load_from_file("pyproject.toml").project.name }}
@@ -24,7 +25,7 @@ source:
   path: ../dist/${{ name }}-${{ version }}.tar.gz
 
 build:
-  number: 0
+  number: ${{ number }}
   noarch: python
 
 outputs:
@@ -66,7 +67,7 @@ outputs:
       noarch: generic
     requirements:
       run:
-        - ${{ pin_subpackage(name, upper_bound="x.x.x") }}
+        - ${{ pin_subpackage(name, exact=True) }}
         - mkdocs ${{ requires_mkdocs }}
         - pymdown-extensions ${{ requires_pymdownx }}
     tests:
@@ -84,7 +85,7 @@ outputs:
       noarch: generic
     requirements:
       run:
-        - ${{ pin_subpackage(name, upper_bound="x.x.x") }}
+        - ${{ pin_subpackage(name, exact=True) }}
         - sphinx ${{ requires_sphinx }}
     tests:
       - python:
@@ -102,7 +103,7 @@ outputs:
       noarch: generic
     requirements:
       run:
-        - ${{ pin_subpackage(name, upper_bound="x.x.x") }}
+        - ${{ pin_subpackage(name, exact=True) }}
         - ruamel.yaml
     tests:
       - python:
@@ -119,10 +120,10 @@ outputs:
       noarch: generic
     requirements:
       run:
-        - ${{ pin_subpackage(name, upper_bound="x.x.x") }}
-        - ${{ pin_subpackage(name ~ "-with-sphinx", upper_bound="x.x.x") }}
-        - ${{ pin_subpackage(name ~ "-with-mkdocs", upper_bound="x.x.x") }}
-        - ${{ pin_subpackage(name ~ "-with-yaml", upper_bound="x.x.x") }}
+        - ${{ pin_subpackage(name, exact=True) }}
+        - ${{ pin_subpackage(name ~ "-with-sphinx", exact=True) }}
+        - ${{ pin_subpackage(name ~ "-with-mkdocs", exact=True) }}
+        - ${{ pin_subpackage(name ~ "-with-yaml", exact=True) }}
     tests:
       - python:
           imports:

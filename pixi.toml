@@ -216,7 +216,9 @@ outputs = ["dist/*.{whl,tar.gz}"]
 
 [feature.tasks-build.tasks.dist-conda]
 description = "- build the conda distributions"
-cmd = """rm -rf dist/noarch
+cmd = """
+export URLJSF_GIT_DESCRIBE=$(git describe --tags)
+&& rm -rf dist/noarch
 && mkdir -p build/rattler-build
 && rattler-build build
   --experimental
