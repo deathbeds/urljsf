@@ -1,5 +1,7 @@
 // Copyright (C) urljsf contributors.
 // Distributed under the terms of the Modified BSD License.
+import type { JSX } from 'react';
+
 import { Styles } from '../_schema.js';
 
 export function Style(props: IStyleProps): JSX.Element {

@@ -55,11 +55,12 @@ class AnyForm(TypedDict, total=False):
 
     """
 
-    props: _Props
+    props: _Props | _AnyFormPropsOneof1
     """
-    JSON-compatible default values for `rjsf` [Form.props][props].
+    JSON-compatible subset of `rjsf` component properties for this form
 
-    [props]: https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/form-props
+
+    Aggregation type: oneOf
     """
 
     schema: ASchema
@@ -148,6 +149,10 @@ Urljsf = TypedDict(
     },
     total=False,
 )
+
+
+_AnyFormPropsOneof1 = str
+""" format: #/definitions/any-schema-location """
 
 
 _AnySchemaLocation = str

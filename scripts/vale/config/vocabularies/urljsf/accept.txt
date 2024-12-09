@@ -76,6 +76,7 @@ PyPI
 pythonic
 re\)render
 readOnly
+ReadTheDocs
 repo/branch
 representer
 RJSF

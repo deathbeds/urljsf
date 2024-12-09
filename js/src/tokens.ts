@@ -16,7 +16,8 @@ export const DEFAULTS: Partial<Urljsf> = {
 
 export const BOOTSTRAP_ID = 'urljsf-bootstrap';
 
-export const emptyObject = Object.freeze({});
+export const emptyObject = Object.freeze({}) as Record<string, any>;
+export const emptyArray = Object.freeze([]) as any as any[];
 
 export const FORM_CLASS = 'urljsf-form';
 

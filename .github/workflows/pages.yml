@@ -11,7 +11,7 @@ permissions:
 env:
   PYTHONUNBUFFERED: '1'
   PIP_DISABLE_PIP_VERSION_CHECK: '1'
-  URLJSF_PIXI_VERSION: 0.36.0
+  URLJSF_PIXI_VERSION: 0.39.0
 
 jobs:
   build:
@@ -22,13 +22,18 @@ jobs:
         with:
           pixi-version: v${{ env.URLJSF_PIXI_VERSION }}
           cache: false
-          environments: atest build docs test test-min
+          environments: atest build docs test test-min check
       - run: pixi run build-yarn
       - run: pixi run build
+      - run: pixi run dist-npm
+      - run: pixi run dist-pypi
+      - run: pixi run dist-conda
       - run: pixi run dist
       - run: pixi run test
       - run: pixi run docs
+      - run: pixi run build-app-cov
       - run: pixi run atest
+      - run: pixi run check
       - run: pixi run report
       - run: cp -r build/reports/ build/docs/_static/
       - uses: actions/upload-pages-artifact@v3

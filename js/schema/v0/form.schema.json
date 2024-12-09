@@ -438,8 +438,16 @@
           "description": "the order in which to show a form, lowest (or omitted) first, with a tiebreaker on name\n"
         },
         "props": {
-          "$ref": "#/definitions/Props",
-          "description": "JSON-compatible subset of `rjsf` component properties for this form\n"
+          "description": "JSON-compatible subset of `rjsf` component properties for this form\n",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Props"
+            },
+            {
+              "type": "string",
+              "format": "#/definitions/any-schema-location"
+            }
+          ]
         },
         "schema": {
           "$ref": "#/definitions/any-schema",

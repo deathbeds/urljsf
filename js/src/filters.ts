@@ -2,10 +2,15 @@
 // Distributed under the terms of the Modified BSD License.
 import { isObject } from '@rjsf/utils';
 
+import { Ajv, ErrorObject } from 'ajv';
+import addFormats from 'ajv-formats';
 import type nunjucks from 'nunjucks';
 
-import { Urljsf } from './_schema';
-import { IFilters } from './tokens';
+import { Urljsf } from './_schema.js';
+import { humanizeErrors } from './ajv.js';
+import { IFilters, emptyArray } from './tokens.js';
+
+let AJV: Ajv;
 
 /** remove empty objects and arrays */
 export function prune(data: Record<string, any>) {
@@ -32,11 +37,18 @@ export function from_entries(data: [string, any][]): Record<string, any> {
   return Object.fromEntries(data);
 }
 
+/* get schema errors */
+export function schema_errors(data: any, schema: Record<string, any>): ErrorObject[] {
+  AJV = AJV || addFormats(new Ajv({ allErrors: true }));
+  AJV.validate(schema, data);
+  return AJV.errors ? humanizeErrors(AJV.errors) : emptyArray;
+}
+
 export async function addFormatFilters(
   config: Urljsf,
   env: nunjucks.Environment,
 ): Promise<nunjucks.Environment> {
-  for (const filter of config?.nunjucks?.filters || []) {
+  for (const filter of config?.nunjucks?.filters || emptyArray) {
     let filters: IFilters | null = null;
     switch (filter) {
       case 'json':
@@ -50,7 +62,8 @@ export async function addFormatFilters(
         break;
       /* istanbul ignore next */
       default:
-        console.warn('Unknown filter', filter);
+        console.trace();
+        console.warn('unknown filter', filter);
         continue;
     }
 
@@ -99,4 +112,9 @@ async function yamlFilters(): Promise<IFilters> {
   };
 }
 
-export const URLJSF_FILTERS = { prune, base64: btoa, from_entries };
+export const URLJSF_FILTERS = {
+  prune,
+  base64: btoa,
+  from_entries,
+  schema_errors,
+};

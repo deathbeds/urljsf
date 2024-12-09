@@ -130,7 +130,7 @@ export function getIdPrefix(config: Urljsf): string {
   if (!_DATA_SETS.has(config)) {
     _DATA_SETS.set(config, _NEXT_DATA_SET++);
   }
-  return config.forms.file?.props?.idPrefix || `urljsf-${_DATA_SETS.get(config)}`;
+  return `urljsf-${_DATA_SETS.get(config)}`;
 }
 
 export function reduceTrimmedLines(memo: string, line: string): string {

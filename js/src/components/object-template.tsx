@@ -1,5 +1,7 @@
 // Copyright (C) urljsf contributors.
 // Distributed under the terms of the Modified BSD License.
+import type { JSX } from 'react';
+
 import Col from 'react-bootstrap/esm/Col.js';
 import Container from 'react-bootstrap/esm/Container.js';
 import Row from 'react-bootstrap/esm/Row.js';

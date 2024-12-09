@@ -1,6 +1,7 @@
 // Copyright (C) urljsf contributors.
 // Distributed under the terms of the Modified BSD License.
 import { Fragment } from 'react';
+import type { JSX } from 'react';
 import { render } from 'react-dom';
 
 import Button from 'react-bootstrap/esm/Button.js';
@@ -8,13 +9,13 @@ import { ButtonProps } from 'react-bootstrap/esm/Button.js';
 
 import type { FormProps, IChangeEvent } from '@rjsf/core';
 import { Form as RJSFForm } from '@rjsf/react-bootstrap';
-import validator from '@rjsf/validator-ajv8';
 
 import { ReadonlySignal, batch, computed, signal } from '@preact/signals';
 import Markdown from 'markdown-to-jsx';
 import type { MarkdownToJSX } from 'markdown-to-jsx';
 
 import { Urljsf } from '../_schema.js';
+import { getValidator } from '../ajv.js';
 import { ensureBootstrap, getBoostrapCss } from '../bootstrap.js';
 import { ensureNunjucks, renderMarkdown } from '../nunjucks.js';
 import {
@@ -41,7 +42,6 @@ const FORM_PRE_DEFAULTS: Partial<FormProps> = {
   liveOmit: true,
   showErrorList: false,
 };
-const FORM_POST_DEFAULTS: Partial<FormProps> = { validator };
 
 const SUBMIT_MD_OPTIONS: MarkdownToJSX.Options = {
   forceInline: true,
@@ -255,7 +255,7 @@ function UrljsfForm(props: IUrljsfFormProps): JSX.Element {
       ...initProps,
       onChange: makeOnFormChange.bind(null, key),
       formData: context.value.data[key],
-      ...FORM_POST_DEFAULTS,
+      validator: getValidator(),
     };
   }
 

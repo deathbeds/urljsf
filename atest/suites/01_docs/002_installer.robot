@@ -28,7 +28,8 @@ Create An Installer Pixi Project
     [Documentation]    Verify the installer demo works.
     Capture Page Screenshot    00-open.png
     Try Licenses
-    Make And Fix An Error
+    Make And Fix A Package Error
+    Make And Fix A Channel Error
     Verify Installer URL
     Verify Installer Download
 
@@ -43,22 +44,39 @@ Try Licenses
     Input Text    css:${CSS_LICENSE}    ${GOOD_LICENSE}
     Checkbox Should Be Selected    css:${CSS_LICENSE_CHECK}
 
-Make And Fix An Error
+Make And Fix A Package Error
     [Documentation]    Exercise a complex operation with the packages array
-    Element Should Not Contain    css:${CSS_U_SUBMIT}    Error
+    Form Should Not Contain Errors
     ${add} =    Set Variable    ${CSS_R_ARRAY_ITEM_ADD}\[title="dependencies"]
     Scroll To    ${add}
     Click Element    css:${add}
     ${p2} =    Set Variable    input#urljsf-0-pixi_dependencies_1_package
-    Wait Until Page Contains    must have required property 'package'
+    Wait Until Page Contains    missing the required field 'package'
     Scroll To    ${CSS_U_SUBMIT}
-    Element Should Contain    css:${CSS_U_SUBMIT}    1 Error
+    Form Should Contain 1 Error
+    Capture Page Screenshot    01-package-empty.png
     Click Element    css:${CSS_U_SUBMIT}
     Input Text    css:${p2}    python
     Wait Until Page Contains    2 dependencies have the name
-    Element Should Contain    css:${CSS_U_SUBMIT}    1 Error
+    Form Should Contain 1 Error
+    Scroll To    ${CSS_U_SUBMIT}
+    Capture Page Screenshot    02-package-dupe.png
     Input Text    css:${p2}    urljsf
-    Element Should Not Contain    css:${CSS_U_SUBMIT}    Error
+    Form Should Not Contain Errors
+
+Make And Fix A Channel Error
+    [Documentation]    Exercise a complex operation with the channels array
+    Form Should Not Contain Errors
+    ${add} =    Set Variable    ${CSS_R_ARRAY_ITEM_ADD}\[title="channels"]
+    Scroll To    ${add}
+    Click Element    css:${add}
+    ${p2} =    Set Variable    input#urljsf-0-pixi_channels_1
+    Wait Until Page Contains    must be a string but it was undefined.
+    Wait Until Page Contains    must match a schema in anyOf.
+    Form Should Contain 2 Errors
+    Capture Page Screenshot    01-channel-empty.png
+    Input Text    css:${p2}    bioconda
+    Form Should Not Contain Errors
 
 Verify Installer URL
     [Documentation]    Verify the URL against an expected value.
@@ -68,6 +86,7 @@ Verify Installer URL
     ${expected} =    Get TOML Fixture    002_installer.toml
     Should Be JSON Equivalent    ${from_toml}    ${expected}
     ${copy} =    Set Variable    css:${CSS_COPY_BUTTON}
+    Scroll To    ${CSS_COPY_BUTTON}
     Click Element    ${copy}
     Wait Until Element Contains    ${copy}    ok
     Wait Until Element Contains    ${copy}    copy
