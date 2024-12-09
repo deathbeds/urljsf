@@ -438,7 +438,7 @@ data:application/toml,{{ t | urlencode  }}
                 "{{ (p.pixi_toml(data.pixi) | trim).val | urlencode }}",
             ],
             "download_filename": "pixi.toml",
-            "submit_button": "Download `pixi.toml`",
+            "submit_button": "Download pixi.toml",
             # extra
             "below_pixi": below_template,
         },

@@ -62,3 +62,16 @@ Should Be JSON Equivalent
     ${left_raw} =    JSON.Dumps    ${left}    &{JSON_NORM}
     ${right_raw} =    JSON.Dumps    ${right}    &{JSON_NORM}
     Should Be Equal    ${left_raw}    ${right_raw}    ${message}
+
+Form Should Not Contain Errors
+    [Documentation]    Verify a form's submit button doesn't contain errors
+    [Arguments]    ${message}=Error    ${selector}=css:${CSS_U_SUBMIT}
+    Scroll To    ${selector}
+    Element Should Not Contain    ${selector}    ${message}
+
+Form Should Contain ${count} Error${plural}
+    [Documentation]    Verify a form's submit button contain errors
+    [Arguments]    ${message}=Error    ${selector}=css:${CSS_U_SUBMIT}
+    Scroll To    ${selector}
+    Element Should Contain    ${selector}    ${count} ${message}
+    ...    message=Expected ${count} error${plural}

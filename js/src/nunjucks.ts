@@ -4,7 +4,7 @@ import type nunjucks from 'nunjucks';
 
 import { Urljsf } from './_schema.js';
 import { URLJSF_FILTERS, addFilters, addFormatFilters } from './filters.js';
-import { CHECKS_PATH_PREFIX, IRenderOptions } from './tokens.js';
+import { CHECKS_PATH_PREFIX, DEBUG, IRenderOptions } from './tokens.js';
 
 class UrljsfLoader implements nunjucks.ILoader {
   private _config: Urljsf;
@@ -36,7 +36,8 @@ export function renderMarkdown(options: IRenderOptions): string {
   try {
     md = env.render(path, context).trim();
   } catch (err) {
-    console.warn('failed to render template', path, err);
+    /* istanbul ignore next */
+    DEBUG && console.warn('failed to render template', path, err);
   }
   return md;
 }
