@@ -97,7 +97,11 @@ addopts = ["--color=yes", "-Werror", "--tb=long", "-vv"]
 
 # robocop ######################################################################
 [tool.robocop]
-exclude = ["replace-set-variable-with-var", "replace-create-with-var"]
+exclude = [
+  "replace-set-variable-with-var",
+  "replace-create-with-var",
+  "no-suite-variable",
+]
 configure = [
   "too-many-calls-in-keyword:max_calls:20",
 ]
