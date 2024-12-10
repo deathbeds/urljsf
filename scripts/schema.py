@@ -98,10 +98,9 @@ def json_to_ts(in_path: Path, out_path: Path) -> int:
     ])
 
 
-TYPING_HEADER = (
-    "from typing import Any, Dict, List, Literal, Required, TypeAlias, TypedDict, Union"
-)
-SCHEMA_PY_PREAMBLE = f'''
+RAW_TYPING_HEADER = """from typing_extensions import Required"""
+
+SCHEMA_PY_PREAMBLE = '''
 """Generated schema for ``urljsf``"""
 # Copyright (C) urljsf contributors.
 # Distributed under the terms of the Modified BSD License.
@@ -110,9 +109,9 @@ from __future__ import annotations
 import sys
 
 if sys.version_info >= (3, 11):  # pragma: no cover
-    {TYPING_HEADER}
+    from typing import Any, Literal, TypeAlias, TypedDict, Union, Required
 else:  # pragma: no cover
-    {TYPING_HEADER.replace(", Required,", ",").replace(", TypeAlias,", ",")}
+    from typing import Any, Literal, TypedDict, Union
     from typing_extensions import Required, TypeAlias
 '''
 
@@ -124,14 +123,14 @@ def json_to_py(in_path: Path, out_path: Path) -> int:
     """
     args = [
         "jsonschema-gentypes",
-        "--python-version=3.11",
+        "--python-version=3.9",
         f"--json-schema={in_path}",
         f"--python={out_path}",
     ]
 
     def _fix() -> int:
         """Fix python output."""
-        raw = out_path.read_text(**UTF8).replace(TYPING_HEADER, "")
+        raw = out_path.read_text(**UTF8).split(RAW_TYPING_HEADER)[1]
         raw = f"{SCHEMA_PY_PREAMBLE}{raw}"
         out_path.write_text(raw, **UTF8)
         return 0

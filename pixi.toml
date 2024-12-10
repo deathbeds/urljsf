@@ -9,6 +9,7 @@ platforms = ["linux-64", "osx-64", "osx-arm64", "win-64"]
 
 all = {description = """
 run ALL tasks that would lead to a release""", depends-on = [
+  "schema",
   "fix",
   "lint",
   "build",

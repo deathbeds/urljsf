@@ -7,7 +7,7 @@
 
 - [#27]
   - fixes errant `idPrefix` relying on a hard-coded form key
-  - update form schema to accept a local file for `forms.*.props`
+  - updates form schema to accept a local file for `forms.*.props`
   - adds in-development builds with `rattler-build`, published on ReadTheDocs
   - adds `schema_errors` nunjucks filter
   - adopts `@segment/ajv-human-errors` for more humane schema error messages

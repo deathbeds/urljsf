@@ -7,9 +7,9 @@ from __future__ import annotations
 import sys
 
 if sys.version_info >= (3, 11):  # pragma: no cover
-    from typing import Any, Dict, List, Literal, Required, TypeAlias, TypedDict, Union
+    from typing import Any, Literal, Required, TypeAlias, TypedDict, Union
 else:  # pragma: no cover
-    from typing import Any, Dict, List, Literal, TypedDict, Union
+    from typing import Any, Literal, TypedDict, Union
 
     from typing_extensions import Required, TypeAlias
 
@@ -25,7 +25,7 @@ Subtype: "_AnySchemaLocation", "AnInlineObject"
 """
 
 
-AnInlineObject = Dict[str, Any]
+AnInlineObject = dict[str, Any]
 """
 An Inline Object.
 
@@ -167,7 +167,7 @@ minLength: 1
 """
 
 
-_AnyStyle = Union[str, Dict[str, Any]]
+_AnyStyle = Union[str, dict[str, Any]]
 """
 A CSS rule, or a nested selector object containing more rules
 
@@ -183,7 +183,7 @@ _AnyTemplateAnyof0 = str
 """ a `nunjucks` template as a simple string """
 
 
-_AnyTemplateAnyof1 = List[str]
+_AnyTemplateAnyof1 = list[str]
 """
     a template as a list of strings that will be concatenated before being rendered
 
@@ -192,14 +192,14 @@ minItems: 1
 """
 
 
-_Checks = Dict[str, "_AnyTemplate"]
+_Checks = dict[str, "_AnyTemplate"]
 """
 `nunjucks` templates keyed by the label displayed to a form user: any evaluating
 to a non-whitespace string will be considered _failing_.
 """
 
 
-_Forms = Dict[str, "AnyForm"]
+_Forms = dict[str, "AnyForm"]
 """ forms used to build and populate a URL """
 
 
@@ -237,10 +237,10 @@ class _Props(TypedDict, total=False):
     focusOnFirstError: bool
     """ If set to true, then the first field with an error will receive the focus when the form is submitted with errors """
 
-    formContext: Dict[str, Any]
+    formContext: dict[str, Any]
     """ globals for custom UI """
 
-    formData: Dict[str, Any]
+    formData: dict[str, Any]
     """ The data for the form, used to prefill a form with existing data """
 
     id: str
@@ -273,7 +273,7 @@ class _Props(TypedDict, total=False):
     readonly: bool
     """ It's possible to make the whole form read-only by setting the `readonly` prop. The `readonly` prop is then forwarded down to each field of the form. If you just want to make some fields read-only, see the `ui:readonly` parameter in `uiSchema` """
 
-    schema: Dict[str, Any]
+    schema: dict[str, Any]
     """ The JSON schema object for the form """
 
     showErrorList: _PropsShowerrorlist
@@ -303,11 +303,11 @@ _PROPSSHOWERRORLIST_BOTTOM: Literal["bottom"] = "bottom"
 """The values for the 'When this prop is set to `top` or 'bottom', a list of errors (or the custom error list defined in the `ErrorList`) will also show. When set to false, only inline input validation errors will be shown. Set to `top` by default' enum"""
 
 
-_Styles = Dict[str, "_AnyStyle"]
+_Styles = dict[str, "_AnyStyle"]
 """ CSS rules, or nested selector objects containing more rules """
 
 
-_Templates = Union[Dict[str, "_AnyTemplate"], "_TemplatesTyped"]
+_Templates = Union[dict[str, "_AnyTemplate"], "_TemplatesTyped"]
 """
 [nunjucks](https://mozilla.github.io/nunjucks/templating.html) strings
 (or lists of strings) that control how strings are built from forms.
@@ -337,7 +337,7 @@ _URLJSF_NO_BOOTSTRAP_DEFAULT = False
 """ Default value of the field path 'urljsf no_bootstrap' """
 
 
-_Uischema = Union[Dict[str, "_UischemaAdditionalproperties"], "_UischemaTyped"]
+_Uischema = Union[dict[str, "_UischemaAdditionalproperties"], "_UischemaTyped"]
 """
 
 WARNING: Normally the types should be a mix of each other instead of Union.
@@ -346,7 +346,7 @@ See: https://github.com/camptocamp/jsonschema-gentypes/issues/7
 
 
 _UischemaAdditionalproperties = Union[
-    "_Uischema", Union[str, Union[int, float], Dict[str, Any], List[Any], bool, None]
+    "_Uischema", Union[str, Union[int, float], dict[str, Any], list[Any], bool, None]
 ]
 """ Aggregation type: anyOf """
 
@@ -386,7 +386,7 @@ _UischemaUiColonOptions = TypedDict(
         # | Aggregation type: anyOf
         "emptyValue": "_UischemaUiColonOptionsEmptyvalue",
         # | Will disable any of the enum options specified in the array (by value)
-        "enumDisabled": List[Union[str, Union[int, float], bool]],
+        "enumDisabled": list[Union[str, Union[int, float], bool]],
         # | Allows a user to provide a list of labels for enum values in the schema
         # |
         # | Aggregation type: anyOf
@@ -411,7 +411,7 @@ _UischemaUiColonOptions = TypedDict(
         "readonly": bool,
         # | Provides a means to set the initial height of a textarea widget
         "rows": Union[int, float],
-        "style": Dict[str, Any],
+        "style": dict[str, Any],
         # | custom overrides for urlsjf grid
         "urljsf:grid": "_UischemaUiColonOptionsUrljsfColonGrid",
         "widget": str,
@@ -424,7 +424,7 @@ _UischemaUiColonOptionsEmptyvalue = Union[
     bool,
     Union[int, float],
     str,
-    Dict[str, Any],
+    dict[str, Any],
     "_UischemaUiColonOptionsEmptyvalueAnyof",
     None,
 ]
@@ -447,7 +447,7 @@ _UischemaUiColonOptionsEnumnames = Union[
     Union[int, float],
     str,
     "_UischemaUiColonOptionsEnumnamesAnyof",
-    List[Union[str, Union[int, float], Dict[str, Any], List[Any], bool, None]],
+    list[Union[str, Union[int, float], dict[str, Any], list[Any], bool, None]],
     None,
 ]
 """
@@ -469,7 +469,7 @@ _UischemaUiColonOptionsOrder = Union[
     Union[int, float],
     str,
     "_UischemaUiColonOptionsOrderAnyof",
-    List[Union[str, Union[int, float], Dict[str, Any], List[Any], bool, None]],
+    list[Union[str, Union[int, float], dict[str, Any], list[Any], bool, None]],
     None,
 ]
 """
@@ -489,15 +489,15 @@ items:
 class _UischemaUiColonOptionsUrljsfColonGrid(TypedDict, total=False):
     """custom overrides for urlsjf grid"""
 
-    addButton: List[str]
-    children: Dict[str, List[str]]
-    default: List[str]
+    addButton: list[str]
+    children: dict[str, list[str]]
+    default: list[str]
 
 
 class _UrljsfNunjucks(TypedDict, total=False):
     """options for the `nunjucks` environment"""
 
-    filters: List[_UrljsfNunjucksFiltersItem]
+    filters: list[_UrljsfNunjucksFiltersItem]
     """
     filters to ensure in `nunjucks` templates
 
