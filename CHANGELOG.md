@@ -3,6 +3,10 @@
 <details>
 <summary>Unreleased</summary>
 
+## 0.1.4
+
+</details>
+
 ## 0.1.3
 
 - [#27]
@@ -13,8 +17,6 @@
   - adopts `@segment/ajv-human-errors` for more humane schema error messages
 
 [#27]: https://github.com/deathbeds/urljsf/pull/27
-
-</details>
 
 ## 0.1.2
 
