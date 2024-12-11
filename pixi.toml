@@ -19,6 +19,7 @@ run ALL tasks that would lead to a release""", depends-on = [
   "atest",
   "check",
   "report",
+  "dist-conda",
 ], cmd = "echo 🚢"}
 fix = {description = """
 apply ALL source formatters""", depends-on = [
