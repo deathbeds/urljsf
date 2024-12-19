@@ -6,16 +6,17 @@ labels: maintenance
 
 ## Release Checklist
 
-- [ ] merge all outstanding PRs
-- [ ] ensure the versions have been bumped (check with `pixi lint`)
-- [ ] ensure the CHANGELOG is up-to-date
-- [ ] validate on ReadTheDocs
+- [ ] merge all outstanding feature PRs
+- [ ] make a preflight PR
+  - [ ] ensure the versions have been bumped (check with `pixi run test`)
+  - [ ] ensure the CHANGELOG is up-to-date
+  - [ ] validate on ReadTheDocs
 - [ ] wait for a successful build of `main`
 - [ ] download the `dist` archive and unpack somewhere (maybe a fresh `dist`)
 - [ ] create a new release through the GitHub UI
   - [ ] paste in the relevant CHANGELOG entries
   - [ ] upload the artifacts
-- [ ] actually upload to `pypi.org`
+- [ ] actually upload to `pypi.org` and `npmjs.org`
 
   ```bash
   cd dist
@@ -27,8 +28,8 @@ labels: maintenance
 
 - [ ] postmortem
   - [ ] handle `conda-forge` feedstock tasks
-  - [ ] start a postmortem PR
-    - [ ] bump to next development version
+  - [ ] make a postmortem PR
+    - [ ] bump to next version
     - [ ] bump the `CACHE_EPOCH`
     - [ ] rebuild `pixi.lock` and `yarn.lock`
     - [ ] update release procedures with lessons learned

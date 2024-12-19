@@ -1,13 +1,13 @@
 # Changelog
 
-<!--
-
 <details>
 <summary>Unreleased</summary>
 
-</details>
+## 0.1.5
 
--->
+> TBD
+
+</details>
 
 ## 0.1.4
 

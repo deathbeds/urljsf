@@ -1,6 +1,6 @@
 {
   "name": "@deathbeds/urljsf",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Build structured data files for pull requests with JSON schema",
   "repository": {
     "type": "git",
