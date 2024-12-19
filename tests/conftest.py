@@ -7,6 +7,7 @@ from __future__ import annotations
 import io
 import json
 import os
+import re
 import shutil
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
@@ -35,6 +36,10 @@ SEP = ";" if WIN else ":"
 UTF8 = {"encoding": "utf-8"}
 HERE = Path(__file__).parent
 ROOT = HERE.parent
+
+PIXI_TOML = ROOT / "pixi.toml"
+PYPROJECT_TOML = ROOT / "pyproject.toml"
+
 JS_EXAMPLES = ROOT / "js/demo"
 FIXTURES = HERE / "fixtures"
 
@@ -209,6 +214,42 @@ def an_example_ui_schema(request: pytest.FixtureRequest) -> dict[str, Any]:
     """Provide an example."""
     src = ALL_DEMO_UI_EXAMPLES[request.param]
     return _parse(src)
+
+
+@pytest.fixture(scope="session")
+def the_pixi_data() -> dict[str, Any]:
+    """Provide the ``pixi.toml`` data."""
+    return tomllib.loads(PIXI_TOML.read_text(**UTF8))
+
+
+@pytest.fixture(scope="session")
+def the_pyproject_data() -> dict[str, Any]:
+    """Provide the ``pyproject.toml`` data."""
+    return tomllib.loads(PYPROJECT_TOML.read_text(**UTF8))
+
+
+@pytest.fixture(scope="session")
+def the_py_version(the_pyproject_data: dict[str, Any]) -> str:
+    """Provide the source-of-truth ``urljsf`` version."""
+    return str(the_pyproject_data["project"]["version"])
+
+
+@pytest.fixture(scope="session")
+def the_js_version(the_py_version: str) -> str:
+    """Provide the source-of-truth ``@deathbeds/urljsf`` version."""
+    return (
+        the_py_version.replace("a", "-alpha.")
+        .replace("b", "-beta.")
+        .replace("rc", "-rc.")
+    )
+
+
+@pytest.fixture(scope="session")
+def the_pixi_version(the_pixi_data: dict[str, Any]) -> str:
+    """Provide the source-of-truth ``pixi`` version."""
+    match = re.findall(r"/v([^/]+?)/", the_pixi_data["$schema"])
+    assert match
+    return str(match[0])
 
 
 def _load_any(stem: str, path: Path) -> tuple[Path, dict[str, Any]]:

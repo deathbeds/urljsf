@@ -499,11 +499,16 @@ class _UrljsfNunjucks(TypedDict, total=False):
 
     filters: list[_UrljsfNunjucksFiltersItem]
     """
-    filters to ensure in `nunjucks` templates
+    extra filters to make available in `nunjucks` templates
 
     uniqueItems: True
     """
 
 
-_UrljsfNunjucksFiltersItem = Union["FileFormat"]
+_UrljsfNunjucksFiltersItem = Union["FileFormat", "_UrljsfNunjucksFiltersItemOneof1"]
 """ Aggregation type: oneOf """
+
+
+_UrljsfNunjucksFiltersItemOneof1 = Union[Literal["zip"]]
+_URLJSFNUNJUCKSFILTERSITEMONEOF1_ZIP: Literal["zip"] = "zip"
+"""The values for the '_UrljsfNunjucksFiltersItemOneof1' enum"""

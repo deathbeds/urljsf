@@ -23,6 +23,13 @@ https://github.com/{{ data.url.repo }}/new/{{ data.url.branch }}?
 }}
 """
 submit_button = """Start new TOML Pull Request"""
+below_file = """
+As a TOML Data URI:
+
+```toml
+{{ data.file | to_toml_url }}
+```
+"""
 
 [checks]
 "Unique Names" = """

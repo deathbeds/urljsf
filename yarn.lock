@@ -314,6 +314,7 @@ __metadata:
     "@types/webpack": ^5.28.5
     bootstrap: ^5.3.3
     copy-webpack-plugin: ^11.0.0
+    fflate: ^0.8.2
     html-webpack-plugin: ^5.5.3
     nunjucks: ^3.2.4
     nyc: ^17.1.0
@@ -2132,6 +2133,13 @@ __metadata:
     picomatch:
       optional: true
   checksum: 517ad31c495f1c0778238eef574a7818788efaaf2ce1969ffa18c70793e2951a9763dfa2e6720b8fcef615e602a3cbb47f9b8aea9da0b02147579ab36043f22f
+  languageName: node
+  linkType: hard
+
+"fflate@npm:^0.8.2":
+  version: 0.8.2
+  resolution: "fflate@npm:0.8.2"
+  checksum: 29470337b85d3831826758e78f370e15cda3169c5cd4477c9b5eea2402261a74b2975bae816afabe1c15d21d98591e0d30a574f7103aa117bff60756fa3035d4
   languageName: node
   linkType: hard
 

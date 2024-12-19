@@ -5,6 +5,10 @@
 
 ## 0.1.4
 
+- [#32]
+  - adds more file-related template filters: `to_(json|toml|yaml)_url`
+  - adds `to_zip_url`, which can create `.zip` archives of trees of files
+
 </details>
 
 ## 0.1.3
