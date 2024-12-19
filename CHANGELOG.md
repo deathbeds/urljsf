@@ -1,15 +1,21 @@
 # Changelog
 
+<!--
+
 <details>
 <summary>Unreleased</summary>
 
+</details>
+
+-->
+
 ## 0.1.4
 
-- [#32]
+- [#33]
   - adds more file-related template filters: `to_(json|toml|yaml)_url`
   - adds `to_zip_url`, which can create `.zip` archives of trees of files
 
-</details>
+[#33]: https://github.com/deathbeds/urljsf/pull/33
 
 ## 0.1.3
 
