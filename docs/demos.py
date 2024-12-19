@@ -30,7 +30,7 @@ URLS = {
         "https://raw.githubusercontent.com/spdx/license-list-data/refs/heads/main/"
         f"json/{LICENSES.name}"
     ),
-    REAL_PIXI_SCHEMA: ("https://pixi.sh/v0.39.0/schema/manifest/schema.json",),
+    REAL_PIXI_SCHEMA: ("https://pixi.sh/v0.39.2/schema/manifest/schema.json",),
 }
 
 FALLBACKS: dict[Path, dict[str, Any]] = {
@@ -416,6 +416,27 @@ _As URL:_
 ```
 data:application/toml,{{ t | urlencode  }}
 ```
+
+
+_As a `.zip` archive (with a `.gitignore` file and `README.md` and
+`pull_request_template.md`):_
+
+```
+{{
+    {
+        "pixi.toml": t,
+        "README.md": "# " ~ data.pixi.name,
+        ".gitignore": ".pixi",
+        ".github": {
+            "pull_request_template.md": [
+                "thanks for contributing to " ~ data.pixi.name,
+                {"level": 9}
+            ]
+        }
+    }
+    | to_zip_url(level=0)
+}}
+```
 """
     )
 
@@ -428,7 +449,7 @@ data:application/toml,{{ t | urlencode  }}
                 "props": {"formContext": {"pixi_schema": real_pixi_schema}},
             }
         },
-        "nunjucks": {"filters": ["toml"]},
+        "nunjucks": {"filters": ["toml", "zip"]},
         "templates": {
             "_pixi_toml": toml_template,
             # known

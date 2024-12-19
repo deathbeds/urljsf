@@ -19,6 +19,12 @@ templates:
         {"filename": data.url.filename, "value": data.file | to_yaml } | urlencode | safe
     }}
   submit_button: Start new YAML Pull Request
+  below_file: |
+    As a YAML Data URI:
+
+    ```yaml
+    {{ data.file | to_yaml_url }}
+    ```
 checks:
   Unique Names: |
     {% for name, tasks in data.file.tasks | default([]) | groupby("task") %}

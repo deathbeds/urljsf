@@ -60,9 +60,12 @@ description = "options for the `nunjucks` environment"
 
 [properties.nunjucks.properties.filters]
 type = "array"
-description = """filters to ensure in `nunjucks` templates"""
-items = {oneOf = [{"$ref" = "#/definitions/any-file-format"}]}
+description = """extra filters to make available in `nunjucks` templates"""
 uniqueItems = true
+items = {oneOf = [
+  {"$ref" = "#/definitions/any-file-format"},
+  {"enum" = ["zip"]},
+]}
 
 # forms ########################################################################
 [definitions.forms]

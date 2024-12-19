@@ -118,9 +118,9 @@ export interface Urljsf {
    */
   nunjucks?: {
     /**
-     * filters to ensure in `nunjucks` templates
+     * extra filters to make available in `nunjucks` templates
      */
-    filters?: FileFormat[];
+    filters?: (FileFormat | 'zip')[];
   };
   style?: Styles;
   /**

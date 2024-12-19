@@ -1,6 +1,6 @@
 {
   "name": "@deathbeds/urljsf",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Build structured data files for pull requests with JSON schema",
   "repository": {
     "type": "git",
@@ -56,6 +56,7 @@
     "@rjsf/utils": "^6.0.0-alpha.0",
     "@rjsf/validator-ajv8": "^6.0.0-alpha.0",
     "@segment/ajv-human-errors": "^2.14.1",
+    "fflate": "^0.8.2",
     "nunjucks": "^3.2.4",
     "preact": "^10.24.0",
     "react-bootstrap": "^2.10.5",

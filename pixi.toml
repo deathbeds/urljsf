@@ -1,4 +1,4 @@
-"$schema" = "https://pixi.sh/v0.39.0/schema/manifest/schema.json"
+"$schema" = "https://pixi.sh/v0.39.2/schema/manifest/schema.json"
 
 [project]
 name = "urljsf"
@@ -448,7 +448,7 @@ cmd = """(
   && sleep 3
   && wget
     --no-clobber
-    https://pixi.sh/v0.39.0/schema/manifest/schema.json
+    https://pixi.sh/v0.39.2/schema/manifest/schema.json
   ) || echo "well we tried" && exit 0
   """
 outputs = ["build/{licenses,feedstock-outputs}.json"]

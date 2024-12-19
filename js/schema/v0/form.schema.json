@@ -42,11 +42,14 @@
       "properties": {
         "filters": {
           "type": "array",
-          "description": "filters to ensure in `nunjucks` templates",
+          "description": "extra filters to make available in `nunjucks` templates",
           "items": {
             "oneOf": [
               {
                 "$ref": "#/definitions/any-file-format"
+              },
+              {
+                "enum": ["zip"]
               }
             ]
           },

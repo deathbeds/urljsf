@@ -135,25 +135,31 @@ In addition to the [built-in filters][nunjucks-builtins] and the pythonic [`jinj
 compatibility layer][jinjacompat], some custom filters are available by default, while
 [format-specific](#format-filters) can be lazily loaded.
 
-| filter                  | note                                                                              |
-| ----------------------- | --------------------------------------------------------------------------------- |
-| `base64`                | encode a string as [`Base64`][base64], useful for encoding arbitrary data in URLs |
-| `from_entries`          | build an object from `[key,value]` pairs with [`Object.entries`][entries]         |
-| `prune`                 | recursively remove `null` objects and empty arrays and objects, useful in TOML    |
-| `schema_errors(schema)` | get schema validation errors                                                      |
-| `to_json` [ff]          | build a JSON string. options: `indent=2`                                          |
-| `from_json` [ff]        | parse JSON string                                                                 |
-| `to_toml` [ff]          | build a TOML string                                                               |
-| `from_toml` [ff]        | parse a TOML string                                                               |
-| `to_yaml` [ff]          | build a YAML string                                                               |
-| `from_yaml` [ff]        | parse a YAML string options: [see `yaml` docs][yaml-docs]                         |
+| [format][ff] | filter                  | note                                                                                   |
+| :----------: | ----------------------- | -------------------------------------------------------------------------------------- |
+|              | `base64`                | encode a string as [`Base64`][base64], useful for encoding arbitrary data in URLs      |
+|              | `from_entries`          | build an object from `[key,value]` pairs with [`Object.entries`][entries]              |
+|              | `prune`                 | recursively remove `null` or empty objects and arrays, useful in TOML                  |
+|              | `schema_errors(schema)` | get schema validation errors                                                           |
+|    `json`    | `from_json`             | parse JSON string                                                                      |
+|    `json`    | `to_json_url`           | build a [Data URL][data-url] for a JSON file                                           |
+|    `json`    | `to_json`               | build a JSON string. options: `indent=2`                                               |
+|    `toml`    | `from_toml`             | parse a TOML string                                                                    |
+|    `toml`    | `to_toml_url`           | build a [Data URL][data-url] for a TOML file                                           |
+|    `toml`    | `to_toml`               | build a TOML string                                                                    |
+|    `yaml`    | `from_yaml`             | parse a YAML string options: [see `yaml` docs][yaml-docs]                              |
+|    `yaml`    | `to_yaml_url`           | build a [Data URL][data-url] for a YAML file                                           |
+|    `yaml`    | `to_yaml`               | build a YAML string                                                                    |
+|    `zip`     | `to_zip_url`            | create a [Data URL][data-url] for a zip archive: [see `fflate.unzipSync` docs][fflate] |
 
 [jinjacompat]: https://mozilla.github.io/nunjucks/api.html#installjinjacompat
 [nunjucks-builtins]: https://mozilla.github.io/nunjucks/templating.html#builtin-filters
 [base64]: https://developer.mozilla.org/en-US/docs/Glossary/Base64
+[data-url]: https://developer.mozilla.org/en-US/docs/Web/URI/Schemes/data
 [entries]:
   https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/entries
 [yaml-docs]: https://eemeli.org/yaml/v1/#options
+[fflate]: https://github.com/101arrowz/fflate/blob/master/docs/README.md#unzipsync
 
 ### Format Filters
 
@@ -161,12 +167,17 @@ compatibility layer][jinjacompat], some custom filters are available by default,
 
 As `urljsf` already provides support for loading JSON, TOML, YAML as needed, the
 parse/serialize functions of the underlying JS libraries may also be enabled for
-templates, and lazily loaded before use. To load all of them:
+templates, and lazily loaded before use.
+
+Similarly, `.zip` files are a very common, low-barrier way to handle trees of files, but
+not needed for every case.
+
+To load all of them:
 
 ```json
 {
   "nunjucks": {
-    "filters": ["toml", "json", "yaml"]
+    "filters": ["toml", "json", "yaml", "zip"]
   }
 }
 ```

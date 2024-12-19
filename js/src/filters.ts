@@ -4,6 +4,7 @@ import { isObject } from '@rjsf/utils';
 
 import { Ajv, ErrorObject } from 'ajv';
 import addFormats from 'ajv-formats';
+import type { Zippable, ZippableFile } from 'fflate';
 import type nunjucks from 'nunjucks';
 
 import { Urljsf } from './_schema.js';
@@ -60,6 +61,9 @@ export async function addFormatFilters(
       case 'yaml':
         filters = await yamlFilters();
         break;
+      case 'zip':
+        filters = await zipFilters();
+        break;
       /* istanbul ignore next */
       default:
         console.trace();
@@ -85,30 +89,69 @@ export function addFilters(
 }
 
 function jsonFilters(): IFilters {
-  return {
+  const filters = {
     to_json: (value: any, kwargs?: any) => {
       const indent = kwargs?.indent;
       return JSON.stringify(value, null, indent != null ? indent : 2);
     },
-    from_json: (value: any) => {
-      return JSON.parse(value);
-    },
+    to_json_url: (value: any, kwargs?: any) =>
+      `data:application/json,${encodeURIComponent(filters.to_json(value, kwargs))}`,
+    from_json: (value: any) => JSON.parse(value),
   };
+  return filters;
 }
 
 async function tomlFilters(): Promise<IFilters> {
   const toml = await import('smol-toml');
-  return {
+  const filters = {
     to_toml: (value: any) => toml.stringify(value),
+    to_toml_url: (value: any) =>
+      `data:application/toml,${encodeURIComponent(filters.to_toml(value))}`,
     from_toml: (value: any) => toml.parse(value),
   };
+  return filters;
 }
 
 async function yamlFilters(): Promise<IFilters> {
-  let yaml = await import('yaml');
-  return {
+  const yaml = await import('yaml');
+  const filters = {
     to_yaml: (value: any, kwargs?: any) => yaml.stringify(value, kwargs),
+    to_yaml_url: (value: any, kwargs?: any) =>
+      `data:application/yaml,${encodeURIComponent(filters.to_yaml(value, kwargs))}`,
     from_yaml: (value: any, kwargs?: any) => yaml.parse(value, kwargs),
+  };
+  return filters;
+}
+
+async function zipFilters(): Promise<IFilters> {
+  const { zipSync, strToU8, strFromU8 } = await import('fflate');
+
+  function fixZippableFile(file: ZippableFile | [ZippableFile, any]): ZippableFile {
+    if (typeof file == 'string') {
+      return strToU8(file);
+    } else if (Array.isArray(file)) {
+      return [fixZippableFile(file[0]), file[1]] as any;
+    } else if (!ArrayBuffer.isView(file)) {
+      return fixZippable(file);
+    }
+    return file;
+  }
+
+  function fixZippable(value: Zippable): Zippable {
+    let clone: Zippable = {};
+    for (const [name, child] of Object.entries(value)) {
+      clone[name] = fixZippableFile(child);
+    }
+    return clone;
+  }
+
+  return {
+    to_zip_url: (value: Zippable, kwargs?: any) => {
+      const fixed = fixZippable(structuredClone(value));
+      const zipped = zipSync(fixed, kwargs);
+      const b64 = btoa(strFromU8(zipped, true));
+      return `data:application/zip;base64,${b64}`;
+    },
   };
 }
 
