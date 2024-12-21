@@ -5,6 +5,7 @@ _.+_
 [A-Z]+[\d]+
 [a-zA-Z\d_.]+\(
 \{[A-Z]+\}
+#xx
 `.*`
 <input>
 acceptCharset
@@ -61,9 +62,11 @@ linter
 live(Omit|Validate)
 min(Items|Length)
 mkdocs
+name/MIME
 natively
 no_bootstrap
 non-
+noqa
 nunjucks
 omitExtraData
 parse/serialize

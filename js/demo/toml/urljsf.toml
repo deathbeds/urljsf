@@ -24,7 +24,7 @@ https://github.com/{{ data.url.repo }}/new/{{ data.url.branch }}?
 """
 submit_button = """Start new TOML Pull Request"""
 below_file = """
-As a TOML Data URI:
+As a TOML Data URL:
 
 ```toml
 {{ data.file | to_toml_url }}

@@ -1,4 +1,4 @@
-"$schema" = "https://pixi.sh/v0.39.2/schema/manifest/schema.json"
+"$schema" = "https://pixi.sh/v0.39.3/schema/manifest/schema.json"
 
 [project]
 name = "urljsf"
@@ -432,7 +432,18 @@ cmd = """export SCOUR_ARGS="scour --enable-id-stripping --enable-comment-strippi
   && $SCOUR_ARGS logo-inkscape.svg logo.svg
   && $SCOUR_ARGS icon-inkscape.svg icon.svg"""
 inputs = ["docs/_static/*-inkscape.svg"]
-outputs = ["docs/_static/*.svg", "!*inkscape.svg"]
+outputs = ["docs/_static/*.svg", "docs/_static/*.svg", "!*inkscape.svg"]
+
+[feature.tasks-docs.tasks.docs-cairo]
+description = "- generate PNG for docs with cairosvg"
+cmd = """cd docs/_static
+  && cairosvg
+    icon.svg
+    --output-width 32
+    --format png
+    --output icon.png"""
+inputs = ["docs/_static/icon.svg"]
+outputs = ["docs/_static/icon.png"]
 
 [feature.tasks-docs.tasks.docs-fetch]
 cmd = """(
@@ -448,7 +459,7 @@ cmd = """(
   && sleep 3
   && wget
     --no-clobber
-    https://pixi.sh/v0.39.2/schema/manifest/schema.json
+    https://pixi.sh/v0.39.3/schema/manifest/schema.json
   ) || echo "well we tried" && exit 0
   """
 outputs = ["build/{licenses,feedstock-outputs}.json"]
@@ -473,7 +484,7 @@ inputs = [
   "dist/*.whl",
   "docs/**/*.{css,rst,md,py}",
 ]
-depends-on = ["docs-pip", "docs-scour", "docs-fetch", "dist-hash"]
+depends-on = ["docs-pip", "docs-scour", "docs-cairo", "docs-fetch", "dist-hash"]
 outputs = ["build/docs"]
 
 [feature.tasks-test.tasks.docs-mkdocs]
@@ -669,6 +680,7 @@ pytest-html = "*"
 pytest-xdist = "*"
 
 [feature.deps-docs.dependencies]
+cairosvg = "*"
 myst-nb = "*"
 pydata-sphinx-theme = ">=0.16.0,<0.17.0"
 pypandoc = "*"

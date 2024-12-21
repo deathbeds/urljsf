@@ -56,6 +56,7 @@
     "@rjsf/utils": "^6.0.0-alpha.0",
     "@rjsf/validator-ajv8": "^6.0.0-alpha.0",
     "@segment/ajv-human-errors": "^2.14.1",
+    "data-uri-to-buffer": "^6.0.2",
     "fflate": "^0.8.2",
     "nunjucks": "^3.2.4",
     "preact": "^10.24.0",

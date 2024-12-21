@@ -135,22 +135,24 @@ In addition to the [built-in filters][nunjucks-builtins] and the pythonic [`jinj
 compatibility layer][jinjacompat], some custom filters are available by default, while
 [format-specific](#format-filters) can be lazily loaded.
 
-| [format][ff] | filter                  | note                                                                                   |
-| :----------: | ----------------------- | -------------------------------------------------------------------------------------- |
-|              | `base64`                | encode a string as [`Base64`][base64], useful for encoding arbitrary data in URLs      |
-|              | `from_entries`          | build an object from `[key,value]` pairs with [`Object.entries`][entries]              |
-|              | `prune`                 | recursively remove `null` or empty objects and arrays, useful in TOML                  |
-|              | `schema_errors(schema)` | get schema validation errors                                                           |
-|    `json`    | `from_json`             | parse JSON string                                                                      |
-|    `json`    | `to_json_url`           | build a [Data URL][data-url] for a JSON file                                           |
-|    `json`    | `to_json`               | build a JSON string. options: `indent=2`                                               |
-|    `toml`    | `from_toml`             | parse a TOML string                                                                    |
-|    `toml`    | `to_toml_url`           | build a [Data URL][data-url] for a TOML file                                           |
-|    `toml`    | `to_toml`               | build a TOML string                                                                    |
-|    `yaml`    | `from_yaml`             | parse a YAML string options: [see `yaml` docs][yaml-docs]                              |
-|    `yaml`    | `to_yaml_url`           | build a [Data URL][data-url] for a YAML file                                           |
-|    `yaml`    | `to_yaml`               | build a YAML string                                                                    |
-|    `zip`     | `to_zip_url`            | create a [Data URL][data-url] for a zip archive: [see `fflate.unzipSync` docs][fflate] |
+| [format][ff] | filter                     | note                                                                                   |
+| :----------: | -------------------------- | -------------------------------------------------------------------------------------- |
+|              | `base64`                   | encode a string as [`Base64`][base64], useful for encoding arbitrary data in URLs      |
+|              | `data_url_file`            | get the file name from a Data URL                                                      |
+|              | `data_url_mime`            | get the MIME type from a Data URL                                                      |
+|              | `from_entries`             | build an object from `[key,value]` pairs with [`Object.entries`][entries]              |
+|              | `prune`                    | recursively remove `null` or empty objects and arrays, useful in TOML                  |
+|              | `schema_errors(schema)`    | get schema validation errors                                                           |
+|    `json`    | `from_json`                | parse JSON string                                                                      |
+|    `json`    | `to_json_url`              | build a [Data URL][data-url] for a JSON file                                           |
+|    `json`    | `to_json`                  | build a JSON string. options: `indent=2`                                               |
+|    `toml`    | `from_toml`                | parse a TOML string                                                                    |
+|    `toml`    | `to_toml_url`              | build a [Data URL][data-url] for a TOML file                                           |
+|    `toml`    | `to_toml`                  | build a TOML string                                                                    |
+|    `yaml`    | `from_yaml`                | parse a YAML string options: [see `yaml` docs][yaml-docs]                              |
+|    `yaml`    | `to_yaml_url`              | build a [Data URL][data-url] for a YAML file                                           |
+|    `yaml`    | `to_yaml`                  | build a YAML string                                                                    |
+|    `zip`     | `to_zip_url(name, **opts)` | create a [Data URL][data-url] for a zip archive: [see `fflate.unzipSync` docs][fflate] |
 
 [jinjacompat]: https://mozilla.github.io/nunjucks/api.html#installjinjacompat
 [nunjucks-builtins]: https://mozilla.github.io/nunjucks/templating.html#builtin-filters

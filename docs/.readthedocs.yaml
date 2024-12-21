@@ -6,7 +6,7 @@ build:
     # `mambaforge-latest` will now start failing: we just need a working `mamba`
     python: mambaforge-23.11
   commands:
-    - mamba install -c conda-forge -c nodefaults pixi==0.39.2
+    - mamba install -c conda-forge -c nodefaults pixi==0.39.3
     - pixi r build-yarn
     - pixi r build
     - pixi r dist-npm

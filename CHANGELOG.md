@@ -3,11 +3,19 @@
 <details>
 <summary>Unreleased</summary>
 
-## 0.1.5
-
 > TBD
 
 </details>
+
+## 0.1.5
+
+- [#36]
+  - adds support for binary files, e.g. uploaded images, in `to_zip_url` template filter
+  - `to_zip_url` accepts a `name` parameter, to encode into the Data URL
+  - adds `data_url_file` and `data_url_mime` to extract the file name/MIME type from a
+    Data URL
+
+[#36]: https://github.com/deathbeds/urljsf/pull/36
 
 ## 0.1.4
 
