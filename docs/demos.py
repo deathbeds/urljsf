@@ -460,7 +460,7 @@ _As a `.zip` archive with:_
     {%- set icon = data.pixi.icon | data_url_file -%}
     {%- set files = (files.push([icon, data.pixi.icon]), files) %}
 - `{{ icon }}`, an icon `{{ data.pixi.icon | data_url_mime }}` file)
-{%- endif %} and )
+{%- endif %}
 
 ```
 {{
