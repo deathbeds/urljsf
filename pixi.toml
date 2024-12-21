@@ -93,7 +93,7 @@ py-static-- = """rm -rf src/urljsf/_static/
 platform-- = '''mkdir -p build
   && python -c 'import platform; u = platform.uname(); print(f"{u.system}-{u.machine}".lower())'
   > build/platform.txt'''
-pip-- = """rm -rf build/pip-freeze/$PIXI_ENVIORNMENT_NAME.txt
+pip-- = """rm -rf build/pip-freeze/$PIXI_ENVIRONMENT_NAME.txt
   && python -m pip install
     -vv
     --no-deps
