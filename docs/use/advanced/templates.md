@@ -138,8 +138,8 @@ compatibility layer][jinjacompat], some custom filters are available by default,
 | [format][ff] | filter                     | note                                                                                   |
 | :----------: | -------------------------- | -------------------------------------------------------------------------------------- |
 |              | `base64`                   | encode a string as [`Base64`][base64], useful for encoding arbitrary data in URLs      |
-|              | `data_uri_file`            | get the file name from a Data URL                                                      |
-|              | `data_uri_mime`            | get the MIME type from a Data URL                                                      |
+|              | `data_url_file`            | get the file name from a Data URL                                                      |
+|              | `data_url_mime`            | get the MIME type from a Data URL                                                      |
 |              | `from_entries`             | build an object from `[key,value]` pairs with [`Object.entries`][entries]              |
 |              | `prune`                    | recursively remove `null` or empty objects and arrays, useful in TOML                  |
 |              | `schema_errors(schema)`    | get schema validation errors                                                           |

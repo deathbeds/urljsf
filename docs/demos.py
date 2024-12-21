@@ -457,9 +457,9 @@ _As a `.zip` archive with:
 - a `.github/pull_request_template.md`
 {%- if data.pixi.icon -%}
     {%- set regExp = r/name=(.*?);/ -%}
-    {%- set icon = data.pixi.icon | data_uri_file -%}
+    {%- set icon = data.pixi.icon | data_url_file -%}
     {%- set files = (files.push([icon, data.pixi.icon]), files) %}
-- `{{ icon }}`, an icon `{{ data.pixi.icon | data_uri_mime }}` file)
+- `{{ icon }}`, an icon `{{ data.pixi.icon | data_url_mime }}` file)
 {%- endif %} and ):_
 
 ```

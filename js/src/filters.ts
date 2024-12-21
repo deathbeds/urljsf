@@ -173,12 +173,12 @@ async function zipFilters(): Promise<IFilters> {
   };
 }
 
-function data_uri_file(value: string) {
+function data_url_file(value: string) {
   const match = RE_URI_FILENAME.exec(value);
   return match ? match[1] : null;
 }
 
-function data_uri_mime(value: string) {
+function data_url_mime(value: string) {
   const match = RE_URI_MIME_TYPE.exec(value);
   return match ? match[1] : null;
 }
@@ -186,8 +186,8 @@ function data_uri_mime(value: string) {
 export const URLJSF_FILTERS = {
   prune,
   base64: btoa,
-  data_uri_file,
-  data_uri_mime,
+  data_url_file,
+  data_url_mime,
   from_entries,
   schema_errors,
 };
