@@ -292,6 +292,11 @@ def installer() -> Urljsf:
                 "items": {"$ref": "#/definitions/a-pixi-package-def"},
                 "minLength": 1,
             },
+            "icon": {
+                "description": "an icon in SVG, PNG",
+                "type": "string",
+                "format": "data-url",
+            },
         },
         "definitions": {
             "a-subdir": {"type": "string", "enum": subdirs},
@@ -321,6 +326,7 @@ def installer() -> Urljsf:
                 "platforms",
                 "channels",
                 "dependencies",
+                "icon",
             ]
         },
         "channels": {"items": {"ui:options": {"label": False}}},
@@ -341,6 +347,11 @@ def installer() -> Urljsf:
                         }
                     },
                 },
+            }
+        },
+        "icon": {
+            "ui:options": {
+                "accept": ".png",
             }
         },
     }
@@ -373,7 +384,9 @@ def installer() -> Urljsf:
 
     toml_template = """
 {% macro pixi_toml(p, schema=None) %}
+
 {% set deps = [] %}
+
 {% for dep in p.dependencies %}
   {% set e = dep.spec %}
   {% if dep.channel %}
@@ -381,6 +394,13 @@ def installer() -> Urljsf:
   {% endif %}
   {% set deps = (deps.push([dep.package, e]), deps) %}
 {% endfor %}
+
+{% set tool = {} %}
+
+{% if data.pixi.icon %}
+    {% set tool = {"icon": data.pixi.icon} %}
+{% endif %}
+
 {% set PT = {
   "project": {
     "name": p.name,
@@ -388,7 +408,8 @@ def installer() -> Urljsf:
     "platforms": p.platforms,
     "channels": p.channels
   },
-  "dependencies": (deps | from_entries)
+  "dependencies": (deps | from_entries),
+  "tool": tool
 } | prune %}
 {% if schema %}
 {% for err in PT | schema_errors(schema) %}
@@ -417,24 +438,36 @@ _As URL:_
 data:application/toml,{{ t | urlencode  }}
 ```
 
+{%- set files = [
+    ["pixi.toml", t],
+    ["README.md", "# " ~ data.pixi.name],
+    [".gitignore", ".pixi"],
+    [".github", {
+        "pull_request_template.md": [
+            "thanks for contributing to " ~ data.pixi.name,
+            {"level": 9}
+        ]
+    }]
+] -%}
 
-_As a `.zip` archive (with a `.gitignore` file and `README.md` and
-`pull_request_template.md`):_
+_As a `.zip` archive with:
+- the `pixi.toml`
+- a `.gitignore` file
+- a `README.md`
+- a `.github/pull_request_template.md`
+{%- if data.pixi.icon -%}
+    {%- set regExp = r/name=(.*?);/ -%}
+    {%- set icon = data.pixi.icon | data_uri_file -%}
+    {%- set files = (files.push([icon, data.pixi.icon]), files) %}
+- `{{ icon }}`, an icon `{{ data.pixi.icon | data_uri_mime }}` file)
+{%- endif %} and ):_
 
 ```
 {{
-    {
-        "pixi.toml": t,
-        "README.md": "# " ~ data.pixi.name,
-        ".gitignore": ".pixi",
-        ".github": {
-            "pull_request_template.md": [
-                "thanks for contributing to " ~ data.pixi.name,
-                {"level": 9}
-            ]
-        }
-    }
-    | to_zip_url(level=0)
+    files
+    | from_entries
+    | prune
+    | to_zip_url(level=0, name=data.pixi.name ~ ".zip")
 }}
 ```
 """

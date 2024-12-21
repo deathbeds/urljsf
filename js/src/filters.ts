@@ -4,12 +4,16 @@ import { isObject } from '@rjsf/utils';
 
 import { Ajv, ErrorObject } from 'ajv';
 import addFormats from 'ajv-formats';
-import type { Zippable, ZippableFile } from 'fflate';
+import type { dataUriToBuffer as dataUriToBuffer_ } from 'data-uri-to-buffer';
+import type { Zippable, ZippableFile, strToU8 as strToU8_ } from 'fflate';
 import type nunjucks from 'nunjucks';
 
 import { Urljsf } from './_schema.js';
 import { humanizeErrors } from './ajv.js';
 import { IFilters, emptyArray } from './tokens.js';
+
+const RE_URI_FILENAME = /;name=(.+?);/;
+const RE_URI_MIME_TYPE = /^data:(.+?)[,;]/;
 
 let AJV: Ajv;
 
@@ -123,41 +127,67 @@ async function yamlFilters(): Promise<IFilters> {
   return filters;
 }
 
+function _fixZippableFile(
+  file: ZippableFile | [ZippableFile, any],
+  strToU8: typeof strToU8_,
+  dataUriToBuffer: typeof dataUriToBuffer_,
+): ZippableFile {
+  if (typeof file == 'string') {
+    if ((file as string).startsWith('data:')) {
+      const buffer = dataUriToBuffer(file);
+      return new Uint8Array(buffer.buffer);
+    }
+    return strToU8(file);
+  } else if (Array.isArray(file)) {
+    return [_fixZippableFile(file[0], strToU8, dataUriToBuffer), file[1]] as any;
+  } else if (!ArrayBuffer.isView(file)) {
+    return _fixZippable(file, strToU8, dataUriToBuffer);
+  }
+  return file;
+}
+
+function _fixZippable(
+  value: Zippable,
+  strToU8: typeof strToU8_,
+  dataUriToBuffer: typeof dataUriToBuffer_,
+): Zippable {
+  let clone: Zippable = {};
+  for (const [name, child] of Object.entries(value)) {
+    clone[name] = _fixZippableFile(child, strToU8, dataUriToBuffer);
+  }
+  return clone;
+}
+
 async function zipFilters(): Promise<IFilters> {
   const { zipSync, strToU8, strFromU8 } = await import('fflate');
-
-  function fixZippableFile(file: ZippableFile | [ZippableFile, any]): ZippableFile {
-    if (typeof file == 'string') {
-      return strToU8(file);
-    } else if (Array.isArray(file)) {
-      return [fixZippableFile(file[0]), file[1]] as any;
-    } else if (!ArrayBuffer.isView(file)) {
-      return fixZippable(file);
-    }
-    return file;
-  }
-
-  function fixZippable(value: Zippable): Zippable {
-    let clone: Zippable = {};
-    for (const [name, child] of Object.entries(value)) {
-      clone[name] = fixZippableFile(child);
-    }
-    return clone;
-  }
+  const { dataUriToBuffer } = await import('data-uri-to-buffer');
 
   return {
     to_zip_url: (value: Zippable, kwargs?: any) => {
-      const fixed = fixZippable(structuredClone(value));
+      let name = kwargs?.name ? `;name=${encodeURIComponent(kwargs.name)}` : '';
+      const fixed = _fixZippable(structuredClone(value), strToU8, dataUriToBuffer);
       const zipped = zipSync(fixed, kwargs);
       const b64 = btoa(strFromU8(zipped, true));
-      return `data:application/zip;base64,${b64}`;
+      return `data:application/zip${name};base64,${b64}`;
     },
   };
+}
+
+function data_uri_file(value: string) {
+  const match = RE_URI_FILENAME.exec(value);
+  return match ? match[1] : null;
+}
+
+function data_uri_mime(value: string) {
+  const match = RE_URI_MIME_TYPE.exec(value);
+  return match ? match[1] : null;
 }
 
 export const URLJSF_FILTERS = {
   prune,
   base64: btoa,
+  data_uri_file,
+  data_uri_mime,
   from_entries,
   schema_errors,
 };

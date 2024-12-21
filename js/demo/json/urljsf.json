@@ -30,6 +30,6 @@
   "templates": {
     "url": "https://github.com/{{ data.url.repo }}/new/{{ data.url.branch }}?\n{{\n    {\"filename\": data.url.filename, \"value\": data.file | to_json } | urlencode | safe\n}}\n",
     "submit_button": "Start new JSON Pull Request",
-    "below_file": "As a JSON Data URI:\n\n```json\n{{ data.file | to_json_url }}\n```\n"
+    "below_file": "As a JSON Data URL:\n\n```json\n{{ data.file | to_json_url }}\n```\n"
   }
 }

@@ -1,4 +1,4 @@
-"""Acceptance tests for ``urljsf``."""
+"""Keywords for HTTP serving ``urljsf`` acceptance tests."""
 # Copyright (C) urljsf contributors.
 # Distributed under the terms of the Modified BSD License.
 

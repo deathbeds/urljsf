@@ -7,6 +7,7 @@ Library             Collections
 Library             OperatingSystem
 Library             SeleniumLibrary
 Library             urllib.parse
+Library             ../../libraries/archive.py
 
 Suite Setup         Setup Urljsf Suite    01_docs/002_installer
 Test Setup          Open Sphinx Demo    installer
@@ -32,6 +33,7 @@ Create An Installer Pixi Project
     Make And Fix A Channel Error
     Verify Installer URL
     Verify Installer Download
+    Verify Installer Archive
 
 
 *** Keywords ***
@@ -103,3 +105,13 @@ Verify Installer Download
     ${expected} =    Get TOML Fixture    002_installer.toml
     Should Be JSON Equivalent    ${from_toml}    ${expected}    Downloaded TOML not as expected
     [Teardown]    Remove File    ${pt}
+
+Verify Installer Archive
+    [Documentation]    Verify the archive downloads correctly
+    ${icon_file} =    Set Variable    ${ROOT}${/}docs${/}_static${/}icon.png
+    Choose File    css:#urljsf-0-pixi_icon    ${icon_file}
+    Wait Until Page Contains    icon.png
+    ${url} =    Get Element Attribute    xpath://pre[3]    textContent
+    ${url} =    Set Variable    ${url.strip()[4:]}
+    File In Archive URL Should Match    ${url}    icon.png    ${icon_file}
+    ...    Icon did not match

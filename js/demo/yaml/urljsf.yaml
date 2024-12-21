@@ -20,7 +20,7 @@ templates:
     }}
   submit_button: Start new YAML Pull Request
   below_file: |
-    As a YAML Data URI:
+    As a YAML Data URL:
 
     ```yaml
     {{ data.file | to_yaml_url }}

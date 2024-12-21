@@ -36,21 +36,21 @@
 
 Once the data is _validated_, the user sees a button which gets a URL, which can be:
 
-- downloaded as a file
+- downloaded as a file (including `.zip` archives)
 - opened in a new browser window
 - copy and pasted
 - submitted to an HTTP endpoint, either by opening a new window, or directly.
-- open native applications like email
+- opened in registered native applications like email
 
 `urljsf` **doesn't** ship a server, so that part is up to you!
 
-**Site builders** write TOML, JSON, YAML or python, then can use `urljsf` as:
+**Builders** write TOML, JSON, YAML, or python, then can use `urljsf` as:
 
 - a drop-in-and-pray [`script`](#js-script)
 - a standalone [CLI tool](#command-line)
 - a [`sphinx`](#sphinx) or [`mkdocs`](#mkdocs) extension
 
-... to create JavaScript/HTML forms that helps **visitors** provide good data for:
+... to create JavaScript/HTML forms that help **visitors** provide good data for:
 
 - pull requests
 - issues
