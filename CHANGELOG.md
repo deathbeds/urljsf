@@ -3,6 +3,8 @@
 <details>
 <summary>Unreleased</summary>
 
+## 0.1.6
+
 > TBD
 
 </details>
