@@ -351,7 +351,7 @@ def installer() -> Urljsf:
         },
         "icon": {
             "ui:options": {
-                "accept": ".png",
+                "accept": ".png,.svg",
             }
         },
     }
@@ -450,7 +450,7 @@ data:application/toml,{{ t | urlencode  }}
     }]
 ] -%}
 
-_As a `.zip` archive with:
+_As a `.zip` archive with:_
 - the `pixi.toml`
 - a `.gitignore` file
 - a `README.md`
@@ -460,7 +460,7 @@ _As a `.zip` archive with:
     {%- set icon = data.pixi.icon | data_url_file -%}
     {%- set files = (files.push([icon, data.pixi.icon]), files) %}
 - `{{ icon }}`, an icon `{{ data.pixi.icon | data_url_mime }}` file)
-{%- endif %} and ):_
+{%- endif %} and )
 
 ```
 {{

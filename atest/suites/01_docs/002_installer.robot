@@ -33,7 +33,8 @@ Create An Installer Pixi Project
     Make And Fix A Channel Error
     Verify Installer URL
     Verify Installer Download
-    Verify Installer Archive
+    Verify Installer Archive    icon.png
+    Verify Installer Archive    icon.svg
 
 
 *** Keywords ***
@@ -108,10 +109,11 @@ Verify Installer Download
 
 Verify Installer Archive
     [Documentation]    Verify the archive downloads correctly
-    ${icon_file} =    Set Variable    ${ROOT}${/}docs${/}_static${/}icon.png
+    [Arguments]    ${icon}
+    ${icon_file} =    Set Variable    ${ROOT}${/}docs${/}_static${/}${icon}
     Choose File    css:#urljsf-0-pixi_icon    ${icon_file}
-    Wait Until Page Contains    icon.png
+    Wait Until Page Contains    ${icon}
     ${url} =    Get Element Attribute    xpath://pre[3]    textContent
     ${url} =    Set Variable    ${url.strip()[4:]}
-    File In Archive URL Should Match    ${url}    icon.png    ${icon_file}
+    File In Archive URL Should Match    ${url}    ${icon}    ${icon_file}
     ...    Icon did not match

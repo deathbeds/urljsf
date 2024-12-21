@@ -3,6 +3,10 @@
 <details>
 <summary>Unreleased</summary>
 
+> TBD
+
+</details>
+
 ## 0.1.5
 
 - [#36]
@@ -12,8 +16,6 @@
     Data URL
 
 [#36]: https://github.com/deathbeds/urljsf/pull/36
-
-</details>
 
 ## 0.1.4
 
