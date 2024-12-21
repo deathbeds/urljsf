@@ -30,7 +30,7 @@ URLS = {
         "https://raw.githubusercontent.com/spdx/license-list-data/refs/heads/main/"
         f"json/{LICENSES.name}"
     ),
-    REAL_PIXI_SCHEMA: ("https://pixi.sh/v0.39.2/schema/manifest/schema.json",),
+    REAL_PIXI_SCHEMA: ("https://pixi.sh/v0.39.3/schema/manifest/schema.json",),
 }
 
 FALLBACKS: dict[Path, dict[str, Any]] = {
